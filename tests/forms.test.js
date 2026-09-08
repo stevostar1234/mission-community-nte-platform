@@ -408,7 +408,8 @@ for (const filename of ["exhibitor-approved-confirmation.html", "government-char
 }
 for (const filename of ["partner-sponsor-approved-confirmation.html", "partner-sponsor-payment-confirmed.html"]) {
   const email = fs.readFileSync(path.join(emailSourceDirectory, filename), "utf8");
-  assert(email.includes("partnership / sponsorship agreement") && email.includes("signing"), `${filename}: signing-agreement guidance must remain available`);
+  const preview = fs.readFileSync(path.join(root, 'email-templates', 'examples', filename), 'utf8');
+  assert(preview.includes("partnership / sponsorship agreement") && preview.includes("signing"), `${filename}: rendered signing-agreement guidance must remain available`);
   for (const field of ["NTE_Stand_Equipment__c", "NTE_Total_Staff_Count__c", "NTE_Invoice_Address__c", "NTE_Invoiced_Email__c", "NTE_Purchase_Order_Number__c", "NTE_Supplier_Agreement_Required__c"]) {
     assert(email.includes(`{!Opportunity.${field}}`), `${filename}: retain the current booking's ${field} detail`);
   }

@@ -65,6 +65,8 @@ Keep the deprecated volunteer auto-response adjustment narrowly scoped to the ac
 
 ## Switching Stripe environments
 
+**Implementation checkpoint:** the 8 September build deliberately uses `NTE_Stripe_Test`, checks the exact sandbox org/account/recipient/reference scope and rejects live Stripe mode. A client-sandbox switch requires its secure secret and account/configuration binding, fresh fixtures and qualification; existing test object IDs are not transferable. Production also needs reviewed live credential/mode support and explicit activation, so a secret swap alone cannot turn this checkpoint into a live integration. Keep the shipped test metadata disabled in the isolated production release candidate until the approved live route is ready. [Implemented scope and evidence](audit/NTE_STRIPE_SANDBOX_IMPLEMENTATION_2026-09-08.md).
+
 With account identity, credentials and resources held in configuration, the application code can remain the same. The switch requires configuration and qualification, not changing every form or manually editing payment URLs.
 
 1. Client activates the appropriate live Stripe services and verifies the merchant, payout account and available payment methods.
@@ -81,7 +83,7 @@ This is a reasonable way to avoid waiting for client access. Create an account u
 
 Later, connect the same integration code to the client's sandbox using its own credential/account binding and resources. Match the client's actual settings and rerun the complete representative journeys plus configuration-sensitive cases. Keep the owner's old test links and records identified as belonging to that earlier environment; do not relabel them as client payments. Then follow the client-sandbox-to-live steps above.
 
-The change is primarily configuration and a further qualification pass. The owner's sandbox proves the integration mechanics; only the client's environment can establish its merchant-specific configuration and operational acceptance. No independent Stripe account or paid service has been created by this task.
+The change is primarily configuration and a further qualification pass. The owner's sandbox proves the integration mechanics; only the client's environment can establish its merchant-specific configuration and operational acceptance. The later authorised implementation has created and connected the owner-controlled test sandbox; the original planning review itself created no account or paid service.
 
 ## Rollback and checkpoint
 

@@ -53,7 +53,7 @@ Supplier agreement {!Opportunity.NTE_Supplier_Agreement_Required__c}
 
 Your agreement
 
-Your partnership / sponsorship agreement will be sent to you shortly for signing, along with a quotation or invoice as requested.
+{NTE_AGREEMENT_NOTE}
 
 Staff details and event preparation
 

@@ -15,4 +15,11 @@ Excluded: Git history from the earlier repositories, Salesforce authentication c
 
 The snapshot was assembled in an isolated local Git repository; the working project's existing `origin` and `package` remotes and historical branch were preserved. For future full-project Git work, use the new private repository explicitly. The canonical public forms preview remains `stevostar1234/nte27-web-to-lead-demo`; no Salesforce package content was pushed there and no new Pages site was enabled.
 
-The [dependency review](NTE_PACKAGE_DEPENDENCY_REVIEW_2026-09-08.md) and [qualification evidence](NTE_DEPENDENCY_QUALIFICATION_2026-09-08.json) establish the current 424-component package, 281 passing Apex tests and 486 matching source/manifest hashes. Stripe Payment Links with manual confirmation is selected but not implemented. No production release or new Stripe account/payment is part of this checkpoint.
+The [dependency review](NTE_PACKAGE_DEPENDENCY_REVIEW_2026-09-08.md) and [qualification evidence](NTE_DEPENDENCY_QUALIFICATION_2026-09-08.json) establish the earlier 424-component package, 281 passing Apex tests and 486 matching source/manifest hashes. Stripe Payment Links was selected but not implemented at that initial checkpoint. The later authorised Stripe update below supersedes that implementation status; production remains untouched.
+
+
+## Later Stripe implementation checkpoint
+
+The private repository now includes the authorised owner-controlled Stripe sandbox integration, generated credential/configuration/payment-request metadata, client questionnaire, updated workflow/release notes, automated tests and maintained client previews. Secrets, CLI authentication files, raw mailbox/provider responses and synthetic record exports remain in ignored local storage and are excluded from the snapshot.
+
+Final MMUAT check-only `0AfAd00000Sq7tKKAR` passed **464 components and 297 Apex tests**, with 530 unchanged source/manifest hashes. Canonical public preview commit `b81b8bced9c64a77aa7b1f31878ffca22dedaeb7` has 63/63 files byte-verified. [Exact qualification](NTE_STRIPE_QUALIFICATION_2026-09-08.json), [implementation and retained test evidence](NTE_STRIPE_SANDBOX_IMPLEMENTATION_2026-09-08.md). The owner paid both the £960 exhibitor and £2,400 partner tests. Each was verified, manually recorded in Salesforce and followed by exactly one corresponding confirmation; both payment links are now inactive after one checkout each. This checkpoint neither activates production nor claims all planned client acceptance scenarios are complete.

@@ -26,6 +26,10 @@
         <members>NTEMetadataReportStressTest</members>
         <members>NTEPanelStressTest</members>
         <members>NTEPricingStressTest</members>
+        <members>NTEStripeClient</members>
+        <members>NTEStripeClientTest</members>
+        <members>NTEStripeBookingService</members>
+        <members>NTEStripeBookingServiceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -351,15 +355,46 @@
         <members>Opportunity.NTE_Finance_Payment_Confirmed__c</members>
         <members>Opportunity.NTE_Finance_Payment_Due__c</members>
         <members>Opportunity.NTE_Pricing_Ready__c</members>
+        <members>NTE_Payment_Request__c.Opportunity__c</members>
+        <members>NTE_Payment_Request__c.Charge_Key__c</members>
+        <members>NTE_Payment_Request__c.Kind__c</members>
+        <members>NTE_Payment_Request__c.Status__c</members>
+        <members>NTE_Payment_Request__c.Amount_Minor__c</members>
+        <members>NTE_Payment_Request__c.Net_Minor__c</members>
+        <members>NTE_Payment_Request__c.Tax_Rate__c</members>
+        <members>NTE_Payment_Request__c.Currency__c</members>
+        <members>NTE_Payment_Request__c.Stripe_Account__c</members>
+        <members>NTE_Payment_Request__c.Source_Fingerprint__c</members>
+        <members>NTE_Payment_Request__c.Source_Lead_Id__c</members>
+        <members>NTE_Payment_Request__c.Reference__c</members>
+        <members>NTE_Payment_Request__c.Description__c</members>
+        <members>NTE_Payment_Request__c.Price_Id__c</members>
+        <members>NTE_Payment_Request__c.Link_Id__c</members>
+        <members>NTE_Payment_Request__c.Payment_URL__c</members>
+        <members>NTE_Payment_Request__c.First_Attempt_At__c</members>
+        <members>NTE_Payment_Request__c.Verified_At__c</members>
+        <members>NTE_Payment_Request__c.Error__c</members>
+        <members>NTE_Payment_Request__c.Delivered_At__c</members>
+        <members>NTE_Payment_Request__c.Recipient__c</members>
+        <members>NTE_Payment_Request__c.Batch_Key__c</members>
+        <members>NTE_Stripe_Config__mdt.Enabled__c</members>
+        <members>NTE_Stripe_Config__mdt.Expected_Account_Id__c</members>
+        <members>NTE_Stripe_Config__mdt.Expected_Org_Id__c</members>
+        <members>NTE_Stripe_Config__mdt.Reference_Prefix__c</members>
+        <members>NTE_Stripe_Config__mdt.Allowed_Email__c</members>
+        <members>NTE_Stripe_Config__mdt.Tax_Rate__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>NTE_Routing_Config.Default</members>
+        <members>NTE_Stripe_Config.Default</members>
         <name>CustomMetadata</name>
     </types>
     <types>
         <members>NTE_Routing_Config__mdt</members>
         <members>NTE_Email_Dispatch__c</members>
+        <members>NTE_Payment_Request__c</members>
+        <members>NTE_Stripe_Config__mdt</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -442,12 +477,14 @@
         <members>Opportunity.NTE_Top_Up_Paid</members>
         <members>Opportunity.NTE_Top_Up_Payments_Due</members>
         <members>Opportunity.NTE_Payment_Confirmed</members>
+        <members>NTE_Payment_Request__c.NTE_Payment_Requests</members>
         <name>ListView</name>
     </types>
     <types>
         <members>NTE_Forms_Administration</members>
         <members>NTE_Management_User</members>
         <members>Volunteer_Applications_User</members>
+        <members>NTE_Stripe_Test_Operator</members>
         <name>PermissionSet</name>
     </types>
     <types>
@@ -491,6 +528,7 @@
     </types>
     <types>
         <members>NTE_Email_Dispatch__c-NTE Email Dispatch</members>
+        <members>NTE_Payment_Request__c-NTE Payment Request</members>
         <name>Layout</name>
     </types>
     <types>
@@ -498,6 +536,14 @@
         <members>Lead.Retry_Update_Email</members>
         <members>Opportunity.Retry_Booking_Email</members>
         <name>QuickAction</name>
+    </types>
+    <types>
+        <members>NTE_Stripe_Test</members>
+        <name>ExternalCredential</name>
+    </types>
+    <types>
+        <members>NTE_Stripe_Test</members>
+        <name>NamedCredential</name>
     </types>
     <version>67.0</version>
 </Package>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses><apexClass>NTEStripeClient</apexClass><enabled>true</enabled></classAccesses>
+    <description>Allows an authorised sandbox operator to use the secure NTE Stripe test principal.</description>
+    <externalCredentialPrincipalAccesses><enabled>true</enabled><externalCredentialPrincipal>NTE_Stripe_Test-NTEApplication</externalCredentialPrincipal></externalCredentialPrincipalAccesses>
+    <label>NTE Stripe Test Operator</label>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Opportunity__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Charge_Key__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Kind__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Status__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Amount_Minor__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Net_Minor__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Tax_Rate__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Currency__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Stripe_Account__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Source_Fingerprint__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Source_Lead_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Reference__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Description__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Price_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Link_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Payment_URL__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.First_Attempt_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Verified_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Error__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Delivered_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Recipient__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Batch_Key__c</field><readable>true</readable></fieldPermissions>
+<objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>NTE_Payment_Request__c</object><viewAllRecords>false</viewAllRecords></objectPermissions>
+</PermissionSet>

@@ -1302,12 +1302,13 @@ const currencyMergeFields = new Set([
   ...opportunityFields.filter(field => field.type === "Currency").map(field => `Opportunity.${field.api}`)
 ]);
 
-function emailPreviewHtml(sourceFile) {
+function emailPreviewHtml(sourceFile, stripe = false) {
   const maintainedSource = fs.readFileSync(path.join(root, "email-templates", "source", sourceFile), "utf8");
   const complimentary = sourceFile === "government-charity-approved-confirmation.html";
   const partner = sourceFile.includes("partner-sponsor");
   const paymentConfirmed = sourceFile.includes("payment-confirmed");
   const values = {...emailPreviewValues};
+  if (stripe) values.Payment_Method__c = 'Stripe';
   if (partner) {
     values.Booking_Reference__c = "NTE-2027-PS-0001";
     values.Target_Booking_Reference__c = values.Booking_Reference__c;
@@ -1359,16 +1360,28 @@ function emailPreviewHtml(sourceFile) {
   if (!partner && Number(values.Power_Socket_Total__c) > 0) financeRows += moneyRow(`Power sockets · ${values.Power_Socket_Count__c} × £${values.Power_Socket_Unit_Price__c}`, values.Power_Socket_Total__c);
   if (!partner && Number(values.Additional_Staff_Total__c) > 0) financeRows += moneyRow(`Additional staff · ${values.Additional_Staff_Count__c} × £${values.Additional_Staff_Unit_Price__c}`, values.Additional_Staff_Total__c);
   financeRows += moneyRow("Booking total · excluding VAT", values.Listed_Price_Total__c);
+  if (stripe) {
+    const net = Number(values.Listed_Price_Total__c);
+    const tax = Math.round(net * 20) / 100;
+    financeRows += moneyRow('VAT (20.00%)', tax) + moneyRow(paymentConfirmed ? 'Total paid' : 'Total payable', net + tax);
+  }
+  const paymentButton = stripe && !paymentConfirmed
+    ? '<p style="margin:20px 0;"><a role="link" aria-disabled="true" style="display:inline-block;padding:14px 22px;background:#0b668f;color:#ffffff;text-decoration:none;border-radius:7px;font-weight:bold;">Pay securely</a></p>' : '';
   const tokens = {
     NTE_EVENT_LABEL: values.NTE_Event_Code__c,
     NTE_ORGANISATION: escapePreview(values.Company),
+    NTE_AGREEMENT_NOTE: stripe
+      ? 'Your partnership / sponsorship agreement will be sent to you shortly for signing.'
+      : 'Your partnership / sponsorship agreement will be sent to you shortly for signing, along with a quotation or invoice as requested.',
     NTE_PREPARATION_LINKS: preparationLinks,
     NTE_PAYMENT_NOTE: paymentConfirmed
       ? "Your payment has been recorded and your space is confirmed."
       : complimentary
         ? "Your booking is complimentary and your space is confirmed. No payment is due."
-        : "Your space is provisionally reserved. The NTE team will send your quotation or invoice with payment instructions. Your space will be confirmed when payment is recorded.",
-    NTE_FINANCE_SUMMARY: '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #dce7ed;border-radius:10px;overflow:hidden;">' + financeRows + '</table>'
+        : stripe
+          ? "Your space is provisionally reserved. Please use the secure payment link below. Your space will be confirmed when the NTE team records your payment."
+          : "Your space is provisionally reserved. The NTE team will send your quotation or invoice with payment instructions. Your space will be confirmed when payment is recorded.",
+    NTE_FINANCE_SUMMARY: '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #dce7ed;border-radius:10px;overflow:hidden;">' + financeRows + '</table>' + paymentButton
   };
   const templateTokenPattern = /\{!(Lead|Contact|Opportunity)\.([A-Za-z0-9_]+)\}|<!--NTE_TOKEN:\{(NTE_[A-Z_]+)\}-->/g;
   if (/\{![^}]+\}|\{NTE_[A-Z_]+\}/.test(source.replace(templateTokenPattern, ""))) {
@@ -1380,6 +1393,13 @@ function emailPreviewHtml(sourceFile) {
     if (!Object.prototype.hasOwnProperty.call(tokens, customToken)) throw new Error(`No preview value for ${customToken}`);
     return tokens[customToken];
   });
+}
+
+for (const type of ['exhibitor', 'partner-sponsor']) {
+  write(path.join(root, 'email-templates', 'examples', `${type}-stripe-provisional.html`),
+    emailPreviewHtml(`${type}-approved-confirmation.html`, true));
+  write(path.join(root, 'email-templates', 'examples', `${type}-stripe-payment-confirmed.html`),
+    emailPreviewHtml(`${type}-payment-confirmed.html`, true));
 }
 
 for (const [api, [sourceFile, subject, description]] of Object.entries(templates)) {
@@ -1992,3 +2012,5 @@ write(path.join(contentAssetDir, "NTE_Management_Logo.asset-meta.xml"), [
 console.log(`Generated fields, ${Object.keys(leadListViews).length + Object.keys(masterPanelOpportunityViews).length + 3} list views, ${Object.keys(nteReports).length} reports, ${Object.keys(templates).length} email templates, 4 flows, 3 permission sets, the NTE Management app, and 5 Lightning pages.`);
 
 require("./build-communications");
+require("./build-stripe");
+require("./build-stripe-bookings");

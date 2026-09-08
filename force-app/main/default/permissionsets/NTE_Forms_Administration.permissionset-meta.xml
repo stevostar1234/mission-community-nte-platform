@@ -2,7 +2,333 @@
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities><application>NTE_Management</application><visible>true</visible></applicationVisibilities>
     <description>Manage NTE forms, bookings and finance.</description>
-    <fieldPermissions>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <classAccesses><apexClass>NTE_MasterPanelController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses>
+        <apexClass>NTEExhibitorApprovalEmailService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>NTERelatedOpportunityController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses><apexClass>NTEEmailDispatchService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>NTEUpdateSubmissionService</apexClass><enabled>true</enabled></classAccesses>
+    <recordTypeVisibilities>
+        <recordType>Opportunity.NTE_Event_Opportunity</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    
+    
+    
+    
+    
+    
+    
+    <userPermissions><enabled>true</enabled><name>EditTask</name></userPermissions>
+    <userPermissions><enabled>true</enabled><name>ConvertLeads</name></userPermissions>
+    <userPermissions><enabled>true</enabled><name>RunReports</name></userPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>NTE Forms Administration</label>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<fieldPermissions>
         <editable>true</editable>
         <field>Lead.Booking_Reference__c</field>
         <readable>true</readable>
@@ -1266,22 +1592,29 @@
     <fieldPermissions><editable>true</editable><field>NTE_Email_Dispatch__c.Sent_At__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>NTE_Email_Dispatch__c.Error__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>NTE_Email_Dispatch__c.Fingerprint__c</field><readable>true</readable></fieldPermissions>
-    <classAccesses><apexClass>NTE_MasterPanelController</apexClass><enabled>true</enabled></classAccesses>
-    <classAccesses>
-        <apexClass>NTEExhibitorApprovalEmailService</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>NTERelatedOpportunityController</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses><apexClass>NTEEmailDispatchService</apexClass><enabled>true</enabled></classAccesses>
-    <classAccesses><apexClass>NTEUpdateSubmissionService</apexClass><enabled>true</enabled></classAccesses>
-    <recordTypeVisibilities>
-        <recordType>Opportunity.NTE_Event_Opportunity</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <objectPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Opportunity__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Charge_Key__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Kind__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Status__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Amount_Minor__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Net_Minor__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Tax_Rate__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Currency__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Stripe_Account__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Source_Fingerprint__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Source_Lead_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Reference__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Description__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Price_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Link_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Payment_URL__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.First_Attempt_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Verified_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Error__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Delivered_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Recipient__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Batch_Key__c</field><readable>true</readable></fieldPermissions>
+<objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
         <allowEdit>true</allowEdit>
@@ -1342,9 +1675,5 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions><allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>NTE_Email_Dispatch__c</object><viewAllRecords>false</viewAllRecords></objectPermissions>
-    <userPermissions><enabled>true</enabled><name>EditTask</name></userPermissions>
-    <userPermissions><enabled>true</enabled><name>ConvertLeads</name></userPermissions>
-    <userPermissions><enabled>true</enabled><name>RunReports</name></userPermissions>
-    <hasActivationRequired>false</hasActivationRequired>
-    <label>NTE Forms Administration</label>
+    <objectPermissions><allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>NTE_Payment_Request__c</object><viewAllRecords>false</viewAllRecords></objectPermissions>
 </PermissionSet>

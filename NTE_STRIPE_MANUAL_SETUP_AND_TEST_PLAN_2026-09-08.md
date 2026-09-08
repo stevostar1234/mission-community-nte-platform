@@ -1,5 +1,7 @@
 # NTE manual Stripe setup and qualification plan
 
+**Implementation follow-up, 8 September:** the owner-controlled sandbox integration is now installed. Both new application types received their own payment link, the owner completed both test payments, and each was manually confirmed with one matching email. Full-package validation passed 464 components and 297 tests. [Exact implementation evidence and remaining qualification](audit/NTE_STRIPE_SANDBOX_IMPLEMENTATION_2026-09-08.md) distinguish these completed observations from the 60 planned scenarios below; this is not a claim that every scenario or the client's account has been tested.
+
 Updated 8 September 2026. Internal working plan for the project owner and Mission Community.
 
 **Selected route:** automatic creation of the correct Stripe payment request and provisional email, followed by **manual payment verification and recording in Salesforce**. The existing space-confirmation email follows that staff action. Automatic payment confirmation is not selected.

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layoutSections><customLabel>true</customLabel><detailHeading>true</detailHeading><editHeading>false</editHeading><label>Payment request</label><layoutColumns>
+        <layoutItems><behavior>Readonly</behavior><field>Name</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Opportunity__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Charge_Key__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Kind__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Status__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Amount_Minor__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Net_Minor__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Tax_Rate__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Currency__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Stripe_Account__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Source_Fingerprint__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Source_Lead_Id__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Reference__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Description__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Price_Id__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Link_Id__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Payment_URL__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>First_Attempt_At__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Verified_At__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Error__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Delivered_At__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Recipient__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Batch_Key__c</field></layoutItems>
+    </layoutColumns><style>OneColumn</style></layoutSections>
+    <showEmailCheckbox>false</showEmailCheckbox><showHighlightsPanel>false</showHighlightsPanel><showInteractionLogPanel>false</showInteractionLogPanel><showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox><showSubmitAndAttachButton>false</showSubmitAndAttachButton>
+</Layout>

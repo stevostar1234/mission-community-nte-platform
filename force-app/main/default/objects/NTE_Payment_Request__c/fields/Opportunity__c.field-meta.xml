@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opportunity__c</fullName>
+    <label>Booking</label>
+    <deleteConstraint>SetNull</deleteConstraint><referenceTo>Opportunity</referenceTo><relationshipLabel>NTE Payment Requests</relationshipLabel><relationshipName>NTE_Payment_Requests</relationshipName>
+    <type>Lookup</type>
+</CustomField>

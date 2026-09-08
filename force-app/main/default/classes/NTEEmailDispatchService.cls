@@ -386,6 +386,7 @@ public with sharing class NTEEmailDispatchService {
         }
         Map<String, Id> confirmationTemplateIds = new Map<String, Id>();
         if (idsByKind.containsKey('BOOKING_CONFIRMED')) {
+            NTEStripeBookingService.preloadEmailRequests(new Set<Id>(idsByKind.get('BOOKING_CONFIRMED')));
             Set<String> templateNames = new Set<String>{'NTE_Exhibitor_Payment_Confirmed', 'NTE_Partner_Sponsor_Payment_Confirmed'};
             for (EmailTemplate emailTemplate : [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :templateNames]) {
                 confirmationTemplateIds.put(emailTemplate.DeveloperName, emailTemplate.Id);
