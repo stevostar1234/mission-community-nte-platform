@@ -1,0 +1,146 @@
+:host {
+    display: block;
+    --nte-navy: #08243a;
+    --nte-gold: #d89b17;
+    --nte-border: #d8e0e7;
+    --nte-muted: #52657a;
+}
+
+.relationship-card {
+    overflow: hidden;
+    border: 1px solid var(--nte-border);
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 0.125rem 0.4rem rgba(8, 36, 58, 0.08);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--nte-gold);
+}
+
+.eyebrow,
+.section-label {
+    margin: 0 0 0.2rem;
+    color: #9a6500;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+h2 {
+    margin: 0;
+    color: var(--nte-navy);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--nte-navy);
+}
+
+th,
+td {
+    padding: 0.72rem 0.85rem;
+    border-bottom: 1px solid #e7edf2;
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background: #f5f8fa;
+    color: var(--nte-muted);
+    font-size: 0.69rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+td {
+    font-size: 0.82rem;
+}
+
+a {
+    color: #075a9c;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+
+.stage-pill {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: #eef4f7;
+    color: var(--nte-navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.account-summary,
+.contacts-section {
+    padding: 1rem 1.25rem;
+}
+
+.account-summary {
+    border-bottom: 1px solid var(--nte-border);
+}
+
+.primary-link {
+    display: inline-block;
+    margin-top: 0.15rem;
+    font-size: 1rem;
+}
+
+.account-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin-top: 0.35rem;
+    color: var(--nte-muted);
+    font-size: 0.8rem;
+}
+
+.contacts-section .table-wrap {
+    margin: 0.65rem -1.25rem -1rem;
+}
+
+.state,
+.empty-state {
+    min-height: 5rem;
+    padding: 1.4rem;
+    color: var(--nte-muted);
+    text-align: center;
+}
+
+.state--error {
+    color: #8e1b1b;
+}
+
+.empty-state--compact {
+    min-height: auto;
+    padding: 0.8rem 0 0;
+}
+
+@media (max-width: 48rem) {
+    th,
+    td {
+        padding: 0.6rem;
+        white-space: nowrap;
+    }
+}

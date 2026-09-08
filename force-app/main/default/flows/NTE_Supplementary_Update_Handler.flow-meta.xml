@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Run_NTE_Service</name>
+        <label>NTE Supplementary Update Handler</label>
+        <locationX>176</locationX>
+        <locationY>276</locationY>
+        <actionName>NTEUpdateSubmissionService</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>leadId</name>
+            <value><elementReference>$Record.Id</elementReference></value>
+        </inputParameters>
+        <nameSegment>NTEUpdateSubmissionService</nameSegment>
+    </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Applies staff, logistics and logo submissions to the NTE Opportunity matched by exact booking reference. Failed submissions are retained; only the existing staff and vehicle temporary Leads are removed after success.</description>
+    <environments>Default</environments>
+    <interviewLabel>NTE Supplementary Update Handler {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>NTE Supplementary Update Handler</label>
+    <processMetadataValues><name>BuilderType</name><value><stringValue>LightningFlowBuilder</stringValue></value></processMetadataValues>
+    <processMetadataValues><name>CanvasMode</name><value><stringValue>AUTO_LAYOUT_CANVAS</stringValue></value></processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector><targetReference>Run_NTE_Service</targetReference></connector>
+        <filterLogic>1 OR 2 OR 3 OR 4</filterLogic>
+        <filters>
+            <field>Web_Form_Type__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Partner / Sponsor Staff Update</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Web_Form_Type__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Exhibitor Staff Update</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Web_Form_Type__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Heavy Vehicle Details</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Web_Form_Type__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Logo Update</stringValue>
+            </value>
+        </filters>
+        <object>Lead</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

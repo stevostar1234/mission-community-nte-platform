@@ -1,0 +1,16 @@
+.DS_Store
+.sf/
+.sfdx/
+node_modules/
+coverage/
+_org-audit/
+tmp/
+.env
+.env.*
+!.env.example
+*.key
+*.p12
+*.pfx
+*.pem
+__pycache__/
+*.pyc

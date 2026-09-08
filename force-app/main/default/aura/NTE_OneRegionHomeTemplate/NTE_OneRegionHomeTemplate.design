@@ -1,0 +1,5 @@
+<design:component label="NTE Full-Width Home">
+    <flexipage:template>
+        <flexipage:region name="main" label="Main" defaultWidth="LARGE" />
+    </flexipage:template>
+</design:component>

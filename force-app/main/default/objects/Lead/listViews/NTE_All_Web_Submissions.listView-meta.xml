@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_All_Web_Submissions</fullName>
+    <columns>FULL_NAME</columns>
+    <columns>LEAD.COMPANY</columns>
+    <columns>LEAD.EMAIL</columns>
+    <columns>Web_Form_Type__c</columns>
+    <columns>NTE_Event_Code__c</columns>
+    <columns>Booking_Reference__c</columns>
+    <columns>Target_Booking_Reference__c</columns>
+    <columns>LEAD.STATUS</columns>
+    <columns>LEAD.CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>NTE_Event_Code__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>NTE All Web Submissions</label>
+</ListView>

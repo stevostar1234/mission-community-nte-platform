@@ -1,0 +1,23 @@
+public with sharing class NTEUpdateSubmissionJob implements Queueable {
+    private String leadIdPayload;
+    private Boolean skipEmailDelivery;
+
+    public NTEUpdateSubmissionJob(String leadIdPayload, Boolean skipEmailDelivery) {
+        this.leadIdPayload = leadIdPayload;
+        this.skipEmailDelivery = skipEmailDelivery == true;
+    }
+
+    public void execute(QueueableContext context) {
+        if (String.isBlank(leadIdPayload)) return;
+        Set<Id> leadIds = new Set<Id>();
+        try {
+            for (String serializedLeadId : leadIdPayload.split(',')) {
+                if (String.isNotBlank(serializedLeadId)) leadIds.add((Id)serializedLeadId.trim());
+            }
+            if (leadIds.isEmpty()) return;
+            NTEUpdateSubmissionService.processLeadIds(leadIds, skipEmailDelivery);
+        } catch (Exception exceptionValue) {
+            NTEUpdateSubmissionService.recordUnexpectedFailure(leadIds, exceptionValue);
+        }
+    }
+}

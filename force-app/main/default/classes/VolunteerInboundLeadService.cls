@@ -1,0 +1,206 @@
+public with sharing class VolunteerInboundLeadService {
+    private static final String APPLICANT_TEMPLATE = 'Volunteer_Application_Acknowledgement';
+    private static final String INTERNAL_TEMPLATE = 'Volunteer_Application_Internal';
+    private static final String ACCEPTED = 'Accepted by Salesforce';
+    private static Set<Id> initializedLeadIds = new Set<Id>();
+    @TestVisible private static Boolean bypassEmailDelivery = false;
+    @TestVisible private static EmailSender emailSender = new SalesforceEmailSender();
+    @TestVisible private static Boolean failNextAuditSave = false;
+
+    public class Request {
+        @InvocableVariable(required=true label='Lead ID')
+        public Id leadId;
+        @InvocableVariable(label='New submission')
+        public Boolean isNewSubmission;
+    }
+
+    @TestVisible private interface EmailSender {
+        List<Messaging.SendEmailResult> send(List<Messaging.SingleEmailMessage> messages);
+    }
+
+    private class SalesforceEmailSender implements EmailSender {
+        public List<Messaging.SendEmailResult> send(List<Messaging.SingleEmailMessage> messages) {
+            return Messaging.sendEmail(messages, false);
+        }
+    }
+
+    private class IntakeEmailException extends Exception {}
+
+    private class Dispatch {
+        Id leadId;
+        Boolean applicant;
+        Messaging.SingleEmailMessage message;
+        Dispatch(Id leadId, Boolean applicant, Messaging.SingleEmailMessage message) {
+            this.leadId = leadId;
+            this.applicant = applicant;
+            this.message = message;
+        }
+    }
+
+    @InvocableMethod(
+        label='Notify Volunteer Application Owner'
+        description='Sends volunteer applicant and owner notifications. Repeated calls retry only messages not already accepted.'
+    )
+    public static void notifyOwner(List<Request> requests) {
+        if (requests == null) return;
+        Set<Id> leadIds = new Set<Id>();
+        Set<Id> newLeadIds = new Set<Id>();
+        for (Request request : requests) {
+            if (request == null || request.leadId == null) continue;
+            leadIds.add(request.leadId);
+            if (request.isNewSubmission == true && !initializedLeadIds.contains(request.leadId)) newLeadIds.add(request.leadId);
+        }
+        if (leadIds.isEmpty()) return;
+
+        List<Lead> leads = [SELECT Id, Email, OwnerId, Volunteer_Applicant_Email_Status__c, Volunteer_Internal_Email_Status__c
+            FROM Lead WHERE Id IN :leadIds AND Web_Form_Type__c = 'Volunteer Application'
+            AND LeadSource = 'Volunteer Application' AND IsConverted = false FOR UPDATE];
+        if (leads.isEmpty()) return;
+        List<Lead> initialAudits = new List<Lead>();
+        Set<Id> pendingLeadIds = new Set<Id>();
+        for (Lead lead : leads) {
+            if (newLeadIds.contains(lead.Id)) {
+                initialAudits.add(new Lead(Id = lead.Id, Volunteer_Applicant_Email_Status__c = 'Not Attempted',
+                    Volunteer_Internal_Email_Status__c = 'Not Attempted', Volunteer_Email_Error__c = null));
+                lead.Volunteer_Applicant_Email_Status__c = 'Not Attempted';
+                lead.Volunteer_Internal_Email_Status__c = 'Not Attempted';
+            }
+            if (lead.Volunteer_Applicant_Email_Status__c != ACCEPTED || lead.Volunteer_Internal_Email_Status__c != ACCEPTED) pendingLeadIds.add(lead.Id);
+        }
+        if (!initialAudits.isEmpty()) {
+            Database.update(initialAudits, true, AccessLevel.SYSTEM_MODE);
+            for (Lead initialAudit : initialAudits) initializedLeadIds.add(initialAudit.Id);
+        }
+        if (pendingLeadIds.isEmpty()) return;
+
+        Set<Id> userOwnerIds = new Set<Id>();
+        for (Lead lead : leads) {
+            if (lead.OwnerId != null && lead.OwnerId.getSObjectType() == User.SObjectType) userOwnerIds.add(lead.OwnerId);
+        }
+        Map<Id, User> usersById = userOwnerIds.isEmpty() ? new Map<Id, User>()
+            : new Map<Id, User>([SELECT Id, Email FROM User WHERE Id IN :userOwnerIds AND IsActive = true]);
+        Map<String, Id> templateIds = new Map<String, Id>();
+        Set<String> templateNames = new Set<String>{APPLICANT_TEMPLATE, INTERNAL_TEMPLATE};
+        for (EmailTemplate templateRecord : [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :templateNames]) {
+            templateIds.put(templateRecord.DeveloperName, templateRecord.Id);
+        }
+
+        Map<Id, Lead> audits = new Map<Id, Lead>();
+        Map<Id, List<String>> errors = new Map<Id, List<String>>();
+        List<Dispatch> dispatches = new List<Dispatch>();
+        for (Lead lead : leads) {
+            if (!pendingLeadIds.contains(lead.Id)) continue;
+            Lead audit = new Lead(Id = lead.Id,
+                Volunteer_Applicant_Email_Status__c = lead.Volunteer_Applicant_Email_Status__c == ACCEPTED ? ACCEPTED : 'Not Attempted',
+                Volunteer_Internal_Email_Status__c = lead.Volunteer_Internal_Email_Status__c == ACCEPTED ? ACCEPTED : 'Not Attempted');
+            audits.put(lead.Id, audit);
+
+            if (lead.Volunteer_Applicant_Email_Status__c != ACCEPTED) {
+                if (!isUsableEmail(lead.Email)) {
+                    fail(audit, true, errors, String.isBlank(lead.Email)
+                        ? 'Applicant acknowledgement was not sent because the email address is blank.'
+                        : 'Applicant acknowledgement was not sent because the email address is invalid.');
+                } else if (!templateIds.containsKey(APPLICANT_TEMPLATE)) {
+                    fail(audit, true, errors, 'Volunteer acknowledgement template was not found.');
+                } else if (!bypassEmailDelivery) {
+                    Messaging.SingleEmailMessage applicantMessage = new Messaging.SingleEmailMessage();
+                    applicantMessage.setTargetObjectId(lead.Id);
+                    applicantMessage.setTemplateId(templateIds.get(APPLICANT_TEMPLATE));
+                    applicantMessage.setSaveAsActivity(false);
+                    dispatches.add(new Dispatch(lead.Id, true, applicantMessage));
+                }
+            }
+
+            if (lead.Volunteer_Internal_Email_Status__c != ACCEPTED) {
+                User ownerUser = usersById.get(lead.OwnerId);
+                if (ownerUser == null || !isUsableEmail(ownerUser.Email)) {
+                    fail(audit, false, errors, 'Internal notification was not sent because the Lead owner has no available email address.');
+                } else if (!templateIds.containsKey(INTERNAL_TEMPLATE)) {
+                    fail(audit, false, errors, 'Internal volunteer notification template was not found.');
+                } else if (!bypassEmailDelivery) {
+                    Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
+                    message.setTargetObjectId(lead.Id);
+                    message.setTreatTargetObjectAsRecipient(false);
+                    message.setToAddresses(new List<String>{ownerUser.Email});
+                    message.setTemplateId(templateIds.get(INTERNAL_TEMPLATE));
+                    message.setSaveAsActivity(false);
+                    dispatches.add(new Dispatch(lead.Id, false, message));
+                }
+            }
+        }
+        dispatchAndRecord(dispatches, audits, errors);
+    }
+
+    private static void dispatchAndRecord(List<Dispatch> dispatches, Map<Id, Lead> audits, Map<Id, List<String>> errors) {
+        if (audits.isEmpty()) return;
+        Savepoint emailSavepoint = Database.setSavepoint();
+        try {
+            sendDispatches(dispatches, audits, errors);
+            writeAudits(audits, errors);
+        } catch (Exception exceptionValue) {
+            // An accepted send must never commit without its duplicate-prevention
+            // audit. Roll back this group's emails, then retain retryable failures.
+            Database.rollback(emailSavepoint);
+            for (Dispatch dispatch : dispatches) {
+                fail(audits.get(dispatch.leadId), dispatch.applicant, errors,
+                    'Email was not sent because its result could not be saved. ' + exceptionValue.getMessage());
+            }
+            writeAudits(audits, errors);
+        } finally {
+            Database.releaseSavepoint(emailSavepoint);
+        }
+    }
+
+    private static void sendDispatches(List<Dispatch> dispatches, Map<Id, Lead> audits, Map<Id, List<String>> errors) {
+        if (dispatches.isEmpty()) return;
+        if (Limits.getEmailInvocations() >= Limits.getLimitEmailInvocations()) {
+            for (Dispatch dispatch : dispatches) fail(audits.get(dispatch.leadId), dispatch.applicant, errors,
+                'Email was not sent because this transaction has no email requests remaining. Retry the failed message.');
+            return;
+        }
+        List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
+        for (Dispatch dispatch : dispatches) messages.add(dispatch.message);
+        try {
+            List<Messaging.SendEmailResult> results = emailSender.send(messages);
+            for (Integer index = 0; index < dispatches.size(); index++) {
+                Dispatch dispatch = dispatches[index];
+                Messaging.SendEmailResult result = results != null && index < results.size() ? results[index] : null;
+                if (result != null && result.isSuccess()) {
+                    setStatus(audits.get(dispatch.leadId), dispatch.applicant, ACCEPTED);
+                } else {
+                    fail(audits.get(dispatch.leadId), dispatch.applicant, errors,
+                        result == null || result.getErrors().isEmpty() ? 'Salesforce did not accept the email.' : result.getErrors()[0].getMessage());
+                }
+            }
+        } catch (Exception exceptionValue) {
+            for (Dispatch dispatch : dispatches) fail(audits.get(dispatch.leadId), dispatch.applicant, errors, exceptionValue.getMessage());
+        }
+    }
+
+    private static void writeAudits(Map<Id, Lead> audits, Map<Id, List<String>> errors) {
+        for (Id leadId : audits.keySet()) {
+            List<String> messages = errors.get(leadId);
+            audits.get(leadId).Volunteer_Email_Error__c = messages == null ? null : String.join(messages, '\n').left(32000);
+        }
+        if (Test.isRunningTest() && failNextAuditSave) {
+            failNextAuditSave = false;
+            throw new IntakeEmailException('The email result could not be saved.');
+        }
+        Database.update(audits.values(), true, AccessLevel.SYSTEM_MODE);
+    }
+
+    @TestVisible private static Boolean isUsableEmail(String email) {
+        return String.isNotBlank(email) && Pattern.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$', email);
+    }
+
+    private static void setStatus(Lead audit, Boolean applicant, String status) {
+        if (applicant) audit.Volunteer_Applicant_Email_Status__c = status;
+        else audit.Volunteer_Internal_Email_Status__c = status;
+    }
+
+    private static void fail(Lead audit, Boolean applicant, Map<Id, List<String>> errors, String message) {
+        setStatus(audit, applicant, 'Failed');
+        if (!errors.containsKey(audit.Id)) errors.put(audit.Id, new List<String>());
+        errors.get(audit.Id).add(String.isBlank(message) ? 'Unknown email error.' : message);
+    }
+}

@@ -1,0 +1,416 @@
+{
+  "run_id": "nte-stress-20260907",
+  "generated_utc": "2026-09-08T00:15:52.401236+00:00",
+  "status": "in_progress",
+  "scope": "Representative intake and four Completed preparation calculations only; not the full 140-case execution ledger or final-pack completion. Exact catalogue IDs are retained; APP-COMP-001 is an inbox alias for APP-EX-003.",
+  "cases": [
+    {
+      "case_id": "EOI-EX-001",
+      "channel": "browser_public_form",
+      "outcome": "submitted_and_invitation_received",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URKUaMAP",
+        "account": null,
+        "contact": null,
+        "opportunity": null,
+        "primary_contact_role": null,
+        "submission_lead": null,
+        "dispatches": []
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after.json",
+        "tmp/nte-stress-20260907/representative-intake-after-04.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/invitation-verification.json"
+      ],
+      "actual_created_at": "2026-09-07T23:10:22.000+0000",
+      "booking_reference": null,
+      "full_journey_complete": false,
+      "actual_invitation_message_id": "1a07e274531f40f9"
+    },
+    {
+      "case_id": "EOI-PS-001",
+      "channel": "browser_public_form",
+      "outcome": "submitted_and_invitation_received",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URPkDMAX",
+        "account": null,
+        "contact": null,
+        "opportunity": null,
+        "primary_contact_role": null,
+        "submission_lead": null,
+        "dispatches": []
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after.json",
+        "tmp/nte-stress-20260907/representative-intake-after-04.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/invitation-verification.json"
+      ],
+      "actual_created_at": "2026-09-07T23:08:50.000+0000",
+      "booking_reference": null,
+      "full_journey_complete": false,
+      "actual_invitation_message_id": "1a07e27452df0f8f"
+    },
+    {
+      "case_id": "APP-EX-001",
+      "channel": "browser_public_form",
+      "outcome": "completed_preparation_verified",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URRyvMAH",
+        "account": "001Ad0000193msAIAQ",
+        "contact": "003Ad000019n4GsIAI",
+        "opportunity": "006Ad00000UdfWoIAJ",
+        "primary_contact_role": "00KAd00000MHTPHMA5",
+        "submission_lead": null,
+        "dispatches": [
+          "a08Ad00000bv66mIAA",
+          "a08Ad00000bvCIVIA2",
+          "a08Ad00000bv3iKIAQ"
+        ]
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after-04.json",
+        "tmp/nte-stress-20260907/representative-converted-ids.json",
+        "tmp/nte-stress-20260907/root-representatives-final.json",
+        "tmp/nte-stress-20260907/root-representatives-final.apex",
+        "tmp/nte-stress-20260907/root-representatives-final.raw.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/final-phase-ledger.json"
+      ],
+      "actual_created_at": "2026-09-07T23:20:37.000+0000",
+      "booking_reference": "NTE-1788822910579-35U6ZJ84",
+      "full_journey_complete": false,
+      "conversion_channel": "native_ui",
+      "completion_verification_channel": "read_only_deployed_Apex_assertion",
+      "is_complete": true,
+      "final_pack_status": "pending_not_sent",
+      "actual_received_message_ids": [
+        "1a07e2c7679c6e48",
+        "1a07e2c78dabede8",
+        "1a07e41c4aabe63e",
+        "1a07e454f25b29aa",
+        "1a07e48207d3bde6",
+        "1a07e49f770a8bac",
+        "1a07e4b4737af5ef",
+        "1a07e531becde2fa"
+      ],
+      "inbox_ledger_case_id": "APP-EX-001"
+    },
+    {
+      "case_id": "APP-PS-001",
+      "channel": "browser_public_form",
+      "outcome": "completed_preparation_verified",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URSLVMA5",
+        "account": "001Ad0000193qkoIAA",
+        "contact": "003Ad000019nCcOIAU",
+        "opportunity": "006Ad00000UdkWUIAZ",
+        "primary_contact_role": "00KAd00000MHXeDMAX",
+        "submission_lead": null,
+        "dispatches": [
+          "a08Ad00000bvGIrIAM",
+          "a08Ad00000bvCIWIA2",
+          "a08Ad00000bv3iLIAQ",
+          "a08Ad00000bvCyTIAU"
+        ]
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after-04.json",
+        "tmp/nte-stress-20260907/representative-converted-ids.json",
+        "tmp/nte-stress-20260907/root-representatives-final.json",
+        "tmp/nte-stress-20260907/root-representatives-final.apex",
+        "tmp/nte-stress-20260907/root-representatives-final.raw.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/final-phase-ledger.json"
+      ],
+      "actual_created_at": "2026-09-07T23:21:46.000+0000",
+      "booking_reference": "NTE-1788823250468-2JEPYTTC",
+      "full_journey_complete": false,
+      "conversion_channel": "native_ui",
+      "completion_verification_channel": "read_only_deployed_Apex_assertion",
+      "is_complete": true,
+      "final_pack_status": "pending_not_sent",
+      "actual_received_message_ids": [
+        "1a07e2d8242e617d",
+        "1a07e2d83aeae55c",
+        "1a07e3c044a37e11",
+        "1a07e44e4ec449d7",
+        "1a07e4821218659a",
+        "1a07e49f74fae1ad",
+        "1a07e4c59bc589a2",
+        "1a07e4e5cd9ddece",
+        "1a07e4f39a641b99",
+        "1a07e55087ba6edd"
+      ],
+      "inbox_ledger_case_id": "APP-PS-001"
+    },
+    {
+      "case_id": "APP-EX-003",
+      "channel": "browser_public_form",
+      "outcome": "completed_preparation_verified",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URSerMAH",
+        "account": "001Ad0000194449IAA",
+        "contact": "003Ad000019nUQfIAM",
+        "opportunity": "006Ad00000UdoYLIAZ",
+        "primary_contact_role": "00KAd00000MHozpMAD",
+        "submission_lead": null,
+        "dispatches": [
+          "a08Ad00000bvCIXIA2",
+          "a08Ad00000bv3iMIAQ"
+        ]
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after-04.json",
+        "tmp/nte-stress-20260907/representative-converted-ids.json",
+        "tmp/nte-stress-20260907/root-representatives-final.json",
+        "tmp/nte-stress-20260907/root-representatives-final.apex",
+        "tmp/nte-stress-20260907/root-representatives-final.raw.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/final-phase-ledger.json"
+      ],
+      "actual_created_at": "2026-09-07T23:22:54.000+0000",
+      "booking_reference": "NTE-1788823353859-UTYWAC2X",
+      "full_journey_complete": false,
+      "conversion_channel": "native_ui",
+      "completion_verification_channel": "read_only_deployed_Apex_assertion",
+      "is_complete": true,
+      "final_pack_status": "pending_not_sent",
+      "actual_received_message_ids": [
+        "1a07e2e8e9cbb565",
+        "1a07e2e8ea3ac35a",
+        "1a07e3a974c7da0f",
+        "1a07e4821686069e",
+        "1a07e49f77dd807b",
+        "1a07e4d134ae5ca6"
+      ],
+      "inbox_ledger_case_id": "APP-COMP-001"
+    },
+    {
+      "case_id": "GUEST-001",
+      "channel": "browser_public_form",
+      "outcome": "submitted_verified",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URSmvMAH",
+        "account": null,
+        "contact": null,
+        "opportunity": null,
+        "primary_contact_role": null,
+        "submission_lead": null,
+        "dispatches": []
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after-04.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/intake-verification.json"
+      ],
+      "actual_created_at": "2026-09-07T23:23:09.000+0000",
+      "booking_reference": null,
+      "full_journey_complete": false,
+      "actual_received_message_ids": [
+        "1a07e2eca31e0ace",
+        "1a07e2ecd8f74de4"
+      ],
+      "scope": "Noncommercial intake only; no invented booking lifecycle."
+    },
+    {
+      "case_id": "VOL-002",
+      "channel": "browser_public_form",
+      "outcome": "submitted_verified",
+      "catalogue_member": true,
+      "record_ids": {
+        "lead": "00QAd00000URPXJMA5",
+        "account": null,
+        "contact": null,
+        "opportunity": null,
+        "primary_contact_role": null,
+        "submission_lead": null,
+        "dispatches": []
+      },
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-intake-after.json",
+        "tmp/nte-stress-20260907/email-quality/logo-fix/postfix-mail-verification.json",
+        "tmp/nte-stress-20260907/volunteer-postfix-native-tasks.json"
+      ],
+      "actual_created_at": "2026-09-07T23:08:02.000+0000",
+      "booking_reference": null,
+      "full_journey_complete": false,
+      "actual_received_message_ids": [
+        "1a07e20f3ae4af95"
+      ],
+      "native_email_task_count": 0,
+      "scope": "Fresh post-fix volunteer case; pre-fix Maya duplicate case excluded."
+    },
+    {
+      "case_id": "CNV-LIVE-001",
+      "channel": "browser_public_form",
+      "catalogue_member": false,
+      "outcome": "completed_preparation_verified",
+      "record_ids": {
+        "lead": "00QAd00000URTClMAP",
+        "account": "001Ad0000193s4kIAA",
+        "contact": "003Ad000019nIwAIAU",
+        "opportunity": "006Ad00000Ude5zIAB",
+        "primary_contact_role": "00KAd00000MHgpVMAT",
+        "submission_lead": null,
+        "dispatches": [
+          "a08Ad00000bvBG6IAM"
+        ]
+      },
+      "booking_reference": "NTE-1788824303908-EC562TQM",
+      "conversion_channel": "API_native_LeadConvert",
+      "finance_channel": "deployed_controller_via_Apex",
+      "finance_actions": [
+        "INVOICE_PROVIDED",
+        "PAYMENT_RECEIVED"
+      ],
+      "preparation_channel": "direct_HTTP_current_form_serializer",
+      "preparation_post_attempts": 2,
+      "completion_verification_channel": "read_only_deployed_Apex_assertion",
+      "is_complete": true,
+      "full_journey_complete": false,
+      "final_pack_status": "pending_not_sent",
+      "logo_scope": "Simulated provided confirmation; actual client upload pending.",
+      "actual_received_message_ids": [
+        "1a07e42d40be51af",
+        "1a07e51bd76e8b02",
+        "1a07e55ec4339bbf"
+      ],
+      "preserved_field_changes": {},
+      "identity_and_decoy_hashes_unchanged": true,
+      "limitations": [
+        "The initial conversion decoy had later DML but a tied LastModifiedDate; strictly newer timestamp not claimed.",
+        "Logo provided flag was simulated; actual client upload remains pending.",
+        "Completed verified with deployed backend calculation and active status, not a separate visual panel check."
+      ],
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/conversion-live-001/RESULT.md",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/RESULT.md",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/lifecycle-result.json",
+        "tmp/nte-stress-20260907/conversion-live-001/registry-fragment.lifecycle-complete.json",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/04-completed-captured/result.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/final-phase-ledger.json"
+      ]
+    },
+    {
+      "case_id": "CNV-LIVE-001-STAFF",
+      "channel": "direct_HTTP_current_form_serializer",
+      "catalogue_member": false,
+      "outcome": "recoverably_deleted",
+      "record_ids": {
+        "lead": "00QAd00000URXWUMA5",
+        "account": null,
+        "contact": null,
+        "opportunity": "006Ad00000Ude5zIAB",
+        "primary_contact_role": null,
+        "submission_lead": "00QAd00000URXWUMA5"
+      },
+      "post_attempts": 1,
+      "target_booking_case": "CNV-LIVE-001",
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/forms-live-state/ledger.json",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/05-submissions-captured/result.json",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/logo-guard-reconciled.json"
+      ]
+    },
+    {
+      "case_id": "CNV-LIVE-001-LOGO",
+      "channel": "direct_HTTP_current_form_serializer",
+      "catalogue_member": false,
+      "outcome": "updated",
+      "record_ids": {
+        "lead": "00QAd00000URXufMAH",
+        "account": null,
+        "contact": null,
+        "opportunity": "006Ad00000Ude5zIAB",
+        "primary_contact_role": null,
+        "submission_lead": "00QAd00000URXufMAH"
+      },
+      "post_attempts": 1,
+      "target_booking_case": "CNV-LIVE-001",
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/forms-live-state/ledger.json",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/05-submissions-captured/result.json",
+        "tmp/nte-stress-20260907/conversion-live-001/lifecycle-02/logo-guard-reconciled.json"
+      ]
+    }
+  ],
+  "method_counts_within_this_journal": {
+    "browser_intake_cases": 8,
+    "of_those_booking_application_cases": 4,
+    "root_representative_native_UI_conversions": 3,
+    "root_native_UI_cancel_check": 1,
+    "Fenmere_API_native_LeadConvert": 1,
+    "Fenmere_controller_finance_actions": 2,
+    "Fenmere_direct_HTTP_preparation_POSTs": 2,
+    "completed_preparation_bookings": 4,
+    "root_received_journey_messages": 24,
+    "Fenmere_received_lifecycle_messages": 3
+  },
+  "separate_intake_allocation_not_added_to_browser_count": {
+    "channel": "direct_HTTP",
+    "post_attempts": 74,
+    "correlated_leads": 73,
+    "proven_pre_lead_platform_rejections": 1,
+    "unknown_outcomes": 0,
+    "evidence_path": "tmp/nte-stress-20260907/bulk-harness/live-state-02/final-intake/cumulative-intake-summary.json"
+  },
+  "root_supplementary_checks": {
+    "Harbour_name_correction": {
+      "source_lead": "00QAd00000URXWTMA5",
+      "outcome": "Matched and Applied; recoverably deleted",
+      "accepted_topup_count": 1,
+      "accepted_topup_total": 50,
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-before-correction.json",
+        "tmp/nte-stress-20260907/representative-after-correction.json",
+        "tmp/nte-stress-20260907/representative-supplementary-harbour.json"
+      ]
+    },
+    "Harbour_repeat_increase": {
+      "source_lead": "00QAd00000URXcvMAH",
+      "outcome": "Failed and retained; booking quantity/total/payment preserved",
+      "actual_success_receipt_found": false,
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-after-rejected-increase.json",
+        "tmp/nte-stress-20260907/representative-supplementary-harbour.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/final-corrections-verification.json"
+      ]
+    },
+    "Cedarhaven_vehicle_replacement": {
+      "source_lead_header": "00QAd00000URRZ8",
+      "outcome": "Replacement values applied; old trailer, registrations, haulier staff and Sunday window removed",
+      "evidence_paths": [
+        "tmp/nte-stress-20260907/representative-preparation-after-01.json",
+        "tmp/nte-stress-20260907/root-representatives-final.json",
+        "tmp/nte-stress-20260907/email-quality/inbox-journeys/final-corrections-verification.json"
+      ]
+    }
+  },
+  "pending": [
+    "Wider bulk journey completion and final combined coverage ledger.",
+    "Fourth root native UI conversion APP-EX-017 was reported successful; authoritative backend record/approval evidence must be attached before counting it here.",
+    "Remaining native duplicate/no-Opportunity/existing-Opportunity qualification as allocated; policy P03 remains separate.",
+    "Remaining late-final-pack and post-pack top-up-history checks. Initial two Sent, immediate replay zero and original routing restoration are already verified.",
+    "Final nine-report reconciliation once finance is stable.",
+    "Final protected Anthrion/legacy preservation reconciliation.",
+    "Final source/generator/manifest reconciliation and full check-only validation.",
+    "Resume coordination is owned by root; read saved NTE_AUDIT_RESUME.md."
+  ],
+  "separate_safe_pause_checkpoint": {
+    "source": "NTE_AUDIT_RESUME.md",
+    "restore_deployment": "0AfAd00000SpJRtKAN",
+    "original_routing_restored": true,
+    "both_final_pack_urls_null": true,
+    "global_queued_final_packs": 0,
+    "initial_dispatches": [
+      "a08Ad00000bvGduIAE",
+      "a08Ad00000bvGdvIAE"
+    ],
+    "initial_dispatch_status": "Sent",
+    "immediate_replay_queued": 0,
+    "inbox_delivery_claim": false,
+    "evidence_path": "tmp/nte-stress-20260907/dispatch-final-pack-plan/restoration/evidence.json"
+  }
+}

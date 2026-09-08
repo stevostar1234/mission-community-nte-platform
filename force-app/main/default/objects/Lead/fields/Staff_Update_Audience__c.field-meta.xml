@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Staff_Update_Audience__c</fullName>
+    <label>Staff Update Audience</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Exhibitor</fullName>
+                <default>false</default>
+                <label>Exhibitor</label>
+            </value>
+            <value>
+                <fullName>Partner / sponsor</fullName>
+                <default>false</default>
+                <label>Partner / sponsor</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

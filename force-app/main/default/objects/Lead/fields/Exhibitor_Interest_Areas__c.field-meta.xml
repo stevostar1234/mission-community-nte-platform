@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exhibitor_Interest_Areas__c</fullName>
+    <label>Exhibitor Interest Areas</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>MultiselectPicklist</type>
+    <visibleLines>4</visibleLines>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Careers and recruitment</fullName>
+                <default>false</default>
+                <label>Careers and recruitment</label>
+            </value>
+            <value>
+                <fullName>Training and education</fullName>
+                <default>false</default>
+                <label>Training and education</label>
+            </value>
+            <value>
+                <fullName>Automotive and mobility</fullName>
+                <default>false</default>
+                <label>Automotive and mobility</label>
+            </value>
+            <value>
+                <fullName>Manufacturing and engineering</fullName>
+                <default>false</default>
+                <label>Manufacturing and engineering</label>
+            </value>
+            <value>
+                <fullName>Renewable and clean energy</fullName>
+                <default>false</default>
+                <label>Renewable and clean energy</label>
+            </value>
+            <value>
+                <fullName>Defence and security</fullName>
+                <default>false</default>
+                <label>Defence and security</label>
+            </value>
+            <value>
+                <fullName>Built environment and facilities</fullName>
+                <default>false</default>
+                <label>Built environment and facilities</label>
+            </value>
+            <value>
+                <fullName>Financial and professional services</fullName>
+                <default>false</default>
+                <label>Financial and professional services</label>
+            </value>
+            <value>
+                <fullName>Digital and technology</fullName>
+                <default>false</default>
+                <label>Digital and technology</label>
+            </value>
+            <value>
+                <fullName>Armed Forces charity or support</fullName>
+                <default>false</default>
+                <label>Armed Forces charity or support</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

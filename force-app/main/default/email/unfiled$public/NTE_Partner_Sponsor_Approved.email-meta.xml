@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE approved partner / sponsor confirmation</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE approved partner / sponsor confirmation</name>
+    <style>none</style>
+    <subject>Your NTE space is provisionally reserved</subject>
+    <textOnly>{NTE_EVENT_LABEL} · Partner / sponsor provisional reservation
+
+Your provisional space is reserved.
+
+{NTE_ORGANISATION} has been allocated partner / sponsor space at {NTE_EVENT_LABEL}.
+
+{!IF(ISBLANK(Contact.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Contact.FirstName}{!IF(ISBLANK(Contact.FirstName),&quot;&quot;,&quot;,&quot;)}
+
+We are delighted to provisionally reserve your partner / sponsor space at {NTE_EVENT_LABEL}. The NTE team will review your requirements and contact you if anything needs clarification.
+
+Your provisional allocation
+
+{NTE_PAYMENT_NOTE}
+
+Organisation and contact
+Organisation {NTE_ORGANISATION}
+Booking reference {!Opportunity.Booking_Reference__c}
+Primary contact {!Contact.FirstName} {!Contact.LastName}
+Email {!Contact.Email}
+Telephone {!Contact.Phone}
+{!IF(AND(ISBLANK(Opportunity.NTE_Event_Contact_Name__c),ISBLANK(Opportunity.NTE_Event_Contact_Email__c)),&quot;&quot;,&quot;Event contact &quot;)}{!Opportunity.NTE_Event_Contact_Name__c}{!IF(OR(ISBLANK(Opportunity.NTE_Event_Contact_Email__c),ISBLANK(Opportunity.NTE_Event_Contact_Name__c)),&quot;&quot;,&quot; · &quot;)}{!Opportunity.NTE_Event_Contact_Email__c}
+
+
+Package and arrangements
+Package(s) {!Opportunity.NTE_Sponsor_Package__c}
+Power {!Opportunity.NTE_Stand_Power__c}
+Equipment {!Opportunity.NTE_Stand_Equipment__c}
+Heavy vehicle follow-up {!Opportunity.NTE_Heavy_Vehicle_Required__c}
+Planned staff {!Opportunity.NTE_Total_Staff_Count__c}
+
+Allocation and charges
+
+{NTE_FINANCE_SUMMARY}
+Quotation and invoicing
+Payment method {!Opportunity.NTE_Payment_Method__c}
+Invoice required {!Opportunity.NTE_Invoice_Required__c}
+Legal organisation name {!Opportunity.NTE_Invoiced_Company__c}
+Trading name {!Opportunity.NTE_Trading_Name__c}
+Billing address {!Opportunity.NTE_Invoice_Address__c}
+{!IF(AND(ISBLANK(Opportunity.NTE_Invoiced_Person__c),ISBLANK(Opportunity.NTE_Invoiced_Email__c),ISBLANK(Opportunity.NTE_Invoice_Contact_Phone__c)),&quot;&quot;,&quot;Finance contact &quot;)}{!Opportunity.NTE_Invoiced_Person__c}{!IF(OR(ISBLANK(Opportunity.NTE_Invoiced_Email__c),ISBLANK(Opportunity.NTE_Invoiced_Person__c)),&quot;&quot;,&quot; · &quot;)}{!Opportunity.NTE_Invoiced_Email__c}{!IF(OR(ISBLANK(Opportunity.NTE_Invoice_Contact_Phone__c),AND(ISBLANK(Opportunity.NTE_Invoiced_Person__c),ISBLANK(Opportunity.NTE_Invoiced_Email__c))),&quot;&quot;,&quot; · &quot;)}{!Opportunity.NTE_Invoice_Contact_Phone__c}
+Quotation required {!Opportunity.NTE_Quote_Required_for_PO__c}
+PO or reference required {!Opportunity.NTE_Purchase_Order__c} {!Opportunity.NTE_Purchase_Order_Number__c}
+Additional invoice information {!Opportunity.NTE_Invoice_Additional_Information__c}
+Supplier agreement {!Opportunity.NTE_Supplier_Agreement_Required__c}
+
+Your agreement
+
+Your partnership / sponsorship agreement will be sent to you shortly for signing, along with a quotation or invoice as requested.
+
+Staff details and event preparation
+
+When your final attendee list is ready, submit the names using the partner / sponsor staff form.
+
+Please upload your latest company logo for {NTE_EVENT_LABEL} marketing and event materials. We request the latest artwork from every participating organisation, as branding may have changed.
+
+{NTE_PREPARATION_LINKS}
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{NTE_EVENT_LABEL} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

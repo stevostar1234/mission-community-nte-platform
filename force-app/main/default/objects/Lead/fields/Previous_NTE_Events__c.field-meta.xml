@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Previous_NTE_Events__c</fullName>
+    <description>Captured by the NTE27 exhibitor Web-to-Lead form.</description>
+    <label>Previous NTE Events</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>No</fullName>
+                <default>false</default>
+                <label>No</label>
+            </value>
+            <value>
+                <fullName>NTE2024</fullName>
+                <default>false</default>
+                <label>NTE24</label>
+            </value>
+            <value>
+                <fullName>NTE2025</fullName>
+                <default>false</default>
+                <label>NTE25</label>
+            </value>
+            <value>
+                <fullName>NTE2026</fullName>
+                <default>false</default>
+                <label>NTE26</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

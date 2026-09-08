@@ -1,0 +1,10 @@
+{
+  "name": "mission-community-nte-salesforce",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-metadata.js",
+    "test": "node tests/forms.test.js",
+    "validate": "npm run build && npm test"
+  }
+}

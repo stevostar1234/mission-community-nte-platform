@@ -1,0 +1,103 @@
+{
+  "status": "no_unresolved_scanned_metadata_dependencies",
+  "inherited_fields": {
+    "expected": 46,
+    "present_in_source_and_manifest": 46
+  },
+  "package_custom_fields": 306,
+  "custom_fields_by_object": {
+    "Account": 5,
+    "Contact": 6,
+    "Lead": 139,
+    "NTE_Email_Dispatch__c": 15,
+    "NTE_Routing_Config__mdt": 10,
+    "Opportunity": 131
+  },
+  "tooling_graph": {
+    "total_edges": 1619,
+    "exact_package_edges": 974,
+    "indexed_source_types": [
+      "ApexClass",
+      "CustomField",
+      "CustomTab",
+      "EmailTemplate",
+      "Layout"
+    ],
+    "platform_entities": [
+      "Account",
+      "AggregateResult",
+      "Contact",
+      "EmailTemplate",
+      "Group",
+      "Lead",
+      "LeadStatus",
+      "Name",
+      "Opportunity",
+      "OpportunityContactRole",
+      "OpportunityStage",
+      "PermissionSet",
+      "PermissionSetAssignment",
+      "Profile",
+      "QueueSobject",
+      "RecordType",
+      "Report",
+      "Task",
+      "TaskStatus",
+      "User"
+    ]
+  },
+  "missing_manifest_or_schema": [],
+  "external_graph_references": [],
+  "unpackaged_referenced_snapshot_fields": [],
+  "global_value_sets_referenced": [],
+  "sales_process_values": [
+    "Qualification",
+    "Needs Analysis",
+    "Proposal",
+    "Negotiation",
+    "Closed Won",
+    "Closed Lost"
+  ],
+  "required_standard_matching_rule": "Contact.Standard_Contact_Match_Rule_v1_1",
+  "matching_rule_observations": [
+    {
+      "DeveloperName": "Standard_PersonAccount_Match_Rule_v1_0",
+      "SobjectType": "Account",
+      "RuleStatus": "Inactive"
+    },
+    {
+      "DeveloperName": "Standard_Contact_Match_Rule_v1_1",
+      "SobjectType": "Contact",
+      "RuleStatus": "Active"
+    },
+    {
+      "DeveloperName": "Standard_Lead_Match_Rule_v1_0",
+      "SobjectType": "Lead",
+      "RuleStatus": "Active"
+    },
+    {
+      "DeveloperName": "Standard_Account_Match_Rule_v1_0",
+      "SobjectType": "Account",
+      "RuleStatus": "Active"
+    }
+  ],
+  "unmanaged_triggers_observed": 0,
+  "active_flows_outside_package": [
+    "customer_satisfaction",
+    "net_promoter_score"
+  ],
+  "evidence_sha256": {
+    "custom-field-identities.json": "5045af97cca07e0b48c34558581774f577648f497ea0b68dc65fdb28dad5e791",
+    "custom-object-identities.json": "6432ececad6692d135dc4adbdf6c039cb1cd2e48ab67ccc7093e8a9b7ad03a79",
+    "flow-inventory.json": "9946262a1a10e781e3bf2977c2e3369336638a0b49553359dee79bb524a6560e",
+    "matching-rule-inventory.json": "f4a33e3816360918f25b1cf0a489954bb40c68db9b48521e0434392b24eb8eac",
+    "trigger-inventory.json": "916401b59ceede17cc4da8a74bf60c4ac0fe747c3d4e0db36a7b4250a772d647",
+    "component-dependencies.json": "d98c6c3570a86cbf926569b1bb32dfafdf3dc4005858161a2465e56e2a0151d2"
+  },
+  "limitations": [
+    "Source and MMUAT snapshot only; production has not been inspected.",
+    "The Tooling graph is partial and does not cover every Flow, LWC, dynamic reference or org setting.",
+    "Shared picklists, duplicate/matching rules, routing, permissions and sender settings need target-specific preflight.",
+    "A successful existing sandbox is not proof of installation in a clean or production org."
+  ]
+}

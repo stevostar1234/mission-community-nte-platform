@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Individual NTE invitation, reminder, booking-confirmation and final-pack email requests and outcomes.</description>
+    <enableActivities>false</enableActivities>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <label>NTE Email Dispatch</label>
+    <nameField><displayFormat>NTE-EMAIL-{000000}</displayFormat><label>Dispatch Number</label><type>AutoNumber</type></nameField>
+    <pluralLabel>NTE Email Dispatches</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

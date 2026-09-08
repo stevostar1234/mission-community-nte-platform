@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE expression of interest acknowledgement</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE expression of interest acknowledgement</name>
+    <style>none</style>
+    <subject>NTE expression of interest received</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Expression of interest received
+
+Thank you for expressing interest.
+
+We have received your interest in partnering with or sponsoring the National Transition Event.
+
+{!IF(ISBLANK(Lead.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Lead.FirstName}{!IF(ISBLANK(Lead.FirstName),&quot;&quot;,&quot;,&quot;)}
+
+Thank you for telling us how {!Lead.Company} would like to be involved with {!Lead.NTE_Event_Code__c}. A member of the Mission Community team will review your interests and contact you to explore the most suitable opportunities.
+
+What happens next
+
+This acknowledgement confirms receipt of your expression of interest. It is not a commercial agreement or confirmation of a package.
+
+Your expression of interest
+
+Please keep this email for your records.
+
+Contact details
+
+Organisation {!Lead.Company}
+Contact {!Lead.FirstName} {!Lead.LastName}
+Job title {!Lead.Title}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+Website {!Lead.Website}
+
+Partnership interests
+
+Interested in {!Lead.Partner_Interest_Type__c}
+Areas of interest {!Lead.Partner_Interest_Areas__c}
+Additional comments regarding desired sponsorship or partnership {!Lead.Partnership_Interest_Detail__c}
+Preferred contact {!Lead.Preferred_Contact_Method__c}
+Best time to contact {!Lead.Preferred_Contact_Time__c}
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

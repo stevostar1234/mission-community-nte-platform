@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Internal NTE exhibitor application notification</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Internal NTE exhibitor application notification</name>
+    <style>none</style>
+    <subject>New NTE exhibitor application</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+
+New exhibitor application.
+
+{!Lead.Company} has applied for exhibition space at {!Lead.NTE_Event_Code__c}.
+
+Hello NTE team,
+
+A new exhibitor application is ready for review. The key operational and commercial information is summarised below.
+
+Next steps
+
+• Check organisation eligibility and space availability.
+
+• Review power, equipment, accessibility and heavy-vehicle requirements.
+
+• Confirm pricing, quotation, purchase-order and supplier requirements.
+
+• Record the decision before sending the appropriate approval or decline email.
+
+Submission summary
+
+Organisation and contact
+
+Organisation {!Lead.Company}
+Alternative name {!Lead.Alternative_Organisation_Name__c}
+Category {!Lead.Exhibitor_Organisation_Category__c}
+Contact {!Lead.FirstName} {!Lead.LastName}
+Job title {!Lead.Title}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+{!IF(AND(ISBLANK(Lead.Secondary_Contact_Name__c),ISBLANK(Lead.Secondary_Contact_Email__c)),&quot;&quot;,&quot;Second contact &quot;)}{!Lead.Secondary_Contact_Name__c}{!IF(OR(ISBLANK(Lead.Secondary_Contact_Email__c),ISBLANK(Lead.Secondary_Contact_Name__c)),&quot;&quot;,&quot; - &quot;)}{!Lead.Secondary_Contact_Email__c}
+
+
+Attendance and space
+
+Previous NTE events {!Lead.Previous_NTE_Events__c}
+Requested space {!Lead.Exhibitor_Space_Selections__c}
+Planned attendees {!Lead.Total_Staff_Count__c}
+Included staff places {!Lead.Included_Staff_Count__c}
+Chargeable additional staff {!Lead.Additional_Staff_Count__c} at {!Lead.Additional_Staff_Unit_Price__c} each
+
+Operations
+
+Power {!Lead.Stand_Power__c} - {!Lead.Power_Socket_Count__c} socket(s)
+Equipment {!Lead.Stand_Equipment__c}
+Heavy vehicle follow-up {!Lead.Heavy_Vehicle_Required__c}
+Accessibility {!Lead.Has_Special_Requirements__c} - {!Lead.Stand_Special_Requirements__c}
+Sunday setup {!Lead.Exhibitor_Hall_Schedule__c}
+
+Commercial
+
+Payment method {!Lead.Payment_Method__c}
+
+Invoice required {!Lead.Invoice_Required__c}
+Legal organisation name {!Lead.Invoiced_Company__c}
+Trading name {!Lead.Trading_Name__c}
+Billing address {!Lead.Invoice_Address__c}
+{!IF(AND(ISBLANK(Lead.Invoiced_Person__c),ISBLANK(Lead.Invoiced_Email__c),ISBLANK(Lead.Invoice_Contact_Phone__c)),&quot;&quot;,&quot;Finance contact &quot;)}{!Lead.Invoiced_Person__c}{!IF(OR(ISBLANK(Lead.Invoiced_Email__c),ISBLANK(Lead.Invoiced_Person__c)),&quot;&quot;,&quot; · &quot;)}{!Lead.Invoiced_Email__c}{!IF(OR(ISBLANK(Lead.Invoice_Contact_Phone__c),AND(ISBLANK(Lead.Invoiced_Person__c),ISBLANK(Lead.Invoiced_Email__c))),&quot;&quot;,&quot; · &quot;)}{!Lead.Invoice_Contact_Phone__c}
+Quotation required {!Lead.Quote_Required_for_PO__c}
+PO or reference required {!Lead.Purchase_Order__c} {!Lead.Purchase_Order_Number__c}
+Additional invoice information {!Lead.Invoice_Additional_Information__c}
+Supplier agreement {!Lead.Supplier_Agreement_Required__c}
+
+CRM
+
+Salesforce reference {!Lead.Id}
+Submission type {!Lead.Web_Form_Type__c}
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

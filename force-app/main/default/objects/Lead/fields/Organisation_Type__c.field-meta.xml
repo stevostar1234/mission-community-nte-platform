@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Organisation_Type__c</fullName>
+    <label>Organisation Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Charity - COBSEO member</fullName>
+                <default>false</default>
+                <label>Charity - COBSEO member</label>
+            </value>
+            <value>
+                <fullName>Charity - Non COBSEO member</fullName>
+                <default>false</default>
+                <label>Charity - Non COBSEO member</label>
+            </value>
+            <value>
+                <fullName>Government Department or Agency</fullName>
+                <default>false</default>
+                <label>Government Department or Agency</label>
+            </value>
+            <value>
+                <fullName>Industry Body / Trade Association</fullName>
+                <default>false</default>
+                <label>Industry Body / Trade Association</label>
+            </value>
+            <value>
+                <fullName>Employer - Automotive</fullName>
+                <default>false</default>
+                <label>Employer - Automotive</label>
+            </value>
+            <value>
+                <fullName>Employer - Clean Energy</fullName>
+                <default>false</default>
+                <label>Employer - Clean Energy</label>
+            </value>
+            <value>
+                <fullName>Employer - Blue Light Services / NHS</fullName>
+                <default>false</default>
+                <label>Employer - Blue Light Services / NHS</label>
+            </value>
+            <value>
+                <fullName>Employer - Built Environment</fullName>
+                <default>false</default>
+                <label>Employer - Built Environment</label>
+            </value>
+            <value>
+                <fullName>Employer - Manufacturing</fullName>
+                <default>false</default>
+                <label>Employer - Manufacturing</label>
+            </value>
+            <value>
+                <fullName>Employer - Defence and Security</fullName>
+                <default>false</default>
+                <label>Employer - Defence and Security</label>
+            </value>
+            <value>
+                <fullName>Employer - Financial and Professional Services</fullName>
+                <default>false</default>
+                <label>Employer - Financial and Professional Services</label>
+            </value>
+            <value>
+                <fullName>Employer - Digital and Technologies</fullName>
+                <default>false</default>
+                <label>Employer - Digital and Technologies</label>
+            </value>
+            <value>
+                <fullName>Employer - Training and Education</fullName>
+                <default>false</default>
+                <label>Employer - Training and Education</label>
+            </value>
+            <value>
+                <fullName>Employer - Land-based</fullName>
+                <default>false</default>
+                <label>Employer - Land-based</label>
+            </value>
+            <value>
+                <fullName>Employer - Other sector</fullName>
+                <default>false</default>
+                <label>Employer - Other sector</label>
+            </value>
+            <value>
+                <fullName>Commercial business</fullName>
+                <default>false</default>
+                <label>Commercial business</label>
+            </value>
+            <value>
+                <fullName>Charity or non-profit</fullName>
+                <default>false</default>
+                <label>Charity or non-profit</label>
+            </value>
+            <value>
+                <fullName>Government or public body</fullName>
+                <default>false</default>
+                <label>Government or public body</label>
+            </value>
+            <value>
+                <fullName>Industry body or trade association</fullName>
+                <default>false</default>
+                <label>Industry body or trade association</label>
+            </value>
+            <value>
+                <fullName>Education or training provider</fullName>
+                <default>false</default>
+                <label>Education or training provider</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

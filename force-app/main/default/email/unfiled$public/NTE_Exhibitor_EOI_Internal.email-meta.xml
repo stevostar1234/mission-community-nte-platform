@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Internal NTE exhibitor expression of interest notification</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Internal NTE exhibitor expression of interest notification</name>
+    <style>none</style>
+    <subject>New NTE exhibitor expression of interest</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+
+New exhibitor interest.
+
+{!Lead.Company} would like to exhibit at {!Lead.NTE_Event_Code__c}.
+
+Hello NTE team,
+
+Review the organisation’s fit and contact {!Lead.FirstName} {!Lead.LastName} using the preference below.
+
+Expression of interest
+Organisation {!Lead.Company}
+Organisation type {!Lead.Organisation_Type__c}
+Contact {!Lead.FirstName} {!Lead.LastName}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+Interested in sponsorship opportunities {!Lead.Exhibitor_Interest_Detail__c}
+Value-adding activities {!Lead.Exhibitor_Community_Contribution__c}
+Preferred contact {!Lead.Preferred_Contact_Method__c}
+Best time to contact {!Lead.Preferred_Contact_Time__c}
+Salesforce reference {!Lead.Id}
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

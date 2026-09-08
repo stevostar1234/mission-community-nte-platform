@@ -1,0 +1,46 @@
+# Mission Community NTE forms and Salesforce package
+
+This repository contains the Salesforce source, forms, tests and release documentation for National Transition Event submissions in Mission Community.
+
+The current release approach and Stripe account-transition steps are in [the production deployment plan](NTE_PRODUCTION_DEPLOYMENT_PLAN_2026-09-08.md). The [8 September dependency audit](audit/NTE_PACKAGE_DEPENDENCY_REVIEW_2026-09-08.md) extends the earlier field-only inventory, and [code metrics](audit/NTE_CODE_METRICS_2026-09-08.json) separate application code, tests, metadata and generated examples. Stripe Payment Links with manual payment confirmation is selected; the integration is still planned.
+
+For the current business requirements, read [NTE_DESIRED_WORKFLOW.md](NTE_DESIRED_WORKFLOW.md). Proposed implementation changes and their approval status are recorded in [NTE_CHANGE_PROPOSALS.md](NTE_CHANGE_PROPOSALS.md). These distinguish the intended workflow from behaviour already implemented in the package.
+
+The sole published and maintained form source is the client-facing repository at `https://github.com/stevostar1234/nte27-web-to-lead-demo`, currently published at `https://stevostar1234.github.io/nte27-web-to-lead-demo/`. This Salesforce package does not publish or expose a separate forms site.
+
+The current visible copy and pricing catalogue are for NTE27. Form identities, booking references and the core Salesforce automation are edition-neutral; visible dates, prices and the versioned server-side pricing catalogue must be reviewed for every edition.
+
+## Included journeys
+
+- Partner / sponsor expression of interest
+- Exhibitor expression of interest
+- Partner / sponsor application
+- Exhibitor application
+- Guest registration
+- Direct-link staff details update
+- Direct-link heavy vehicle and logistics update
+- Secure logo-upload handoff page
+
+## Repository layout
+
+- Root HTML and `assets/`: local validation fixtures retained for package compatibility; do not publish these as a separate forms site
+- `force-app/`: Salesforce DX source (fields, Opportunity model, email templates, flows, Apex services, list views and permission set)
+- `email-templates/source/`: editable email HTML sources
+- `scripts/build-metadata.js`: reproducible Salesforce metadata and email-template build
+- `config/salesforce-standard-values.json`: required NTE sales-stage definitions
+- `scripts/prepare-shared-picklists.py`: local production overlay that preserves target picklist values/defaults
+- `scripts/audit-package-dependencies.py`: current offline dependency audit using retrieved metadata and exact Tooling identities
+- `tests/`: browser-side form tests
+- `audit/ux-2026-08-17/`: release-review screenshots
+- `PRODUCTION_READINESS_REVIEW_2026-08-17.md`: production risks and recommended controls
+
+## Local validation
+
+```sh
+npm run validate
+python3 tests/shared-picklists.test.py
+```
+
+Credentials, authentication caches, temporary snapshots and raw business-record exports are excluded from Git. Historical audit links into `tmp/` refer to the retained local evidence workspace. The repository contains the current implementation and internal handoff documents; it does not activate production or publish another forms site.
+
+See [NTE_MANAGEMENT_APP.md](NTE_MANAGEMENT_APP.md) for the daily Salesforce workspace, access model and app-specific record pages. See [SALESFORCE_DEPLOYMENT.md](SALESFORCE_DEPLOYMENT.md) for architecture, deployment and lifecycle checks, and [PRODUCTION_PACKAGE_SYNC.md](PRODUCTION_PACKAGE_SYNC.md) for the mandatory paired source/MMUAT release process. The inherited field inventory is retained in [pre-production-dependancies.md](pre-production-dependancies.md). Review [PRODUCTION_READINESS_REVIEW_2026-08-17.md](PRODUCTION_READINESS_REVIEW_2026-08-17.md) before production and [FUTURE_NTE_MAINTENANCE.md](FUTURE_NTE_MAINTENANCE.md) before preparing another NTE edition.

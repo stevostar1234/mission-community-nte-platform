@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Pricing_Ready__c</fullName>
+    <description>Whether the saved booking price can be used for finance and readiness.</description>
+    <formula>AND(NOT(ISBLANK(NTE_Listed_Price_Total__c)), NTE_Listed_Price_Total__c &gt;= 0, OR(ISPICKVAL(NTE_Pricing_Status__c, &quot;Calculated&quot;), AND(ISBLANK(TEXT(NTE_Pricing_Status__c)), NTE_Listed_Price_Total__c &gt; 0)))</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>NTE Pricing Ready</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

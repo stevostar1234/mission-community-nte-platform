@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>NTE_Opportunities_Internal_Edit</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>NTE Opportunities - Internal Edit Access</label>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+        <criteriaItems>
+            <field>RecordTypeId</field>
+            <operation>equals</operation>
+            <value>NTE Event Opportunity</value>
+        </criteriaItems>
+    </sharingCriteriaRules>
+</SharingRules>

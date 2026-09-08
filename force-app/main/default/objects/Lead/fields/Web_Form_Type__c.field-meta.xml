@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Web_Form_Type__c</fullName>
+    <description>Identifies the public form that created the Lead. Stable across NTE editions.</description>
+    <label>Web Form Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Partner Sponsor Application Form</fullName>
+                <default>false</default>
+                <label>Partner Sponsor Application Form</label>
+            </value>
+            <value>
+                <fullName>Partner Sponsor Exhibition Space Questions</fullName>
+                <default>false</default>
+                <label>Partner Sponsor Exhibition Space Questions</label>
+            </value>
+            <value>
+                <fullName>Partner / Sponsor Expression of Interest</fullName>
+                <default>false</default>
+                <label>Partner / Sponsor Expression of Interest</label>
+            </value>
+            <value>
+                <fullName>Exhibitor Expression of Interest</fullName>
+                <default>false</default>
+                <label>Exhibitor Expression of Interest</label>
+            </value>
+            <value>
+                <fullName>Partner / Sponsor Application</fullName>
+                <default>false</default>
+                <label>Partner / Sponsor Application</label>
+            </value>
+            <value>
+                <fullName>Exhibitor Application</fullName>
+                <default>false</default>
+                <label>Exhibitor Application</label>
+            </value>
+            <value>
+                <fullName>Guest Registration</fullName>
+                <default>false</default>
+                <label>Guest Registration</label>
+            </value>
+            <value>
+                <fullName>Staff Details Update</fullName>
+                <default>false</default>
+                <label>Staff Details Update</label>
+            </value>
+            <value>
+                <fullName>Partner / Sponsor Staff Update</fullName>
+                <default>false</default>
+                <label>Partner / Sponsor Staff Update</label>
+            </value>
+            <value>
+                <fullName>Exhibitor Staff Update</fullName>
+                <default>false</default>
+                <label>Exhibitor Staff Update</label>
+            </value>
+            <value>
+                <fullName>Heavy Vehicle Details</fullName>
+                <default>false</default>
+                <label>Heavy Vehicle Details</label>
+            </value>
+            <value>
+                <fullName>Logo Update</fullName>
+                <default>false</default>
+                <label>Logo Update</label>
+            </value>
+            <value>
+                <fullName>Volunteer Application</fullName>
+                <default>false</default>
+                <label>Volunteer Application</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

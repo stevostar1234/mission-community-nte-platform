@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-08",
+  "scope": "Stripe planning; both manual and automatic payment-confirmation routes remain unselected",
+  "live_check": {
+    "system": "Salesforce",
+    "target_alias": "mission-mmuat",
+    "read_only": true,
+    "query": "SELECT OrganizationType, IsSandbox, InstanceName FROM Organization",
+    "result": {
+      "OrganizationType": "Enterprise Edition",
+      "IsSandbox": true,
+      "InstanceName": "GBR2S"
+    },
+    "query_api_version": "68.0",
+    "source_api_version": "67.0",
+    "initial_restricted_attempt": "CLI could not access stored authorisation; the identical read-only query succeeded with scoped keychain/network access"
+  },
+  "not_verified": [
+    "Client Stripe account, charges capability, payout bank or credentials",
+    "Future Salesforce integration user, licence/object permissions and External Client App",
+    "Target production configuration and quota headroom",
+    "Actual Stripe API callout, payment request, charge or webhook processing",
+    "End-to-end test-mode integration or merged Stripe payment email"
+  ],
+  "mutations": {
+    "salesforce_records": 0,
+    "stripe_requests": 0,
+    "email_sends": 0,
+    "deployments": 0,
+    "website_publications": 0
+  },
+  "plan": "../NTE_STRIPE_IMPLEMENTATION_PLAN_2026-09-08.md"
+}

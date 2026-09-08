@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE vehicle and logistics acknowledgement</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE vehicle and logistics acknowledgement</name>
+    <style>none</style>
+    <subject>NTE vehicle and logistics details received</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Logistics details received
+
+Your logistics details are with us.
+
+The NTE operations team will review your delivery and collection information.
+
+Hello,
+
+We have received updated vehicle, equipment and haulier details for {!Lead.Company}. We will use this information to plan safe paddock access and will contact you if anything needs clarification.
+
+What happens next
+
+Submitting these details does not itself approve a delivery slot. The NTE operations team will confirm final access arrangements separately.
+
+Logistics summary
+
+Booking
+
+Organisation {!Lead.Company}
+Booking reference {!Lead.Target_Booking_Reference__c}
+Contact {!Lead.FirstName} {!Lead.LastName}
+Delivery window {!Lead.Delivery_Window__c}
+
+Equipment
+
+Item 1 {!Lead.Heavy_Item_1_Description__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_1_Registration__c),ISBLANK(Lead.Heavy_Item_1_Description__c)),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_1_Registration__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_1_Dimensions__c),AND(ISBLANK(Lead.Heavy_Item_1_Description__c),ISBLANK(Lead.Heavy_Item_1_Registration__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_1_Dimensions__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_1_Gross_Weight__c),AND(ISBLANK(Lead.Heavy_Item_1_Description__c),ISBLANK(Lead.Heavy_Item_1_Registration__c),ISBLANK(Lead.Heavy_Item_1_Dimensions__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_1_Gross_Weight__c}
+{!IF(AND(ISBLANK(Lead.Heavy_Item_2_Description__c),ISBLANK(Lead.Heavy_Item_2_Registration__c),ISBLANK(Lead.Heavy_Item_2_Dimensions__c),ISBLANK(Lead.Heavy_Item_2_Gross_Weight__c)),&quot;&quot;,&quot;Item 2 &quot;)}{!Lead.Heavy_Item_2_Description__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_2_Registration__c),ISBLANK(Lead.Heavy_Item_2_Description__c)),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_2_Registration__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_2_Dimensions__c),AND(ISBLANK(Lead.Heavy_Item_2_Description__c),ISBLANK(Lead.Heavy_Item_2_Registration__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_2_Dimensions__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_2_Gross_Weight__c),AND(ISBLANK(Lead.Heavy_Item_2_Description__c),ISBLANK(Lead.Heavy_Item_2_Registration__c),ISBLANK(Lead.Heavy_Item_2_Dimensions__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_2_Gross_Weight__c}
+{!IF(AND(ISBLANK(Lead.Heavy_Item_3_Description__c),ISBLANK(Lead.Heavy_Item_3_Registration__c),ISBLANK(Lead.Heavy_Item_3_Dimensions__c),ISBLANK(Lead.Heavy_Item_3_Gross_Weight__c)),&quot;&quot;,&quot;Item 3 &quot;)}{!Lead.Heavy_Item_3_Description__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_3_Registration__c),ISBLANK(Lead.Heavy_Item_3_Description__c)),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_3_Registration__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_3_Dimensions__c),AND(ISBLANK(Lead.Heavy_Item_3_Description__c),ISBLANK(Lead.Heavy_Item_3_Registration__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_3_Dimensions__c}{!IF(OR(ISBLANK(Lead.Heavy_Item_3_Gross_Weight__c),AND(ISBLANK(Lead.Heavy_Item_3_Description__c),ISBLANK(Lead.Heavy_Item_3_Registration__c),ISBLANK(Lead.Heavy_Item_3_Dimensions__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Heavy_Item_3_Gross_Weight__c}
+
+
+Haulier
+
+{!IF(ISBLANK(Lead.Haulier_Name__c),&quot;&quot;,&quot;Haulier &quot;)}{!Lead.Haulier_Name__c}
+{!IF(AND(ISBLANK(Lead.Haulier_Vehicle_Type__c),ISBLANK(Lead.Haulier_Vehicle_Dimensions__c),ISBLANK(Lead.Haulier_Vehicle_Gross_Weight__c)),&quot;&quot;,&quot;Vehicle &quot;)}{!Lead.Haulier_Vehicle_Type__c}{!IF(OR(ISBLANK(Lead.Haulier_Vehicle_Dimensions__c),ISBLANK(Lead.Haulier_Vehicle_Type__c)),&quot;&quot;,&quot; - &quot;)}{!Lead.Haulier_Vehicle_Dimensions__c}{!IF(OR(ISBLANK(Lead.Haulier_Vehicle_Gross_Weight__c),AND(ISBLANK(Lead.Haulier_Vehicle_Type__c),ISBLANK(Lead.Haulier_Vehicle_Dimensions__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Haulier_Vehicle_Gross_Weight__c}
+{!IF(ISBLANK(Lead.Haulier_Vehicle_Registration__c),&quot;&quot;,&quot;Registration &quot;)}{!Lead.Haulier_Vehicle_Registration__c}
+{!IF(ISBLANK(Lead.Haulier_Staff__c),&quot;&quot;,&quot;Driver or staff &quot;)}{!Lead.Haulier_Staff__c}
+
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

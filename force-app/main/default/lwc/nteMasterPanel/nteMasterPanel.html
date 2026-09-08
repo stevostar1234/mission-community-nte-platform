@@ -1,0 +1,738 @@
+<template>
+    <section class="master-panel" aria-busy={isLoading}>
+        <header class="brand-header">
+            <div class="brand-lockup">
+                <img src={logoUrl} alt="Mission Community NTE" class="brand-logo" />
+                <div>
+                    <p class="eyebrow">NTE Management</p>
+                    <h1>Master Panel</h1>
+                </div>
+            </div>
+            <div class="header-actions">
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    variant="bare"
+                    alternative-text="Refresh Master Panel"
+                    title="Refresh"
+                    onclick={handleRefresh}
+                    disabled={panelControlsDisabled}
+                ></lightning-button-icon>
+            </div>
+        </header>
+
+        <div class="filter-bar" aria-label="Master Panel filters">
+            <lightning-combobox
+                name="eventCode"
+                label="Event code"
+                value={eventCode}
+                options={eventOptions}
+                onchange={handleEventChange}
+                variant="label-stacked"
+                disabled={panelControlsDisabled}
+            ></lightning-combobox>
+            <lightning-combobox
+                name="timeRange"
+                label="Time"
+                value={timeRange}
+                options={timeOptions}
+                onchange={handleTimeChange}
+                variant="label-stacked"
+                disabled={panelControlsDisabled}
+            ></lightning-combobox>
+            <lightning-combobox
+                name="owner"
+                label="Owner"
+                value={ownerId}
+                options={ownerOptions}
+                onchange={handleOwnerChange}
+                variant="label-stacked"
+                disabled={panelControlsDisabled}
+            ></lightning-combobox>
+        </div>
+
+        <main class="content-shell">
+            <section class="pipeline-section" aria-label="Event pipeline">
+                <div class="slds-path pipeline-path">
+                    <div class="slds-grid slds-path__track pipeline-path-track">
+                        <div class="slds-grid slds-path__scroller-container pipeline-path-scroll">
+                            <div class="slds-path__scroller">
+                                <div class="slds-path__scroller_inner">
+                                    <ul class="slds-path__nav pipeline-path-nav" aria-label="Event stages">
+                                        <template for:each={pipeline} for:item="step">
+                                            <li key={step.key} class={step.pathClass} role="presentation">
+                                                <button
+                                                    type="button"
+                                                    class="slds-path__link pipeline-path-link"
+                                                    data-stage={step.key}
+                                                    data-view={step.viewKey}
+                                                    onclick={handlePipelineSelect}
+                                                    aria-pressed={step.ariaPressed}
+                                                    disabled={panelControlsDisabled}
+                                                    title={step.detail}
+                                                >
+                                                    <span class="slds-path__stage pipeline-path-icon">
+                                                        <lightning-icon icon-name={step.icon} size="xx-small" alternative-text=""></lightning-icon>
+                                                    </span>
+                                                    <span class="slds-path__title pipeline-path-title">
+                                                        <strong>{step.displayCount}</strong>
+                                                        <span>{step.label}</span>
+                                                    </span>
+                                                </button>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <template lwc:if={hasStageOptions}>
+                    <nav class="stage-options" aria-label="Narrow the selected stage">
+                        <template for:each={stageOptions} for:item="option">
+                            <button
+                                key={option.key}
+                                type="button"
+                                class={option.cssClass}
+                                data-view={option.key}
+                                onclick={handleStageOptionSelect}
+                                aria-pressed={option.ariaPressed}
+                                disabled={panelControlsDisabled}
+                                title={option.detail}
+                            >
+                                <lightning-icon icon-name={option.icon} size="x-small" alternative-text=""></lightning-icon>
+                                <span>{option.label}</span>
+                                <strong>{option.count}</strong>
+                            </button>
+                        </template>
+                    </nav>
+                </template>
+            </section>
+
+            <section class="workbench" aria-labelledby="workbench-heading">
+                <div class="record-table-panel">
+                    <div class="table-toolbar">
+                        <div>
+                            <p class="section-kicker">Current view</p>
+                            <h3 id="workbench-heading">{selectedQueue.label}</h3>
+                            <span>{selectedQueue.detail}</span>
+                        </div>
+                        <div class="toolbar-actions">
+                            <template lwc:if={isInterestView}>
+                                <button class="primary-link toolbar-button" type="button" onclick={handleOpenInvitations} disabled={panelControlsDisabled}>Send to all</button>
+                            </template>
+                            <template lwc:if={canRemindAll}>
+                                <button class="primary-link toolbar-button" type="button" onclick={handleOpenReminders} disabled={panelControlsDisabled}>Remind All</button>
+                            </template>
+                            <template lwc:if={canDistributeFinalPack}>
+                                <button class="primary-link toolbar-button" type="button" onclick={handleOpenFinalPack} disabled={panelControlsDisabled}>Distribute final pack</button>
+                            </template>
+                            <template lwc:if={selectedQueue.listUrl}>
+                                <a class="secondary-link" href={selectedQueue.listUrl}>Open global list</a>
+                            </template>
+                            <template lwc:if={selectedQueue.weeklyReportUrl}>
+                                <a class="secondary-link" href={selectedQueue.weeklyReportUrl}>View Weekly Finance Report</a>
+                            </template>
+                            <template lwc:if={selectedQueue.reportUrl}>
+                                <a class="primary-link" href={selectedQueue.reportUrl}>View cross-event report</a>
+                            </template>
+                        </div>
+                    </div>
+
+                    <template lwc:if={errorMessage}>
+                        <div class="error-state" role="alert">
+                            <lightning-icon icon-name="utility:error" size="small" alternative-text="Error"></lightning-icon>
+                            <div>
+                                <strong>Master Panel unavailable</strong>
+                                <p>{errorMessage}</p>
+                            </div>
+                            <button type="button" class="retry-button" onclick={handleRefresh} disabled={panelControlsDisabled}>Try again</button>
+                        </div>
+                    </template>
+
+                    <template lwc:elseif={hasRows}>
+                        <div class="table-scroll" tabindex="0" aria-label={selectedQueue.label}>
+                            <table class={tableClass}>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="col-record">Record</th>
+                                        <template lwc:if={isGuestView}>
+                                            <th scope="col" class="col-email">Email</th>
+                                            <th scope="col" class="col-phone">Contact number</th>
+                                            <th scope="col" class="col-guest">Additional guest</th>
+                                            <th scope="col" class="col-short">Accessibility</th>
+                                        </template>
+                                        <template lwc:elseif={isInterestView}>
+                                            <th scope="col" class="col-type">Enquiry type</th>
+                                            <th scope="col" class="col-wide">Sponsorship / interest</th>
+                                            <th scope="col" class="col-wide">Activities / details</th>
+                                            <th scope="col" class="col-contact">Preferred contact</th>
+                                        </template>
+                                        <template lwc:elseif={isApplicationView}>
+                                            <th scope="col" class="col-type">Application</th>
+                                            <th scope="col" class="col-wide">Package / space</th>
+                                            <th scope="col" class="col-amount">Applied total</th>
+                                            <th scope="col" class="col-short">PO quote</th>
+                                            <th scope="col" class="col-contact">Contact</th>
+                                        </template>
+                                        <template lwc:elseif={isFinanceView}>
+                                            <th scope="col" class="col-status">Finance</th>
+                                            <th scope="col" class="col-status">Staff</th>
+                                            <th scope="col" class="col-status">Logistics</th>
+                                            <th scope="col" class="col-amount">{financeAmountLabel}</th>
+                                        </template>
+                                        <template lwc:elseif={isApprovedView}>
+                                            <th scope="col" class="col-stage">Stage</th>
+                                            <th scope="col" class="col-type">Type</th>
+                                            <th scope="col" class="col-wide">Package / space</th>
+                                            <th scope="col" class="col-amount">Amount</th>
+                                            <th scope="col" class="col-contact">Primary contact</th>
+                                        </template>
+                                        <template lwc:elseif={isUpdatesView}>
+                                            <th scope="col" class="col-type">Type</th>
+                                            <th scope="col" class="col-status">Staff</th>
+                                            <th scope="col" class="col-status">Heavy vehicle</th>
+                                            <th scope="col" class="col-status">Logo</th>
+                                            <th scope="col" class="col-wide">Package / space</th>
+                                            <th scope="col" class="col-contact">Primary contact</th>
+                                        </template>
+                                        <template lwc:elseif={isLogoView}>
+                                            <th scope="col" class="col-type">Type</th>
+                                            <th scope="col" class="col-wide">Booking reference</th>
+                                            <th scope="col" class="col-wide">Package / space</th>
+                                            <th scope="col" class="col-contact">Primary contact</th>
+                                        </template>
+                                        <template lwc:elseif={isCompletedView}>
+                                            <th scope="col" class="col-type">Type</th>
+                                            <th scope="col" class="col-wide">Package / space</th>
+                                            <th scope="col" class="col-amount">Amount</th>
+                                            <th scope="col" class="col-contact">Primary contact</th>
+                                        </template>
+                                        <template lwc:elseif={isHeavyView}>
+                                            <th scope="col" class="col-short">Requirement</th>
+                                            <th scope="col" class="col-wide">Vehicle</th>
+                                            <th scope="col" class="col-wide">Access details</th>
+                                            <th scope="col" class="col-contact">Primary contact</th>
+                                        </template>
+                                        <template lwc:elseif={isStaffView}>
+                                            <th scope="col" class="col-short">Planned staff</th>
+                                            <th scope="col" class="col-short">Additional staff</th>
+                                            <th scope="col" class="col-wide">Package / space</th>
+                                            <th scope="col" class="col-contact">Primary contact</th>
+                                        </template>
+                                        <template lwc:else>
+                                            <th scope="col" class="col-type">Type</th>
+                                            <th scope="col" class="col-stage">Status</th>
+                                            <th scope="col" class="col-wide">Key detail</th>
+                                            <th scope="col" class="col-amount">Amount</th>
+                                            <th scope="col" class="col-contact">Contact</th>
+                                        </template>
+                                        <th scope="col" class="col-owner">Owner</th>
+                                        <template lwc:if={hasRowActions}><th scope="col" class="col-action">{actionColumnLabel}</th></template>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={visibleRows} for:item="row">
+                                        <tr
+                                            key={row.recordId}
+                                            class={row.rowClass}
+                                            data-id={row.recordId}
+                                            tabindex="0"
+                                            aria-label={row.selectAriaLabel}
+                                            onclick={handleSelectRow}
+                                            onkeydown={handleRowKeyDown}
+                                        >
+                                            <td>
+                                                <div class="record-cell">
+                                                    <span class="record-icon">
+                                                        <lightning-icon icon-name={row.typeIcon} size="small" alternative-text=""></lightning-icon>
+                                                    </span>
+                                                    <div>
+                                                        <strong>{row.organisation}</strong>
+                                                        <span>{row.contactName}</span>
+                                                        <small>{row.typeLabel} · {row.eventCode}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <template lwc:if={isGuestView}>
+                                                <td class="contact-cell">
+                                                    <template lwc:if={row.hasEmail}><a href={row.emailUrl}>{row.email}</a></template>
+                                                    <template lwc:else><span>—</span></template>
+                                                </td>
+                                                <td class="contact-cell">
+                                                    <template lwc:if={row.hasPhone}><a href={row.phoneUrl}>{row.phone}</a></template>
+                                                    <template lwc:else><span>—</span></template>
+                                                </td>
+                                                <td class="stacked-cell">
+                                                    <template lwc:if={row.hasAccompanyingGuest}>
+                                                        <strong>{row.accompanyingGuestName}</strong>
+                                                        <template lwc:if={row.accompanyingGuestEmail}>
+                                                            <a href={row.accompanyingGuestEmailUrl}>{row.accompanyingGuestEmail}</a>
+                                                        </template>
+                                                    </template>
+                                                    <template lwc:else><span>None</span></template>
+                                                </td>
+                                                <td><span class="plain-value">{row.guestAccessibility}</span></td>
+                                            </template>
+                                            <template lwc:elseif={isInterestView}>
+                                                <td><span class="type-chip">{row.interestTypeDisplay}</span></td>
+                                                <td><span class="clamped-value" title={row.interestAreas}>{row.interestAreasDisplay}</span></td>
+                                                <td><span class="clamped-value" title={row.interestDetail}>{row.interestDetailDisplay}</span></td>
+                                                <td><span class="plain-value">{row.preferredContact}</span></td>
+                                            </template>
+                                            <template lwc:elseif={isApplicationView}>
+                                                <td><span class="type-chip">{row.typeLabel}</span></td>
+                                                <td><span class="clamped-value" title={row.packageOrSpace}>{row.packageOrSpaceDisplay}</span></td>
+                                                <td class="amount-cell">
+                                                    <template lwc:if={row.pricingReviewRequired}><strong>Check pricing</strong></template>
+                                                    <template lwc:else><lightning-formatted-number value={row.amount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                                </td>
+                                                <td><span class="plain-value">{row.quoteRequirement}</span></td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:elseif={isFinanceView}>
+                                                <td><span class={row.scopedFinanceClass}>{row.scopedFinanceStatus}</span></td>
+                                                <td><span class={row.staffClass}>{row.staffStatus}</span></td>
+                                                <td><span class={row.logisticsClass}>{row.logisticsStatus}</span></td>
+                                                <td class="amount-cell">
+                                                    <template lwc:if={row.pricingReviewRequired}><span>—</span></template>
+                                                    <template lwc:else><lightning-formatted-number value={row.financeAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                                </td>
+                                            </template>
+                                            <template lwc:elseif={isApprovedView}>
+                                                <td><span class="stage-label">{row.stage}</span></td>
+                                                <td><span class="type-chip">{row.typeLabel}</span></td>
+                                                <td><span class="clamped-value" title={row.packageOrSpace}>{row.packageOrSpaceDisplay}</span></td>
+                                                <td class="amount-cell">
+                                                    <template lwc:if={row.pricingReviewRequired}><strong>Check pricing</strong></template>
+                                                    <template lwc:else><lightning-formatted-number value={row.amount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                                </td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:elseif={isUpdatesView}>
+                                                <td><span class="type-chip">{row.typeLabel}</span></td>
+                                                <td><span class={row.staffClass}>{row.staffStatus}</span></td>
+                                                <td><span class={row.logisticsClass}>{row.logisticsStatus}</span></td>
+                                                <td><span class={row.logoClass}>{row.logoStatus}</span></td>
+                                                <td><span class="clamped-value" title={row.packageOrSpace}>{row.packageOrSpaceDisplay}</span></td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:elseif={isLogoView}>
+                                                <td><span class="type-chip">{row.typeLabel}</span></td>
+                                                <td><span class="plain-value">{row.bookingReference}</span></td>
+                                                <td><span class="clamped-value" title={row.packageOrSpace}>{row.packageOrSpaceDisplay}</span></td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:elseif={isCompletedView}>
+                                                <td><span class="type-chip">{row.typeLabel}</span></td>
+                                                <td><span class="clamped-value" title={row.packageOrSpace}>{row.packageOrSpaceDisplay}</span></td>
+                                                <td class="amount-cell">
+                                                    <template lwc:if={row.pricingReviewRequired}><strong>Check pricing</strong></template>
+                                                    <template lwc:else><lightning-formatted-number value={row.amount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                                </td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:elseif={isHeavyView}>
+                                                <td><span class={row.logisticsClass}>{row.heavyVehicleRequirement}</span></td>
+                                                <td class="stacked-cell"><strong>{row.vehicleTypeDisplay}</strong><span>{row.vehicleRegistrationDisplay}</span></td>
+                                                <td class="stacked-cell"><strong>{row.vehicleDimensionsDisplay}</strong><span>{row.haulierNameDisplay}</span></td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:elseif={isStaffView}>
+                                                <td><span class="plain-value">{row.plannedStaffDisplay}</span></td>
+                                                <td><span class="plain-value">{row.additionalStaffDisplay}</span></td>
+                                                <td><span class="clamped-value" title={row.packageOrSpace}>{row.packageOrSpaceDisplay}</span></td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><a href={row.emailUrl}>{row.email}</a></td>
+                                            </template>
+                                            <template lwc:else>
+                                                <td><span class="type-chip">{row.typeLabel}</span></td>
+                                                <td><span class="stage-label">{row.stage}</span></td>
+                                                <td><span class="clamped-value" title={row.keyDetail}>{row.keyDetail}</span></td>
+                                                <td class="amount-cell">
+                                                    <template lwc:if={row.pricingReviewRequired}><strong>Check pricing</strong></template>
+                                                    <template lwc:elseif={row.isOpportunity}><lightning-formatted-number value={row.amount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                                    <template lwc:else><span>—</span></template>
+                                                </td>
+                                                <td class="stacked-cell"><strong>{row.contactName}</strong><span>{row.contactDisplay}</span></td>
+                                            </template>
+                                            <td><span class="owner-name">{row.ownerName}</span></td>
+                                            <template lwc:if={hasRowActions}>
+                                            <td class="action-cell">
+                                                <template lwc:if={row.showInterestDecision}>
+                                                    <div class="decision-actions">
+                                                        <button class="table-action" type="button" data-id={row.recordId} onclick={handleOpenInvitations} disabled={row.invitationActionDisabled}>Send Application</button>
+                                                        <button class="table-action danger-action" type="button" data-id={row.recordId} data-decision="INTEREST_NOT_PROGRESSED" onclick={handleLeadDecision} disabled={row.invitationActionDisabled}>Reject</button>
+                                                    </div>
+                                                </template>
+                                                <template lwc:elseif={row.showApplicationDecision}>
+                                                    <div class="decision-actions">
+                                                        <button class="table-action" type="button" data-id={row.recordId} onclick={handleConvertLead} disabled={row.actionDisabled}>Convert</button>
+                                                        <button class="table-action danger-action" type="button" data-id={row.recordId} data-decision="APPLICATION_REJECTED" onclick={handleLeadDecision} disabled={row.actionDisabled}>Reject</button>
+                                                    </div>
+                                                </template>
+                                                <template lwc:elseif={row.showMarkQuote}>
+                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="QUOTE_PROVIDED" onclick={handleMilestone} disabled={row.actionDisabled}>Quote provided</button>
+                                                </template>
+                                                <template lwc:elseif={row.showMarkInvoice}>
+                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="INVOICE_PROVIDED" onclick={handleMilestone} disabled={row.actionDisabled}>Booking invoice provided</button>
+                                                </template>
+                                                <template lwc:elseif={row.showMarkTopUpInvoice}>
+                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP_INVOICE_PROVIDED" onclick={handleMilestone} disabled={row.actionDisabled}>Staff top-up invoice provided</button>
+                                                </template>
+                                                <template lwc:elseif={row.showMarkPaid}>
+                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Booking payment received</button>
+                                                </template>
+                                                <template lwc:elseif={row.showMarkTopUpPaid}>
+                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP_PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Staff top-up payment received</button>
+                                                </template>
+                                                <template lwc:else>
+                                                    <span>—</span>
+                                                </template>
+                                            </td>
+                                            </template>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="empty-state">
+                            <lightning-icon icon-name="utility:check" size="medium" alternative-text=""></lightning-icon>
+                            <strong>No records in this queue</strong>
+                            <p>Nothing matches the selected event, time and owner filters.</p>
+                        </div>
+                    </template>
+
+                    <footer class="table-footer">
+                        <span aria-live="polite">{pageLabel}</span>
+                        <div>
+                            <lightning-button label="Previous" onclick={handlePrevious} disabled={previousDisabled}></lightning-button>
+                            <lightning-button label="Next" onclick={handleNext} disabled={nextDisabled} class="next-button"></lightning-button>
+                        </div>
+                    </footer>
+                </div>
+
+                <aside class="detail-panel">
+                    <template lwc:if={selectedRecord}>
+                        <div class="detail-head">
+                            <span class="detail-icon">
+                                <lightning-icon icon-name={selectedRecord.typeIcon} size="small" alternative-text=""></lightning-icon>
+                            </span>
+                            <div>
+                                <p>{selectedRecord.typeLabel}</p>
+                                <h3>{selectedRecord.organisation}</h3>
+                                <span>{selectedRecord.bookingReference}</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h4>{selectedRecord.contactSectionLabel}</h4>
+                            <template lwc:if={selectedRecord.contactIssue}>
+                                <p class="contact-warning" role="status">{selectedRecord.contactIssue}</p>
+                            </template>
+                            <dl>
+                                <div><dt>Name</dt><dd>{selectedRecord.contactName}</dd></div>
+                                <div><dt>Email</dt><dd><a href={selectedRecord.emailUrl}>{selectedRecord.email}</a></dd></div>
+                                <div><dt>Phone</dt><dd><a href={selectedRecord.phoneUrl}>{selectedRecord.phone}</a></dd></div>
+                                <div><dt>Owner</dt><dd>{selectedRecord.ownerName}</dd></div>
+                            </dl>
+                        </div>
+
+                        <template lwc:if={selectedRecord.hasEventDayContact}>
+                            <div class="detail-section">
+                                <h4>Event day contact</h4>
+                                <dl>
+                                    <div><dt>Name</dt><dd>{selectedRecord.eventDayContactName}</dd></div>
+                                    <div><dt>Email</dt><dd><a href={selectedRecord.eventDayEmailUrl}>{selectedRecord.eventDayContactEmail}</a></dd></div>
+                                    <div><dt>Phone</dt><dd><a href={selectedRecord.eventDayPhoneUrl}>{selectedRecord.eventDayContactPhone}</a></dd></div>
+                                </dl>
+                            </div>
+                        </template>
+
+                        <template lwc:if={selectedRecord.isGuest}>
+                            <div class="detail-section">
+                                <h4>Guest registration</h4>
+                                <dl>
+                                    <div><dt>Additional guest</dt><dd>{selectedRecord.accompanyingGuestDisplay}</dd></div>
+                                    <div><dt>Guest email</dt><dd><a href={selectedRecord.accompanyingGuestEmailUrl}>{selectedRecord.accompanyingGuestEmailDisplay}</a></dd></div>
+                                    <div><dt>Accessibility</dt><dd>{selectedRecord.guestAccessibility}</dd></div>
+                                </dl>
+                            </div>
+                        </template>
+                        <template lwc:elseif={selectedRecord.isInterest}>
+                            <div class="detail-section">
+                                <h4>Expression of interest</h4>
+                                <dl>
+                                    <div><dt>Enquiry type</dt><dd>{selectedRecord.interestTypeDisplay}</dd></div>
+                                    <div><dt>Sponsorship / interest</dt><dd>{selectedRecord.interestAreasDisplay}</dd></div>
+                                    <div><dt>Activities / details</dt><dd>{selectedRecord.interestDetailDisplay}</dd></div>
+                                    <div><dt>Preferred contact</dt><dd>{selectedRecord.preferredContact}</dd></div>
+                                    <div><dt>Application invitation</dt><dd><span class={selectedRecord.invitationClass}>{selectedRecord.invitationStatusDisplay}</span></dd></div>
+                                    <template lwc:if={selectedRecord.invitationSentAt}>
+                                        <div><dt>Invitation sent</dt><dd><lightning-formatted-date-time value={selectedRecord.invitationSentAt} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time></dd></div>
+                                    </template>
+                                </dl>
+                            </div>
+                        </template>
+                        <template lwc:elseif={selectedRecord.isApplicationLead}>
+                            <div class="detail-section">
+                                <h4>Application</h4>
+                                <dl>
+                                    <div><dt>Type</dt><dd>{selectedRecord.typeLabel}</dd></div>
+                                    <div><dt>Package / space</dt><dd>{selectedRecord.packageOrSpaceDisplay}</dd></div>
+                                    <div>
+                                        <dt>Applied total</dt>
+                                        <dd>
+                                            <template lwc:if={selectedRecord.pricingReviewRequired}>Check pricing</template>
+                                            <template lwc:else><lightning-formatted-number value={selectedRecord.amount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                        </dd>
+                                    </div>
+                                    <div><dt>PO quote</dt><dd>{selectedRecord.quoteRequirement}</dd></div>
+                                    <div><dt>Payment method</dt><dd>{selectedRecord.paymentMethodDisplay}</dd></div>
+                                </dl>
+                            </div>
+                        </template>
+                        <template lwc:elseif={selectedRecord.isOpportunity}>
+                            <div class="detail-section">
+                                <h4>Booking</h4>
+                                <dl>
+                                    <div><dt>Stage</dt><dd>{selectedRecord.stage}</dd></div>
+                                    <div><dt>Package / space</dt><dd>{selectedRecord.packageOrSpaceDisplay}</dd></div>
+                                    <div>
+                                        <dt>Booking (ex VAT)</dt>
+                                        <dd>
+                                            <template lwc:if={selectedRecord.pricingReviewRequired}>Check pricing</template>
+                                            <template lwc:else><lightning-formatted-number value={selectedRecord.baseAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
+                                        </dd>
+                                    </div>
+                                    <template lwc:if={selectedRecord.hasTopUpAmount}>
+                                        <div><dt>Staff top-up (ex VAT)</dt><dd><lightning-formatted-number value={selectedRecord.topUpAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></dd></div>
+                                    </template>
+                                    <div><dt>Planned staff</dt><dd>{selectedRecord.plannedStaffDisplay}</dd></div>
+                                    <div><dt>Heavy vehicle</dt><dd>{selectedRecord.heavyVehicleRequirement}</dd></div>
+                                    <div><dt>Payment method</dt><dd>{selectedRecord.paymentMethodDisplay}</dd></div>
+                                </dl>
+                            </div>
+
+                            <div class="detail-section">
+                                <h4>Readiness</h4>
+                                <div class="readiness-row"><span>Finance</span><strong class={selectedRecord.financeClass}>{selectedRecord.financeStatus}</strong></div>
+                                <div class="readiness-row"><span>Staff</span><strong class={selectedRecord.staffClass}>{selectedRecord.staffStatus}</strong></div>
+                                <div class="readiness-row"><span>Logistics</span><strong class={selectedRecord.logisticsClass}>{selectedRecord.logisticsStatus}</strong></div>
+                                <div class="readiness-row"><span>Logo</span><strong class={selectedRecord.logoClass}>{selectedRecord.logoStatus}</strong></div>
+                            </div>
+
+                        </template>
+
+                        <div class="detail-actions">
+                            <a class="detail-action secondary-action" href={selectedRecord.recordUrl}>Open full record</a>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="detail-empty">
+                            <lightning-icon icon-name="standard:record" size="medium" alternative-text=""></lightning-icon>
+                            <strong>Select a record</strong>
+                            <p>Its contact, booking and readiness details will appear here.</p>
+                        </div>
+                    </template>
+                </aside>
+            </section>
+
+            <section class="overview-section event-breakdown" aria-labelledby="event-overview-heading">
+                <div class="breakdown-heading">
+                    <h2 id="event-overview-heading">Event breakdown</h2>
+                </div>
+
+                <div class="breakdown-primary-grid">
+                    <section class="breakdown-block submissions-block" aria-labelledby="submission-status-heading">
+                        <h3 id="submission-status-heading">Submission status</h3>
+                        <div class="breakdown-list">
+                            <button class="submission-metric" type="button" data-view={guestBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={guestBreakdown.ariaLabel}>
+                                <span class="breakdown-icon icon-guest"><lightning-icon icon-name={guestBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <span class="breakdown-copy">
+                                    <strong>{guestBreakdown.label}</strong>
+                                    <small><b>{guestBreakdown.completed}</b> captured</small>
+                                </span>
+                                <span class="metric-track" aria-hidden="true"><span class="metric-fill fill-guest" style={guestBreakdown.completedStyle}></span></span>
+                                <span class="metric-total"><strong>{guestBreakdown.total}</strong><small>captured</small></span>
+                            </button>
+
+                            <button class="submission-metric" type="button" data-view={interestBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={interestBreakdown.ariaLabel}>
+                                <span class="breakdown-icon icon-interest"><lightning-icon icon-name={interestBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <span class="breakdown-copy">
+                                    <strong>{interestBreakdown.label}</strong>
+                                    <small><b>{interestBreakdown.inProgress}</b> open</small>
+                                </span>
+                                <span class="metric-track" aria-hidden="true"><span class="metric-fill fill-interest" style={interestBreakdown.inProgressStyle}></span></span>
+                                <span class="metric-total"><strong>{interestBreakdown.inProgress}</strong><small>open</small></span>
+                            </button>
+
+                            <button class="submission-metric application-metric" type="button" data-view={applicationBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={applicationBreakdown.ariaLabel}>
+                                <span class="breakdown-icon icon-application"><lightning-icon icon-name={applicationBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <span class="breakdown-copy"><strong>{applicationBreakdown.label}</strong></span>
+                                <span class="metric-track split-track" aria-hidden="true">
+                                    <span class="metric-fill fill-review" style={applicationBreakdown.inProgressStyle}><b>{applicationBreakdown.inProgress}</b></span>
+                                    <span class="metric-fill fill-approved" style={applicationBreakdown.completedStyle}><b>{applicationBreakdown.completed}</b></span>
+                                </span>
+                                <span class="metric-total"><strong>{applicationBreakdown.total}</strong><small>total</small></span>
+                                <span class="split-labels" aria-hidden="true"><small>awaiting review</small><small>approved</small></span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="breakdown-block booking-block" aria-labelledby="booking-progress-heading">
+                        <h3 id="booking-progress-heading">Booking progress</h3>
+                        <button class="booking-progress" type="button" data-view={bookingBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={bookingBreakdown.ariaLabel}>
+                            <span class="booking-ring" style={bookingBreakdown.donutStyle} aria-hidden="true">
+                                <span class="booking-ring-centre"><strong>{bookingBreakdown.total}</strong><small>approved<br />bookings</small></span>
+                            </span>
+                            <span class="booking-legend">
+                                <span class="booking-legend-item"><i class="legend-dot complete-dot"></i><strong>{bookingBreakdown.completed}</strong><small>fully complete</small></span>
+                                <span class="booking-legend-item"><i class="legend-dot progress-dot"></i><strong>{bookingBreakdown.inProgress}</strong><small>still in progress</small></span>
+                            </span>
+                        </button>
+                    </section>
+                </div>
+
+                <div class="breakdown-secondary-grid">
+                    <section class="breakdown-block finance-block" aria-labelledby="finance-actions-heading">
+                        <h3 id="finance-actions-heading">Finance actions</h3>
+                        <div class="action-list">
+                            <button class="action-metric" type="button" data-view={quoteBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={quoteBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={quoteBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{quoteBreakdown.label}</strong>
+                                <span class="action-track" aria-hidden="true">
+                                    <span class="action-fill fill-complete" style={quoteBreakdown.completedStyle}>{quoteBreakdown.completed} Provided</span>
+                                    <span class="action-fill fill-outstanding" style={quoteBreakdown.inProgressStyle}>{quoteBreakdown.inProgress} Outstanding</span>
+                                </span>
+                                <span class="metric-total compact-total"><strong>{quoteBreakdown.total}</strong><small>total</small></span>
+                            </button>
+                            <button class="action-metric" type="button" data-view={invoiceBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={invoiceBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={invoiceBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{invoiceBreakdown.label}</strong>
+                                <span class="action-track" aria-hidden="true">
+                                    <span class="action-fill fill-complete" style={invoiceBreakdown.completedStyle}>{invoiceBreakdown.completed} Provided</span>
+                                    <span class="action-fill fill-outstanding" style={invoiceBreakdown.inProgressStyle}>{invoiceBreakdown.inProgress} Outstanding</span>
+                                </span>
+                                <span class="metric-total compact-total"><strong>{invoiceBreakdown.total}</strong><small>total</small></span>
+                            </button>
+                            <button class="action-metric" type="button" data-view={paymentBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={paymentBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={paymentBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{paymentBreakdown.label}</strong>
+                                <span class="action-track" aria-hidden="true">
+                                    <span class="action-fill fill-complete" style={paymentBreakdown.completedStyle}>{paymentBreakdown.completed} Received</span>
+                                    <span class="action-fill fill-outstanding" style={paymentBreakdown.inProgressStyle}>{paymentBreakdown.inProgress} Outstanding</span>
+                                </span>
+                                <span class="metric-total compact-total"><strong>{paymentBreakdown.total}</strong><small>total</small></span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="breakdown-block delivery-block" aria-labelledby="delivery-updates-heading">
+                        <h3 id="delivery-updates-heading">Delivery updates</h3>
+                        <div class="action-list delivery-list">
+                            <button class="action-metric" type="button" data-view={logisticsBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={logisticsBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={logisticsBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{logisticsBreakdown.label}</strong>
+                                <span class="action-track" aria-hidden="true">
+                                    <span class="action-fill fill-complete" style={logisticsBreakdown.completedStyle}>{logisticsBreakdown.completed} Completed</span>
+                                    <span class="action-fill fill-outstanding" style={logisticsBreakdown.inProgressStyle}>{logisticsBreakdown.inProgress} Outstanding</span>
+                                </span>
+                                <span class="metric-total compact-total"><strong>{logisticsBreakdown.total}</strong><small>total</small></span>
+                            </button>
+                            <button class="action-metric" type="button" data-view={staffBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={staffBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={staffBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{staffBreakdown.label}</strong>
+                                <span class="action-track" aria-hidden="true">
+                                    <span class="action-fill fill-complete" style={staffBreakdown.completedStyle}>{staffBreakdown.completed} Completed</span>
+                                    <span class="action-fill fill-outstanding" style={staffBreakdown.inProgressStyle}>{staffBreakdown.inProgress} Outstanding</span>
+                                </span>
+                                <span class="metric-total compact-total"><strong>{staffBreakdown.total}</strong><small>total</small></span>
+                            </button>
+                            <button class="action-metric" type="button" data-view={logoBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={logoBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={logoBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{logoBreakdown.label}</strong>
+                                <span class="action-track" aria-hidden="true">
+                                    <span class="action-fill fill-complete" style={logoBreakdown.completedStyle}>{logoBreakdown.completed} Completed</span>
+                                    <span class="action-fill fill-outstanding" style={logoBreakdown.inProgressStyle}>{logoBreakdown.inProgress} Outstanding</span>
+                                </span>
+                                <span class="metric-total compact-total"><strong>{logoBreakdown.total}</strong><small>total</small></span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </main>
+
+        <template lwc:if={isCommunicationModalOpen}>
+            <section class="reminder-modal" role="dialog" aria-modal="true" aria-labelledby="communication-dialog-title" onkeydown={handleModalKeyDown} onfocusin={handleModalFocus} onfocusout={handleModalFocusOut}>
+                <div class="reminder-dialog communication-dialog">
+                    <header class="reminder-header">
+                        <div>
+                            <h2 id="communication-dialog-title">{communicationDraft.title}</h2>
+                        </div>
+                        <button class="modal-close email-close" type="button" data-modal-focus aria-label="Close email preview" onclick={handleCloseCommunication} disabled={communicationBusy}>
+                            <lightning-icon icon-name="utility:close" size="small" alternative-text=""></lightning-icon>
+                        </button>
+                    </header>
+
+                    <div class="reminder-content">
+                        <template lwc:if={communicationError}><p class="reminder-warning" role="alert">{communicationError}</p></template>
+                        <div class="communication-recipients">
+                            <div class="email-recipient-list" role="group" aria-label="Email recipients" tabindex="0">
+                                <template for:each={visibleCommunicationRecipients} for:item="recipient">
+                                    <div class={recipient.rowClass} key={recipient.recordId}>
+                                        <lightning-input type="checkbox" variant="label-hidden" label={recipient.selectionLabel} data-id={recipient.recordId} checked={recipient.selected} disabled={recipient.disabled} onchange={handleRecipientSelection}></lightning-input>
+                                        <div class="email-recipient-details">
+                                            <strong>{recipient.displayName}</strong>
+                                            <span>{recipient.company}</span>
+                                            <template lwc:if={recipient.lastSentAt}><span>Last sent: <lightning-formatted-date-time value={recipient.lastSentAt} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time></span></template>
+                                            <template lwc:if={recipient.issue}><p class="recipient-issue">{recipient.issue}</p></template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="recipient-controls">
+                                <div class="recipient-summary" aria-live="polite" aria-atomic="true">
+                                    <div><strong>{selectedEmailRecipientCount}</strong><span>Selected</span></div>
+                                    <div><strong>{availableRecipientCount}</strong><span>Available to send</span></div>
+                                </div>
+                                <div class="recipient-list-actions">
+                                    <button class="recipient-action recipient-action-select" type="button" onclick={handleSelectEligibleRecipients} disabled={communicationBusy}>Select all</button>
+                                    <button class="recipient-action recipient-action-clear" type="button" onclick={handleClearRecipients} disabled={communicationBusy}>Clear</button>
+                                    <button class="recipient-action recipient-action-refresh" type="button" onclick={handleRefreshCommunication} disabled={communicationBusy}>Refresh</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="communication-edit-preview">
+                            <div class="communication-editor">
+                                <lightning-input type="text" label="Subject" value={communicationSubject} maxlength="255" onchange={handleCommunicationSubjectChange} disabled={communicationBusy}></lightning-input>
+                                <lightning-textarea class="reminder-message" label="Message" value={communicationMessage} maxlength="32000" onchange={handleCommunicationMessageChange} disabled={communicationBusy}></lightning-textarea>
+                            </div>
+                            <div class="communication-preview">
+                                <template lwc:if={hasSelectedEmailRecipients}>
+                                    <lightning-combobox label="Preview for" value={previewRecipientId} options={recipientOptions} onchange={handlePreviewRecipientChange} disabled={communicationBusy}></lightning-combobox>
+                                    <template lwc:if={isPreviewLoading}><p class="email-guidance" role="status">Updating email preview…</p></template>
+                                    <template lwc:if={previewReady}>
+                                        <div class="email-html-preview"><lightning-formatted-rich-text value={communicationPreviewHtml}></lightning-formatted-rich-text></div>
+                                    </template>
+                                </template>
+                                <template lwc:else><p class="email-guidance">Select a recipient to preview their email.</p></template>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="reminder-footer">
+                        <button class="primary-link toolbar-button" type="button" onclick={handleSendCommunication} disabled={sendCommunicationDisabled}>{sendCommunicationLabel}</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="reminder-backdrop"></div>
+        </template>
+
+        <template lwc:if={isLoading}>
+            <div class="loading-mask" role="status" aria-live="polite">
+                <lightning-spinner alternative-text="Loading Master Panel" size="medium"></lightning-spinner>
+            </div>
+        </template>
+    </section>
+</template>

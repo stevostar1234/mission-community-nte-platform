@@ -1,0 +1,192 @@
+public with sharing class NTERelatedOpportunityController {
+    public class RelationshipResponse {
+        @AuraEnabled public String mode;
+        @AuraEnabled public String title;
+        @AuraEnabled public String emptyMessage;
+        @AuraEnabled public RelatedAccount account;
+        @AuraEnabled public List<RelatedOpportunity> opportunities = new List<RelatedOpportunity>();
+        @AuraEnabled public List<RelatedContact> contacts = new List<RelatedContact>();
+    }
+
+    public class RelatedOpportunity {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String name;
+        @AuraEnabled public String eventCode;
+        @AuraEnabled public String bookingType;
+        @AuraEnabled public String stage;
+        @AuraEnabled public Decimal amount;
+        @AuraEnabled public Date closeDate;
+        @AuraEnabled public Boolean primaryContact;
+
+        public RelatedOpportunity(Opportunity opportunityRecord, Boolean isPrimary) {
+            id = opportunityRecord.Id;
+            name = opportunityRecord.Name;
+            eventCode = opportunityRecord.NTE_Event_Code__c;
+            bookingType = opportunityRecord.NTE_Source_Form_Type__c;
+            stage = opportunityRecord.StageName;
+            amount = opportunityRecord.Amount;
+            closeDate = opportunityRecord.CloseDate;
+            primaryContact = isPrimary;
+        }
+    }
+
+    public class RelatedAccount {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String name;
+        @AuraEnabled public String phone;
+        @AuraEnabled public String website;
+
+        public RelatedAccount(Account accountRecord) {
+            id = accountRecord.Id;
+            name = accountRecord.Name;
+            phone = accountRecord.Phone;
+            website = accountRecord.Website;
+        }
+    }
+
+    public class RelatedContact {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String name;
+        @AuraEnabled public String title;
+        @AuraEnabled public String email;
+        @AuraEnabled public String phone;
+        @AuraEnabled public String role;
+        @AuraEnabled public Boolean primaryContact;
+
+        public RelatedContact(OpportunityContactRole roleRecord) {
+            id = roleRecord.ContactId;
+            name = roleRecord.Contact.Name;
+            title = roleRecord.Contact.Title;
+            email = roleRecord.Contact.Email;
+            phone = roleRecord.Contact.Phone;
+            role = roleRecord.Role;
+            primaryContact = roleRecord.IsPrimary;
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static RelationshipResponse getRelationships(Id recordId, String objectApiName) {
+        if (recordId == null || String.isBlank(objectApiName)) {
+            throw new AuraHandledException('A record is required to load NTE relationships.');
+        }
+
+        if (!new Set<String>{'Account', 'Contact', 'Opportunity'}.contains(objectApiName)) {
+            throw new AuraHandledException('NTE relationships are available for Account, Contact and Opportunity records.');
+        }
+
+        RelationshipResponse response = new RelationshipResponse();
+        try {
+            if (objectApiName == 'Account') {
+                response.mode = 'opportunities';
+                response.title = 'NTE Opportunities';
+                response.emptyMessage = 'No NTE opportunities are linked to this account.';
+                List<Opportunity> opportunityRecords = [
+                    SELECT Id, Name, NTE_Event_Code__c, NTE_Source_Form_Type__c,
+                           StageName, Amount, CloseDate
+                    FROM Opportunity
+                    WHERE AccountId = :recordId
+                      AND RecordType.DeveloperName = 'NTE_Event_Opportunity'
+                      AND NTE_Event_Code__c != null
+                    WITH USER_MODE
+                    ORDER BY CloseDate DESC, Name
+                    LIMIT 200
+                ];
+                for (Opportunity opportunityRecord : readableOpportunities(opportunityRecords)) {
+                    response.opportunities.add(new RelatedOpportunity(opportunityRecord, false));
+                }
+                return response;
+            }
+
+            if (objectApiName == 'Contact') {
+                response.mode = 'opportunities';
+                response.title = 'NTE Opportunities';
+                response.emptyMessage = 'No NTE opportunities are linked to this contact.';
+                List<OpportunityContactRole> roleRecords = [
+                    SELECT IsPrimary, Opportunity.Id, Opportunity.Name,
+                           Opportunity.NTE_Event_Code__c, Opportunity.NTE_Source_Form_Type__c,
+                           Opportunity.StageName, Opportunity.Amount, Opportunity.CloseDate
+                    FROM OpportunityContactRole
+                    WHERE ContactId = :recordId
+                      AND Opportunity.RecordType.DeveloperName = 'NTE_Event_Opportunity'
+                      AND Opportunity.NTE_Event_Code__c != null
+                    WITH USER_MODE
+                    ORDER BY Opportunity.CloseDate DESC, Opportunity.Name
+                    LIMIT 200
+                ];
+                for (OpportunityContactRole roleRecord : readableRoles(roleRecords)) {
+                    response.opportunities.add(new RelatedOpportunity(roleRecord.Opportunity, roleRecord.IsPrimary));
+                }
+                return response;
+            }
+
+            response.mode = 'relationships';
+            response.title = 'NTE Relationships';
+            response.emptyMessage = 'No account or contacts are linked to this opportunity.';
+            List<Opportunity> opportunityRecords = [
+                SELECT Id, AccountId
+                FROM Opportunity
+                WHERE Id = :recordId
+                  AND RecordType.DeveloperName = 'NTE_Event_Opportunity'
+                WITH USER_MODE
+                LIMIT 1
+            ];
+            if (opportunityRecords.isEmpty()) {
+                throw new AuraHandledException('This record is not an NTE event opportunity.');
+            }
+
+            Opportunity opportunityRecord = readableOpportunities(opportunityRecords)[0];
+            if (opportunityRecord.AccountId != null) {
+                List<Account> accountRecords = [
+                    SELECT Id, Name, Phone, Website
+                    FROM Account
+                    WHERE Id = :opportunityRecord.AccountId
+                    WITH USER_MODE
+                    LIMIT 1
+                ];
+                if (!accountRecords.isEmpty()) {
+                    response.account = new RelatedAccount(readableAccounts(accountRecords)[0]);
+                }
+            }
+
+            List<OpportunityContactRole> roleRecords = [
+                SELECT ContactId, Contact.Name, Contact.Title, Contact.Email, Contact.Phone,
+                       Role, IsPrimary
+                FROM OpportunityContactRole
+                WHERE OpportunityId = :recordId
+                WITH USER_MODE
+                ORDER BY IsPrimary DESC, Contact.Name
+                LIMIT 200
+            ];
+            for (OpportunityContactRole roleRecord : readableRoles(roleRecords)) {
+                response.contacts.add(new RelatedContact(roleRecord));
+            }
+            return response;
+        } catch (QueryException accessError) {
+            throw new AuraHandledException('You do not have permission to view these NTE relationships.');
+        }
+    }
+
+    private static List<Opportunity> readableOpportunities(List<Opportunity> records) {
+        List<Opportunity> readable = new List<Opportunity>();
+        for (SObject recordValue : Security.stripInaccessible(AccessType.READABLE, records).getRecords()) {
+            readable.add((Opportunity)recordValue);
+        }
+        return readable;
+    }
+
+    private static List<OpportunityContactRole> readableRoles(List<OpportunityContactRole> records) {
+        List<OpportunityContactRole> readable = new List<OpportunityContactRole>();
+        for (SObject recordValue : Security.stripInaccessible(AccessType.READABLE, records).getRecords()) {
+            readable.add((OpportunityContactRole)recordValue);
+        }
+        return readable;
+    }
+
+    private static List<Account> readableAccounts(List<Account> records) {
+        List<Account> readable = new List<Account>();
+        for (SObject recordValue : Security.stripInaccessible(AccessType.READABLE, records).getRecords()) {
+            readable.add((Account)recordValue);
+        }
+        return readable;
+    }
+}

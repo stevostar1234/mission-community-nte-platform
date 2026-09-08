@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE exhibitor staff update acknowledgement</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE exhibitor staff update acknowledgement</name>
+    <style>none</style>
+    <subject>NTE exhibitor staff details updated</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Exhibitor staff details
+
+Your staff details have been received.
+
+Hello,
+
+We have matched this update to booking {!Lead.Target_Booking_Reference__c} for {!Lead.Company}.
+
+Staff details
+Names covered by booking {!Lead.Staff_Base_Names__c}
+Top-up places {!Lead.Top_Up_Staff_Count__c}
+Top-up names {!Lead.Top_Up_Staff_Names__c}
+Top-up total {!Lead.Top_Up_Staff_Total__c} + VAT
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

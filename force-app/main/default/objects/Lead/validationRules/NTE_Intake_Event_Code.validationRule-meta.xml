@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Intake_Event_Code</fullName>
+    <active>true</active>
+    <description>New or changed NTE interest, application and guest event codes must identify a four-digit edition. Unrelated edits to historical records are preserved.</description>
+    <errorConditionFormula>AND(OR(ISNEW(), ISCHANGED(NTE_Event_Code__c), ISCHANGED(Web_Form_Type__c)), OR(ISPICKVAL(Web_Form_Type__c, &quot;Partner / Sponsor Expression of Interest&quot;), ISPICKVAL(Web_Form_Type__c, &quot;Exhibitor Expression of Interest&quot;), ISPICKVAL(Web_Form_Type__c, &quot;Partner / Sponsor Application&quot;), ISPICKVAL(Web_Form_Type__c, &quot;Exhibitor Application&quot;), ISPICKVAL(Web_Form_Type__c, &quot;Guest Registration&quot;)), NOT(REGEX(NTE_Event_Code__c, &quot;^NTE[0-9]{4}$&quot;)))</errorConditionFormula>
+    <errorDisplayField>NTE_Event_Code__c</errorDisplayField>
+    <errorMessage>Enter an event code in the format NTE2027.</errorMessage>
+</ValidationRule>

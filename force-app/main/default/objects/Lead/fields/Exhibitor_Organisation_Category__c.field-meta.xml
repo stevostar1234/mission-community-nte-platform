@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exhibitor_Organisation_Category__c</fullName>
+    <description>Captured by the NTE27 exhibitor Web-to-Lead form.</description>
+    <label>Exhibitor Organisation Category</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Charity - member of Cobseo</fullName>
+                <default>false</default>
+                <label>Charity - member of COBSEO</label>
+            </value>
+            <value>
+                <fullName>Charity - not a member of Cobseo</fullName>
+                <default>false</default>
+                <label>Charity - not a member of COBSEO</label>
+            </value>
+            <value>
+                <fullName>Employer - Automotive Sector</fullName>
+                <default>false</default>
+                <label>Employer - Automotive Sector</label>
+            </value>
+            <value>
+                <fullName>Employer - Manufacturing Sector</fullName>
+                <default>false</default>
+                <label>Employer - Manufacturing Sector</label>
+            </value>
+            <value>
+                <fullName>Employer - Renewable &amp; Clean Energy Sector</fullName>
+                <default>false</default>
+                <label>Employer - Renewable &amp; Clean Energy Sector</label>
+            </value>
+            <value>
+                <fullName>Employer - Defence</fullName>
+                <default>false</default>
+                <label>Employer - Defence &amp; Security</label>
+            </value>
+            <value>
+                <fullName>Employer - Built Environment</fullName>
+                <default>false</default>
+                <label>Employer - Built Environment</label>
+            </value>
+            <value>
+                <fullName>Employer - Facilities Management</fullName>
+                <default>false</default>
+                <label>Employer - Facilities Management</label>
+            </value>
+            <value>
+                <fullName>Employer - Financial and Professional Services</fullName>
+                <default>false</default>
+                <label>Employer - Financial and Professional Services</label>
+            </value>
+            <value>
+                <fullName>Employer - Digital &amp; Technologies</fullName>
+                <default>false</default>
+                <label>Employer - Digital &amp; Technologies</label>
+            </value>
+            <value>
+                <fullName>Employer - Training Provider from any industry</fullName>
+                <default>false</default>
+                <label>Employer - Training Provider from any industry</label>
+            </value>
+            <value>
+                <fullName>Employer - Landbased industry</fullName>
+                <default>false</default>
+                <label>Employer - Landbased industry</label>
+            </value>
+            <value>
+                <fullName>Employer - Blue Light &amp; NHS</fullName>
+                <default>false</default>
+                <label>Employer - Blue Light &amp; NHS</label>
+            </value>
+            <value>
+                <fullName>Employer - Other Sectors not denoted above</fullName>
+                <default>false</default>
+                <label>Employer - Other Sectors not denoted above</label>
+            </value>
+            <value>
+                <fullName>Government or Government Agency</fullName>
+                <default>false</default>
+                <label>Government or Government Agency</label>
+            </value>
+            <value>
+                <fullName>Local Government or LG related</fullName>
+                <default>false</default>
+                <label>Local Government or LG related</label>
+            </value>
+            <value>
+                <fullName>Trade Association</fullName>
+                <default>false</default>
+                <label>Trade Association</label>
+            </value>
+            <value>
+                <fullName>CIC or Not for Profit</fullName>
+                <default>false</default>
+                <label>CIC or Not for Profit</label>
+            </value>
+            <value>
+                <fullName>Regular or Reserve Services, or Cadets</fullName>
+                <default>false</default>
+                <label>Regular or Reserve Services, or Cadets</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

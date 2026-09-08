@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Update_Emails_Failed</fullName>
+    
+    <columns>FULL_NAME</columns>
+    <columns>LEAD.COMPANY</columns>
+    <columns>Web_Form_Type__c</columns>
+    <columns>Target_Booking_Reference__c</columns>
+    <columns>NTE_Update_Status__c</columns>
+    <columns>NTE_Applicant_Email_Status__c</columns>
+    <columns>LEAD.CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters><field>NTE_Update_Status__c</field><operation>equals</operation><value>Matched and Applied</value></filters>
+    <filters><field>NTE_Applicant_Email_Status__c</field><operation>equals</operation><value>Failed</value></filters>
+    <label>NTE Update Emails Failed</label>
+</ListView>

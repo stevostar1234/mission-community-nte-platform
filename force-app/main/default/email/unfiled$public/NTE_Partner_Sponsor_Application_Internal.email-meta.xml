@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Internal NTE partner / sponsor application notification</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Internal NTE partner / sponsor application notification</name>
+    <style>none</style>
+    <subject>New NTE partner / sponsor application</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+
+New partner / sponsor application.
+
+{!Lead.Company} has applied to participate at {!Lead.NTE_Event_Code__c}.
+
+Hello NTE team,
+
+A new partner / sponsor application is ready for review.
+
+Organisation and contact
+Organisation {!Lead.Company}
+Application reference {!Lead.Booking_Reference__c}
+Applicant {!Lead.FirstName} {!Lead.LastName}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+{!IF(AND(ISBLANK(Lead.Event_Contact_Name__c),ISBLANK(Lead.Event_Contact_Email__c)),&quot;&quot;,&quot;Event contact &quot;)}{!Lead.Event_Contact_Name__c}{!IF(OR(ISBLANK(Lead.Event_Contact_Email__c),ISBLANK(Lead.Event_Contact_Name__c)),&quot;&quot;,&quot; · &quot;)}{!Lead.Event_Contact_Email__c}
+
+
+Package and arrangements
+Package(s) {!Lead.Sponsor_Package__c}
+Power {!Lead.Stand_Power__c}
+Equipment {!Lead.Stand_Equipment__c}
+Heavy vehicle follow-up {!Lead.Heavy_Vehicle_Required__c}
+Planned staff {!Lead.Total_Staff_Count__c}
+
+Quotation and invoicing
+Payment method {!Lead.Payment_Method__c}
+Invoice required {!Lead.Invoice_Required__c}
+Legal organisation name {!Lead.Invoiced_Company__c}
+Trading name {!Lead.Trading_Name__c}
+Billing address {!Lead.Invoice_Address__c}
+{!IF(AND(ISBLANK(Lead.Invoiced_Person__c),ISBLANK(Lead.Invoiced_Email__c),ISBLANK(Lead.Invoice_Contact_Phone__c)),&quot;&quot;,&quot;Finance contact &quot;)}{!Lead.Invoiced_Person__c}{!IF(OR(ISBLANK(Lead.Invoiced_Email__c),ISBLANK(Lead.Invoiced_Person__c)),&quot;&quot;,&quot; · &quot;)}{!Lead.Invoiced_Email__c}{!IF(OR(ISBLANK(Lead.Invoice_Contact_Phone__c),AND(ISBLANK(Lead.Invoiced_Person__c),ISBLANK(Lead.Invoiced_Email__c))),&quot;&quot;,&quot; · &quot;)}{!Lead.Invoice_Contact_Phone__c}
+Quotation required {!Lead.Quote_Required_for_PO__c}
+PO or reference required {!Lead.Purchase_Order__c} {!Lead.Purchase_Order_Number__c}
+Additional invoice information {!Lead.Invoice_Additional_Information__c}
+Supplier agreement {!Lead.Supplier_Agreement_Required__c}
+
+Open the Lead in Salesforce to review the application and record your decision.
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

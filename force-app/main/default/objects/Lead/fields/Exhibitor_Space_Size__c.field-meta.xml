@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exhibitor_Space_Size__c</fullName>
+    <label>Exhibitor Space Size</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Headline Partner - size and position to be confirmed with sponsor</fullName>
+                <default>false</default>
+                <label>Headline Partner - size and position to be confirmed with sponsor</label>
+            </value>
+            <value>
+                <fullName>Gold Partner - size and position to be confirmed with sponsor</fullName>
+                <default>false</default>
+                <label>Gold Partner - size and position to be confirmed with sponsor</label>
+            </value>
+            <value>
+                <fullName>Premier Partner - double exhibitor space (two trestle tables length)</fullName>
+                <default>false</default>
+                <label>Premier Partner - double exhibitor space (two trestle tables length)</label>
+            </value>
+            <value>
+                <fullName>Champion Partner - standard exhibitor space (one trestle table length)</fullName>
+                <default>false</default>
+                <label>Champion Partner - standard exhibitor space (one trestle table length)</label>
+            </value>
+            <value>
+                <fullName>Zone Sponsor - double exhibitor space (two trestle tables length)</fullName>
+                <default>false</default>
+                <label>Zone Sponsor - double exhibitor space (two trestle tables length)</label>
+            </value>
+            <value>
+                <fullName>Troops&apos; Track Day Partner - standard exhibitor space (one trestle table length)</fullName>
+                <default>false</default>
+                <label>Troops&apos; Track Day Partner - standard exhibitor space (one trestle table length)</label>
+            </value>
+            <value>
+                <fullName>Standard exhibitor space (one trestle table length) - suitable for Community Stage, Event Guide Sponsor, Delegate Tote Bag and Karting Activity sponsors)</fullName>
+                <default>false</default>
+                <label>Standard exhibitor space (one trestle table length) - suitable for Community Stage, Event Guide Sponsor, Delegate Tote Bag and Karting Activity sponsors)</label>
+            </value>
+            <value>
+                <fullName>10m × 6m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>10m × 6m</label>
+            </value>
+            <value>
+                <fullName>11m × 7m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>11m × 7m</label>
+            </value>
+            <value>
+                <fullName>12m × 4m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>12m × 4m</label>
+            </value>
+            <value>
+                <fullName>13m × 5m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>13m × 5m</label>
+            </value>
+            <value>
+                <fullName>14m × 6m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>14m × 6m</label>
+            </value>
+            <value>
+                <fullName>15m × 7m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>15m × 7m</label>
+            </value>
+            <value>
+                <fullName>16m × 4m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>16m × 4m</label>
+            </value>
+            <value>
+                <fullName>17m × 5m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>17m × 5m</label>
+            </value>
+            <value>
+                <fullName>18m × 6m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>18m × 6m</label>
+            </value>
+            <value>
+                <fullName>19m × 7m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>19m × 7m</label>
+            </value>
+            <value>
+                <fullName>20m × 4m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>20m × 4m</label>
+            </value>
+            <value>
+                <fullName>9m × 5m</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>9m × 5m</label>
+            </value>
+            <value>
+                <fullName>As specified in selected space</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>As specified in selected space</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,91 @@
+<template>
+    <article class="relationship-card">
+        <header class="card-header">
+            <div>
+                <p class="eyebrow">NTE Management</p>
+                <h2>{title}</h2>
+            </div>
+            <lightning-icon icon-name="standard:opportunity" size="small" alternative-text=""></lightning-icon>
+        </header>
+
+        <template if:true={isLoading}>
+            <div class="state"><lightning-spinner size="small" alternative-text="Loading NTE relationships"></lightning-spinner></div>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="state state--error" role="alert">{errorMessage}</div>
+        </template>
+
+        <template if:true={showsOpportunities}>
+            <template if:true={hasOpportunities}>
+                <div class="table-wrap">
+                    <table>
+                        <caption class="slds-assistive-text">NTE opportunities related to this record</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Opportunity</th>
+                                <th scope="col">Event</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Stage</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Close date</th>
+                                <template if:true={objectApiNameIsContact}><th scope="col">Relationship</th></template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={opportunities} for:item="item">
+                                <tr key={item.id}>
+                                    <td><a href={item.url}>{item.name}</a></td>
+                                    <td>{item.eventCode}</td>
+                                    <td>{item.bookingType}</td>
+                                    <td><span class="stage-pill">{item.stage}</span></td>
+                                    <td>{item.amountText}</td>
+                                    <td>{item.closeDateText}</td>
+                                    <template if:true={objectApiNameIsContact}><td>{item.contactText}</td></template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
+            <template if:false={hasOpportunities}><p class="empty-state">{emptyMessage}</p></template>
+        </template>
+
+        <template if:true={showsRelationships}>
+            <template if:true={hasOpportunityRelationships}>
+                <template if:true={account}>
+                    <section class="account-summary" aria-labelledby="nte-account-heading">
+                        <p id="nte-account-heading" class="section-label">Account</p>
+                        <a class="primary-link" href={account.url}>{account.name}</a>
+                        <div class="account-meta"><span>{account.phone}</span><span>{account.website}</span></div>
+                    </section>
+                </template>
+
+                <section class="contacts-section" aria-labelledby="nte-contacts-heading">
+                    <p id="nte-contacts-heading" class="section-label">Opportunity contacts</p>
+                    <template if:true={hasContacts}>
+                        <div class="table-wrap">
+                            <table>
+                                <caption class="slds-assistive-text">Contacts related to this NTE opportunity</caption>
+                                <thead><tr><th scope="col">Contact</th><th scope="col">Role</th><th scope="col">Title</th><th scope="col">Email</th><th scope="col">Phone</th></tr></thead>
+                                <tbody>
+                                    <template for:each={contacts} for:item="item">
+                                        <tr key={item.id}>
+                                            <td><a href={item.url}>{item.name}</a></td>
+                                            <td><span class="stage-pill">{item.roleText}</span></td>
+                                            <td>{item.title}</td>
+                                            <td><a href={item.emailLink}>{item.emailText}</a></td>
+                                            <td>{item.phoneText}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                    <template if:false={hasContacts}><p class="empty-state empty-state--compact">No contacts are linked to this opportunity.</p></template>
+                </section>
+            </template>
+            <template if:false={hasOpportunityRelationships}><p class="empty-state">{emptyMessage}</p></template>
+        </template>
+    </article>
+</template>

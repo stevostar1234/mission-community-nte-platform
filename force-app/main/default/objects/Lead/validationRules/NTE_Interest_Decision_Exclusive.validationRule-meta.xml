@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Interest_Decision_Exclusive</fullName>
+    <active>true</active>
+    <description>An expression of interest cannot be both progressed and not progressed.</description>
+    <errorConditionFormula>AND(NTE_Interest_Progressed__c, NTE_Interest_Not_Progressed__c)</errorConditionFormula>
+    <errorMessage>Choose either Progressed or Not Progressed, not both.</errorMessage>
+</ValidationRule>

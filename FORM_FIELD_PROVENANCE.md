@@ -1,0 +1,208 @@
+# NTE27 Form Field Provenance and Change Rationale
+
+Last reviewed: 18 August 2026
+
+This document records why every visible form field exists and where it came from. It is a requirements-traceability record, not legal or compliance approval. The Salesforce API names shown in the HTML are deployed MMUAT mappings unless a section explicitly identifies an outstanding dependency.
+
+## Source register
+
+- **Kate exhibitor workbook:** `260729 NTE27 Exhibitor Expression of Interest to Exhibit Questions.xlsx`, sheet `Questions to Ask`. This is the principal source for the exhibitor application questions.
+- **Kate process workbook:** `260427 NTE26 Exhibitor Process (2) (1).xlsx`. This describes operational stages such as invitation, registration, invoicing, payment, allocation, confirmation and arrival. It is a process source, not a question-by-question form specification.
+- **Kate emails and written feedback:** the emails supplied in the project brief, including the request to separate exhibitor and partner/sponsor journeys, price and multi-select sponsor packages, staff and heavy-vehicle follow-ups, power charges, accessibility requirements, acknowledgements, approval messages, logo collection, terms, guest registration and optional add-ons.
+- **Partner/sponsor Microsoft Forms:** `https://forms.cloud.microsoft/e/eKBk2tj5a2` and `https://forms.cloud.microsoft/e/UtVv8GT8Dn`, supplied by Kate as the two partner/sponsor forms to combine.
+- **Heavy-vehicle Microsoft Form:** `https://forms.cloud.microsoft/e/UhqUZsvNGq`, supplied by Kate as the current logistics questionnaire.
+- **Tony guest questionnaire:** `Guests Question (002).docx`, supplied by Kate after the original request.
+- **Client email copy:** `Auto response, Exhibitor, Govt&Charity confirmation email templates.docx` and the four supplied HTML email templates.
+- **User-directed change:** a decision or wording supplied directly by the project lead in this task after reviewing the client material.
+- **Project-added:** a field or adaptation introduced by the implementation team to make the journey usable, identifiable or Salesforce-compatible. It was not requested verbatim by Kate or Tony.
+
+Where sources conflict, the priority used here is: later client feedback, then the attached source questionnaire, then explicit user direction, then project-added design decisions.
+
+## 1. Partner / sponsor expression of interest
+
+This is the public, pre-qualification journey. Kate explicitly said the priced partner/sponsor application is onboarding rather than expression of interest and should not appear publicly. The project lead therefore requested a separate, simple public expression-of-interest form.
+
+### Fields
+
+- **Organisation name** — adapted from the client’s partner/sponsor and exhibitor forms; standard identity field.
+- **Organisation type** — project-added qualification field. It supports routing and the charity/government distinction but was not supplied as an exact EOI question.
+- **Website** — adapted from the client’s commercial forms; useful for qualification.
+- **First name and surname** — adapted from the client forms and Kate’s question about separating names for personalised emails.
+- **Job title, email address and telephone number** — adapted from the client’s commercial contact questions.
+- **Partnering, sponsoring or both** — project-added to distinguish the enquiry before packages are discussed.
+- **Areas of interest** — project-added multi-select covering partnership, headline/gold/premier/champion opportunities, zone sponsorship, stage/content, event assets, Escapade, Troops’ Track Day and other ideas. It intentionally does not show prices because this is pre-qualification.
+- **Additional comments regarding desired sponsorship or partnership** — user-directed replacement for the two earlier narrative questions. It remains required and maps to the proposed partnership-interest detail field.
+- **Preferred contact method and best time to contact** — project-added follow-up fields.
+- **How the applicant heard about NTE27** — adapted from the exhibitor questionnaire.
+- **Permission for Mission Community to make contact** — project-added journey-specific consent. The final privacy wording still requires client/legal approval.
+
+### Important boundary
+
+This form captures interest only. It does not select packages, agree prices, collect invoicing details or confirm acceptance.
+
+## 2. Exhibitor application
+
+This is the standalone exhibitor application Kate explicitly requested, separate from partner/sponsor onboarding.
+
+### Organisation and applicant
+
+- **Organisation name for marketing** — Kate exhibitor workbook.
+- **Alternative or former organisation name** — removed from the public exhibitor application following Kate's 18 August feedback. The existing Salesforce field is retained for historical data and is no longer populated by new applications.
+- **Organisation category** — Kate exhibitor workbook, adapted to support commercial, charity, government and blue-light pricing rules described in Kate’s feedback.
+- **Organisation website** — Kate exhibitor workbook.
+- **Title/prefix, first name, surname, job title, email, mobile and work/landline phone** — Kate exhibitor workbook. First and surname are separate in line with Kate’s email-personalisation question.
+- **Second contact switch and second contact prefix, name, job title, email, mobile and work phone** — Kate exhibitor workbook. Conditional display is a project implementation choice.
+
+### Event history and application details
+
+- **Previously attended NTE24, NTE25 and NTE26** — Kate’s workbook originally contained three separate year questions. The shorter client-facing labels retain the deployed Salesforce values NTE2024, NTE2025 and NTE2026 so existing reporting remains compatible. Each year is an independent checkbox; an unchecked year means No.
+- **Planned number of exhibitor staff** — Kate exhibitor workbook.
+- **Exhibition-space selection** — Kate exhibitor workbook and client pricing material. Prices are shown in the interface to support the application decision.
+- **Power required and number of sockets** — Kate’s written feedback: £100 + VAT per socket, availability not guaranteed unless requested, with a 50% discount for charities, government and blue-light organisations. Conditional display and the indicative calculation are project implementation choices.
+- **Additional staff required and number above the included allocation** — Kate’s written feedback: £50 + VAT per additional person.
+- **Names of colleagues, one per line** — Kate’s written feedback, including the instruction that names may change later.
+- **Indicative ex-VAT total** — project-added calculation using the client-supplied space, socket and extra-staff prices. It is not an invoice or quote.
+
+### Space, equipment and accessibility
+
+- **Sunday setup availability** — Kate exhibitor workbook.
+- **Equipment beyond display stands and laptops** — Kate exhibitor workbook and written feedback.
+- **Heavy vehicles/items indicator** — Kate’s written feedback. The detailed logistics questionnaire is intentionally sent later because Kate said applicants often do not have final details at initial application.
+- **Accessibility required and free-text details** — Kate’s written feedback and workbook. The project lead later directed that the question be general and not single out disabled parking.
+
+### Quotation and invoicing
+
+- **Quotation required before an invoice can be raised** — retained as a separate question at Kate's request on 28 August 2026 so quotation work is not inferred from the invoice choice.
+- **Payment method** — chargeable applicants choose Bank transfer or Stripe. This is stored separately from invoice readiness so both routes can receive an invoice and follow the same finance milestones.
+- **Invoice required** — calculated automatically from the selected space and chargeable extras. Complimentary applications with no chargeable extras remain outside the finance workflow; every chargeable application enters it regardless of payment method.
+- **Legal organisation name for quotation and invoicing, billing address and trading name** — Mission Motorsport Customer Finance Information Sheet supplied on 18 August 2026, with the legal-name label clarified by Kate on 28 August 2026. Trading name uses a new field rather than repurposing the historical alternative-organisation-name field.
+- **Main contact name, email and telephone** — the same finance sheet; these are already captured in section 2 and are not duplicated.
+- **Finance contact name, email and telephone** — the same finance sheet. Kate's 28 August 2026 direction explicitly asks for these details even when the finance contact is the same as the main NTE contact.
+- **Purchase order or reference requirement and details** — the same finance sheet, extending the existing purchase-order fields without removing their earlier data.
+- **Additional information required on the quotation or invoice** — the same finance sheet; stored in a new long-text field.
+- **Supplier agreement required** — explicitly retained at Kate's request.
+- **Question order** — quotation, payment method, purchase-order/reference and supplier-agreement requirements appear before the billing identity and finance-contact fields, following Kate's 28 August 2026 direction.
+- **Declaration name and automatic submission date** — fulfil the finance sheet's signature, name and date intent within the online form; no paper signature field is duplicated.
+- **Conditional display of billing details** — project implementation choice so applicants who genuinely need neither a quote nor invoice are not asked for irrelevant billing fields.
+
+### Final details and declaration
+
+- **Industry body or trade-association membership** — Kate exhibitor workbook.
+- **How the applicant heard about NTE27** — Kate exhibitor workbook.
+- **Declaration name** — explicitly required in Kate’s workbook: “Declaration - By entering your name in the box below…”. It has therefore been retained under the instruction to remove declaration-name fields only when the client had not specified one.
+- **Agreement to NTE27 Terms and Conditions and Privacy Policy** — Kate requested a Terms and Conditions link; the project lead directed the current visible wording to use “Privacy Policy” instead of “payment terms”. The client must still supply or approve the final URLs and legal wording.
+
+## 3. Partner / sponsor application
+
+This is the direct-link application used after Mission Community has discussed and qualified the opportunity. Kate said the two existing partner/sponsor forms could be amalgamated and that this is onboarding, not public expression of interest.
+
+### Organisation and contacts
+
+- **Organisation name for marketing, applicant first name, surname, job title, email and telephone** — combined from the two client partner/sponsor Microsoft Forms; name split also follows Kate’s email-personalisation question.
+- **Whether the applicant is the main event-day contact** — client partner/sponsor form.
+- **Event-day contact first name, surname, job title, email and mobile** — client partner/sponsor form. Conditional display is a project implementation choice.
+
+### Package selection
+
+- **Partner/sponsor package selections** — Kate’s written package list and prices. Checkboxes intentionally allow more than one package because Kate wrote, “More than one package could be allowed”.
+- **Headline Partner £30,000; Gold Partner £15,000; Premier Partner £7,000; Champion Partner £2,000; Zone Sponsor £5,000; Community Stage Sponsor £6,000; Podcast Corner Sponsor £6,000; Event Guide Sponsor £5,000; Delegate Tote Bag Sponsor £5,000; Helmet Bay Sponsor £3,000; Auditorium Sponsor £5,000; Live Stream Sponsor £6,000; Wristband Sponsor £3,000; Escapade Sponsor £9,000** — Kate’s written list. “Zone” is displayed as “Zone Sponsor” for applicant clarity following project-lead direction.
+- **Selected package count and listed-price total** — project-added interface summary. It excludes VAT and does not constitute a quote or invoice. Only choices with defined prices are available.
+
+### Exhibition space and operations
+
+- **Space size and preferred position** — removed following the client review on 13 August 2026. Mission Community confirmed that the selected partner/sponsor package already includes the appropriate exhibition space, so applicants do not need to choose a size or position.
+- **Sunday setup, power, equipment, accessibility requirement/details, colleague names and other space notes** — combined client partner/sponsor exhibition-space form and Kate’s written feedback.
+- **Heavy vehicles/items indicator and later logistics-form notice** — Kate’s written feedback. Detailed questions remain in the separate later-stage form.
+
+### Quotation, invoicing and agreement
+
+- **Quotation requirement, purchase-order/reference requirement and supplier-agreement requirement** — the same revised Customer Finance Information questions used on the exhibitor application, reordered following Kate's 28 August 2026 direction.
+- **Legal organisation name, billing address, trading name and finance contact details** — the same revised Customer Finance Information questions used on the exhibitor application. The form explicitly asks for a finance contact different from the main NTE contact, following Kate's 28 August 2026 direction.
+- **Payment method and invoice workflow** — partner/sponsor applicants choose Bank transfer or Stripe. Both remain in the invoice workflow because an invoice accompanies either route; the payment method is copied to the NTE Opportunity on conversion.
+- **Main contact name, email and telephone** — already captured in section 1 and not duplicated in the finance section.
+- **Declaration name and automatic submission date** — fulfil the finance sheet's signature, name and date intent within the online form.
+- **Agreement to NTE27 Terms and Conditions and Privacy Policy** — Kate’s terms-link requirement plus the project lead’s current wording direction. Final URLs and wording still need client/legal approval.
+
+## 4. Guest registration
+
+This form implements Tony’s supplied `Guests Question (002).docx`.
+
+### Fields
+
+- **Guest first name and surname** — Tony specified “Name”; split into first and surname as a project adaptation for Salesforce and personalised emails.
+- **Email, phone, organisation and job title** — Tony guest questionnaire.
+- **Accompanying guest yes/no** — Tony guest questionnaire.
+- **Accompanying guest first name, surname and email** — Tony specified accompanying person name and email; the name is split for Salesforce. Conditional display is a project implementation choice.
+- **Accessibility requirement yes/no and free-text arrangements** — Tony guest questionnaire. Visible wording was generalised at the project lead’s direction.
+- **Accuracy and permission declaration** — project-added safeguard because a registrant may submit another person’s personal details. The exact wording should receive client/privacy approval before production.
+- **Fallback organisation value for individual guests** — project implementation detail required because Web-to-Lead requires a company value.
+
+## 5. Staff details update
+
+Kate asked how attendee names could be updated nearer the event and suggested that this might need a separate form. During the client review on 13 August 2026, Mission Community confirmed that the same update journey must work for exhibitor and partner/sponsor applications.
+
+### Fields
+
+- **Organisation name, submitting contact first name, surname and original application email** — adapted from the initial applications so Salesforce can identify either an exhibitor or partner/sponsor booking.
+- **Application reference** — project-added reconciliation key; it is optional until the Salesforce process confirms how references will be issued.
+- **Total attending, whether the total exceeds the allocation, number above allocation and full attendee list** — adapted from Kate’s staff questions and £50 + VAT additional-staff rule.
+
+### Important boundary
+
+Web-to-Lead cannot reopen the original browser submission. The deployed automation matches the exact application reference to one converted Opportunity. It updates exactly one booking; unmatched or failed submissions remain visible for manual reconciliation.
+
+## 6. Heavy Vehicle, Equipment and Haulier details
+
+Kate supplied the current Microsoft Form and asked for its questions to be captured for exhibitors bringing large vehicles or equipment. Because she also said the details are often unavailable at initial application, the full questionnaire is a later-stage form linked from the initial indicator.
+
+### Identification and contacts
+
+- **Exhibiting organisation, main contact, email and direct phone** — heavy-vehicle Microsoft Form. Main-contact name is split into first and surname as a Salesforce adaptation.
+- **Application reference** — project-added reconciliation key. It is the automatically generated booking reference shown in the application email. It is not a password and does not open or reveal the original application; the update form can only submit supplementary details against an exact matching approved booking.
+- **Second contact name, email and phone** — heavy-vehicle Microsoft Form.
+- **Planned delivery window** — heavy-vehicle Microsoft Form.
+
+### Exhibition items
+
+- **Description/manufacturer/model, registration where applicable, dimensions and gross weight for items 1, 2 and 3** — heavy-vehicle Microsoft Form. The three repeated groups are a fixed Web-to-Lead representation of the current questionnaire.
+
+### Haulier
+
+- **Haulier name, staff names, vehicle type, vehicle gross weight without the exhibition item, dimensions and registration** — heavy-vehicle Microsoft Form.
+
+### Important boundary
+
+The deployed automation associates this supplementary submission with the exact application reference of an approved exhibitor or partner/sponsor Opportunity.
+
+## 7. Logo upload
+
+This page has no Salesforce form fields.
+
+- **Secure upload link** — project-added response to Kate’s request for a single place to collect approved organisations’ logos without handling email attachments manually.
+- **Preferred formats and filename guidance** — project-added operational guidance.
+- **Visible copy and layout** — simplified after the client review on 13 August 2026 to use short, natural instructions and mention the secure upload only once. Approval-stage explanations were removed because only approved organisations receive this page.
+- **Microsoft 365 File Request destination** — proposed implementation. Mission Community must supply the final File Request URL and confirm the controlled SharePoint/OneDrive folder and access rules.
+
+## Email-template provenance
+
+- **Exhibitor application received and internal notification** — adapted from the supplied exhibitor HTML templates and Kate’s application-autoresponder wording.
+- **Approved paid exhibitor confirmation** — based on the supplied exhibitor confirmation wording, including invoice, power, additional staff, logo and final-event-detail messages.
+- **Approved government/charity confirmation** — based on the supplied government/charity confirmation wording.
+- **Partner/sponsor expression-of-interest receipt and internal notification** — project-added for the public pre-qualification journey requested by the project lead; field summaries reflect that new form.
+- **Partner/sponsor application confirmation** — adapted from the supplied sponsor applicant confirmation and Kate's 18 August direction that the application link is only issued after the partnership or sponsorship has been agreed. It confirms the organisation, repeats the submitted package, arrangements and quotation/invoicing details, and places the logo-upload action beside the logo request.
+- **Partner/sponsor application confirmed** — project-added at the project lead’s current request, based on Kate’s described post-approval process: confirm the application, state that a quotation/invoice will follow where applicable, and request the latest logo.
+- **Guest registration receipt and internal notification** — project-added around Tony’s supplied questionnaire.
+- **Staff-update and heavy-vehicle receipts** — project-added acknowledgements for the later-stage forms.
+
+## Outstanding approvals and implementation dependencies
+
+- Final NTE27 Terms and Conditions URL, Privacy Policy URL and approved agreement wording.
+- Final Microsoft 365 File Request URL and storage ownership/access rules.
+- Any future automatic Stripe reconciliation requires the selected payment provider and webhook/notification design. Until then, staff use **Invoice / Stripe link provided** after sending the relevant document/link and **Has paid** after payment is confirmed.
+- Confirmation whether finance needs dedicated quote number, invoice number and manually entered issue-date fields. The current actions record the quote-provided, invoice/Stripe-link-provided and paid milestones with an automatic action timestamp and user, but do not store external document numbers or a separately chosen finance date.
+- Confirmation whether partner/sponsor application submission should also automatically move or convert the Salesforce record, or whether the NTE team will continue to complete that internal step after checking the submitted requirements.
+- Approved sender, reply-to address, subject lines and final copy for each email.
+- Any approved Escapade ticket add-on price, VAT, quantity and capacity rules; the current sponsor package is not the same as a bookable ticket add-on.
+- End-to-end security review, privacy review, accessibility testing and user acceptance testing before production submissions are enabled.
+
+Pricing catalogue update, 6 September 2026: the client retired the two unpriced application choices. Browser and Salesforce catalogues now require a defined price; complimentary spaces remain available to eligible categories.

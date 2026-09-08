@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exhibitor_Space_Selections__c</fullName>
+    <description>Captured by the NTE27 exhibitor Web-to-Lead form.</description>
+    <label>Exhibitor Space Selections</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Garage Space - reduced size with power - £600 + VAT</fullName>
+                <default>false</default>
+                <label>Garage Space - reduced size with power - £600 + VAT</label>
+            </value>
+            <value>
+                <fullName>Single Garage - Paddock Side with power - £800 + VAT</fullName>
+                <default>false</default>
+                <label>Single Garage - Paddock Side with power - £800 + VAT</label>
+            </value>
+            <value>
+                <fullName>Double Garage - Paddock Side with power - £1,300 + VAT</fullName>
+                <default>false</default>
+                <label>Double Garage - Paddock Side with power - £1,300 + VAT</label>
+            </value>
+            <value>
+                <fullName>Single Garage - Track Side - £800 + VAT</fullName>
+                <default>false</default>
+                <label>Single Garage - Track Side - £800 + VAT</label>
+            </value>
+            <value>
+                <fullName>Double Garage - Track Side - £1,300 + VAT</fullName>
+                <default>false</default>
+                <label>Double Garage - Track Side - £1,300 + VAT</label>
+            </value>
+            <value>
+                <fullName>Clean Energy Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Clean Energy Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Clean Energy Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Clean Energy Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Built Environment Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Built Environment Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Built Environment Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Built Environment Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Manufacturing Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Manufacturing Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Manufacturing Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Manufacturing Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Defence &amp; Security Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Defence &amp; Security Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Defence &amp; Security Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Defence &amp; Security Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Digital and Technologies Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Digital and Technologies Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Digital and Technologies Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Digital and Technologies Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>FM Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>FM Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>FM Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>FM Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Professional &amp; Financial Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Professional &amp; Financial Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Professional &amp; Financial Zone - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Professional &amp; Financial Zone - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Training &amp; Education Zone - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Training &amp; Education Zone - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Any other business - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Any other business - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>Any other business - Double - £849 + VAT</fullName>
+                <default>false</default>
+                <label>Any other business - Double - £849 + VAT</label>
+            </value>
+            <value>
+                <fullName>Local Government Authority - Single - £249.50 + VAT</fullName>
+                <default>false</default>
+                <label>Local Government Authority - Single - £249.50 + VAT</label>
+            </value>
+            <value>
+                <fullName>Blue Light - Single - £249.50 + VAT</fullName>
+                <default>false</default>
+                <label>Blue Light - Single - £249.50 + VAT</label>
+            </value>
+            <value>
+                <fullName>Trade Association - Single - £499 + VAT</fullName>
+                <default>false</default>
+                <label>Trade Association - Single - £499 + VAT</label>
+            </value>
+            <value>
+                <fullName>COBSEO Charity - Single - Free</fullName>
+                <default>false</default>
+                <label>COBSEO Charity - Single - Free</label>
+            </value>
+            <value>
+                <fullName>Non COBSEO Charity - Single - Free</fullName>
+                <default>false</default>
+                <label>Non COBSEO Charity - Single - Free</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>8</visibleLines>
+</CustomField>

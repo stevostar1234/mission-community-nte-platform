@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Approval_Email_Requested_By__c</fullName>
+    <label>NTE Provisional Email Requested By</label>
+    <length>255</length>
+    <type>Text</type>
+</CustomField>

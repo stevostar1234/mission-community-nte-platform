@@ -1,0 +1,6 @@
+<aura:component implements="lightning:homeTemplate" description="Full-width one-region Home template for the NTE Management app">
+    <aura:attribute name="main" type="Aura.Component[]" />
+    <div class="nte-full-width-home" role="main">
+        {!v.main}
+    </div>
+</aura:component>

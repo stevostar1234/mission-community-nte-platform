@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE partner / sponsor staff update acknowledgement</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE partner / sponsor staff update acknowledgement</name>
+    <style>none</style>
+    <subject>NTE partner / sponsor staff details updated</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Partner / sponsor staff details
+
+Your staff details have been received.
+
+Hello,
+
+We have matched this update to booking {!Lead.Target_Booking_Reference__c} for {!Lead.Company}.
+
+Staff details
+Total attending {!Lead.Total_Staff_Count__c}
+Names {!Lead.Staff_Base_Names__c}
+
+There is no additional charge for partner or sponsor staff.
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

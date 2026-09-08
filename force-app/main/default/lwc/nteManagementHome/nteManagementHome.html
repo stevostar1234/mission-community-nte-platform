@@ -1,0 +1,178 @@
+<template>
+    <section class="portfolio" aria-busy={isLoading}>
+        <header class="portfolio-header">
+            <div class="portfolio-title">
+                <p class="eyebrow">NTE Management</p>
+                <h1>Event portfolio</h1>
+            </div>
+
+            <div class="portfolio-controls">
+                <lightning-combobox
+                    class="event-selector"
+                    name="event"
+                    label="Event"
+                    value={selectedEventCode}
+                    options={eventOptions}
+                    onchange={handleEventChange}
+                    disabled={controlsDisabled}
+                ></lightning-combobox>
+                <span class="control-divider" aria-hidden="true"></span>
+                <lightning-button-icon
+                    class="refresh-button"
+                    icon-name="utility:refresh"
+                    alternative-text="Refresh event portfolio"
+                    title="Refresh event portfolio"
+                    variant="bare"
+                    onclick={handleRefresh}
+                    disabled={isLoading}
+                ></lightning-button-icon>
+                <div class="refresh-copy" aria-live="polite">
+                    <span>Last refreshed</span>
+                    <strong>{refreshedAt}</strong>
+                </div>
+            </div>
+        </header>
+
+        <template if:true={showInitialLoading}>
+            <div class="loading-state">
+                <lightning-spinner alternative-text="Loading event portfolio" size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="message-state" role="alert">
+                <lightning-icon icon-name="utility:error" size="small" alternative-text=""></lightning-icon>
+                <p>{errorMessage}</p>
+            </div>
+        </template>
+
+        <template if:true={hasDashboard}>
+            <section class="headline-section" aria-labelledby="headline-heading">
+                <h2 id="headline-heading" class="slds-assistive-text">Headline event values</h2>
+                <ol class="headline-flow">
+                    <template for:each={headlineMetrics} for:item="metric">
+                        <li key={metric.key} class={metric.itemClass}>
+                            <div class="headline-metric">
+                                <p class="headline-label">{metric.label}</p>
+                                <p class="headline-value">{metric.formattedValue}</p>
+                                <p class="headline-records">
+                                    <lightning-icon
+                                        class={metric.dotClass}
+                                        icon-name="utility:record"
+                                        size="xx-small"
+                                        alternative-text=""
+                                    ></lightning-icon>
+                                    <span>{metric.recordText}</span>
+                                </p>
+                            </div>
+                            <template if:true={metric.showConnector}>
+                                <lightning-icon
+                                    class="headline-connector"
+                                    icon-name="utility:chevronright"
+                                    size="small"
+                                    alternative-text=""
+                                ></lightning-icon>
+                            </template>
+                        </li>
+                    </template>
+                </ol>
+            </section>
+
+            <div class="portfolio-grid">
+                <section class="pipeline-section" aria-labelledby="pipeline-heading">
+                    <h2 id="pipeline-heading">Commercial pipeline</h2>
+                    <div class="table-scroll">
+                        <table class="pipeline-table">
+                            <caption class="slds-assistive-text">Commercial pipeline record counts and values by stage</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col"><span class="slds-assistive-text">Stage</span></th>
+                                    <th scope="col">Records</th>
+                                    <th scope="col">Exhibitor value</th>
+                                    <th scope="col">Partner / sponsor value</th>
+                                    <th scope="col">Total value</th>
+                                    <th scope="col">Relative value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={pipelineRows} for:item="row">
+                                    <tr key={row.key}>
+                                        <th scope="row">
+                                            <span class="stage-name">
+                                                <lightning-icon class={row.iconClass} icon-name={row.iconName} size="xx-small" alternative-text=""></lightning-icon>
+                                                <span>{row.label}</span>
+                                            </span>
+                                        </th>
+                                        <td>{row.formattedRecords}</td>
+                                        <td>
+                                            <span class="cell-value">{row.formattedExhibitorValue}</span>
+                                            <span class="data-track" aria-hidden="true"><span class="data-fill data-fill--exhibitor" style={row.exhibitorWidthStyle}></span></span>
+                                        </td>
+                                        <td>
+                                            <span class="cell-value">{row.formattedPartnerValue}</span>
+                                            <span class="data-track" aria-hidden="true"><span class="data-fill data-fill--partner" style={row.partnerWidthStyle}></span></span>
+                                        </td>
+                                        <td class="total-value">{row.formattedTotalValue}</td>
+                                        <td>
+                                            <span class="cell-value">{row.formattedShare}</span>
+                                            <span class="data-track" aria-hidden="true"><span class="data-fill data-fill--share" style={row.shareWidthStyle}></span></span>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <aside class="insights-column" aria-label="Revenue and booking insights">
+                    <section class="insight-section" aria-labelledby="readiness-heading">
+                        <h2 id="readiness-heading">Revenue readiness</h2>
+                        <div class="readiness-bar" aria-hidden="true">
+                            <template for:each={revenueReadiness} for:item="item">
+                                <span key={item.key} class={item.segmentClass} style={item.widthStyle}></span>
+                            </template>
+                        </div>
+                        <ul class="readiness-list">
+                            <template for:each={revenueReadiness} for:item="item">
+                                <li key={item.key}>
+                                    <span class="readiness-label">
+                                        <lightning-icon class={item.dotClass} icon-name="utility:record" size="xx-small" alternative-text=""></lightning-icon>
+                                        <span>{item.label}</span>
+                                    </span>
+                                    <span class="readiness-percentage">{item.formattedPercentage}</span>
+                                    <span class="readiness-value">{item.formattedValue}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </section>
+
+                    <section class="insight-section booking-section" aria-labelledby="booking-heading">
+                        <h2 id="booking-heading">Booking mix</h2>
+                        <div class="booking-table-wrap">
+                            <table class="booking-table">
+                                <caption class="slds-assistive-text">Exhibitor and partner or sponsor booking comparison</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><span class="slds-assistive-text">Measure</span></th>
+                                        <th scope="col">Exhibitor</th>
+                                        <th scope="col">Partner / sponsor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><th scope="row">Records</th><td>{bookingMix.exhibitor.recordsText}</td><td>{bookingMix.partnerSponsor.recordsText}</td></tr>
+                                    <tr><th scope="row">Value</th><td>{bookingMix.exhibitor.valueText}</td><td>{bookingMix.partnerSponsor.valueText}</td></tr>
+                                    <tr><th scope="row">Avg. value</th><td>{bookingMix.exhibitor.averageText}</td><td>{bookingMix.partnerSponsor.averageText}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+
+            <footer lwc:if={pricingReviewNote} class="portfolio-note">
+                <lightning-icon icon-name="utility:info" size="small" alternative-text="Information"></lightning-icon>
+                <p>{pricingReviewNote}</p>
+            </footer>
+        </template>
+    </section>
+</template>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Finance_Invoice_Due__c</fullName>
+    <description>Booking or staff top-up invoice work, including unresolved pricing.</description>
+    <formula>OR(NOT(NTE_Pricing_Ready__c), AND(OR(NTE_Quote_Required_for_PO__c &lt;&gt; &quot;Yes&quot;, NTE_Quote_Provided__c), OR(AND(OR(NTE_Invoice_Required__c = &quot;Yes&quot;, NTE_Listed_Price_Total__c &gt; 0, NOT(NTE_Pricing_Ready__c)), NOT(NTE_Invoice_Provided__c)), AND(OR(NTE_Top_Up_Invoice_Required__c, BLANKVALUE(NTE_Top_Up_Staff_Total__c, 0) &gt; 0), NOT(NTE_Top_Up_Invoice_Provided__c)))))</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>NTE Finance Invoice Required</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

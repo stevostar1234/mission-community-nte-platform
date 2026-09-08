@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Internal NTE expression of interest notification</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Internal NTE expression of interest notification</name>
+    <style>none</style>
+    <subject>New NTE partner / sponsor expression of interest</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+
+New partner / sponsor interest.
+
+{!Lead.Company} would like to discuss partnering with or sponsoring {!Lead.NTE_Event_Code__c}.
+
+Hello NTE team,
+
+A new partner or sponsor expression of interest is ready for qualification. The prospect has not selected a priced package or supplied billing details at this stage.
+
+Next steps
+
+• Review organisational fit and the comments provided.
+
+• Assign an owner and contact the prospect using their preference below.
+
+• Share the sales brochure or webinar details where appropriate.
+
+• Record the qualification outcome and next follow-up date in Salesforce.
+
+Submission summary
+
+Prospect
+
+Organisation {!Lead.Company}
+Organisation type {!Lead.Organisation_Type__c}
+Contact {!Lead.FirstName} {!Lead.LastName}
+Job title {!Lead.Title}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+Website {!Lead.Website}
+
+Interest
+
+Interested in {!Lead.Partner_Interest_Type__c}
+Areas {!Lead.Partner_Interest_Areas__c}
+Additional comments regarding desired sponsorship or partnership {!Lead.Partnership_Interest_Detail__c}
+Preferred contact {!Lead.Preferred_Contact_Method__c}
+Best time {!Lead.Preferred_Contact_Time__c}
+Discovery source {!Lead.Event_Discovery_Source__c}
+
+CRM
+
+Salesforce reference {!Lead.Id}
+Submission type {!Lead.Web_Form_Type__c}
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

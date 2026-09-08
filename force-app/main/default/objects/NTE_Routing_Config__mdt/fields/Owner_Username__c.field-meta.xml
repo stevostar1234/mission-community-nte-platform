@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Owner_Username__c</fullName>
+    <description>Username of the active Salesforce user who owns NTE submissions and receives internal notifications in this environment.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Owner Username</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

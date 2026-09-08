@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Logo_Update_Form_URL__c</fullName>
+    <description>Public form used by confirmed NTE organisations to provide their latest logo.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Logo Update Form URL</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

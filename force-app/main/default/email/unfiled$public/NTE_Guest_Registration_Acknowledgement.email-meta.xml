@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE guest registration acknowledgement</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE guest registration acknowledgement</name>
+    <style>none</style>
+    <subject>NTE guest registration received</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Guest registration received
+
+Thank you for registering.
+
+We have received your guest details for the National Transition Event.
+
+{!IF(ISBLANK(Lead.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Lead.FirstName}{!IF(ISBLANK(Lead.FirstName),&quot;&quot;,&quot;,&quot;)}
+
+Thank you for registering for {!Lead.NTE_Event_Code__c} at Silverstone. We will use the information below to prepare for your visit and will send further event information closer to the date.
+
+Accessibility arrangements
+
+If you told us about accessibility requirements for you or anyone accompanying you, the NTE team will review them and contact you if further detail is needed.
+
+Your registration summary
+
+Primary guest
+
+Name {!Lead.FirstName} {!Lead.LastName}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+Organisation {!Lead.Company}
+Job title {!Lead.Title}
+
+Your party
+
+Accompanying guest {!Lead.Guest_Accompanying__c}
+Accompanying guest name {!Lead.Accompanying_Guest_Name__c}
+Accompanying guest email {!Lead.Accompanying_Guest_Email__c}
+Accessibility requirements {!Lead.Guest_Accessibility_Required__c} - {!Lead.Guest_Accessibility_Details__c}
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

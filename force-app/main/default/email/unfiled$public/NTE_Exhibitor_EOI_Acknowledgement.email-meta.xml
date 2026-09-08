@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE exhibitor expression of interest acknowledgement</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE exhibitor expression of interest acknowledgement</name>
+    <style>none</style>
+    <subject>NTE exhibitor interest received</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Expression of interest received
+
+Thank you for your interest in exhibiting.
+
+{!IF(ISBLANK(Lead.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Lead.FirstName}{!IF(ISBLANK(Lead.FirstName),&quot;&quot;,&quot;,&quot;)}
+
+We have received the expression of interest from {!Lead.Company}. The NTE team will review the information and contact you about the most suitable next step.
+
+What happens next
+
+This is an acknowledgement of interest, not confirmation of an exhibition space.
+
+Your expression of interest
+Organisation {!Lead.Company}
+Organisation type {!Lead.Organisation_Type__c}
+Interested in sponsorship opportunities {!Lead.Exhibitor_Interest_Detail__c}
+Value-adding activities {!Lead.Exhibitor_Community_Contribution__c}
+Preferred contact {!Lead.Preferred_Contact_Method__c}
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

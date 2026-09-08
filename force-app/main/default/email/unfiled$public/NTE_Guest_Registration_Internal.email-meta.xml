@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Internal NTE guest registration notification</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Internal NTE guest registration notification</name>
+    <style>none</style>
+    <subject>New NTE guest registration</subject>
+    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+
+New guest registration.
+
+{!Lead.FirstName} {!Lead.LastName} has registered to attend {!Lead.NTE_Event_Code__c}.
+
+Hello NTE team,
+
+A new guest registration has been received. Please review any accompanying-guest and accessibility information below.
+
+Next steps
+
+• Check for an existing attendee or duplicate registration.
+
+• Record the primary and accompanying guest against {!Lead.NTE_Event_Code__c}.
+
+• Route accessibility requirements to the event operations owner.
+
+• Include the registrant in the final joining-instructions audience.
+
+Submission summary
+
+Primary guest
+
+Name {!Lead.FirstName} {!Lead.LastName}
+Email {!Lead.Email}
+Telephone {!Lead.Phone}
+Organisation {!Lead.Company}
+Job title {!Lead.Title}
+
+Party and access
+
+Accompanying guest {!Lead.Guest_Accompanying__c}
+Name {!Lead.Accompanying_Guest_Name__c}
+Email {!Lead.Accompanying_Guest_Email__c}
+Accessibility {!Lead.Guest_Accessibility_Required__c} - {!Lead.Guest_Accessibility_Details__c}
+
+CRM
+
+Salesforce reference {!Lead.Id}
+Submission type {!Lead.Web_Form_Type__c}
+
+{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

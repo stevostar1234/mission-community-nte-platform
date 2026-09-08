@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Partner_Sponsor_Applications</fullName>
+    <columns>FULL_NAME</columns>
+    <columns>LEAD.COMPANY</columns>
+    <columns>LEAD.EMAIL</columns>
+    <columns>Booking_Reference__c</columns>
+    <columns>Payment_Method__c</columns>
+    <columns>NTE_Event_Code__c</columns>
+    <columns>NTE_Application_Rejected__c</columns>
+    <columns>LEAD.STATUS</columns>
+    <columns>LEAD.CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Web_Form_Type__c</field>
+        <operation>equals</operation>
+        <value>Partner / Sponsor Application</value>
+    </filters>
+    <filters>
+        <field>LEAD.CONVERTED</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>NTE_Application_Rejected__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>NTE_Event_Code__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>NTE Partner / Sponsor Applications</label>
+</ListView>

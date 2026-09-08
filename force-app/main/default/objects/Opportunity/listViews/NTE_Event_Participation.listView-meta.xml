@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Event_Participation</fullName>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>NTE_Event_Code__c</columns>
+    <columns>NTE_Source_Form_Type__c</columns>
+    <columns>Booking_Reference__c</columns>
+    <columns>NTE_Attendance_Status__c</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>OPPORTUNITY.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Opportunity.NTE_Event_Opportunity</value>
+    </filters>
+    <filters>
+        <field>NTE_Event_Code__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>NTE Event Participation</label>
+</ListView>

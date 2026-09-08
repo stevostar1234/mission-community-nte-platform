@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Heavy_Vehicle_Update_Completed_At__c</fullName>
+    <description>Set automatically after a Heavy Vehicle Details submission has been applied successfully.</description>
+    <label>NTE Heavy Vehicle Update Completed At</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>DateTime</type>
+</CustomField>

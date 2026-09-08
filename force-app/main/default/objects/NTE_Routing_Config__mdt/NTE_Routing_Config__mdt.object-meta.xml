@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Environment-specific owner routing for National Transition Event submissions.</description>
+    <label>NTE Routing Configuration</label>
+    <pluralLabel>NTE Routing Configurations</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

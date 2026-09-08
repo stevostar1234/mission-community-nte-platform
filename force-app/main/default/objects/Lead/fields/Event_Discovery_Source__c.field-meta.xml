@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Discovery_Source__c</fullName>
+    <description>How the person discovered the National Transition Event.</description>
+    <label>Event Discovery Source</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Previous exhibitor</fullName>
+                <default>false</default>
+                <label>Previous exhibitor</label>
+            </value>
+            <value>
+                <fullName>E-mail invitation</fullName>
+                <default>false</default>
+                <label>E-mail invitation</label>
+            </value>
+            <value>
+                <fullName>Word of mouth from previous exhibitor</fullName>
+                <default>false</default>
+                <label>Word of mouth from previous exhibitor</label>
+            </value>
+            <value>
+                <fullName>Word of mouth from previous attendees</fullName>
+                <default>false</default>
+                <label>Word of mouth from previous attendees</label>
+            </value>
+            <value>
+                <fullName>Website</fullName>
+                <default>false</default>
+                <label>Website</label>
+            </value>
+            <value>
+                <fullName>LinkedIn</fullName>
+                <default>false</default>
+                <label>LinkedIn</label>
+            </value>
+            <value>
+                <fullName>Facebook</fullName>
+                <default>false</default>
+                <label>Facebook</label>
+            </value>
+            <value>
+                <fullName>Instagram</fullName>
+                <default>false</default>
+                <label>Instagram</label>
+            </value>
+            <value>
+                <fullName>Previous NTE event</fullName>
+                <default>false</default>
+                <label>Previous NTE event</label>
+            </value>
+            <value>
+                <fullName>NTE webinar or brochure</fullName>
+                <default>false</default>
+                <label>NTE webinar or brochure</label>
+            </value>
+            <value>
+                <fullName>Email invitation</fullName>
+                <default>false</default>
+                <label>Email invitation</label>
+            </value>
+            <value>
+                <fullName>Recommendation or word of mouth</fullName>
+                <default>false</default>
+                <label>Recommendation or word of mouth</label>
+            </value>
+            <value>
+                <fullName>National Transition Event website</fullName>
+                <default>false</default>
+                <label>National Transition Event website</label>
+            </value>
+            <value>
+                <fullName>Mission Community website</fullName>
+                <default>false</default>
+                <label>Mission Community website</label>
+            </value>
+            <value>
+                <fullName>Other social media</fullName>
+                <default>false</default>
+                <label>Other social media</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
