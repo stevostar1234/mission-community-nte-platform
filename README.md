@@ -2,6 +2,8 @@
 
 This repository contains the Salesforce source, forms, tests and release documentation for National Transition Event submissions in Mission Community.
 
+The complete private project checkpoint is [stevostar1234/mission-community-nte-platform](https://github.com/stevostar1234/mission-community-nte-platform). [Publication and file verification](audit/NTE_GITHUB_CHECKPOINT_2026-09-08.md) record the uploaded contents and exclusions.
+
 The current release approach and Stripe account-transition steps are in [the production deployment plan](NTE_PRODUCTION_DEPLOYMENT_PLAN_2026-09-08.md). The [8 September dependency audit](audit/NTE_PACKAGE_DEPENDENCY_REVIEW_2026-09-08.md) extends the earlier field-only inventory, and [code metrics](audit/NTE_CODE_METRICS_2026-09-08.json) separate application code, tests, metadata and generated examples. Stripe Payment Links with manual payment confirmation is selected; the integration is still planned.
 
 For the current business requirements, read [NTE_DESIRED_WORKFLOW.md](NTE_DESIRED_WORKFLOW.md). Proposed implementation changes and their approval status are recorded in [NTE_CHANGE_PROPOSALS.md](NTE_CHANGE_PROPOSALS.md). These distinguish the intended workflow from behaviour already implemented in the package.
