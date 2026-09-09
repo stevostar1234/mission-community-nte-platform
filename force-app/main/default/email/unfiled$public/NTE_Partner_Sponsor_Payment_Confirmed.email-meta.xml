@@ -14,9 +14,23 @@ Your partnership / sponsorship is confirmed.
 
 Thank you for your booking payment. We are delighted to confirm your partnership / sponsorship at {NTE_EVENT_LABEL}.
 
-Booking payment received
+Your agreement
 
-{NTE_PAYMENT_NOTE}
+Your partnership / sponsorship agreement is supplied separately for signing. If you have not yet received it, please contact the NTE team.
+
+Final event details will be sent approximately two weeks before the event. If you have any questions, please do feel free to get in touch.
+
+Staff details and event preparation
+
+When your final attendee list is ready, submit the names using the partner / sponsor staff form.
+
+Please upload your latest company logo for {NTE_EVENT_LABEL} marketing and event materials. We request the latest artwork from every participating organisation, as branding may have changed.
+
+{NTE_PREPARATION_LINKS}
+
+Your booking charges
+
+{NTE_FINANCE_SUMMARY}
 
 Organisation and contact
 Organisation {NTE_ORGANISATION}
@@ -34,9 +48,6 @@ Equipment {!Opportunity.NTE_Stand_Equipment__c}
 Heavy vehicle follow-up {!Opportunity.NTE_Heavy_Vehicle_Required__c}
 Planned staff {!Opportunity.NTE_Total_Staff_Count__c}
 
-Your booking charges
-
-{NTE_FINANCE_SUMMARY}
 Billing details
 Payment method {!Opportunity.NTE_Payment_Method__c}
 Legal organisation name {!Opportunity.NTE_Invoiced_Company__c}
@@ -47,19 +58,6 @@ PO or reference {!Opportunity.NTE_Purchase_Order__c} {!Opportunity.NTE_Purchase_
 Additional invoice information {!Opportunity.NTE_Invoice_Additional_Information__c}
 Supplier agreement {!Opportunity.NTE_Supplier_Agreement_Required__c}
 
-Your agreement
-
-Your partnership / sponsorship agreement is supplied separately for signing. If you have not yet received it, please contact the NTE team.
-
-Final event details will be sent approximately two weeks before the event. If you have any questions, please do feel free to get in touch.
-
-Staff details and event preparation
-
-When your final attendee list is ready, submit the names using the partner / sponsor staff form.
-
-Please upload your latest company logo for {NTE_EVENT_LABEL} marketing and event materials. We request the latest artwork from every participating organisation, as branding may have changed.
-
-{NTE_PREPARATION_LINKS}
 If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
 
 Kind regards,

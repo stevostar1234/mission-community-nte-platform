@@ -395,13 +395,15 @@ for (const filename of ["partner-sponsor-approved-confirmation.html", "exhibitor
   const email = fs.readFileSync(path.join(root, "email-templates", "source", filename), "utf8");
   assert(compileEmailPresentation(email).includes("{!Contact.FirstName}") && email.includes("{!Opportunity.Booking_Reference__c}"), `${filename}: approval must use the booking and its Primary Contact as merge context`);
   assert(!email.includes("{!Lead."), `${filename}: post-conversion approval must not merge a potentially stale Lead snapshot`);
-  for (const token of ["NTE_EVENT_LABEL", "NTE_ORGANISATION", "NTE_PAYMENT_NOTE", "NTE_FINANCE_SUMMARY", "NTE_PREPARATION_LINKS"]) {
+  const requiredTokens = ["NTE_EVENT_LABEL", "NTE_ORGANISATION", "NTE_FINANCE_SUMMARY", "NTE_PREPARATION_LINKS"];
+  if (!filename.includes("payment-confirmed")) requiredTokens.push("NTE_PAYMENT_NOTE");
+  for (const token of requiredTokens) {
     assert(email.includes(`{${token}}`), `${filename}: approval must include the current ${token} content`);
   }
 }
 for (const filename of ["exhibitor-approved-confirmation.html", "government-charity-approved-confirmation.html", "exhibitor-payment-confirmed.html"]) {
   const email = fs.readFileSync(path.join(emailSourceDirectory, filename), "utf8");
-  for (const wording of ["Final event details will be sent approximately two weeks before the event.", "Livery Bay", "website logo montage", "Use your booking reference to provide the final staff names.", "separately invoiced top-up places"]) {
+  for (const wording of ["Final event details will be sent approximately two weeks before the event.", "Livery Bay", "website logo montage", "Use your booking reference to provide the final staff names.", "additional staff places as separately invoiced top-ups if required"]) {
     assert(email.includes(wording), `${filename}: restored client wording must preserve ${wording}`);
   }
   assert(email.indexOf("Use your booking reference to provide the final staff names.") < email.indexOf("{NTE_PREPARATION_LINKS}"), `${filename}: preparation buttons must follow the staff guidance`);
@@ -419,6 +421,27 @@ for (const filename of ["exhibitor-payment-confirmed.html", "partner-sponsor-pay
   const email = fs.readFileSync(path.join(emailSourceDirectory, filename), "utf8");
   assert(email.includes("Thank you for your booking payment."), `${filename}: payment confirmation must identify its trigger`);
   assert(!/provisionally reserved|invoice will be issued|invoice will follow|payment instructions/i.test(email), `${filename}: confirmed email must not request the booking payment again`);
+  assert(!email.includes("Booking payment received") && !email.includes("{NTE_PAYMENT_NOTE}"), `${filename}: remove the repeated payment-status box`);
+}
+for (const filename of fs.readdirSync(emailSourceDirectory).filter(name => name.endsWith('.html'))) {
+  const email = fs.readFileSync(path.join(emailSourceDirectory, filename), 'utf8');
+  assert(!/>CRM<|\{!(?:Lead|Opportunity|Contact|Account)\.(?:Id|OwnerId)\}/i.test(email), `${filename}: email content must not expose CRM record identifiers`);
+}
+for (const participant of ['exhibitor', 'partner-sponsor']) {
+  for (const confirmed of [false, true]) {
+    const name = `${participant}-stripe-${confirmed ? 'payment-confirmed' : 'provisional'}.html`;
+    const email = fs.readFileSync(path.join(root, 'email-templates', 'examples', name), 'utf8');
+    const prep = email.indexOf('Staff details and event preparation');
+    const charges = email.indexOf(confirmed ? 'Your booking charges' : 'Allocation and charges');
+    const details = email.indexOf(participant === 'partner-sponsor' ? 'Organisation and contact' : confirmed ? 'Your confirmed booking' : 'Your provisional booking');
+    assert(confirmed ? prep < charges && charges < details : charges < prep && prep < details, `${name}: section order must follow the owner annotations`);
+    assert(email.includes(confirmed ? 'Total paid' : 'Total payable'), `${name}: distinguish paid and payable amounts`);
+    if (confirmed) assert(!/Pay Now|Total payable|data-nte-payment-button/.test(email), `${name}: a payment confirmation must not request payment`);
+    else {
+      assert(email.includes('Pay Now') && email.includes('assets/stripe-icon.png') && email.includes('aria-disabled="true"'), `${name}: show the branded preview control without a payment destination`);
+      assert(!/href="https:\/\/buy\.stripe\.com/.test(email), `${name}: public previews cannot collect a payment`);
+    }
+  }
 }
 for (const filename of ["volunteer-application-applicant-confirmation.html", "volunteer-application-internal-notification.html"]) {
   const email = fs.readFileSync(path.join(emailSourceDirectory, filename), "utf8");

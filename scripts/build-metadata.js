@@ -1353,20 +1353,20 @@ function emailPreviewHtml(sourceFile, stripe = false) {
   const preparationLinks = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;table-layout:fixed;"><tr>' + actions.map(([label, page]) =>
     `<td class="action-column" width="${actions.length === 3 ? '33.33%' : '50%'}" valign="top" style="padding:0 4px 8px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td align="center" bgcolor="${colour}" style="background-color:${colour};border-radius:7px;"><a class="email-button" href="https://stevostar1234.github.io/nte27-web-to-lead-demo/${page}" style="display:block;padding:14px 10px;background-color:${colour};color:#ffffff;text-decoration:none;border-radius:7px;font-size:14px;line-height:21px;font-weight:bold;">${label}</a></td></tr></table></td>`
   ).join("") + '</tr></table>';
-  const moneyRow = (label, value) => `<tr><td style="padding:12px 18px;border-bottom:1px solid #e4edf2;">${escapePreview(label)}</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e4edf2;">£${Number(value).toFixed(2)}</td></tr>`;
+  const moneyRow = (label, value) => `<tr><td style="padding:12px 18px;border-bottom:1px solid #e4edf2;">${escapePreview(label)}</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e4edf2;white-space:nowrap;">£${Number(value).toFixed(2)}</td></tr>`;
   let financeRows = partner
     ? moneyRow("Partner / sponsor package", values.Sponsor_Package_Total__c)
     : moneyRow("Exhibition space", values.Exhibitor_Space_Price__c);
   if (!partner && Number(values.Power_Socket_Total__c) > 0) financeRows += moneyRow(`Power sockets · ${values.Power_Socket_Count__c} × £${values.Power_Socket_Unit_Price__c}`, values.Power_Socket_Total__c);
   if (!partner && Number(values.Additional_Staff_Total__c) > 0) financeRows += moneyRow(`Additional staff · ${values.Additional_Staff_Count__c} × £${values.Additional_Staff_Unit_Price__c}`, values.Additional_Staff_Total__c);
-  financeRows += moneyRow("Booking total · excluding VAT", values.Listed_Price_Total__c);
+  financeRows += moneyRow(paymentConfirmed && !stripe ? "Total paid · excluding VAT" : "Booking total · excluding VAT", values.Listed_Price_Total__c);
   if (stripe) {
     const net = Number(values.Listed_Price_Total__c);
     const tax = Math.round(net * 20) / 100;
     financeRows += moneyRow('VAT (20.00%)', tax) + moneyRow(paymentConfirmed ? 'Total paid' : 'Total payable', net + tax);
   }
   const paymentButton = stripe && !paymentConfirmed
-    ? '<p style="margin:20px 0;"><a role="link" aria-disabled="true" style="display:inline-block;padding:14px 22px;background:#0b668f;color:#ffffff;text-decoration:none;border-radius:7px;font-weight:bold;">Pay securely</a></p>' : '';
+    ? '<table data-nte-payment-button="true" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:420px;margin:26px auto 10px;"><tr><td align="center" bgcolor="#0b668f" style="background-color:#0b668f;border-radius:10px;"><a role="link" aria-disabled="true" aria-label="Pay Now with Stripe" style="display:block;padding:19px 20px;border-radius:10px;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:0;line-height:28px;text-align:left;"><span style="display:inline-block;width:56%;vertical-align:middle;font-size:21px;font-weight:bold;line-height:28px;">Pay Now </span><span style="display:inline-block;width:44%;vertical-align:middle;text-align:right;"><span style="display:inline-block;padding-left:14px;border-left:1px solid #b8d9e8;font-size:17px;font-weight:bold;line-height:26px;white-space:nowrap;"><img src="https://stevostar1234.github.io/nte27-web-to-lead-demo/assets/stripe-icon.png?v=20260909-1" width="22" height="22" alt="" role="presentation" style="display:inline-block;width:22px;height:22px;margin-right:7px;border:0;border-radius:4px;vertical-align:middle;">Stripe</span></span></a></td></tr></table>' : '';
   const tokens = {
     NTE_EVENT_LABEL: values.NTE_Event_Code__c,
     NTE_ORGANISATION: escapePreview(values.Company),
@@ -1379,7 +1379,7 @@ function emailPreviewHtml(sourceFile, stripe = false) {
       : complimentary
         ? "Your booking is complimentary and your space is confirmed. No payment is due."
         : stripe
-          ? "Your space is provisionally reserved. Please use the secure payment link below. Your space will be confirmed when the NTE team records your payment."
+          ? "Your space is provisionally reserved. Please use the secure payment link below. Your space will be confirmed by the NTE Team."
           : "Your space is provisionally reserved. The NTE team will send your quotation or invoice with payment instructions. Your space will be confirmed when payment is recorded.",
     NTE_FINANCE_SUMMARY: '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #dce7ed;border-radius:10px;overflow:hidden;">' + financeRows + '</table>' + paymentButton
   };

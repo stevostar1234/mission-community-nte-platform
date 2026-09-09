@@ -88,14 +88,59 @@ private class NTEBookingPaymentEmailTest {
         System.assert(partnerHtml.contains('NTE-PAYMENT-PARTNER'));
         System.assert(partnerHtml.contains('partner-staff'));
         System.assert(!partnerHtml.contains('exhibitor-staff'));
-        System.assert(exhibitorHtml.contains('your space is confirmed'));
-        System.assert(partnerHtml.contains('your space is confirmed'));
+        assertPaidPresentation(exhibitorHtml, false);
+        assertPaidPresentation(partnerHtml, true);
+        System.assert(NTEExhibitorApprovalEmailService.plainTextFromHtml(exhibitorHtml).contains('Total paid · excluding VAT'));
+        System.assert(NTEExhibitorApprovalEmailService.plainTextFromHtml(partnerHtml).contains('Total paid · excluding VAT'));
         System.assert(exhibitorHtml.contains('action-column') && partnerHtml.contains('action-column'));
         System.assert(!exhibitorHtml.contains('event-day@example.invalid'));
         System.assert(partnerHtml.contains('Event contact') && partnerHtml.contains('Different Event-Day Contact')
             && partnerHtml.contains('event-day@example.invalid'), 'Event-day details remain labelled booking information; the dispatch recipient must remain the primary Contact.');
         System.assert(partnerHtml.contains('Primary contact') && partnerHtml.contains('payment-primary-1@example.invalid'));
         System.assert(!exhibitorHtml.contains('{NTE_') && !partnerHtml.contains('{NTE_'));
+    }
+
+    @IsTest
+    static void stripeConfirmationsShowSavedPaidTotalsWithoutAnotherPaymentRequest() {
+        configure();
+        List<Id> bookingIds = new List<Id>{bookingId('EXHIBITOR'), bookingId('PARTNER')};
+        List<NTE_Payment_Request__c> payments = new List<NTE_Payment_Request__c>();
+        for (Integer i = 0; i < bookingIds.size(); i++) {
+            Decimal net = i == 0 ? 80000 : 200000;
+            payments.add(new NTE_Payment_Request__c(Opportunity__c = bookingIds[i],
+                Charge_Key__c = 'PAID-PRESENTATION-' + bookingIds[i], Kind__c = 'Booking', Status__c = 'Ready',
+                Net_Minor__c = net, Amount_Minor__c = net * 1.2, Tax_Rate__c = 20, Currency__c = 'gbp'));
+            update new Opportunity(Id = bookingIds[i], NTE_Payment_Method__c = 'Stripe');
+        }
+        insert payments;
+        Test.startTest();
+        List<Id> dispatchIds = new List<Id>();
+        for (Id selected : bookingIds) {
+            System.assert(NTE_MasterPanelController.updateMilestone(selected, 'PAYMENT_RECEIVED').success);
+            dispatchIds.add(dispatchFor(selected).Id);
+        }
+        NTEEmailDispatchService.processQueued(dispatchIds, true);
+        Test.stopTest();
+        for (Integer i = 0; i < bookingIds.size(); i++) {
+            System.assertEquals('Sent', dispatchFor(bookingIds[i]).Status__c);
+            String html = NTEEmailDispatchService.renderedHtml.get(bookingIds[i]);
+            assertPaidPresentation(html, i == 1);
+            String text = NTEExhibitorApprovalEmailService.plainTextFromHtml(html);
+            System.assert(text.contains(i == 0 ? '£960.00' : '£2400.00'));
+            System.assert(text.contains(i == 0 ? '£160.00' : '£400.00'));
+            System.assert(text.contains('Total paid') && !text.contains('Total payable'));
+            System.assertEquals(1, dispatchCount(bookingIds[i]));
+        }
+    }
+
+    private static void assertPaidPresentation(String html, Boolean partner) {
+        System.assert(html.contains('Thank you for your booking payment.'));
+        System.assert(!html.contains('Booking payment received'), 'The repeated paid-status box was removed by the owner.');
+        System.assert(!html.contains('Total payable') && !html.contains('Pay Now') && !html.contains('buy.stripe.com'));
+        Integer preparation = html.indexOf('Staff details and event preparation');
+        Integer charges = html.indexOf('Your booking charges');
+        Integer details = html.indexOf(partner ? 'Organisation and contact' : 'Your confirmed booking');
+        System.assert(preparation >= 0 && preparation < charges && charges < details, 'Preparation, charges and booking details must follow the approved order.');
     }
 
     @IsTest

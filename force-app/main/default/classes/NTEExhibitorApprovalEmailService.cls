@@ -331,11 +331,11 @@ public without sharing class NTEExhibitorApprovalEmailService {
         Map<String, String> replacements = new Map<String, String>{
             '{NTE_EVENT_LABEL}' => escape(booking.NTE_Event_Code__c),
             '{NTE_ORGANISATION}' => escape(booking.Account == null ? booking.Name : booking.Account.Name),
-            '{NTE_PAYMENT_NOTE}' => escape(paymentNote(booking, paymentConfirmation, stripePayment)),
             '{NTE_FINANCE_SUMMARY}' => financeSummary(booking, stripePayment, paymentConfirmation)
                 + (paymentConfirmation || stripePayment == null ? '' : stripePaymentButton(stripePayment)),
             '{NTE_PREPARATION_LINKS}' => preparationLinks(booking, routing)
         };
+        if (!paymentConfirmation) replacements.put('{NTE_PAYMENT_NOTE}', escape(paymentNote(booking, stripePayment)));
         if (booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE && !paymentConfirmation) {
             replacements.put('{NTE_AGREEMENT_NOTE}', stripePayment == null
                 ? 'Your partnership / sponsorship agreement will be sent to you shortly for signing, along with a quotation or invoice as requested.'
@@ -436,12 +436,11 @@ public without sharing class NTEExhibitorApprovalEmailService {
         return preparationConfigurationError(booking, routing);
     }
 
-    private static String paymentNote(Opportunity booking, Boolean paymentConfirmation, NTE_Payment_Request__c payment) {
-        if (paymentConfirmation && booking.NTE_Payment_Received__c) return 'Your payment has been recorded and your space is confirmed.';
+    private static String paymentNote(Opportunity booking, NTE_Payment_Request__c payment) {
         if (isEligibleComplimentaryBooking(booking) && amount(booking) == 0) {
             return 'Your booking is complimentary and your space is confirmed. No payment is due.';
         }
-        if (payment != null) return 'Your space is provisionally reserved. Please use the secure payment link below. Your space will be confirmed when the NTE team records your payment.';
+        if (payment != null) return 'Your space is provisionally reserved. Please use the secure payment link below. Your space will be confirmed by the NTE Team.';
         return 'Your space is provisionally reserved. The NTE team will send your quotation or invoice with payment instructions. Your space will be confirmed when payment is recorded.';
     }
     private static String financeSummary(Opportunity booking, NTE_Payment_Request__c payment, Boolean paymentConfirmation) {
@@ -450,7 +449,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
             : moneyRow('Exhibition space', booking.NTE_Exhibitor_Space_Price__c);
         if (valueOrZero(booking.NTE_Power_Socket_Total__c) > 0) rows += moneyRow(quantityLabel('Power sockets', booking.NTE_Power_Socket_Count__c, booking.NTE_Power_Socket_Unit_Price__c), booking.NTE_Power_Socket_Total__c);
         if (valueOrZero(booking.NTE_Additional_Staff_Total__c) > 0) rows += moneyRow(quantityLabel('Additional staff places', booking.NTE_Additional_Staff_Count__c, booking.NTE_Additional_Staff_Unit_Price__c), booking.NTE_Additional_Staff_Total__c);
-        rows += moneyRow('Booking total · excluding VAT', amount(booking));
+        rows += moneyRow(paymentConfirmation && payment == null ? 'Total paid · excluding VAT' : 'Booking total · excluding VAT', amount(booking));
         if (payment != null) {
             rows += moneyRow('VAT (' + String.valueOf(payment.Tax_Rate__c.setScale(2)) + '%)', (payment.Amount_Minor__c - payment.Net_Minor__c) / 100);
             rows += moneyRow(paymentConfirmation ? 'Total paid' : 'Total payable', payment.Amount_Minor__c / 100);
@@ -459,8 +458,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
     }
     private static String stripePaymentButton(NTE_Payment_Request__c payment) {
         if (!NTEStripeClient.validTestUrl(payment.Payment_URL__c)) throw new ApprovalEmailException('The Stripe payment link is not ready.');
-        return '<p style="margin:20px 0;"><a href="' + escape(payment.Payment_URL__c)
-            + '" style="display:inline-block;padding:14px 24px;border-radius:8px;background:#0b668f;color:#ffffff;text-decoration:none;font-weight:700;">Pay securely</a></p>';
+        return '<table data-nte-payment-button="true" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:420px;margin:26px auto 10px;"><tr><td align="center" bgcolor="#0b668f" style="background-color:#0b668f;border-radius:10px;"><a href="' + escape(payment.Payment_URL__c) + '" aria-label="Pay Now with Stripe" style="display:block;padding:19px 20px;border-radius:10px;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:0;line-height:28px;text-align:left;"><span style="display:inline-block;width:56%;vertical-align:middle;font-size:21px;font-weight:bold;line-height:28px;">Pay Now </span><span style="display:inline-block;width:44%;vertical-align:middle;text-align:right;"><span style="display:inline-block;padding-left:14px;border-left:1px solid #b8d9e8;font-size:17px;font-weight:bold;line-height:26px;white-space:nowrap;"><img src="https://stevostar1234.github.io/nte27-web-to-lead-demo/assets/stripe-icon.png?v=20260909-1" width="22" height="22" alt="" role="presentation" style="display:inline-block;width:22px;height:22px;margin-right:7px;border:0;border-radius:4px;vertical-align:middle;">Stripe</span></span></a></td></tr></table>';
     }
     private static Decimal componentTotal(Opportunity booking) {
         return valueOrZero(booking.NTE_Sponsor_Package_Total__c) + valueOrZero(booking.NTE_Exhibitor_Space_Price__c)
@@ -520,7 +518,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
     }
     private static String moneyRow(String label, Decimal value) {
         return '<tr><td style="padding:12px 18px;border-bottom:1px solid #e4edf2;">' + escape(label)
-            + '</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e4edf2;">£' + money(value) + '</td></tr>';
+            + '</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e4edf2;white-space:nowrap;">£' + money(value) + '</td></tr>';
     }
     private static Decimal amount(Opportunity booking) { return booking.NTE_Listed_Price_Total__c; }
     private static Decimal valueOrZero(Decimal value) { return value == null ? 0 : value; }

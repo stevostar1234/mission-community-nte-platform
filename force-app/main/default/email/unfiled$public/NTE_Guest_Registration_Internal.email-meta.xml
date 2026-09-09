@@ -43,11 +43,6 @@ Name {!Lead.Accompanying_Guest_Name__c}
 Email {!Lead.Accompanying_Guest_Email__c}
 Accessibility {!Lead.Guest_Accessibility_Required__c} - {!Lead.Guest_Accessibility_Details__c}
 
-CRM
-
-Salesforce reference {!Lead.Id}
-Submission type {!Lead.Web_Form_Type__c}
-
 {!Lead.NTE_Event_Code__c} • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>

@@ -122,6 +122,7 @@ private class NTEStripeBookingServiceTest {
         String plain = NTEExhibitorApprovalEmailService.plainTextFromHtml(html);
         System.assert(plain.contains('£960.00') && plain.contains('£160.00') && plain.contains('£800.00'));
         System.assert(plain.contains('https://buy.stripe.com/test_Test') && plain.contains('exhibitor-staff-update.html'));
+        assertPaymentPresentation(html, false);
         System.assert(!plain.contains('££') && !plain.contains('{NTE_'));
         System.assertEquals(1, NTEExhibitorApprovalEmailService.acceptedDispatchCount); System.assertEquals(2, mock.writes);
     }
@@ -134,9 +135,20 @@ private class NTEStripeBookingServiceTest {
         System.assertEquals(240000, payment.Amount_Minor__c);
         String html = NTEExhibitorApprovalEmailService.htmlByOpportunityId.get(f.booking.Id);
         System.assert(html.contains('partner-sponsor-staff-update.html') && html.contains('buy.stripe.com'));
+        assertPaymentPresentation(html, true);
         System.assert(!html.contains('along with a quotation or invoice'), 'The combined Stripe email must not promise another quote.');
         System.assert(!html.contains('exhibitor-staff-update.html')); System.assertEquals(false, state(f.booking.Id).NTE_Payment_Received__c);
         System.assertEquals(true, state(f.booking.Id).NTE_Quote_Provided__c, 'The agreed combined itemised email supplies the requested quote.');
+    }
+    private static void assertPaymentPresentation(String html, Boolean partner) {
+        System.assert(html.contains('Pay Now') && html.contains('assets/stripe-icon.png'));
+        System.assert(html.contains('Your space will be confirmed by the NTE Team.'));
+        System.assert(html.contains('Total payable') && !html.contains('Total paid'));
+        Integer charges = html.indexOf('Allocation and charges');
+        Integer payment = html.indexOf('data-nte-payment-button');
+        Integer preparation = html.indexOf('Staff details and event preparation');
+        Integer details = html.indexOf(partner ? 'Organisation and contact' : 'Your provisional booking');
+        System.assert(charges >= 0 && charges < payment && payment < preparation && preparation < details);
     }
     @IsTest static void outageBlocksEmailWithoutChangingPayment() {
         Fixture f = savedFixture('EXHIBITOR'); Test.startTest();

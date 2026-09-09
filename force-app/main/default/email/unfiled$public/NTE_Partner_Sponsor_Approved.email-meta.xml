@@ -20,6 +20,22 @@ Your provisional allocation
 
 {NTE_PAYMENT_NOTE}
 
+Your agreement
+
+{NTE_AGREEMENT_NOTE}
+
+Allocation and charges
+
+{NTE_FINANCE_SUMMARY}
+
+Staff details and event preparation
+
+When your final attendee list is ready, submit the names using the partner / sponsor staff form.
+
+Please upload your latest company logo for {NTE_EVENT_LABEL} marketing and event materials. We request the latest artwork from every participating organisation, as branding may have changed.
+
+{NTE_PREPARATION_LINKS}
+
 Organisation and contact
 Organisation {NTE_ORGANISATION}
 Booking reference {!Opportunity.Booking_Reference__c}
@@ -36,9 +52,6 @@ Equipment {!Opportunity.NTE_Stand_Equipment__c}
 Heavy vehicle follow-up {!Opportunity.NTE_Heavy_Vehicle_Required__c}
 Planned staff {!Opportunity.NTE_Total_Staff_Count__c}
 
-Allocation and charges
-
-{NTE_FINANCE_SUMMARY}
 Quotation and invoicing
 Payment method {!Opportunity.NTE_Payment_Method__c}
 Invoice required {!Opportunity.NTE_Invoice_Required__c}
@@ -51,17 +64,6 @@ PO or reference required {!Opportunity.NTE_Purchase_Order__c} {!Opportunity.NTE_
 Additional invoice information {!Opportunity.NTE_Invoice_Additional_Information__c}
 Supplier agreement {!Opportunity.NTE_Supplier_Agreement_Required__c}
 
-Your agreement
-
-{NTE_AGREEMENT_NOTE}
-
-Staff details and event preparation
-
-When your final attendee list is ready, submit the names using the partner / sponsor staff form.
-
-Please upload your latest company logo for {NTE_EVENT_LABEL} marketing and event materials. We request the latest artwork from every participating organisation, as branding may have changed.
-
-{NTE_PREPARATION_LINKS}
 If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
 
 Kind regards,

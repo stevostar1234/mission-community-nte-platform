@@ -70,11 +70,6 @@ PO or reference required {!Lead.Purchase_Order__c} {!Lead.Purchase_Order_Number_
 Additional invoice information {!Lead.Invoice_Additional_Information__c}
 Supplier agreement {!Lead.Supplier_Agreement_Required__c}
 
-CRM
-
-Salesforce reference {!Lead.Id}
-Submission type {!Lead.Web_Form_Type__c}
-
 {!Lead.NTE_Event_Code__c} • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>

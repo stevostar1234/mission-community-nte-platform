@@ -14,13 +14,21 @@ Your exhibition space is confirmed.
 
 Thank you for your booking payment. We are delighted to confirm your exhibition space at {NTE_EVENT_LABEL}.
 
-Booking payment received
-
-{NTE_PAYMENT_NOTE}
-
 Final event details will be sent approximately two weeks before the event. If you have any questions, please do feel free to get in touch.
 
 Should you require any printing, you may be interested in the services our Livery Bay has to offer, as detailed in the information supplied by the NTE team.
+
+Staff details and event preparation
+
+Use your booking reference to provide the final staff names. You can also request additional staff places as separately invoiced top-ups if required.
+
+Please upload your latest company logo for inclusion in the National Transition Event website logo montage. We request this from all exhibitors, as branding is often updated or refreshed.
+
+{NTE_PREPARATION_LINKS}
+
+Your booking charges
+
+{NTE_FINANCE_SUMMARY}
 
 Your confirmed booking
 Organisation {NTE_ORGANISATION}
@@ -29,16 +37,6 @@ Exhibition space {!Opportunity.NTE_Exhibitor_Space_Selections__c}
 Planned staff {!Opportunity.NTE_Total_Staff_Count__c}
 Included staff places {!Opportunity.NTE_Included_Staff_Count__c}
 
-Your booking charges
-
-{NTE_FINANCE_SUMMARY}
-Staff details and event preparation
-
-Use your booking reference to provide the final staff names. You can also request separately invoiced top-up places.
-
-Please upload your latest company logo for inclusion in the National Transition Event website logo montage. We request this from all exhibitors, as branding is often updated or refreshed.
-
-{NTE_PREPARATION_LINKS}
 If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
 
 Kind regards,
