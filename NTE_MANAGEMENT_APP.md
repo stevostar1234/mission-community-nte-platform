@@ -56,6 +56,8 @@ Completed records have a manual **Final joining instructions sent** checkbox. Jo
 
 The app assigns dedicated Dynamic Forms pages for Lead, Account, Contact and Opportunity on both large and small form factors. These assignments apply only while users work in NTE Management.
 
+The app selects the view, not the record's form type or whether the person also volunteers. Other apps keep their existing pages and layout assignments. Do not activate NTE pages as organisation defaults or deploy shared Profiles/layouts. [Production preservation checks](deployment/NTE_PAGE_ISOLATION.md) protect that boundary; the older MMUAT Lead-view repair is not part of the production package.
+
 Each page uses Salesforce's standard Highlights Panel action source. This preserves the actions configured on the assigned page layout—including Convert on unconverted Leads and Edit, Delete, Clone and other applicable record actions—while respecting each user's permissions. New remains available from the corresponding object list view.
 
 - **Lead:** submission status, person and organisation, contact preferences, enquiry or application details, guest information, invoicing, logistics, update processing, activities and related records.

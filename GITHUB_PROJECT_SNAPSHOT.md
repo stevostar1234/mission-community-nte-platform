@@ -14,7 +14,7 @@ The complete project is maintained in the private [mission-community-nte-platfor
 | Metadata generation and local checks | `scripts/`, `tests/`, `package.json` |
 | Stripe account transition | [Client handover](NTE_STRIPE_CLIENT_HANDOVER_2026-09-11.md), `config/stripe-sandbox.example.json`, `config/stripe-live.example.json` |
 | Failure recovery | [14 September guide](output/NTE_Form_Submission_Failure_and_Recovery_Guide_2026-09-14.docx), [current restrictions and superseded space rule](audit/NTE_FORM_RESTRICTIONS_2026-09-15.md), [recovery decisions](audit/NTE_FORM_FAILURE_GUIDE_AND_CONVERSION_REVIEW_2026-09-14.md) |
-| Changes to existing shared components | [Target review patches](deployment/target-review/README.md) for Mission's Leads navigation and the legacy report's volunteer exclusion |
+| Preserve existing business record views | [App-specific page boundary and deployment checks](deployment/NTE_PAGE_ISOLATION.md); historical [target-review patches](deployment/target-review/README.md) must not be applied automatically |
 
 ## Verified implementation
 
@@ -22,13 +22,17 @@ The 15 September full MMUAT validation `0AfAd00000Sw2KfKAJ` passed 509 component
 
 Conversion is silent and each NTE application requires a new Opportunity. Requirements actions deliberately release Stripe, bank-transfer or free-space messages; checklist ticks are independent. Payment receipt is manual. A single later Stripe staff top-up keeps the original payment history and does not repeat finance questions. Staff names are not counted. Joining instructions are sent and marked manually. Native Account/Contact matching stays unchanged. Failed submissions are recovered by manual correction or a fresh applicant form.
 
+The 15 September app-view follow-up repaired two older MMUAT Lead assignment components (`0AfAd00000SwDsnKAF`). The same records show NTE pages only in NTE Management, with original business views retained in Mission and Mission Community. All existing layouts, page definitions and Profiles remain unchanged. New candidate/baseline checks prevent those shared definitions from entering the production release. The sandbox repair files stay outside production source. [Verified scope](audit/NTE_APP_PAGE_ISOLATION_2026-09-15.md).
+
+The subsequent [volunteer legacy-compatibility review](audit/VOLUNTEER_LEGACY_COMPATIBILITY_REVIEW_2026-09-15.md) is planning only. It records missing display/conversion coverage for the new volunteer answers and recommends preserving the existing Person Account register and all historic field definitions. Those volunteer changes are not implemented or approved by the app-view release.
+
 An isolated local rebuild reproduces the current generated source exactly. No sandbox journeys, emails or payments are replayed as part of this repository checkpoint. The dated audit remains the record of native qualification; production must validate its own configured candidate.
 
 ## Prepare production from the root source
 
 1. Clone the repository or download the current branch. Use the root `force-app/` and complete manifest, not an older reconstruction ZIP.
 2. Run the maintained metadata build and local checks. Apply target configuration only after building.
-3. Follow the production plan to preserve the target's shared picklists, rules, app customisations and record access. Review the two supplemental patches against the actual target components.
+3. Follow the production plan to preserve the target's shared picklists, rules, app customisations and record access. Run the page-isolation candidate check and capture the target's existing page/layout baseline. Keep existing apps, business layouts, Profiles and shared object defaults out of the deployment source. Historical supplemental patches are not automatic production steps.
 4. Replace MMUAT-specific routing, organisation/field IDs, preview URLs and merchant settings with the approved production values. Install API secrets separately in protected credentials. The repository intentionally retains the qualified sandbox configuration; it is not a ready-configured production merchant.
 5. Validate the exact configured candidate in the authorised production org, then release it through the separately approved deployment. Do not run destructive manifests or backfill scripts automatically; their target-specific scope must first be checked.
 

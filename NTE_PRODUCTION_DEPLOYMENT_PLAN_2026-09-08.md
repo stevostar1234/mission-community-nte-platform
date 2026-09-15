@@ -8,6 +8,8 @@ Stripe Invoicing and optional post-payment invoice creation remain excluded. The
 
 ## Recommended deployment method
 
+**15 September record-view boundary:** preserve every existing production business layout and page assignment. NTE pages are assigned only through the `NTE_Management` app, irrespective of whether the same record also belongs to another workflow. Follow [the mandatory source/target page checks](deployment/NTE_PAGE_ISOLATION.md) before and after release. Do not import the separate sandbox Lead-default repair, shared Profiles/layouts, other app definitions or global view overrides into the production candidate.
+
 Use this versioned Salesforce DX source and the complete `manifest/production-package.xml`, deployed through Salesforce CLI/Metadata API. Keep one reviewed release candidate, its configuration, validation result and source hashes together in GitHub. An automated CI release with a protected production environment can execute the same process later; it is not needed to introduce another packaging system now.
 
 | Option | Fit for this project |

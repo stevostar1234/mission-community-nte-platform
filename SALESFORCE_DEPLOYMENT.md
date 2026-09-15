@@ -40,7 +40,7 @@ sf project deploy start --manifest manifest/production-package.xml --target-org 
 Deploy only after the validation succeeds. The manual-pricing retirement manifest exists for a separately reviewed schema migration; it is not a routine installation step. Preserve target data and inspect dependencies before any destructive change.
 Follow the paired source/MMUAT process in `PRODUCTION_PACKAGE_SYNC.md` for every approved change.
 
-For production, follow [the current release plan](NTE_PRODUCTION_DEPLOYMENT_PLAN_2026-09-08.md). Retrieve and reconcile the shared LeadSource/OpportunityStage definitions before validation. Apply any reviewed target overlay after the generator runs, then freeze and validate that exact candidate. Production access and release are separate from sandbox qualification.
+For production, follow [the current release plan](NTE_PRODUCTION_DEPLOYMENT_PLAN_2026-09-08.md). Retrieve and reconcile the shared LeadSource/OpportunityStage definitions before validation. Preserve existing business layouts and page assignments using [the required page-isolation checks](deployment/NTE_PAGE_ISOLATION.md). Only NTE Management receives the NTE record pages; no shared layout, Profile, other app or global page default is deployed. Apply any reviewed target overlay after the generator runs, then freeze and validate that exact candidate. Production access and release are separate from sandbox qualification.
 
 ## Lifecycle checks
 

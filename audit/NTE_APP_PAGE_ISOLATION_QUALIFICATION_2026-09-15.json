@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-15",
+  "proposal": 25,
+  "productionDeployed": false,
+  "sandboxValidation": {
+    "id": "0AfAd00000SwDRNKA3",
+    "status": "Succeeded",
+    "components": 2
+  },
+  "sandboxDeployment": {
+    "id": "0AfAd00000SwDsnKAF",
+    "status": "Succeeded",
+    "components": 2,
+    "apexChanged": false,
+    "testLevel": "NoTestRun"
+  },
+  "protectedDefinitionsCompared": 225,
+  "intendedSandboxAssignmentChanges": [
+    "applications/Mission_Community_Partnerships.app-meta.xml",
+    "objects/Lead/Lead.object-meta.xml"
+  ],
+  "unintendedProtectedChanges": [],
+  "missingProtectedDefinitions": [],
+  "addedSharedDefinitions": [],
+  "unchangedFullDefinitions": {
+    "layouts": 136,
+    "flexipages": 38,
+    "profiles": 22,
+    "applications": 32
+  },
+  "unchangedNteAppAndPages": 6,
+  "qualifiedSourceFilesUnchanged": 594,
+  "sourceCandidateCheck": {
+    "passed": true,
+    "errors": []
+  },
+  "localTests": {
+    "forms": "passed",
+    "pageIsolationMethods": 6,
+    "pageIsolationStatus": "passed"
+  },
+  "recordMutations": 0,
+  "emailsSent": 0,
+  "paymentsMade": 0,
+  "rawNativeEvidenceLocation": "tmp/nte-layout-isolation-20260915/",
+  "productionRepairFilesPackaged": false,
+  "verifiedAt": "2026-09-15T13:18:57.481691+00:00",
+  "browserVerification": {
+    "Lead": {
+      "Mission": "Existing personal/service/volunteer/consent layout; old sponsor/exhibition sections absent",
+      "Mission Community": "Existing personal/service/volunteer/consent layout; old sponsor/exhibition sections absent",
+      "NTE Management": "NTE submission/application/pricing/procurement sections on the same Lead"
+    },
+    "Account": {
+      "Mission": "Existing Partner page",
+      "NTE Management": "NTE participation and organisation details"
+    },
+    "Contact": {
+      "Mission": "Existing contact/address/business fields",
+      "NTE Management": "NTE participation and contact details"
+    },
+    "Opportunity": {
+      "Mission": "Existing standard sales fields",
+      "NTE Management": "NTE booking, application, pricing, finance/payments, logistics and correspondence sections"
+    }
+  },
+  "browserVerificationComplete": true
+}

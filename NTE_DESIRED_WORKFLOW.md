@@ -6,6 +6,22 @@ This is the current record of the intended workflow. Read it before proposing, i
 
 When the project owner supplies a changed brief, update the relevant rule here, record the change in the decision history, and update affected proposal statuses/dependencies. Record unknowns as undecided. Do not treat an assistant suggestion as an accepted business rule. Current explicit user instructions take precedence over this document. Do not assume client changes have occurred unless they are communicated or otherwise authorised for discovery.
 
+## Volunteer legacy compatibility — proposal 26, review only, 15 September
+
+The owner requires preservation of existing volunteer records and established field/API definitions. The new web form should populate the same fields for equivalent questions; genuinely new questions may remain blank on older records. Do not make historic records invalid, reclassify them or replace their existing information. The owner explicitly requests discussion before implementing any volunteer mapping/layout change.
+
+The read-only review confirms reuse of the established identity, contact, date-of-birth, next-of-kin, volunteering and consent fields. It identifies new answers missing from the old Lead page, absent conversion mappings/destination fields for those answers, a populated Company placeholder inconsistent with the existing Person Account volunteer register, and a new-form-only Lead list. Proposed remedies remain unapproved. Preserve all 25 native custom Lead conversion mappings and the existing beneficiary/volunteer overlap. [Field-by-field findings and recommendation](audit/VOLUNTEER_LEGACY_COMPATIBILITY_REVIEW_2026-09-15.md).
+
+## App-specific record views — proposal 25, approved 15 September
+
+The current Lightning app determines the record view. NTE Management uses its own Lead, Account, Contact and Opportunity pages; Mission, Mission Community and all other apps retain their existing business pages and page-layout assignments. The same person or organisation can participate in both workflows. Do not switch layouts using form type, NTE participation, record classification or a volunteer flag. Do not create record types or change a person's classification to select a page.
+
+Preserve all existing production page layouts, profiles, compact layouts, shared object defaults, other apps and their Lightning pages. Deploy only the NTE-owned app/pages and the layouts for the new dedicated NTE objects. The sandbox repair of older global/Mission Community Lead overrides is separate from the production package; do not import those sandbox definitions into production. Existing historical sponsorship fields belong to the client’s original layouts and remain intact.
+
+The owner authorises the sandbox correction, the equivalent check across all four core objects, production-preservation checks and GitHub updates. Production itself is not authorised for deployment. The initially considered form-based fallback was explicitly declined and removed before any deployment.
+
+Implemented and verified in MMUAT as `0AfAd00000SwDsnKAF`: only the two older Lead assignment components changed. All 136 layouts, 38 Lightning pages and 22 Profiles are preserved. Actual same-record checks pass across the four core objects in NTE Management and Mission, plus the volunteer Lead in Mission Community. [Release and production boundary](audit/NTE_APP_PAGE_ISOLATION_2026-09-15.md).
+
 ## Space selection — proposal 23, approved 15 September
 
 Any organisation category may request any listed exhibitor space, including either complimentary charity space, the half-price Local Government/Blue Light spaces and the Trade Association space. Do not disable, clear or reject a selected space because of organisation category, in the browser or in Salesforce pricing. The NTE team decides whether to approve or reject the application. Changing organisation category preserves the selection. This supersedes earlier category-to-space eligibility assertions and tests.
