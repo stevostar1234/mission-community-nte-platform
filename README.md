@@ -2,6 +2,8 @@
 
 This repository contains the Salesforce source, forms, tests and release documentation for National Transition Event submissions in Mission Community.
 
+**15 September space-selection release:** any organisation type may request any listed exhibitor space; free choices show their £499 + VAT bundle value. Deployed to MMUAT and published to the canonical preview after 422 native tests. [Release evidence](audit/NTE_SPACE_SELECTION_RELEASE_2026-09-15.md) and [remaining form restrictions](audit/NTE_FORM_RESTRICTIONS_2026-09-15.md).
+
 The complete private project checkpoint is [stevostar1234/mission-community-nte-platform](https://github.com/stevostar1234/mission-community-nte-platform). [Current publication and verification](audit/NTE_GITHUB_CHECKPOINT_2026-09-15.md) records this update; [the earlier checkpoint](audit/NTE_GITHUB_CHECKPOINT_2026-09-08.md) retains its original evidence.
 
 **15 September 2026 package checkpoint:** start with [the current source and deployment guide](GITHUB_PROJECT_SNAPSHOT.md). The source includes the 14 September manual finance, VAT, flexible staff rosters, Update issues and final panel refinements, with the latest confirmed recovery decisions. Historical manuals and archived reconstruction bundles are retained for reference; the root source and `manifest/production-package.xml` are the current deployment basis.

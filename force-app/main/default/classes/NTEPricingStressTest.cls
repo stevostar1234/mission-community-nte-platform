@@ -34,13 +34,6 @@ private class NTEPricingStressTest {
         'COBSEO Charity - Single - Free' => 0,
         'Non COBSEO Charity - Single - Free' => 0
     };
-    private static final Map<String, String> RESTRICTED_CATEGORIES = new Map<String, String>{
-        'Local Government Authority - Single - £249.50 + VAT' => 'Local Government or LG related',
-        'Blue Light - Single - £249.50 + VAT' => 'Employer - Blue Light & NHS',
-        'Trade Association - Single - £499 + VAT' => 'Trade Association',
-        'COBSEO Charity - Single - Free' => 'Charity - member of Cobseo',
-        'Non COBSEO Charity - Single - Free' => 'Charity - not a member of Cobseo'
-    };
     private static final Map<String, Decimal> PACKAGE_PRICES = new Map<String, Decimal>{
         'Headline Partner' => 30000, 'Gold Partner' => 15000, 'Premier Partner' => 7000,
         'Champion Partner' => 2000, 'Zone Sponsor' => 5000, 'Community Stage Sponsor' => 6000,
@@ -60,7 +53,7 @@ private class NTEPricingStressTest {
         Integer cases = 0;
         for (String space : SPACE_PRICES.keySet()) {
             Integer included = space.contains('Double') ? 4 : 2;
-            String category = RESTRICTED_CATEGORIES.containsKey(space) ? RESTRICTED_CATEGORIES.get(space) : COMMERCIAL;
+            String category = COMMERCIAL;
             for (Integer staff : new List<Integer>{1, included, included + 1, 99}) {
                 for (Integer sockets : new List<Integer>{0, 1, 20}) {
                     Lead application = exhibitor(space, category, String.valueOf(staff), sockets == 0 ? 'No' : 'Yes', sockets);
@@ -90,18 +83,21 @@ private class NTEPricingStressTest {
     }
 
     @IsTest
-    static void everyCategoryUsesExactDiscountAndRestrictedSpaceRules() {
+    static void everyCategoryCanChooseEverySpaceWithItsOwnPowerRate() {
         List<String> categories = new List<String>();
         for (Schema.PicklistEntry entry : Lead.Exhibitor_Organisation_Category__c.getDescribe().getPicklistValues()) {
             if (entry.isActive()) categories.add(entry.getValue());
         }
-        System.assertEquals(19, categories.size(), 'A new category needs its pricing eligibility reviewed.');
+        System.assertEquals(19, categories.size(), 'Keep the all-category coverage current when the catalogue changes.');
         for (String category : categories) {
             for (String space : SPACE_PRICES.keySet()) {
                 Lead application = exhibitor(space, category, '4', 'Yes', 1);
                 NTEPricingService.applyLeadPricing(application);
-                Boolean eligible = !RESTRICTED_CATEGORIES.containsKey(space) || RESTRICTED_CATEGORIES.get(space) == category;
-                System.assertEquals(eligible ? 'Calculated' : 'Review required', application.Pricing_Status__c, category + ' / ' + space);
+                Opportunity booking = bookingFrom(application);
+                NTEPricingService.applyOpportunityPricing(booking);
+                System.assertEquals('Calculated', application.Pricing_Status__c, category + ' / ' + space);
+                System.assertEquals('Calculated', booking.NTE_Pricing_Status__c, category + ' / ' + space);
+                System.assertEquals(application.Listed_Price_Total__c * 1.2, booking.Amount, category + ' / ' + space);
                 System.assertEquals(DISCOUNTED_CATEGORIES.contains(category) ? 50 : 100,
                     application.Power_Socket_Unit_Price__c, 'Power discount category: ' + String.valueOf(category));
                 System.assertEquals('Yes', application.Invoice_Required__c);

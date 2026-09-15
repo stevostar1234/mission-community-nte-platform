@@ -1,10 +1,18 @@
 # Desired NTE workflow
 
-Last updated: 14 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
+Last updated: 15 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
 
 This is the current record of the intended workflow. Read it before proposing, implementing, testing or reviewing NTE changes. Confirmed requirements describe the target behaviour; they do not imply that the current package already implements it. [NTE_CHANGE_PROPOSALS.md](NTE_CHANGE_PROPOSALS.md) records implementation proposals and their approval status. The dated audit contains source evidence and historical discussion, some of which has been superseded here.
 
 When the project owner supplies a changed brief, update the relevant rule here, record the change in the decision history, and update affected proposal statuses/dependencies. Record unknowns as undecided. Do not treat an assistant suggestion as an accepted business rule. Current explicit user instructions take precedence over this document. Do not assume client changes have occurred unless they are communicated or otherwise authorised for discovery.
+
+## Space selection — proposal 23, approved 15 September
+
+Any organisation category may request any listed exhibitor space, including either complimentary charity space, the half-price Local Government/Blue Light spaces and the Trade Association space. Do not disable, clear or reject a selected space because of organisation category, in the browser or in Salesforce pricing. The NTE team decides whether to approve or reject the application. Changing organisation category preserves the selection. This supersedes earlier category-to-space eligibility assertions and tests.
+
+The complimentary benefits callout states “Single exhibition space, one 6ft trestle table, one chair and two staff places - worth £499 + VAT.” The £499 is the comparative value, not a charge. Extras remain separately chargeable; a genuinely zero total hides finance questions and paid extras restore them for either payment method. Prices, 20% VAT and the separate category-based socket discount remain unchanged. That socket discount is reported as a remaining pricing rule, not extended to other categories without a decision. Remove the unconditional socket-discount promise from the now-unrestricted free-space option descriptions; the power section explains the actual rule.
+
+The owner also requests a source review of all other form restrictions. Report retained constraints and practical exceptions; this does not authorise removing required information, quantity limits, catalogue validation or the accepted single top-up rule. Implementation and paired MMUAT/public-preview release are approved; production deployment is separate.
 
 ## Latest confirmed replacement — proposal 22, 13 September
 

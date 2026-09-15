@@ -1,0 +1,2751 @@
+{
+  "date": "2026-09-15",
+  "scope": "Static controls in all ten maintained submission forms. Runtime field limits and server reconciliation rules are described in NTE_FORM_RESTRICTIONS_2026-09-15.md.",
+  "forms": [
+    {
+      "file": "exhibitor-application.html",
+      "sha256": "a99af9ae0a65e011c43b0bfe5a4d0fe31192309daa7e38b72c1273312e8be8ef",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 54,
+          "id": "company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name as it should appear in marketing"
+        },
+        {
+          "tag": "select",
+          "line": 55,
+          "id": "organisation-category",
+          "required": null,
+          "data-sf-field": "Exhibitor_Organisation_Category__c",
+          "options": [
+            "",
+            "Employer - Automotive Sector",
+            "Employer - Manufacturing Sector",
+            "Employer - Renewable & Clean Energy Sector",
+            "Employer - Defence",
+            "Employer - Built Environment",
+            "Employer - Facilities Management",
+            "Employer - Financial and Professional Services",
+            "Employer - Digital & Technologies",
+            "Employer - Training Provider from any industry",
+            "Employer - Landbased industry",
+            "Employer - Blue Light & NHS",
+            "Employer - Other Sectors not denoted above",
+            "Government or Government Agency",
+            "Local Government or LG related",
+            "Regular or Reserve Services, or Cadets",
+            "Trade Association",
+            "Charity - member of Cobseo",
+            "Charity - not a member of Cobseo",
+            "CIC or Not for Profit"
+          ],
+          "label": "Organisation category"
+        },
+        {
+          "tag": "input",
+          "line": 56,
+          "id": "website",
+          "type": "url",
+          "data-sf-field": "Website",
+          "label": "Organisation website"
+        },
+        {
+          "tag": "select",
+          "line": 63,
+          "id": "salutation",
+          "data-sf-field": "Salutation",
+          "options": [
+            "",
+            "Mr.",
+            "Ms.",
+            "Mrs.",
+            "Dr.",
+            "Prof.",
+            "Mx."
+          ],
+          "label": "Title / prefix"
+        },
+        {
+          "tag": "input",
+          "line": 64,
+          "id": "contact-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 65,
+          "id": "contact-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 66,
+          "id": "job-title",
+          "required": null,
+          "data-sf-field": "Title",
+          "label": "Job title"
+        },
+        {
+          "tag": "input",
+          "line": 67,
+          "id": "email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Email address"
+        },
+        {
+          "tag": "input",
+          "line": 68,
+          "id": "mobile",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Event_Contact_Mobile__c",
+          "label": "Mobile phone"
+        },
+        {
+          "tag": "input",
+          "line": 69,
+          "id": "phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Phone",
+          "label": "Landline or work phone"
+        },
+        {
+          "tag": "input",
+          "line": 71,
+          "id": "second-contact-toggle",
+          "type": "checkbox",
+          "label": "Add a second contact person"
+        },
+        {
+          "tag": "input",
+          "line": 74,
+          "id": "second-prefix",
+          "data-sf-field": "Secondary_Contact_Prefix__c",
+          "label": "Prefix"
+        },
+        {
+          "tag": "input",
+          "line": 75,
+          "id": "second-name",
+          "data-sf-field": "Secondary_Contact_Name__c",
+          "label": "Full name"
+        },
+        {
+          "tag": "input",
+          "line": 76,
+          "id": "second-title",
+          "data-sf-field": "Secondary_Contact_Title__c",
+          "label": "Job title"
+        },
+        {
+          "tag": "input",
+          "line": 77,
+          "id": "second-email",
+          "type": "email",
+          "data-sf-field": "Secondary_Contact_Email__c",
+          "label": "Email"
+        },
+        {
+          "tag": "input",
+          "line": 78,
+          "id": "second-mobile",
+          "type": "tel",
+          "data-sf-field": "Secondary_Contact_Mobile__c",
+          "label": "Mobile phone"
+        },
+        {
+          "tag": "input",
+          "line": 79,
+          "id": "second-phone",
+          "type": "tel",
+          "data-sf-field": "Secondary_Contact_Phone__c",
+          "label": "Work phone"
+        },
+        {
+          "tag": "input",
+          "line": 89,
+          "id": "nte2024",
+          "type": "checkbox",
+          "data-sf-field": "Previous_NTE_Events__c"
+        },
+        {
+          "tag": "input",
+          "line": 90,
+          "id": "nte2025",
+          "type": "checkbox",
+          "data-sf-field": "Previous_NTE_Events__c"
+        },
+        {
+          "tag": "input",
+          "line": 91,
+          "id": "nte2026",
+          "type": "checkbox",
+          "data-sf-field": "Previous_NTE_Events__c"
+        },
+        {
+          "tag": "input",
+          "line": 99,
+          "id": "planned-count",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "required": null,
+          "data-sf-field": "Planned_Exhibitor_Count__c",
+          "label": "How many people do you currently plan to bring, including yourself?"
+        },
+        {
+          "tag": "input",
+          "line": 102,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "required": null,
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 103,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 104,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 105,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 106,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 107,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 108,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 109,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 110,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 111,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 112,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 113,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 114,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 115,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 116,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 117,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 118,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 119,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 120,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 121,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 122,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 123,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 124,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 125,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 126,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 127,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 128,
+          "type": "radio",
+          "name": "exhibitor-space",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        {
+          "tag": "input",
+          "line": 135,
+          "type": "radio",
+          "name": "power-required",
+          "id": "power-required-yes",
+          "required": null,
+          "data-sf-field": "Stand_Power__c"
+        },
+        {
+          "tag": "input",
+          "line": 135,
+          "type": "radio",
+          "name": "power-required",
+          "data-sf-field": "Stand_Power__c"
+        },
+        {
+          "tag": "input",
+          "line": 136,
+          "id": "power-count",
+          "type": "number",
+          "min": "1",
+          "max": "20",
+          "data-required-when-visible": null,
+          "data-sf-field": "Power_Socket_Count__c",
+          "label": "Number of sockets"
+        },
+        {
+          "tag": "select",
+          "line": 144,
+          "id": "sunday-setup",
+          "data-sf-field": "Exhibitor_Hall_Schedule__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "For garage exhibits and large stands in the halls, setting up between 14:00-18:00 hrs on Sunday is required. Please indicate you are able to do this."
+        },
+        {
+          "tag": "textarea",
+          "line": 145,
+          "id": "equipment",
+          "required": null,
+          "data-sf-field": "Stand_Equipment__c",
+          "label": "Equipment beyond display stands and laptops"
+        },
+        {
+          "tag": "select",
+          "line": 146,
+          "id": "heavy-vehicle",
+          "required": null,
+          "data-sf-field": "Heavy_Vehicle_Required__c",
+          "options": [
+            "",
+            "Yes",
+            "No",
+            "Not known yet"
+          ],
+          "label": "Will you bring cars, tractors or heavy items that need to be dropped off on a flatbed or trailer?"
+        },
+        {
+          "tag": "select",
+          "line": 147,
+          "id": "accessibility",
+          "required": null,
+          "data-sf-field": "Has_Special_Requirements__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you have any accessibility requirements?"
+        },
+        {
+          "tag": "textarea",
+          "line": 148,
+          "id": "accessibility-details",
+          "data-required-when-visible": null,
+          "data-sf-field": "Stand_Special_Requirements__c",
+          "label": "Please tell us what you need"
+        },
+        {
+          "tag": "select",
+          "line": 155,
+          "id": "payment-method",
+          "data-required-when-visible": null,
+          "data-sf-field": "Payment_Method__c",
+          "options": [
+            "",
+            "Bank transfer",
+            "Stripe"
+          ],
+          "label": "Payment Method"
+        },
+        {
+          "tag": "select",
+          "line": 156,
+          "id": "invoice-requested",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoice_Requested__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you require an invoice?"
+        },
+        {
+          "tag": "select",
+          "line": 157,
+          "id": "quote-for-po",
+          "data-required-when-visible": null,
+          "data-sf-field": "Quote_Required_for_PO__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you require a quotation?"
+        },
+        {
+          "tag": "select",
+          "line": 158,
+          "id": "purchase-order",
+          "data-required-when-visible": null,
+          "data-sf-field": "Purchase_Order__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you require a purchase order or reference?"
+        },
+        {
+          "tag": "input",
+          "line": 159,
+          "id": "purchase-order-number",
+          "data-required-when-visible": null,
+          "data-sf-field": "Purchase_Order_Number__c",
+          "label": "Purchase order or reference details"
+        },
+        {
+          "tag": "select",
+          "line": 160,
+          "id": "supplier-agreement",
+          "data-required-when-visible": null,
+          "data-sf-field": "Supplier_Agreement_Required__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Will a supplier agreement be required?"
+        },
+        {
+          "tag": "input",
+          "line": 161,
+          "id": "invoice-company",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoiced_Company__c",
+          "label": "Legal organisation name for quotation and invoicing"
+        },
+        {
+          "tag": "input",
+          "line": 162,
+          "id": "trading-name",
+          "data-sf-field": "Trading_Name__c",
+          "label": "Trading name, if different"
+        },
+        {
+          "tag": "textarea",
+          "line": 163,
+          "id": "invoice-address",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoice_Address__c",
+          "label": "Billing address, including postcode"
+        },
+        {
+          "tag": "input",
+          "line": 165,
+          "id": "invoice-person",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoiced_Person__c",
+          "label": "Finance contact name"
+        },
+        {
+          "tag": "input",
+          "line": 166,
+          "id": "invoice-email",
+          "type": "email",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoiced_Email__c",
+          "label": "Finance contact email address"
+        },
+        {
+          "tag": "input",
+          "line": 167,
+          "id": "invoice-phone",
+          "type": "tel",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoice_Contact_Phone__c",
+          "label": "Finance contact telephone number"
+        },
+        {
+          "tag": "select",
+          "line": 168,
+          "id": "invoice-additional-required",
+          "data-required-when-visible": null,
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Is there any additional information that must appear on the quotation or invoice?"
+        },
+        {
+          "tag": "textarea",
+          "line": 169,
+          "id": "invoice-additional-information",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoice_Additional_Information__c",
+          "label": "Additional quotation or invoice information"
+        },
+        {
+          "tag": "input",
+          "line": 176,
+          "id": "industry-body",
+          "required": null,
+          "data-sf-field": "Industry_Body_Details__c",
+          "label": "Industry body or trade association membership"
+        },
+        {
+          "tag": "select",
+          "line": 177,
+          "id": "discovery",
+          "required": null,
+          "data-sf-field": "Event_Discovery_Source__c",
+          "options": [
+            "",
+            "Previous exhibitor",
+            "E-mail invitation",
+            "Word of mouth from previous exhibitor",
+            "Word of mouth from previous attendees",
+            "Website",
+            "LinkedIn",
+            "Facebook",
+            "Instagram"
+          ],
+          "label": "How did you hear about NTE27?"
+        },
+        {
+          "tag": "input",
+          "line": 178,
+          "id": "declaration-name",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 179,
+          "id": "declaration-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        },
+        {
+          "tag": "input",
+          "line": 181,
+          "id": "terms",
+          "type": "checkbox",
+          "required": null,
+          "data-sf-field": "Terms_and_Conditions__c",
+          "label": "I have read and agree to the NTE27 Privacy Policy."
+        }
+      ],
+      "conditionalSections": [
+        {
+          "source": "second-contact-toggle",
+          "values": "Yes",
+          "line": 72
+        },
+        {
+          "source": "power-required-yes",
+          "values": "Yes",
+          "line": 136
+        },
+        {
+          "source": "accessibility",
+          "values": "Yes",
+          "line": 148
+        },
+        {
+          "source": "invoice-required",
+          "values": "Yes",
+          "line": 152
+        },
+        {
+          "source": "purchase-order",
+          "values": "Yes",
+          "line": 159
+        },
+        {
+          "source": "invoice-additional-required",
+          "values": "Yes",
+          "line": 169
+        }
+      ],
+      "choiceGroups": []
+    },
+    {
+      "file": "exhibitor-interest.html",
+      "sha256": "0ce1f1b73fffd476d55665c192ff72e398c1ddf25ba8968f04dc3632b6e1d8f3",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 30,
+          "id": "exhibitor-interest-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name"
+        },
+        {
+          "tag": "select",
+          "line": 31,
+          "id": "exhibitor-interest-type",
+          "required": null,
+          "data-sf-field": "Organisation_Type__c",
+          "options": [
+            "",
+            "Charity - COBSEO member",
+            "Charity - Non COBSEO member",
+            "Government Department or Agency",
+            "Industry Body / Trade Association",
+            "Employer - Automotive",
+            "Employer - Clean Energy",
+            "Employer - Blue Light Services / NHS",
+            "Employer - Built Environment",
+            "Employer - Manufacturing",
+            "Employer - Defence and Security",
+            "Employer - Financial and Professional Services",
+            "Employer - Digital and Technologies",
+            "Employer - Training and Education",
+            "Employer - Land-based",
+            "Employer - Other sector"
+          ],
+          "label": "Organisation type"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "exhibitor-interest-website",
+          "type": "url",
+          "data-sf-field": "Website",
+          "label": "Website"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "exhibitor-interest-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "exhibitor-interest-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 35,
+          "id": "exhibitor-interest-title",
+          "required": null,
+          "data-sf-field": "Title",
+          "label": "Job title"
+        },
+        {
+          "tag": "input",
+          "line": 36,
+          "id": "exhibitor-interest-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Email address"
+        },
+        {
+          "tag": "input",
+          "line": 37,
+          "id": "exhibitor-interest-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Phone",
+          "label": "Telephone number"
+        },
+        {
+          "tag": "input",
+          "line": 47,
+          "type": "radio",
+          "name": "exhibitor-sponsorship-interest",
+          "required": null,
+          "data-sf-field": "Exhibitor_Interest_Detail__c"
+        },
+        {
+          "tag": "input",
+          "line": 48,
+          "type": "radio",
+          "name": "exhibitor-sponsorship-interest",
+          "data-sf-field": "Exhibitor_Interest_Detail__c"
+        },
+        {
+          "tag": "input",
+          "line": 49,
+          "type": "radio",
+          "name": "exhibitor-sponsorship-interest",
+          "data-sf-field": "Exhibitor_Interest_Detail__c"
+        },
+        {
+          "tag": "textarea",
+          "line": 55,
+          "id": "exhibitor-value-adding-activities",
+          "data-sf-field": "Exhibitor_Community_Contribution__c",
+          "label": "We work with a number of organisations that host value-adding activities such as workshops and skills advice at NTE. Is this something you could offer the event?"
+        },
+        {
+          "tag": "select",
+          "line": 63,
+          "id": "exhibitor-contact-method",
+          "required": null,
+          "data-sf-field": "Preferred_Contact_Method__c",
+          "options": [
+            "",
+            "Email",
+            "Telephone",
+            "Video call",
+            "No preference"
+          ],
+          "label": "Preferred contact method"
+        },
+        {
+          "tag": "input",
+          "line": 64,
+          "id": "exhibitor-contact-time",
+          "data-sf-field": "Preferred_Contact_Time__c",
+          "label": "Best time to contact you"
+        },
+        {
+          "tag": "select",
+          "line": 65,
+          "id": "exhibitor-interest-discovery",
+          "required": null,
+          "data-sf-field": "Event_Discovery_Source__c",
+          "options": [
+            "",
+            "Previous NTE event",
+            "NTE webinar or brochure",
+            "Email invitation",
+            "Recommendation or word of mouth",
+            "National Transition Event website",
+            "Mission Community website",
+            "LinkedIn",
+            "Other social media",
+            "Other"
+          ],
+          "label": "How did you hear about NTE27?"
+        },
+        {
+          "tag": "input",
+          "line": 67,
+          "id": "exhibitor-interest-consent",
+          "type": "checkbox",
+          "required": null,
+          "data-sf-field": "Contact_Consent__c",
+          "label": "I agree that Mission Community may contact me about exhibiting at NTE27."
+        },
+        {
+          "tag": "input",
+          "line": 69,
+          "id": "exhibitor-interest-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 70,
+          "id": "exhibitor-interest-signature-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [],
+      "choiceGroups": []
+    },
+    {
+      "file": "exhibitor-staff-update.html",
+      "sha256": "2337ca4c45556ba0b1ef4643e3ee72d7fb7fdcfb8bb6b370156c7f1907cb6e9d",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 23,
+          "id": "exhibitor-staff-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name"
+        },
+        {
+          "tag": "input",
+          "line": 24,
+          "id": "exhibitor-staff-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "Your first name"
+        },
+        {
+          "tag": "input",
+          "line": 25,
+          "id": "exhibitor-staff-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Your surname"
+        },
+        {
+          "tag": "input",
+          "line": 26,
+          "id": "exhibitor-staff-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Your email address"
+        },
+        {
+          "tag": "input",
+          "line": 27,
+          "id": "exhibitor-staff-reference",
+          "required": null,
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c",
+          "label": "Booking reference"
+        },
+        {
+          "tag": "textarea",
+          "line": 32,
+          "id": "exhibitor-staff-names",
+          "required": null,
+          "label": "Staff names for your booking"
+        },
+        {
+          "tag": "select",
+          "line": 37,
+          "id": "top-up-required",
+          "required": null,
+          "data-sf-field": "Top_Up_Staff_Required__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you want to purchase any additional staff places?"
+        },
+        {
+          "tag": "input",
+          "line": 40,
+          "id": "top-up-count",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "data-required-when-visible": null,
+          "data-sf-field": "Top_Up_Staff_Count__c",
+          "label": "Total number of top-up staff places required"
+        },
+        {
+          "tag": "textarea",
+          "line": 41,
+          "id": "top-up-names",
+          "data-required-when-visible": null,
+          "data-sf-field": "Top_Up_Staff_Names__c",
+          "label": "Names for the top-up places"
+        },
+        {
+          "tag": "input",
+          "line": 46,
+          "id": "exhibitor-staff-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 47,
+          "id": "exhibitor-staff-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [
+        {
+          "source": "top-up-required",
+          "values": "Yes",
+          "line": 38
+        }
+      ],
+      "choiceGroups": []
+    },
+    {
+      "file": "guest-registration.html",
+      "sha256": "579b50147ed1d9896c65c8ea50ede26ea628539dc7a0318616ae5c7f047deaf8",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 28,
+          "id": "guest-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 29,
+          "id": "guest-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 30,
+          "id": "guest-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Email address"
+        },
+        {
+          "tag": "input",
+          "line": 31,
+          "id": "guest-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Phone",
+          "label": "Phone number"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "guest-organisation",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "guest-title",
+          "data-sf-field": "Title",
+          "label": "Job title"
+        },
+        {
+          "tag": "select",
+          "line": 40,
+          "id": "guest-accompanying",
+          "required": null,
+          "data-sf-field": "Guest_Accompanying__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Will anyone be accompanying you?"
+        },
+        {
+          "tag": "input",
+          "line": 44,
+          "id": "guest-companion-first-name",
+          "maxlength": "40",
+          "data-required-when-visible": null,
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 45,
+          "id": "guest-companion-last-name",
+          "maxlength": "80",
+          "data-required-when-visible": null,
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 46,
+          "id": "guest-companion-email",
+          "type": "email",
+          "data-required-when-visible": null,
+          "data-sf-field": "Accompanying_Guest_Email__c",
+          "label": "Email address"
+        },
+        {
+          "tag": "select",
+          "line": 54,
+          "id": "guest-accessibility",
+          "required": null,
+          "data-sf-field": "Guest_Accessibility_Required__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you or anyone in your party have accessibility needs so we can make appropriate arrangements?"
+        },
+        {
+          "tag": "textarea",
+          "line": 57,
+          "id": "guest-accessibility-details",
+          "data-required-when-visible": null,
+          "data-sf-field": "Guest_Accessibility_Details__c",
+          "label": "Please tell us what arrangements would help"
+        },
+        {
+          "tag": "input",
+          "line": 59,
+          "id": "guest-declaration",
+          "type": "checkbox",
+          "required": null,
+          "data-sf-field": "Guest_Information_Declaration__c",
+          "label": "I confirm that these details are accurate and, where I have provided another person's details, I have their permission to do so."
+        },
+        {
+          "tag": "input",
+          "line": 61,
+          "id": "guest-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 62,
+          "id": "guest-signature-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [
+        {
+          "source": "guest-accompanying",
+          "values": "Yes",
+          "line": 42
+        },
+        {
+          "source": "guest-accessibility",
+          "values": "Yes",
+          "line": 56
+        }
+      ],
+      "choiceGroups": []
+    },
+    {
+      "file": "heavy-vehicle-details.html",
+      "sha256": "32fab004ce761dbadf291bfb0f448b917e6b158ec1e80752f502a294bdbd48ef",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 17,
+          "id": "vehicle-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Name of exhibiting organisation"
+        },
+        {
+          "tag": "input",
+          "line": 18,
+          "id": "vehicle-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "Main contact first name"
+        },
+        {
+          "tag": "input",
+          "line": 19,
+          "id": "vehicle-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Main contact surname"
+        },
+        {
+          "tag": "input",
+          "line": 20,
+          "id": "vehicle-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Main contact email"
+        },
+        {
+          "tag": "input",
+          "line": 21,
+          "id": "vehicle-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Phone",
+          "label": "Main contact direct phone"
+        },
+        {
+          "tag": "input",
+          "line": 22,
+          "id": "vehicle-reference",
+          "required": null,
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c",
+          "label": "Booking reference"
+        },
+        {
+          "tag": "input",
+          "line": 23,
+          "id": "vehicle-second-contact",
+          "required": null,
+          "data-sf-field": "Secondary_Contact_Name__c",
+          "label": "Second contact"
+        },
+        {
+          "tag": "input",
+          "line": 24,
+          "id": "vehicle-second-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Secondary_Contact_Email__c",
+          "label": "Second contact email"
+        },
+        {
+          "tag": "input",
+          "line": 25,
+          "id": "vehicle-second-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Secondary_Contact_Phone__c",
+          "label": "Second contact phone"
+        },
+        {
+          "tag": "select",
+          "line": 26,
+          "id": "delivery-window",
+          "required": null,
+          "data-sf-field": "Delivery_Window__c",
+          "options": [
+            "",
+            "Sunday 28 February between 14:00 - 18:00",
+            "Monday 1 March between 06:30 - 07:15"
+          ],
+          "label": "Planned delivery window"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "item1-description",
+          "required": null,
+          "data-sf-field": "Heavy_Item_1_Description__c",
+          "label": "Manufacturer and model, or a clear description of the item being exhibited"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "item1-registration",
+          "data-sf-field": "Heavy_Item_1_Registration__c",
+          "label": "Registration, if known and applicable"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "item1-dimensions",
+          "required": null,
+          "data-sf-field": "Heavy_Item_1_Dimensions__c",
+          "label": "Dimensions (L × W × H)"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "item1-weight",
+          "required": null,
+          "data-sf-field": "Heavy_Item_1_Gross_Weight__c",
+          "label": "Gross weight"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "item2-description",
+          "data-sf-field": "Heavy_Item_2_Description__c",
+          "label": "Manufacturer and model, or a clear description of the item being exhibited"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "item2-registration",
+          "data-sf-field": "Heavy_Item_2_Registration__c",
+          "label": "Registration, if known and applicable"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "item2-dimensions",
+          "data-sf-field": "Heavy_Item_2_Dimensions__c",
+          "label": "Dimensions (L × W × H)"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "item2-weight",
+          "data-sf-field": "Heavy_Item_2_Gross_Weight__c",
+          "label": "Gross weight"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "item3-description",
+          "data-sf-field": "Heavy_Item_3_Description__c",
+          "label": "Manufacturer and model, or a clear description of the item being exhibited"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "item3-registration",
+          "data-sf-field": "Heavy_Item_3_Registration__c",
+          "label": "Registration, if known and applicable"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "item3-dimensions",
+          "data-sf-field": "Heavy_Item_3_Dimensions__c",
+          "label": "Dimensions (L × W × H)"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "item3-weight",
+          "data-sf-field": "Heavy_Item_3_Gross_Weight__c",
+          "label": "Gross weight"
+        },
+        {
+          "tag": "input",
+          "line": 39,
+          "id": "haulier-name",
+          "required": null,
+          "data-sf-field": "Haulier_Name__c",
+          "label": "Name of haulier delivering / collecting"
+        },
+        {
+          "tag": "textarea",
+          "line": 40,
+          "id": "haulier-staff",
+          "data-sf-field": "Haulier_Staff__c",
+          "label": "Names of haulier staff, if known"
+        },
+        {
+          "tag": "input",
+          "line": 41,
+          "id": "haulier-type",
+          "required": null,
+          "data-sf-field": "Haulier_Vehicle_Type__c",
+          "label": "Type of haulier vehicle"
+        },
+        {
+          "tag": "input",
+          "line": 42,
+          "id": "haulier-weight",
+          "required": null,
+          "data-sf-field": "Haulier_Vehicle_Gross_Weight__c",
+          "label": "Gross weight without exhibition item"
+        },
+        {
+          "tag": "input",
+          "line": 43,
+          "id": "haulier-dimensions",
+          "required": null,
+          "data-sf-field": "Haulier_Vehicle_Dimensions__c",
+          "label": "Haulier vehicle dimensions (L × W × H)"
+        },
+        {
+          "tag": "input",
+          "line": 44,
+          "id": "haulier-registration",
+          "data-sf-field": "Haulier_Vehicle_Registration__c",
+          "label": "Haulier vehicle registration, if known"
+        },
+        {
+          "tag": "input",
+          "line": 45,
+          "id": "vehicle-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 46,
+          "id": "vehicle-signature-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [],
+      "choiceGroups": []
+    },
+    {
+      "file": "logo-upload.html",
+      "sha256": "68eb26df2441ff2ae766250d5167c709607dadb7320e953a73a4936d69b7c43f",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 26,
+          "id": "logo-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name"
+        },
+        {
+          "tag": "input",
+          "line": 27,
+          "id": "logo-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "Your first name"
+        },
+        {
+          "tag": "input",
+          "line": 28,
+          "id": "logo-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Your surname"
+        },
+        {
+          "tag": "input",
+          "line": 29,
+          "id": "logo-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Your email address"
+        },
+        {
+          "tag": "input",
+          "line": 30,
+          "id": "logo-booking-reference",
+          "required": null,
+          "maxlength": "80",
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c",
+          "label": "Booking reference"
+        }
+      ],
+      "conditionalSections": [],
+      "choiceGroups": []
+    },
+    {
+      "file": "partner-sponsor-application.html",
+      "sha256": "d6d2dbf93e6b35540af88943ca95fd3ec562fa6c7bce14f9f9fde66995cb9860",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 53,
+          "id": "partner-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name as it should appear in marketing"
+        },
+        {
+          "tag": "input",
+          "line": 54,
+          "id": "partner-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 55,
+          "id": "partner-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 56,
+          "id": "partner-title",
+          "required": null,
+          "data-sf-field": "Title",
+          "label": "Job title"
+        },
+        {
+          "tag": "input",
+          "line": 57,
+          "id": "partner-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Contact email"
+        },
+        {
+          "tag": "input",
+          "line": 58,
+          "id": "partner-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Phone",
+          "label": "Contact telephone"
+        },
+        {
+          "tag": "select",
+          "line": 59,
+          "id": "partner-day-contact-same",
+          "required": null,
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Will the applicant be the main contact on the day of NTE27?"
+        },
+        {
+          "tag": "input",
+          "line": 64,
+          "id": "partner-day-first-name",
+          "maxlength": "40",
+          "data-required-when-visible": null,
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 65,
+          "id": "partner-day-last-name",
+          "maxlength": "80",
+          "data-required-when-visible": null,
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 66,
+          "id": "partner-day-title",
+          "maxlength": "128",
+          "data-required-when-visible": null,
+          "label": "Job title"
+        },
+        {
+          "tag": "input",
+          "line": 67,
+          "id": "partner-day-email",
+          "type": "email",
+          "maxlength": "80",
+          "data-required-when-visible": null,
+          "label": "Email address"
+        },
+        {
+          "tag": "input",
+          "line": 68,
+          "id": "partner-day-mobile",
+          "type": "tel",
+          "maxlength": "40",
+          "data-required-when-visible": null,
+          "label": "Mobile phone number"
+        },
+        {
+          "tag": "input",
+          "line": 77,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 78,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 79,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 80,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 81,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 82,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 83,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 84,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 85,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 86,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 87,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 88,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 89,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "input",
+          "line": 90,
+          "type": "checkbox",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        {
+          "tag": "select",
+          "line": 98,
+          "id": "partner-sunday",
+          "required": null,
+          "data-sf-field": "Exhibitor_Hall_Schedule__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "For garage exhibits and large stands in the halls, setting up between 14:00-18:00 hrs on Sunday is required. Please indicate you are able to do this."
+        },
+        {
+          "tag": "select",
+          "line": 99,
+          "id": "partner-power",
+          "required": null,
+          "data-sf-field": "Stand_Power__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Will you require power on your stand?"
+        },
+        {
+          "tag": "textarea",
+          "line": 100,
+          "id": "partner-equipment",
+          "required": null,
+          "data-sf-field": "Stand_Equipment__c",
+          "label": "Equipment beyond display stands and laptops"
+        },
+        {
+          "tag": "select",
+          "line": 101,
+          "id": "partner-heavy-vehicle",
+          "required": null,
+          "data-sf-field": "Heavy_Vehicle_Required__c",
+          "options": [
+            "",
+            "Yes",
+            "No",
+            "Not known yet"
+          ],
+          "label": "Will you bring cars, tractors or heavy items that need to be dropped off on a flatbed or trailer?"
+        },
+        {
+          "tag": "select",
+          "line": 102,
+          "id": "partner-accessibility",
+          "required": null,
+          "data-sf-field": "Has_Special_Requirements__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you have any accessibility requirements?"
+        },
+        {
+          "tag": "textarea",
+          "line": 103,
+          "id": "partner-accessibility-details",
+          "data-required-when-visible": null,
+          "data-sf-field": "Stand_Special_Requirements__c",
+          "label": "Accessibility details"
+        },
+        {
+          "tag": "input",
+          "line": 104,
+          "id": "partner-planned-count",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "required": null,
+          "data-sf-field": "Planned_Exhibitor_Count__c",
+          "label": "How many people do you currently plan to bring, including yourself?"
+        },
+        {
+          "tag": "textarea",
+          "line": 105,
+          "id": "partner-extra-notes",
+          "required": null,
+          "data-sf-field": "Stand_Extra_Notes__c",
+          "label": "Anything else to share about your space?"
+        },
+        {
+          "tag": "select",
+          "line": 112,
+          "id": "partner-payment-method",
+          "required": null,
+          "data-sf-field": "Payment_Method__c",
+          "options": [
+            "",
+            "Bank transfer",
+            "Stripe"
+          ],
+          "label": "Payment Method"
+        },
+        {
+          "tag": "select",
+          "line": 113,
+          "id": "partner-invoice-requested",
+          "required": null,
+          "data-sf-field": "Invoice_Requested__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you require an invoice?"
+        },
+        {
+          "tag": "select",
+          "line": 114,
+          "id": "partner-quote",
+          "required": null,
+          "data-sf-field": "Quote_Required_for_PO__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you require a quotation?"
+        },
+        {
+          "tag": "select",
+          "line": 115,
+          "id": "partner-po",
+          "required": null,
+          "data-sf-field": "Purchase_Order__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you require a purchase order or reference?"
+        },
+        {
+          "tag": "input",
+          "line": 116,
+          "id": "partner-po-number",
+          "data-required-when-visible": null,
+          "data-sf-field": "Purchase_Order_Number__c",
+          "label": "Purchase order or reference details"
+        },
+        {
+          "tag": "select",
+          "line": 117,
+          "id": "partner-supplier-agreement",
+          "required": null,
+          "data-sf-field": "Supplier_Agreement_Required__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Will a supplier agreement be required?"
+        },
+        {
+          "tag": "input",
+          "line": 118,
+          "id": "partner-invoice-company",
+          "required": null,
+          "data-sf-field": "Invoiced_Company__c",
+          "label": "Legal organisation name for quotation and invoicing"
+        },
+        {
+          "tag": "input",
+          "line": 119,
+          "id": "partner-trading-name",
+          "data-sf-field": "Trading_Name__c",
+          "label": "Trading name, if different"
+        },
+        {
+          "tag": "textarea",
+          "line": 120,
+          "id": "partner-invoice-address",
+          "required": null,
+          "data-sf-field": "Invoice_Address__c",
+          "label": "Billing address, including postcode"
+        },
+        {
+          "tag": "input",
+          "line": 122,
+          "id": "partner-invoice-person",
+          "required": null,
+          "data-sf-field": "Invoiced_Person__c",
+          "label": "Finance contact name"
+        },
+        {
+          "tag": "input",
+          "line": 123,
+          "id": "partner-invoice-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Invoiced_Email__c",
+          "label": "Finance contact email address"
+        },
+        {
+          "tag": "input",
+          "line": 124,
+          "id": "partner-invoice-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Invoice_Contact_Phone__c",
+          "label": "Finance contact telephone number"
+        },
+        {
+          "tag": "select",
+          "line": 125,
+          "id": "partner-invoice-additional-required",
+          "required": null,
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Is there any additional information that must appear on the quotation or invoice?"
+        },
+        {
+          "tag": "textarea",
+          "line": 126,
+          "id": "partner-invoice-additional-information",
+          "data-required-when-visible": null,
+          "data-sf-field": "Invoice_Additional_Information__c",
+          "label": "Additional quotation or invoice information"
+        },
+        {
+          "tag": "input",
+          "line": 133,
+          "id": "partner-declaration-name",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 134,
+          "id": "partner-declaration-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        },
+        {
+          "tag": "input",
+          "line": 136,
+          "id": "partner-terms",
+          "type": "checkbox",
+          "required": null,
+          "data-sf-field": "Terms_and_Conditions__c",
+          "label": "I have read and agree to the NTE27 Privacy Policy."
+        }
+      ],
+      "conditionalSections": [
+        {
+          "source": "partner-day-contact-same",
+          "values": "No",
+          "line": 61
+        },
+        {
+          "source": "partner-accessibility",
+          "values": "Yes",
+          "line": 103
+        },
+        {
+          "source": "partner-po",
+          "values": "Yes",
+          "line": 116
+        },
+        {
+          "source": "partner-invoice-additional-required",
+          "values": "Yes",
+          "line": 126
+        }
+      ],
+      "choiceGroups": [
+        {
+          "data-required-checkbox-group": null,
+          "data-required-message": "Please select at least one package."
+        }
+      ]
+    },
+    {
+      "file": "partner-sponsor-interest.html",
+      "sha256": "4a6dbf33e2ea1ee89c867e63fe16d3695b8a924c4d75c22d1acb1b7f44e69faf",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 27,
+          "id": "eoi-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name"
+        },
+        {
+          "tag": "select",
+          "line": 28,
+          "id": "eoi-organisation-type",
+          "required": null,
+          "data-sf-field": "Organisation_Type__c",
+          "options": [
+            "",
+            "Charity - COBSEO member",
+            "Charity - Non COBSEO member",
+            "Government Department or Agency",
+            "Industry Body / Trade Association",
+            "Employer - Automotive",
+            "Employer - Clean Energy",
+            "Employer - Blue Light Services / NHS",
+            "Employer - Built Environment",
+            "Employer - Manufacturing",
+            "Employer - Defence and Security",
+            "Employer - Financial and Professional Services",
+            "Employer - Digital and Technologies",
+            "Employer - Training and Education",
+            "Employer - Land-based",
+            "Employer - Other sector"
+          ],
+          "label": "Organisation type"
+        },
+        {
+          "tag": "input",
+          "line": 29,
+          "id": "eoi-website",
+          "type": "url",
+          "data-sf-field": "Website",
+          "label": "Website"
+        },
+        {
+          "tag": "input",
+          "line": 30,
+          "id": "eoi-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "First name"
+        },
+        {
+          "tag": "input",
+          "line": 31,
+          "id": "eoi-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "eoi-title",
+          "required": null,
+          "data-sf-field": "Title",
+          "label": "Job title"
+        },
+        {
+          "tag": "input",
+          "line": 33,
+          "id": "eoi-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Email address"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "eoi-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "Phone",
+          "label": "Telephone number"
+        },
+        {
+          "tag": "select",
+          "line": 41,
+          "id": "eoi-interest-type",
+          "required": null,
+          "data-sf-field": "Partner_Interest_Type__c",
+          "options": [
+            "",
+            "Partnership",
+            "Sponsorship",
+            "Both - open to discussion",
+            "Not sure - I would like advice"
+          ],
+          "label": "Are you interested in partnering, sponsoring, or discussing both?"
+        },
+        {
+          "tag": "input",
+          "line": 43,
+          "type": "checkbox",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        {
+          "tag": "input",
+          "line": 44,
+          "type": "checkbox",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        {
+          "tag": "input",
+          "line": 45,
+          "type": "checkbox",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        {
+          "tag": "input",
+          "line": 46,
+          "type": "checkbox",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        {
+          "tag": "input",
+          "line": 47,
+          "type": "checkbox",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        {
+          "tag": "input",
+          "line": 48,
+          "type": "checkbox",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        {
+          "tag": "textarea",
+          "line": 50,
+          "id": "eoi-interest-detail",
+          "required": null,
+          "data-sf-field": "Partnership_Interest_Detail__c",
+          "label": "Additional comments regarding desired sponsorship or partnership"
+        },
+        {
+          "tag": "select",
+          "line": 57,
+          "id": "eoi-contact-method",
+          "required": null,
+          "data-sf-field": "Preferred_Contact_Method__c",
+          "options": [
+            "",
+            "Email",
+            "Telephone",
+            "Video call",
+            "No preference"
+          ],
+          "label": "Preferred contact method"
+        },
+        {
+          "tag": "input",
+          "line": 58,
+          "id": "eoi-contact-time",
+          "data-sf-field": "Preferred_Contact_Time__c",
+          "label": "Best time to contact you"
+        },
+        {
+          "tag": "select",
+          "line": 59,
+          "id": "eoi-discovery",
+          "required": null,
+          "data-sf-field": "Event_Discovery_Source__c",
+          "options": [
+            "",
+            "Previous NTE event",
+            "NTE webinar or brochure",
+            "Email invitation",
+            "Recommendation or word of mouth",
+            "National Transition Event website",
+            "Mission Community website",
+            "LinkedIn",
+            "Other social media",
+            "Other"
+          ],
+          "label": "How did you hear about NTE27?"
+        },
+        {
+          "tag": "input",
+          "line": 61,
+          "id": "eoi-consent",
+          "type": "checkbox",
+          "required": null,
+          "data-sf-field": "Contact_Consent__c",
+          "label": "I agree that Mission Community may contact me about NTE27 partnership and sponsorship opportunities."
+        },
+        {
+          "tag": "input",
+          "line": 63,
+          "id": "eoi-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 64,
+          "id": "eoi-signature-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [],
+      "choiceGroups": [
+        {
+          "data-required-checkbox-group": null,
+          "data-required-message": "Please select at least one area of interest."
+        }
+      ]
+    },
+    {
+      "file": "partner-sponsor-staff-update.html",
+      "sha256": "7624e610dc4327921e913385981396915977bf6da387208cafeedf4127075816",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 22,
+          "id": "partner-staff-company",
+          "required": null,
+          "data-sf-field": "Company",
+          "label": "Organisation name"
+        },
+        {
+          "tag": "input",
+          "line": 23,
+          "id": "partner-staff-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "Your first name"
+        },
+        {
+          "tag": "input",
+          "line": 24,
+          "id": "partner-staff-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Your surname"
+        },
+        {
+          "tag": "input",
+          "line": 25,
+          "id": "partner-staff-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Your email address"
+        },
+        {
+          "tag": "input",
+          "line": 26,
+          "id": "partner-staff-reference",
+          "required": null,
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c",
+          "label": "Booking reference"
+        },
+        {
+          "tag": "input",
+          "line": 32,
+          "id": "partner-staff-total",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "required": null,
+          "data-sf-field": "Total_Staff_Count__c",
+          "label": "Final number attending, including you"
+        },
+        {
+          "tag": "textarea",
+          "line": 33,
+          "id": "partner-staff-names",
+          "required": null,
+          "label": "Staff names"
+        },
+        {
+          "tag": "input",
+          "line": 34,
+          "id": "partner-staff-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 35,
+          "id": "partner-staff-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [],
+      "choiceGroups": []
+    },
+    {
+      "file": "volunteer-application.html",
+      "sha256": "de33f2ef8413010e90c9679a985bdaa3f138de46d734f8d5c2307fac7d44c075",
+      "controls": [
+        {
+          "tag": "input",
+          "line": 41,
+          "id": "volunteer-first-name",
+          "required": null,
+          "data-sf-field": "FirstName",
+          "label": "Forename(s)"
+        },
+        {
+          "tag": "input",
+          "line": 42,
+          "id": "volunteer-last-name",
+          "required": null,
+          "data-sf-field": "LastName",
+          "label": "Surname"
+        },
+        {
+          "tag": "input",
+          "line": 43,
+          "id": "volunteer-dob",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Date_of_Birth__c",
+          "label": "Date of birth"
+        },
+        {
+          "tag": "input",
+          "line": 44,
+          "id": "volunteer-mobile",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "MobilePhone",
+          "label": "Mobile number"
+        },
+        {
+          "tag": "input",
+          "line": 45,
+          "id": "volunteer-home-phone",
+          "type": "tel",
+          "data-sf-field": "Phone",
+          "label": "Home telephone"
+        },
+        {
+          "tag": "input",
+          "line": 46,
+          "id": "volunteer-email",
+          "type": "email",
+          "required": null,
+          "data-sf-field": "Email",
+          "label": "Email address"
+        },
+        {
+          "tag": "textarea",
+          "line": 47,
+          "id": "volunteer-address",
+          "required": null,
+          "data-sf-field": "Street",
+          "label": "Address"
+        },
+        {
+          "tag": "input",
+          "line": 48,
+          "id": "volunteer-postcode",
+          "required": null,
+          "data-sf-field": "PostalCode",
+          "label": "Postcode"
+        },
+        {
+          "tag": "input",
+          "line": 56,
+          "id": "volunteer-emergency-name",
+          "required": null,
+          "data-sf-field": "NOK_Name__c",
+          "label": "Full name"
+        },
+        {
+          "tag": "input",
+          "line": 57,
+          "id": "volunteer-emergency-relationship",
+          "required": null,
+          "data-sf-field": "NOK_Relationship__c",
+          "label": "Relationship to you"
+        },
+        {
+          "tag": "input",
+          "line": 58,
+          "id": "volunteer-emergency-phone",
+          "type": "tel",
+          "required": null,
+          "data-sf-field": "NOK_Phone__c",
+          "label": "Telephone number"
+        },
+        {
+          "tag": "input",
+          "line": 59,
+          "id": "volunteer-emergency-same-address",
+          "type": "checkbox"
+        },
+        {
+          "tag": "textarea",
+          "line": 60,
+          "id": "volunteer-emergency-address",
+          "required": null,
+          "data-required-when-visible": null,
+          "data-sf-field": "NOK_Address__c",
+          "label": "Emergency contact’s address"
+        },
+        {
+          "tag": "input",
+          "line": 61,
+          "id": "volunteer-emergency-postcode",
+          "required": null,
+          "data-required-when-visible": null,
+          "data-sf-field": "NOK_Postcode__c",
+          "label": "Postcode"
+        },
+        {
+          "tag": "select",
+          "line": 72,
+          "id": "volunteer-forces-service",
+          "required": null,
+          "data-sf-field": "Volunteer_Armed_Forces_Service__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Have you served, or are you currently serving, in HM Armed Forces?"
+        },
+        {
+          "tag": "textarea",
+          "line": 76,
+          "id": "volunteer-service-details",
+          "data-sf-field": "Volunteer_Service_Details__c",
+          "label": "Service, unit, station or ship"
+        },
+        {
+          "tag": "input",
+          "line": 77,
+          "id": "volunteer-service-dates",
+          "data-sf-field": "Volunteer_Service_Dates__c",
+          "label": "Dates in Service"
+        },
+        {
+          "tag": "input",
+          "line": 87,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 88,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 89,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 90,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 91,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 92,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 93,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 94,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 95,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 96,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 97,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 98,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        {
+          "tag": "input",
+          "line": 105,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 106,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 107,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 108,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 109,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 110,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 111,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 112,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 113,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 114,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 115,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 116,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        {
+          "tag": "input",
+          "line": 123,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 124,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 125,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 126,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 127,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 128,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 129,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 130,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 131,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "input",
+          "line": 132,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        {
+          "tag": "select",
+          "line": 137,
+          "id": "volunteer-dbs",
+          "required": null,
+          "data-sf-field": "Volunteer_DBS_Willing__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Would you be willing to complete a DBS check if the role requires one?"
+        },
+        {
+          "tag": "input",
+          "line": 146,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        {
+          "tag": "input",
+          "line": 147,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        {
+          "tag": "input",
+          "line": 148,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        {
+          "tag": "input",
+          "line": 149,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        {
+          "tag": "input",
+          "line": 150,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        {
+          "tag": "input",
+          "line": 156,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Availability__c"
+        },
+        {
+          "tag": "input",
+          "line": 157,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Availability__c"
+        },
+        {
+          "tag": "input",
+          "line": 158,
+          "type": "checkbox",
+          "data-sf-field": "Volunteer_Availability__c"
+        },
+        {
+          "tag": "input",
+          "line": 292,
+          "id": "volunteer-conduct-acknowledgement",
+          "type": "checkbox",
+          "required": null,
+          "data-sf-field": "Volunteer_Code_Consent__c"
+        },
+        {
+          "tag": "select",
+          "line": 296,
+          "id": "volunteer-consent",
+          "required": null,
+          "data-sf-field": "Volunteer_Consent__c",
+          "options": [
+            "",
+            "Yes",
+            "No"
+          ],
+          "label": "Do you consent to Mission Motorsport using your personal information, contacting you about suitable opportunities, using approved images or stories for promotion, and using relevant medical information where needed?"
+        },
+        {
+          "tag": "input",
+          "line": 297,
+          "id": "volunteer-signature",
+          "required": null,
+          "data-sf-field": "Declaration_Name__c",
+          "label": "Digital signature (full name)"
+        },
+        {
+          "tag": "input",
+          "line": 298,
+          "id": "volunteer-signature-date",
+          "type": "date",
+          "required": null,
+          "data-sf-field": "Declaration_Date__c",
+          "label": "Date"
+        }
+      ],
+      "conditionalSections": [
+        {
+          "source": "volunteer-emergency-same-address",
+          "values": "No",
+          "line": 60
+        },
+        {
+          "source": "volunteer-emergency-same-address",
+          "values": "No",
+          "line": 61
+        },
+        {
+          "source": "volunteer-emergency-same-address",
+          "values": "Yes",
+          "line": 63
+        },
+        {
+          "source": "volunteer-forces-service",
+          "values": "Yes",
+          "line": 74
+        }
+      ],
+      "choiceGroups": [
+        {
+          "data-required-checkbox-group": null,
+          "data-required-message": "Please select at least one volunteering opportunity."
+        },
+        {
+          "data-required-checkbox-group": null,
+          "data-required-message": "Please select at least one skill or area of experience."
+        },
+        {
+          "data-required-checkbox-group": null,
+          "data-required-message": "Please select at least one region."
+        },
+        {
+          "data-required-checkbox-group": null,
+          "data-single-choice-group": null,
+          "data-required-message": "Please select the hours you are willing to give per month."
+        },
+        {
+          "data-required-checkbox-group": null,
+          "data-exclusive-choice": "Any",
+          "data-required-message": "Please select your availability preference."
+        }
+      ]
+    }
+  ]
+}

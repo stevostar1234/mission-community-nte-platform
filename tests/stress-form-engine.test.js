@@ -441,7 +441,52 @@ test("volunteer revised opportunities and skills reach their own Salesforce fiel
   for (const api of ["Volunteer_Opportunities__c","Volunteer_Skills__c"]) assert.equal(payload(f)[fieldName(f,api)],"Transport and Logistics;Marshalling;Pop up shop");
 });
 
-test("complimentary benefits follow eligible selection while paid extras remain chargeable", () => {
+test("all organisation categories can select every space without losing their selection", () => {
+  const f = complete(fixture("exhibitor-application.html"));
+  const spaces = f.form.querySelectorAll('[name="exhibitor-space"]');
+  const categories = f.get("organisation-category").querySelectorAll("option").map(option => option.value).filter(Boolean);
+  assert.equal(categories.length, 19); assert.equal(spaces.length, 27);
+  set(f, "planned-count", "2");
+  set(f, f.form.querySelectorAll('[name="power-required"]').find(node => node.value === "No"), true);
+  for (const category of categories) {
+    set(f, "organisation-category", category);
+    for (const space of spaces) {
+      assert.equal(space.disabled, false, category + " / " + space.value);
+      set(f, space, true);
+      assert.equal(space.checked, true);
+      assert.equal(f.form.querySelector('[data-sf-field="Listed_Price_Total__c"]').value, String(Number(space.dataset.price)));
+      assert.equal(f.get("billing").hidden, Number(space.dataset.price) === 0);
+      assert.equal(f.form.querySelector('[data-complimentary-benefits]').hidden, Number(space.dataset.price) !== 0);
+      if (Number(space.dataset.price) === 249.5) assert.match(f.form.querySelector('[data-discount-savings]').textContent, /£299\.40 including VAT on your space\./);
+      matrixCases++;
+    }
+    assert.equal(spaces.at(-1).checked, true);
+  }
+});
+
+test("commercial applicants submit either free space with zero finance or full paid-extra requirements", () => {
+  for (const spaceName of ["COBSEO Charity - Single - Free", "Non COBSEO Charity - Single - Free"]) {
+    for (const method of ["Bank transfer", "Stripe"]) for (const extra of [false, true]) {
+      const f = complete(fixture("exhibitor-application.html"));
+      set(f, "organisation-category", "Employer - Automotive Sector");
+      set(f, f.form.querySelectorAll('[name="exhibitor-space"]').find(node => node.value === spaceName), true);
+      set(f, "planned-count", "2");
+      set(f, f.form.querySelectorAll('[name="power-required"]').find(node => node.value === "No"), true);
+      if (extra) { set(f, "power-required-yes", true); set(f, "power-count", "1"); }
+      complete(f);
+      if (extra) set(f, "payment-method", method);
+      f.form.requestSubmit();
+      assert.equal(f.document.posts.length, 1, spaceName + " / " + method + " / extras=" + extra);
+      assert.equal(payload(f)[fieldName(f,"Exhibitor_Space_Selections__c")], spaceName);
+      assert.equal(payload(f)[fieldName(f,"Listed_Price_Total__c")], extra ? "100" : "0");
+      assert.equal(payload(f)[fieldName(f,"Payment_Method__c")], extra ? method : undefined);
+      assert.equal(f.get("billing").hidden, !extra);
+      matrixCases++;
+    }
+  }
+});
+
+test("complimentary benefits remain selected across organisation changes while paid extras remain chargeable", () => {
   const f = complete(fixture("exhibitor-application.html"));
   const benefits = f.form.querySelector("[data-complimentary-benefits]");
   assert.equal(benefits.hidden, true);
@@ -455,10 +500,13 @@ test("complimentary benefits follow eligible selection while paid extras remain 
   assert.equal(f.form.querySelector('[data-sf-field="Listed_Price_Total__c"]').value, "100");
   assert.match(f.form.querySelector("[data-estimate]").textContent, /£100.00/);
   set(f, "organisation-category", "Employer - Automotive Sector");
-  assert.equal(benefits.hidden, true, "A deselected ineligible free space cannot leave a free-benefits claim");
+  assert.equal(benefits.hidden, false);
+  assert.match(benefits.textContent, /- worth £499 \+ VAT/);
+  assert.equal(f.form.querySelector('[data-sf-field="Listed_Price_Total__c"]').value, "150", "Only the category-based power rate changes");
+  assert.equal(f.form.querySelector('[name="exhibitor-space"]:checked').value, "COBSEO Charity - Single - Free");
 });
 
-test("discount savings show only selected eligible space and power reductions", () => {
+test("discount savings follow the selected space independently of the category-based power reduction", () => {
   const f = complete(fixture("exhibitor-application.html"));
   const savings = f.form.querySelector("[data-discount-savings]");
   const selectSpace = value => set(f, f.form.querySelectorAll('[name="exhibitor-space"]').find(node => node.value === value), true);
@@ -471,7 +519,8 @@ test("discount savings show only selected eligible space and power reductions", 
   set(f, f.form.querySelectorAll('[name="power-required"]').find(node => node.value === "No"), true);
   assert.match(savings.textContent, /save £299\.40 including VAT/); assert(!savings.textContent.includes("socket"));
   set(f, "organisation-category", "Local Government or LG related");
-  assert.equal(savings.hidden, true, "Changing eligibility clears a stale selected-space saving");
+  assert.equal(savings.hidden, false);
+  assert.match(savings.textContent, /save £299\.40 including VAT on your space\./);
   selectSpace("Local Government Authority - Single - £249.50 + VAT");
   assert.match(savings.textContent, /save £299\.40 including VAT/);
   set(f, "organisation-category", "Charity - member of Cobseo");

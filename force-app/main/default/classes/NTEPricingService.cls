@@ -268,7 +268,7 @@ public without sharing class NTEPricingService {
             if (EXHIBITOR_SPACE_PRICES.containsKey(exhibitorSpace)) result.spacePrice = EXHIBITOR_SPACE_PRICES.get(exhibitorSpace);
             else result.reviewRequired = true;
 
-            if (!isKnownExhibitorCategory(category) || !isEligibleForRestrictedSpace(exhibitorSpace, category)) {
+            if (!isKnownExhibitorCategory(category)) {
                 result.reviewRequired = true;
             }
 
@@ -319,18 +319,6 @@ public without sharing class NTEPricingService {
             }
         }
         return activeExhibitorCategories.contains(category);
-    }
-
-    private static Boolean isEligibleForRestrictedSpace(String spaceName, String category) {
-        Map<String, String> requiredCategoryBySpace = new Map<String, String>{
-            'Local Government Authority - Single - £249.50 + VAT' => 'Local Government or LG related',
-            'Blue Light - Single - £249.50 + VAT' => 'Employer - Blue Light & NHS',
-            'Trade Association - Single - £499 + VAT' => 'Trade Association',
-            'COBSEO Charity - Single - Free' => 'Charity - member of Cobseo',
-            'Non COBSEO Charity - Single - Free' => 'Charity - not a member of Cobseo'
-        };
-        return !requiredCategoryBySpace.containsKey(spaceName)
-            || requiredCategoryBySpace.get(spaceName) == category;
     }
 
     private static Decimal decimalFromText(String value) {

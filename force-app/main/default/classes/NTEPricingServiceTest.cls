@@ -112,8 +112,8 @@ private class NTEPricingServiceTest {
     }
 
     @IsTest
-    static void preventsRestrictedSpaceEligibilityBypass() {
-        Lead ineligibleFreeSpace = new Lead(
+    static void allowsFreeAndDiscountedRequestsRegardlessOfOrganisationType() {
+        Lead freeSpaceRequest = new Lead(
             Web_Form_Type__c = 'Exhibitor Application',
             Exhibitor_Space_Selections__c = 'COBSEO Charity - Single - Free',
             Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector',
@@ -122,11 +122,12 @@ private class NTEPricingServiceTest {
             Additional_Staff_Required__c = 'No',
             Invoice_Required__c = 'No'
         );
-        NTEPricingService.applyLeadPricing(ineligibleFreeSpace);
-        System.assertEquals('Review required', ineligibleFreeSpace.Pricing_Status__c);
-        System.assertEquals('Yes', ineligibleFreeSpace.Invoice_Required__c);
+        NTEPricingService.applyLeadPricing(freeSpaceRequest);
+        System.assertEquals('Calculated', freeSpaceRequest.Pricing_Status__c);
+        System.assertEquals(0, freeSpaceRequest.Listed_Price_Total__c);
+        System.assertEquals('No', freeSpaceRequest.Invoice_Required__c);
 
-        Opportunity ineligibleDiscount = new Opportunity(
+        Opportunity discountRequest = new Opportunity(
             NTE_Source_Form_Type__c = 'Exhibitor Application',
             NTE_Exhibitor_Space_Selections__c = 'Blue Light - Single - £249.50 + VAT',
             NTE_Exhibitor_Organisation_Category__c = 'Employer - Manufacturing Sector',
@@ -135,9 +136,11 @@ private class NTEPricingServiceTest {
             NTE_Additional_Staff_Required__c = 'No',
             NTE_Invoice_Required__c = 'No'
         );
-        NTEPricingService.applyOpportunityPricing(ineligibleDiscount);
-        System.assertEquals('Review required', ineligibleDiscount.NTE_Pricing_Status__c);
-        System.assertEquals('Yes', ineligibleDiscount.NTE_Invoice_Required__c);
+        NTEPricingService.applyOpportunityPricing(discountRequest);
+        System.assertEquals('Calculated', discountRequest.NTE_Pricing_Status__c);
+        System.assertEquals(249.50, discountRequest.NTE_Listed_Price_Total__c);
+        System.assertEquals(299.40, discountRequest.Amount);
+        System.assertEquals('Yes', discountRequest.NTE_Invoice_Required__c);
     }
 
     @IsTest

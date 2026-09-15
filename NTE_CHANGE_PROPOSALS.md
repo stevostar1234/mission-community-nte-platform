@@ -30,6 +30,7 @@ The owner approved **1, 2, 3, 4, 5, 6, 8 and 10**, and approved **9 with revised
 
 | 21 | VAT across the NTE booking journey | Apply 20% VAT to payable catalogue charges, preserving net package/item prices and showing aggregate VAT and gross totals across forms, Salesforce, finance/reporting, emails and Stripe. Replace verified dummy NTE records with five examples in each of the five established working positions and test the revised calculations. | Implemented and qualified in MMUAT and the canonical preview, 13 September |
 | 22 | Manual finance requirements and booking actions | Conversion creates a new event-labelled booking without sending or reserving; staff record independent requirements, deliberately send the correct booking/top-up message, and track manual joining instructions. Reconcile finance filters, completion, reports, page layouts and dependencies. | Implemented and qualified — MMUAT and canonical preview, 14 September; P03 new-booking policy explicitly settled |
+| 23 | Open exhibitor space requests to every organisation type | Add the £499 + VAT complimentary-space value; remove category-to-space gates in forms and Salesforce, preserve independent power pricing and manual team decisions, and report other form restrictions. | Implemented and qualified — MMUAT and canonical preview, 15 September; 422 native tests passed |
 
 ## Suggested order and boundaries
 

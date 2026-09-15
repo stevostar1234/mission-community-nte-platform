@@ -645,6 +645,51 @@ private class NTEConversionFlowTest {
         System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject LIKE 'NTE booking provisional email%']);
     }
 
+    @IsTest
+    static void commercialRequestsForFreeAndDiscountedSpacesConvertSilently() {
+        NTEInboundLeadService.bypassEmailDelivery = true;
+        NTEExhibitorApprovalEmailService.bypassEmailDelivery = true;
+        List<String> spaces = new List<String>{'COBSEO Charity - Single - Free',
+            'Non COBSEO Charity - Single - Free', 'Blue Light - Single - £249.50 + VAT',
+            'COBSEO Charity - Single - Free'};
+        List<Decimal> totals = new List<Decimal>{0, 0, 299.40, 120};
+        List<Lead> applications = new List<Lead>();
+        for (Integer i = 0; i < spaces.size(); i++) {
+            Lead application = targetApplication('Open Space ' + i, false);
+            application.Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector';
+            application.Exhibitor_Space_Selections__c = spaces[i];
+            if (i == 3) { application.Stand_Power__c = 'Yes'; application.Power_Socket_Count__c = 1; }
+            applications.add(application);
+        }
+        insert applications;
+        List<Database.LeadConvert> conversions = new List<Database.LeadConvert>();
+        for (Lead application : applications) conversions.add(conversionFor(application));
+        Test.startTest();
+        List<Database.LeadConvertResult> results = Database.convertLead(conversions, false);
+        Test.stopTest();
+        Set<Id> bookingIds = new Set<Id>();
+        for (Database.LeadConvertResult result : results) {
+            System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
+            bookingIds.add(result.getOpportunityId());
+        }
+        Map<Id, Opportunity> bookings = new Map<Id, Opportunity>([SELECT Amount,
+            NTE_Pricing_Status__c, NTE_Invoice_Required__c, NTE_Approval_Email_Status__c,
+            NTE_Payment_Received__c, NTE_Exhibitor_Space_Selections__c
+            FROM Opportunity WHERE Id IN :bookingIds]);
+        for (Integer i = 0; i < results.size(); i++) {
+            Opportunity booking = bookings.get(results[i].getOpportunityId());
+            System.assertEquals('Calculated', booking.NTE_Pricing_Status__c);
+            System.assertEquals(spaces[i], booking.NTE_Exhibitor_Space_Selections__c);
+            System.assertEquals(totals[i], booking.Amount);
+            System.assertEquals(totals[i] > 0 ? 'Yes' : 'No', booking.NTE_Invoice_Required__c);
+            System.assertNotEquals('Sent', booking.NTE_Approval_Email_Status__c);
+            System.assertEquals(false, booking.NTE_Payment_Received__c);
+        }
+        System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c]);
+        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds
+            AND Subject LIKE 'NTE booking provisional email%']);
+    }
+
     private static Lead targetApplication(String label, Boolean partner) {
         String token = label.toLowerCase().replace(' ', '-');
         return new Lead(FirstName = 'Exact', LastName = label, Company = 'Exact Conversion ' + label,

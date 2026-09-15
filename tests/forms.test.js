@@ -137,7 +137,7 @@ const expectedAssetVersion = "20260908-1";
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
   const vatForm = ["partner-sponsor-application.html", "exhibitor-application.html", "exhibitor-staff-update.html"].includes(file);
-  const expectedScriptVersion = "20260914-staff-1";
+  const expectedScriptVersion = "20260915-spaces-1";
   assert(html.includes("assets/config.js?v=20260913-finance-2"), `${file}: config asset version is stale`);
   assert(html.includes(`assets/forms.js?v=${expectedScriptVersion}`), `${file}: forms asset version is stale`);
   assert(html.includes(`assets/styles.css?v=${vatForm ? "20260913-vat" : expectedAssetVersion}`), `${file}: stylesheet asset version is stale`);
@@ -503,9 +503,6 @@ for (const report of ["NTE_02_Partner_Sponsor_Event_Operations", "NTE_03_Exhibit
   assert(xml.includes("Opportunity.NTE_Invoice_Requested__c"), `${report} must include the independent invoice request`);
 }
 assert(fs.readFileSync(path.join(root, "force-app", "main", "default", "reports", "NTE_Operations", "NTE_07_Application_and_EOI_Pipeline.report-meta.xml"), "utf8").includes("Lead.Payment_Method__c"), "the application pipeline report must include the Lead payment method");
-assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("COBSEO Charity - Single - Free"))), ["Charity - member of Cobseo"]);
-assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("Blue Light - Single - £249.50 + VAT"))), ["Employer - Blue Light & NHS"]);
-assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("Single Garage - Track Side - £799 + VAT"))), []);
 assert(exhibitorHtml.includes('data-sf-field="Logo_Upload_URL__c"'), "exhibitor application must store the configured logo-upload URL for confirmation emails");
 assert(partnerHtml.includes('data-sf-field="Logo_Upload_URL__c"'), "partner application must store the configured logo-upload URL for confirmation emails");
 
