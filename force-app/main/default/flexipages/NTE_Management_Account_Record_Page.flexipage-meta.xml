@@ -77,8 +77,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Source_Form_Type__c</fieldItem>
-                <identifier>RecordNTE_Source_Form_Type__c0L1</identifier>
+                <fieldItem>Record.NTE_Event_Code__c</fieldItem>
+                <identifier>RecordNTE_Event_Code__c0L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -87,8 +87,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Application_Date__c</fieldItem>
-                <identifier>RecordNTE_Last_Application_Date__c0L2</identifier>
+                <fieldItem>Record.NTE_Source_Form_Type__c</fieldItem>
+                <identifier>RecordNTE_Source_Form_Type__c0L2</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_1_Left</name>
@@ -101,8 +101,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Event_Code__c</fieldItem>
-                <identifier>RecordNTE_Event_Code__c0R0</identifier>
+                <fieldItem>Record.NTE_Booking_Reference__c</fieldItem>
+                <identifier>RecordNTE_Booking_Reference__c0R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -111,8 +111,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Booking_Reference__c</fieldItem>
-                <identifier>RecordNTE_Booking_Reference__c0R1</identifier>
+                <fieldItem>Record.NTE_Last_Application_Date__c</fieldItem>
+                <identifier>RecordNTE_Last_Application_Date__c0R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -169,8 +169,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.ParentId</fieldItem>
+                <identifier>RecordParentId1L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Type</fieldItem>
-                <identifier>RecordType1L1</identifier>
+                <identifier>RecordType1L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Industry</fieldItem>
+                <identifier>RecordIndustry1L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -180,27 +200,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.AccountSource</fieldItem>
-                <identifier>RecordAccountSource1L2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Website</fieldItem>
-                <identifier>RecordWebsite1L3</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.AnnualRevenue</fieldItem>
-                <identifier>RecordAnnualRevenue1L4</identifier>
+                <identifier>RecordAccountSource1L4</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_2_Left</name>
@@ -213,28 +213,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.ParentId</fieldItem>
-                <identifier>RecordParentId1R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Industry</fieldItem>
-                <identifier>RecordIndustry1R1</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
                 <fieldItem>Record.Phone</fieldItem>
-                <identifier>RecordPhone1R2</identifier>
+                <identifier>RecordPhone1R0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Website</fieldItem>
+                <identifier>RecordWebsite1R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -244,7 +234,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NumberOfEmployees</fieldItem>
-                <identifier>RecordNumberOfEmployees1R3</identifier>
+                <identifier>RecordNumberOfEmployees1R2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.AnnualRevenue</fieldItem>
+                <identifier>RecordAnnualRevenue1R3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -301,8 +301,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.LastModifiedById</fieldItem>
-                <identifier>RecordLastModifiedById2L1</identifier>
+                <fieldItem>Record.CreatedById</fieldItem>
+                <identifier>RecordCreatedById2L1</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_3_Left</name>
@@ -315,8 +315,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.CreatedById</fieldItem>
-                <identifier>RecordCreatedById2R0</identifier>
+                <fieldItem>Record.LastModifiedById</fieldItem>
+                <identifier>RecordLastModifiedById2R0</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_3_Right</name>

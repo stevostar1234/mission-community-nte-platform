@@ -1,6 +1,6 @@
 # NTE Management app
 
-Last deployment review: 18 August 2026
+Last access review: 13 September 2026. Earlier deployment evidence below remains dated history.
 
 Salesforce target: Mission Motorsport MMUAT sandbox (`mission-mmuat`)
 
@@ -10,19 +10,25 @@ Application API name: `NTE_Management`
 
 NTE Management is the app-scoped daily workspace for NTE enquiries, applications, participants, bookings, event delivery and follow-up. It is additive: it does not replace or modify the existing Mission Community or prototype applications.
 
+## Prices and VAT
+
+Package, space, socket and staff prices are stored excluding VAT. The current policy adds 20% to each net booking or separately invoiced staff top-up after applicable discounts. Booking Amount includes VAT on the initial booking; confirmed value includes the gross booking and any gross top-up once. Home, Master Panel and finance queues show amounts including VAT. Financial reports also expose the net amounts and VAT breakdown.
+
+The existing **NTE Management Access** group grants all 11 new VAT fields. Its calculated status is Updated, and Kate Lole and Tony Radford’s existing active assignments were verified on 13 September. No additional permission group or user-onboarding step is needed for VAT. [Release and test records](audit/NTE_VAT_IMPLEMENTATION_2026-09-13.md).
+
 ## Navigation and Master Panel
 
-The fixed navigation opens on **Master Panel**, followed by Home, Leads, Accounts, Contacts, Opportunities, Tasks, Calendar, Dashboards, Reports and Forms. Master Panel is the live event workbench and provides:
+The fixed navigation opens on **Home**, followed by Master Panel, Leads, Accounts, Contacts, Opportunities, Tasks, Calendar, Dashboards and Reports. The public forms remain on the separate forms website. Master Panel is the live event workbench and provides:
 
 - dynamic Event code, Time and Owner filters;
 - a bottom-of-page event overview table covering guest registrations, expressions of interest, applications, finance, approved bookings, logistics confirmation and staff updates, split into total, in-progress and completed values;
 - the Interest → Applications → Approved → Finances → Updates → Completed pipeline;
-- combined stage views that open immediately, with centred optional subtype filters for exhibitor and partner/sponsor interest, applications and approvals; quotes required, invoices required, payments required and completed payments; and heavy-vehicle and staff updates;
-- a true-completion percentage based on approved bookings that have every applicable quote, invoice, payment, staff and heavy-vehicle milestone complete;
+- combined stage views that open immediately, with centred optional subtype filters for exhibitor and partner/sponsor interest, applications and approvals; Requirements, Payment required and Payment confirmed; and heavy-vehicle and staff updates;
+- a true-completion percentage based on approved bookings that have the applicable payments or free-space confirmation, staff, logo and heavy-vehicle preparation complete;
 - queue-specific operational tables that remove non-applicable fields and surface the contact, application, finance, staff or vehicle details needed for that queue;
 - a Convert action on every unconverted application Lead that opens Salesforce's standard Account, Contact and Opportunity matching screen; returning through the Master Panel navigation reloads all figures;
-- paginated record drill-down with contact, booking, readiness and finance details; and
-- audited Quote provided, Invoice provided and Payment received milestones in the required order.
+- paginated records with contact, booking, readiness and finance details; Requirements uses individual cards with direct full-record links; and
+- persistent requirement checkboxes, manual booking/payment-link actions and separate payment-received actions.
 
 The custom home page also provides direct access to:
 
@@ -35,6 +41,16 @@ The custom home page also provides direct access to:
 - tasks, calendar, reports, dashboards and the live public-form directory.
 
 The app uses the supplied NTE logo without redrawing it. Its app chrome and custom components use a midnight blue, NTE gold and white palette, with responsive layouts for desktop and mobile.
+
+## Manual finance workflow
+
+Conversion creates a new Opportunity and sends no applicant email or payment link. Existing Accounts and Contacts can be reused. The saved event code is appended to the booking name; more than one Opportunity may have that name.
+
+Requirements lists the applicant's applicable quotation, invoice, purchase order/reference, supplier agreement, extra document details and bank-detail requirement. Each checkbox saves independently. It records work completed and never gates or automatically follows an email action. From this view, staff send the relevant Stripe link, bank-transfer provisional reservation or free-space confirmation.
+
+After the payment request is accepted, the booking moves to Payment required, where the applicable booking or staff-top-up receipt can be recorded. Receipt of the initial booking sends its confirmation once. A later staff top-up returns the booking to Requirements for its separate link, then Payment required, then Payment confirmed. The original payment and its timestamp remain unchanged. Staff-top-up receipt does not send the original confirmation again.
+
+Completed records have a manual **Final joining instructions sent** checkbox. Joining instructions are sent by the team outside this mass-email workflow. The checkbox records time and user without sending an email or creating a Task.
 
 ## App-scoped record pages
 
@@ -58,15 +74,28 @@ The package provides:
 - the existing NTE Lead queue views; and
 - **NTE Event Participation** on Opportunity.
 
-It also provides Opportunity list views for Quotes required, Invoices required, Payments due, Heavy vehicle updates due and Staff updates due. Staff and heavy-vehicle form processing stamps completion timestamps on the booking so Master Panel and the operational reports use the same evidence.
+Current operational Opportunity list views are Requirements, Payment required, Payment confirmed, Heavy vehicle updates due, Staff updates due and Logo updates due. Superseded quote/invoice and separate top-up list views are recorded as retirement candidates until the authorised cleanup is qualified. Staff and heavy-vehicle form processing stamps completion timestamps on the booking so Master Panel and the operational reports use the same evidence.
 
 The idempotent post-deployment backfill classified 11 retained Accounts and 11 retained Contacts created by earlier NTE conversions. It performed 22 updates and no deletes.
 
 ## Access model
 
-`NTE_Management_User` exposes the application, its tabs and the NTE classification fields. It was assigned to all 10 active human CRM users in MMUAT: four Standard Users and six System Administrators.
+Assign **NTE Management Access** (`NTE_Management_Access`) to each authorised NTE user. This permission set group combines:
 
-The permission set deliberately does not grant new Account, Contact, Lead or Opportunity CRUD or sharing access. Existing profiles, permission sets, ownership and sharing rules continue to determine which records each person can read or change. Guest, automated-process, Chatter-only and machine integration identities cannot use this CRM Lightning app and were not assigned it.
+- `NTE_Management_User`: NTE Management app and Master Panel, NTE fields and Apex entry points, Lead conversion, reports, operational record creation/editing and communication actions.
+- **NTE Stripe Payment Operator** (`NTE_Stripe_Test_Operator`, retained API name): use of the protected test/live principals and read access to payment-request history, including its saved environment. The configured mode selects the appropriate principal. It does not grant Stripe Dashboard access or expose the secret key.
+
+Kate Lole (Standard User) and Tony Radford (System Administrator) received this group in MMUAT on 11 September. Their profiles and earlier assignments were preserved. The group adds no Modify All Data, View All Data, object-wide Modify All or delete permissions. Existing administrators retain their own wider profile permissions.
+
+For a new user, open **Setup → Permission Set Groups → NTE Management Access → Manage Assignments → Add Assignments**, select the user and save. Alternatively use **Users → user → Permission Set Group Assignments → Edit Assignments**. Wait until the group status is **Updated** before assignment. A user who is already signed in should refresh or sign in again, then select **NTE Management** from the App Launcher. Assign this group once; do not also assign its constituent permission sets. Existing direct assignments to `NTE_Management_User` or `NTE_Forms_Administration` remain valid and were not removed by this change.
+
+The user needs a Salesforce licence that supports Leads and Opportunities; a Salesforce Platform or Chatter-only licence is insufficient. Record visibility still follows profiles, ownership and sharing. The accepted open internal model is already implemented by the packaged `NTE_Opportunities_Internal_Edit` rule, which grants all internal users edit access to NTE Event Opportunities when they have object/field access. The NTE Operations & Finance report folder grants all internal users View access. The native checks verified both testers can read and edit 60 current client-test Leads, bookings and Accounts.
+
+For production, assign this same group to **every active System Administrator and the selected standard users** during the separately authorised release, and include it in future user onboarding. A newly created administrator does not automatically receive this custom group. Reconcile production sharing, licences and the final roster before assignment. The existing Stripe component now covers both environment principals, keeping the same group and one-assignment onboarding. Populate the approved target credential securely and verify the expected org, merchant and mode. Do not use the MMUAT test key as production configuration.
+
+The active recipient/reference restrictions were removed in proposal 17. Ordinary references and any valid Primary Contact email are accepted; optional filters are blank. Proposal 20 adds explicit test/live support while MMUAT remains in test mode. Manual payment confirmation remains the agreed workflow. [Latest qualification](audit/NTE_STRIPE_LIVE_READINESS_2026-09-11.md).
+
+[11 September access verification and release evidence](audit/NTE_MANAGEMENT_ACCESS_2026-09-11.md).
 
 ## Deployment and verification
 

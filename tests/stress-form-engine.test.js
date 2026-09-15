@@ -80,7 +80,7 @@ class Element {
   requestSubmit() { if (this.noValidate || this.reportValidity()) this.dispatchEvent(new FixtureEvent("submit", {bubbles: true})); }
   submit() { if (this.ownerDocument.failSubmit) throw new Error("Navigation unavailable"); this.ownerDocument.posts.push(Object.fromEntries(this.querySelectorAll("input").map(input => [input.name, input.value]))); }
 }
-for (const name of ["required", "disabled", "hidden", "noValidate"]) Object.defineProperty(Element.prototype, name, {get() { return this.hasAttribute(name.toLowerCase()); }, set(value) { value ? this.setAttribute(name.toLowerCase(), "") : this.removeAttribute(name.toLowerCase()); }});
+for (const name of ["required", "disabled", "hidden", "noValidate", "open"]) Object.defineProperty(Element.prototype, name, {get() { return this.hasAttribute(name.toLowerCase()); }, set(value) { value ? this.setAttribute(name.toLowerCase(), "") : this.removeAttribute(name.toLowerCase()); }});
 for (const name of ["id", "name", "min", "max", "step", "pattern", "className", "action", "method", "href"]) { const attr = name === "className" ? "class" : name; Object.defineProperty(Element.prototype, name, {get() { return this.getAttribute(attr) || ""; }, set(value) { this.setAttribute(attr, value); }}); }
 Object.defineProperty(Element.prototype, "maxLength", {get() { return this.hasAttribute("maxlength") ? Number(this.getAttribute("maxlength")) : -1; }, set(value) { this.setAttribute("maxlength", value); }});
 
@@ -113,7 +113,7 @@ function fixture(filename, options = {}, runtime = {}) {
 }
 
 function set(f, id, value, notify = true) { const control = typeof id === "string" ? f.get(id) : id; assert(control, "fixture control exists: " + id); if (/^(checkbox|radio)$/.test(control.type)) control.checked = value; else control.value = value; if (notify) { control.dispatchEvent(new FixtureEvent("input", {bubbles: true})); control.dispatchEvent(new FixtureEvent("change", {bubbles: true})); } return control; }
-function complete(f) {
+function complete(f, options = {}) {
   for (let round = 0; round < 4; round++) {
     for (const control of f.form.querySelectorAll("input, select, textarea")) {
       if (!control.required || control.disabled || control.type === "hidden" || control.value && !/^(radio|checkbox)$/.test(control.type)) continue;
@@ -124,7 +124,20 @@ function complete(f) {
     }
     f.form.querySelectorAll("[data-required-checkbox-group]").forEach(group => { if (!group.querySelector('input[type="checkbox"]:checked')) set(f, group.querySelector('input[type="checkbox"]'), true); });
   }
+  if (f.form.hasAttribute("data-require-code-of-conduct") && options.conduct !== false) {
+    readConduct(f);
+    set(f, "volunteer-conduct-acknowledgement", true);
+  }
   return f;
+}
+
+function readConduct(f, scrollTop = 800) {
+  const details = f.form.querySelector("[data-conduct-document]");
+  const reader = f.form.querySelector("[data-conduct-reader]");
+  reader.clientHeight = 400; reader.scrollHeight = 1200; reader.scrollTop = 0;
+  details.open = true; details.dispatchEvent(new FixtureEvent("toggle"));
+  reader.scrollTop = scrollTop; reader.dispatchEvent(new FixtureEvent("scroll"));
+  return reader;
 }
 
 let passed = 0; let failed = 0; let matrixCases = 0; const results = [];
@@ -144,7 +157,7 @@ for (const filename of filenames) {
   test(filename + ": script-assigned overlong text is rejected without truncation", () => {
     const f = complete(fixture(filename)); const name = f.form.querySelector('[data-sf-field="FirstName"]'); set(f, name, "É".repeat(41)); f.form.requestSubmit(); assert.equal(f.document.posts.length, 0); assert.equal(name.value.length, 41); set(f, name, "É".repeat(40)); f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
   });
-  test(filename + ": future and out-of-range signature dates are rejected", () => {
+  if (filename !== "logo-upload.html") test(filename + ": future and out-of-range signature dates are rejected", () => {
     const f = complete(fixture(filename)); const date = f.form.querySelector('[data-sf-field="Declaration_Date__c"]'); for (const value of ["2099-01-01", "2025-12-31"]) { set(f, date, value); f.form.requestSubmit(); assert.equal(f.document.posts.length, 0); } set(f, date, "2026-09-01"); f.form.requestSubmit(); assert.equal(payload(f)[fieldName(f, "Declaration_Date__c")], "01/09/2026");
   });
   test(filename + ": transport exceptions clear busy state and permit retry", () => {
@@ -170,8 +183,8 @@ test("disabled guest name sources cannot leak through a hidden combined field", 
 test("guest conditionals are synchronised at submit even without change events", () => {
   const f = complete(fixture("guest-registration.html")); set(f, "guest-accompanying", "Yes", false); f.form.requestSubmit(); assert.equal(f.document.posts.length, 0); assert.equal(f.get("guest-companion-first-name").required, true);
 });
-test("partner count correction clears the name-count validation error", () => {
-  const f = complete(fixture("partner-sponsor-staff-update.html")); set(f, "partner-staff-total", "2"); f.form.requestSubmit(); assert.equal(f.document.posts.length, 0); set(f, "partner-staff-total", "1"); f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
+test("partner quantity correction permits submission with an independent staff list", () => {
+  const f = complete(fixture("partner-sponsor-staff-update.html")); set(f, "partner-staff-total", "100"); f.form.requestSubmit(); assert.equal(f.document.posts.length, 0); assert.equal(f.document.activeElement?.id, "partner-staff-total"); set(f, "partner-staff-total", "2"); f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
 });
 test("clearing an incomplete optional heavy item permits submission", () => {
   const f = complete(fixture("heavy-vehicle-details.html")); set(f, "item2-registration", "AB12 CDE"); f.form.requestSubmit(); assert.equal(f.document.posts.length, 0); set(f, "item2-registration", ""); f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
@@ -183,8 +196,56 @@ test("optional heavy item combinations enforce completeness and ordering", () =>
   for (let bits = 0; bits < 16; bits++) { const f = complete(fixture("heavy-vehicle-details.html")); ["description", "registration", "dimensions", "weight"].forEach((part, index) => set(f, "item2-" + part, bits & (1 << index) ? "Value" : "")); const expected = bits === 0 || (bits & 13) === 13; assert.equal(f.internals.validateHeavyItems(f.form), expected, "item2 mask " + bits); matrixCases++; }
   const f = complete(fixture("heavy-vehicle-details.html")); ["description", "dimensions", "weight"].forEach(part => set(f, "item3-" + part, "Value")); assert.equal(f.internals.validateHeavyItems(f.form), false);
 });
-test("staff counts validate integer bounds and exact name lines", () => {
-  for (const count of [0,1,2,99,100,1.5]) for (const names of [0,1,2,99,100]) { const f = complete(fixture("partner-sponsor-staff-update.html")); set(f, "partner-staff-total", String(count)); set(f, "partner-staff-names", Array.from({length:names}, (_, i) => "Person " + i).join("\r\n")); assert.equal(f.internals.validateStaffUpdate(f.form), Number.isInteger(count) && count >= 1 && count <= 99 && count === names); matrixCases++; }
+test("partner quantities and required staff text validate independently", () => {
+  for (const count of [0,1,2,99,100,1.5]) for (const names of [0,1,2,99,100]) {
+    const f = complete(fixture("partner-sponsor-staff-update.html"));
+    const text = Array.from({length:names}, (_, i) => "Person " + i).join("\r\n");
+    set(f, "partner-staff-total", String(count)); set(f, "partner-staff-names", text); f.form.requestSubmit();
+    const valid = Number.isInteger(count) && count >= 1 && count <= 99 && names > 0;
+    assert.equal(f.document.posts.length, valid ? 1 : 0, "declared quantity " + count + ", roster lines " + names);
+    if (valid) {
+      assert.equal(payload(f)[fieldName(f,"Total_Staff_Count__c")], String(count));
+      assert.equal(payload(f)[fieldName(f,"Planned_Exhibitor_Count__c")], String(count));
+      assert.equal(payload(f)[fieldName(f,"Staff_Base_Names__c")], text);
+    }
+    matrixCases++;
+  }
+});
+test("exhibitor rosters never infer or submit staffing quantities", () => {
+  for (const text of ["Alex", "Alex\nBea\nChris", Array.from({length:101}, (_, i) => "Person " + i).join("\n"), "Alex and Bea; Chris", "Alex\n\nBea"]) {
+    const f = complete(fixture("exhibitor-staff-update.html")); set(f,"exhibitor-staff-names",text); f.form.requestSubmit();
+    assert.equal(f.document.posts.length,1);
+    assert.equal(payload(f)[fieldName(f,"Staff_Base_Names__c")],text);
+    for (const api of ["Total_Staff_Count__c","Planned_Exhibitor_Count__c","Additional_Staff_Count__c"]) assert.equal(payload(f)[fieldName(f,api)],undefined,api);
+    assert.equal(payload(f)[fieldName(f,"Top_Up_Staff_Total__c")],"0");
+    matrixCases++;
+  }
+});
+test("top-up charges use purchased quantity regardless of staff names", () => {
+  for (const count of [0,1,2,99,100,1.5]) for (const text of ["", "Alex", "Alex\nBea\nChris", Array.from({length:100}, (_, i) => "Person " + i).join("\n")]) {
+    const f = complete(fixture("exhibitor-staff-update.html"));
+    set(f,"top-up-required","Yes"); set(f,"top-up-count",String(count)); set(f,"top-up-names",text); f.form.requestSubmit();
+    const valid = Number.isInteger(count) && count >= 1 && count <= 99 && !!text;
+    assert.equal(f.document.posts.length, valid ? 1 : 0, "purchased quantity " + count + ", staff text " + text.slice(0,20));
+    if (valid) {
+      assert.equal(payload(f)[fieldName(f,"Top_Up_Staff_Count__c")],String(count));
+      assert.equal(payload(f)[fieldName(f,"Top_Up_Staff_Unit_Price__c")],"50");
+      assert.equal(payload(f)[fieldName(f,"Top_Up_Staff_Total__c")],String(count * 50));
+      assert.equal(payload(f)[fieldName(f,"Top_Up_Staff_Names__c")],text);
+      assert.equal(f.form.querySelector("[data-top-up-estimate]").textContent,f.utils.totalText(count * 50));
+    }
+    matrixCases++;
+  }
+});
+test("blank staff names remain invalid and hidden top-up names stay excluded", () => {
+  for (const [filename,id] of [["partner-sponsor-staff-update.html","partner-staff-names"],["exhibitor-staff-update.html","exhibitor-staff-names"]]) {
+    const f=complete(fixture(filename)); set(f,id," \r\n \t"); f.form.requestSubmit(); assert.equal(f.document.posts.length,0); assert.equal(f.document.activeElement?.id,id);
+    set(f,id,"Alex and Bea"); f.form.requestSubmit(); assert.equal(f.document.posts.length,1);
+  }
+  const f=complete(fixture("exhibitor-staff-update.html")); set(f,"top-up-required","Yes"); set(f,"top-up-count","2"); set(f,"top-up-names"," \n "); f.form.requestSubmit(); assert.equal(f.document.posts.length,0);
+  set(f,"top-up-required","No"); f.form.requestSubmit(); assert.equal(f.document.posts.length,1);
+  for (const api of ["Top_Up_Staff_Count__c","Top_Up_Staff_Names__c"]) assert.equal(payload(f)[fieldName(f,api)],undefined,api);
+  assert.equal(payload(f)[fieldName(f,"Top_Up_Staff_Total__c")],"0");
 });
 test("all package combinations serialize the exact catalogue total", () => {
   const packages = fixture("partner-sponsor-application.html").form.querySelectorAll("[data-package-price]").map(control => Number(control.dataset.packagePrice));
@@ -203,7 +264,7 @@ test("invalid quantities cannot produce NaN, infinite or fractional prices", () 
 test("catalogue name prefixes with extra suffixes are rejected", () => { for (const space of single.form.querySelectorAll('[name="exhibitor-space"]')) assert.equal(single.utils.includedStaffForSpace(space.value + " removed"), null); });
 test("submit recomputes altered package and exhibitor totals", () => {
   const partner = complete(fixture("partner-sponsor-application.html")); partner.form.querySelector('[data-sf-field="Listed_Price_Total__c"]').value = "0"; partner.form.requestSubmit(); assert.equal(payload(partner)[fieldName(partner,"Listed_Price_Total__c")], "30000");
-  const f = complete(fixture("exhibitor-application.html")); set(f,f.form.querySelectorAll('[name="power-required"]').find(control => control.value === "No"),true); set(f,"planned-count","5",false); f.form.requestSubmit(); assert.equal(payload(f)[fieldName(f,"Listed_Price_Total__c")], "750"); assert.equal(payload(f)[fieldName(f,"Additional_Staff_Count__c")], "3");
+  const f = complete(fixture("exhibitor-application.html")); set(f,f.form.querySelectorAll('[name="power-required"]').find(control => control.value === "No"),true); set(f,"planned-count","5",false); f.form.requestSubmit(); assert.equal(payload(f)[fieldName(f,"Listed_Price_Total__c")], "749"); assert.equal(payload(f)[fieldName(f,"Additional_Staff_Count__c")], "3");
 });
 test("nested invoice details are excluded after complimentary selection", () => {
   const f = complete(fixture("exhibitor-application.html")); set(f,"purchase-order","Yes"); set(f,"purchase-order-number","PO-123"); set(f,"invoice-additional-required","Yes"); set(f,"invoice-additional-information","Cost centre 8"); set(f,"organisation-category","Charity - member of Cobseo"); set(f,f.form.querySelectorAll('[name="exhibitor-space"]').find(space => space.value === "COBSEO Charity - Single - Free"),true); set(f,"power-required-yes",false); set(f,f.form.querySelectorAll('[name="power-required"]').find(control => control.value === "No"),true); set(f,"planned-count","2"); f.form.requestSubmit(); for (const api of ["Purchase_Order_Number__c","Invoice_Additional_Information__c","Invoiced_Company__c","Payment_Method__c"]) assert.equal(payload(f)[fieldName(f,api)],undefined); assert.equal(payload(f)[fieldName(f,"Listed_Price_Total__c")], "0");
@@ -246,13 +307,13 @@ test("checkbox and radio groups have programmatic group names", () => {
   for (const filename of filenames) { const f=fixture(filename); for (const group of f.form.querySelectorAll("[data-required-checkbox-group], [role=\"radiogroup\"]")) { if (group.tagName === "FIELDSET") assert(group.querySelector("legend")); else { assert(["group","radiogroup"].includes(group.getAttribute("role")),filename); assert(f.get(group.getAttribute("aria-labelledby")),filename); } } }
 });
 test("invalid event configuration keeps the form unavailable without throwing", () => { const f=complete(fixture("guest-registration.html",{eventCodeOverride:"NTE-next"})); assert.doesNotThrow(()=>f.form.requestSubmit()); assert.equal(f.document.posts.length,0); assert.match(f.form.querySelector("[data-form-status]").textContent,/unavailable/); });
-test("native scientific notation counts serialize as ordinary decimal values", () => { const f=complete(fixture("exhibitor-application.html")); set(f,"planned-count","1e1"); set(f,"power-count","1e1"); f.form.requestSubmit(); for (const api of ["Planned_Exhibitor_Count__c","Total_Staff_Count__c","Power_Socket_Count__c"]) assert.equal(payload(f)[fieldName(f,api)],"10"); assert.equal(payload(f)[fieldName(f,"Listed_Price_Total__c")],"2000"); });
+test("native scientific notation counts serialize as ordinary decimal values", () => { const f=complete(fixture("exhibitor-application.html")); set(f,"planned-count","1e1"); set(f,"power-count","1e1"); f.form.requestSubmit(); for (const api of ["Planned_Exhibitor_Count__c","Total_Staff_Count__c","Power_Socket_Count__c"]) assert.equal(payload(f)[fieldName(f,api)],"10"); assert.equal(payload(f)[fieldName(f,"Listed_Price_Total__c")],"1999"); });
 
 for (const boundary of [
   {zone:"BST", before:"2026-09-07T22:59:59.999Z", after:"2026-09-07T23:00:00.000Z", previousDay:"2026-09-07", today:"2026-09-08", tomorrow:"2026-09-09", serialized:"08/09/2026"},
   {zone:"GMT", before:"2027-01-07T23:59:59.999Z", after:"2027-01-08T00:00:00.000Z", previousDay:"2027-01-07", today:"2027-01-08", tomorrow:"2027-01-09", serialized:"08/01/2027"}
 ]) {
-  for (const filename of filenames) {
+  for (const filename of filenames.filter(name => name !== "logo-upload.html")) {
     test(filename + ": London midnight " + boundary.zone + " refreshes date bounds before submission", () => {
       const f=complete(fixture(filename, {}, {now:boundary.before}));
       const date=f.form.querySelector('[data-sf-field="Declaration_Date__c"]');
@@ -296,6 +357,268 @@ for (const boundary of [
     assert.equal(f.document.posts.length,0);
   });
 }
+
+test("volunteer emergency address requires separate details unless same-address is selected", () => {
+  const f = complete(fixture("volunteer-application.html"));
+  set(f, "volunteer-emergency-address", ""); set(f, "volunteer-emergency-postcode", "");
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+  set(f, "volunteer-address", "14 Meadow Lane\nBristol"); set(f, "volunteer-postcode", "BS1 4AA");
+  set(f, "volunteer-emergency-same-address", true);
+  assert.equal(f.get("volunteer-emergency-address").disabled, true);
+  assert.equal(f.get("volunteer-emergency-address").required, false);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
+  assert.equal(payload(f)[fieldName(f, "NOK_Address__c")], "14 Meadow Lane\nBristol");
+  assert.equal(payload(f)[fieldName(f, "NOK_Postcode__c")], "BS1 4AA");
+});
+test("volunteer same-address submits latest address even without change events", () => {
+  const f = complete(fixture("volunteer-application.html"));
+  set(f, "volunteer-emergency-address", "Separate address"); set(f, "volunteer-emergency-postcode", "OX12 9AA");
+  set(f, "volunteer-emergency-same-address", true, false);
+  set(f, "volunteer-address", "22 River Road\nYork", false); set(f, "volunteer-postcode", "YO1 1AA", false);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
+  assert.equal(payload(f)[fieldName(f, "NOK_Address__c")], "22 River Road\nYork");
+  assert.equal(payload(f)[fieldName(f, "NOK_Postcode__c")], "YO1 1AA");
+});
+test("volunteer unticking same-address restores the separate address without overwriting it", () => {
+  const f = complete(fixture("volunteer-application.html"));
+  set(f, "volunteer-emergency-address", "8 Oak Street\nLeeds"); set(f, "volunteer-emergency-postcode", "LS1 1AA");
+  set(f, "volunteer-emergency-same-address", true); set(f, "volunteer-emergency-same-address", false);
+  assert.equal(f.get("volunteer-emergency-address").required, true);
+  assert.equal(f.get("volunteer-emergency-address").disabled, false);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
+  assert.equal(payload(f)[fieldName(f, "NOK_Address__c")], "8 Oak Street\nLeeds");
+  assert.equal(payload(f)[fieldName(f, "NOK_Postcode__c")], "LS1 1AA");
+});
+test("volunteer address requirements refresh after a restored page", () => {
+  const f = complete(fixture("volunteer-application.html")); set(f, "volunteer-emergency-same-address", true, false);
+  f.window.dispatchEvent(new FixtureEvent("pageshow", {persisted:true}));
+  assert.equal(f.get("volunteer-emergency-address-field").hidden, true);
+  set(f, "volunteer-emergency-same-address", false, false); set(f, "volunteer-emergency-address", "", false);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+  assert.equal(f.get("volunteer-emergency-address").required, true);
+});
+test("volunteer separate emergency address rejects overlong values before transport", () => {
+  for (const [id, limit] of [["volunteer-emergency-address",1000],["volunteer-emergency-postcode",20]]) {
+    const f=complete(fixture("volunteer-application.html"));set(f,id,"A".repeat(limit+1));f.form.requestSubmit();assert.equal(f.document.posts.length,0);
+    set(f,id,"A".repeat(limit));f.form.requestSubmit();assert.equal(f.document.posts.length,1);
+  }
+});
+test("volunteer hour checkboxes select one range and preserve every requested value", () => {
+  for (const value of ["0-4","4-8","8-16","16+","Don't know"]) {
+    const f=complete(fixture("volunteer-application.html"));
+    const choices=f.form.querySelectorAll('[data-sf-field="Volunteer_Hours__c"]');
+    set(f,choices.find(control=>control.value===value),true);
+    assert.deepEqual(choices.filter(control=>control.checked).map(control=>control.value),[value]);
+    f.form.requestSubmit();assert.equal(f.document.posts.length,1);
+    assert.equal(payload(f)[fieldName(f,"Volunteer_Hours__c")],value);
+  }
+});
+test("volunteer availability allows weekdays and weekends while keeping Any exclusive", () => {
+  const f=complete(fixture("volunteer-application.html"));
+  const choices=f.form.querySelectorAll('[data-sf-field="Volunteer_Availability__c"]');
+  const choose=value=>set(f,choices.find(control=>control.value===value),true);
+  choose("Weekdays");choose("Weekends");assert.equal(choices.filter(control=>control.checked).length,2);
+  choose("Any");assert.deepEqual(choices.filter(control=>control.checked).map(control=>control.value),["Any"]);
+  choose("Weekends");assert.deepEqual(choices.filter(control=>control.checked).map(control=>control.value),["Weekends"]);
+  choose("Weekdays");f.form.requestSubmit();assert.equal(f.document.posts.length,1);
+  assert.equal(payload(f)[fieldName(f,"Volunteer_Availability__c")],"Weekdays;Weekends");
+});
+test("volunteer missing or conflicting availability never reaches transport", () => {
+  for (const api of ["Volunteer_Hours__c","Volunteer_Availability__c"]) {
+    const f=complete(fixture("volunteer-application.html"));const choices=f.form.querySelectorAll('[data-sf-field="'+api+'"]');
+    choices.forEach(control=>set(f,control,false));f.form.requestSubmit();assert.equal(f.document.posts.length,0);
+    set(f,choices[0],true,false);set(f,choices.at(-1),true,false);f.form.requestSubmit();assert.equal(f.document.posts.length,0);
+  }
+});
+test("volunteer revised opportunities and skills reach their own Salesforce fields", () => {
+  const f=complete(fixture("volunteer-application.html"));
+  for (const api of ["Volunteer_Opportunities__c","Volunteer_Skills__c"]) {
+    const choices=f.form.querySelectorAll('[data-sf-field="'+api+'"]');choices.forEach(control=>set(f,control,false));
+    for (const value of ["Transport and Logistics","Marshalling","Pop up shop"]) set(f,choices.find(control=>control.value===value),true);
+    assert.equal(choices.some(control=>["Driving / Transport","Charity Merchandise / Shop Support"].includes(control.value)),false);
+  }
+  f.form.requestSubmit();assert.equal(f.document.posts.length,1);
+  for (const api of ["Volunteer_Opportunities__c","Volunteer_Skills__c"]) assert.equal(payload(f)[fieldName(f,api)],"Transport and Logistics;Marshalling;Pop up shop");
+});
+
+test("complimentary benefits follow eligible selection while paid extras remain chargeable", () => {
+  const f = complete(fixture("exhibitor-application.html"));
+  const benefits = f.form.querySelector("[data-complimentary-benefits]");
+  assert.equal(benefits.hidden, true);
+  set(f, "organisation-category", "Charity - member of Cobseo");
+  set(f, f.form.querySelectorAll('[name="exhibitor-space"]').find(node => node.value === "COBSEO Charity - Single - Free"), true);
+  set(f, "planned-count", "3");
+  set(f, "power-required-yes", true);
+  set(f, "power-count", "1");
+  assert.equal(benefits.hidden, false);
+  assert.match(benefits.textContent, /one 6ft trestle table, one chair and two staff places/);
+  assert.equal(f.form.querySelector('[data-sf-field="Listed_Price_Total__c"]').value, "100");
+  assert.match(f.form.querySelector("[data-estimate]").textContent, /£100.00/);
+  set(f, "organisation-category", "Employer - Automotive Sector");
+  assert.equal(benefits.hidden, true, "A deselected ineligible free space cannot leave a free-benefits claim");
+});
+
+test("discount savings show only selected eligible space and power reductions", () => {
+  const f = complete(fixture("exhibitor-application.html"));
+  const savings = f.form.querySelector("[data-discount-savings]");
+  const selectSpace = value => set(f, f.form.querySelectorAll('[name="exhibitor-space"]').find(node => node.value === value), true);
+  assert.equal(savings.hidden, true);
+  set(f, "organisation-category", "Employer - Blue Light & NHS");
+  selectSpace("Blue Light - Single - £249.50 + VAT");
+  set(f, "power-required-yes", true); set(f, "power-count", "2");
+  assert.equal(savings.hidden, false);
+  assert.match(savings.textContent, /50% discount applied: you save £419\.40 including VAT on your space and power sockets\./);
+  set(f, f.form.querySelectorAll('[name="power-required"]').find(node => node.value === "No"), true);
+  assert.match(savings.textContent, /save £299\.40 including VAT/); assert(!savings.textContent.includes("socket"));
+  set(f, "organisation-category", "Local Government or LG related");
+  assert.equal(savings.hidden, true, "Changing eligibility clears a stale selected-space saving");
+  selectSpace("Local Government Authority - Single - £249.50 + VAT");
+  assert.match(savings.textContent, /save £299\.40 including VAT/);
+  set(f, "organisation-category", "Charity - member of Cobseo");
+  selectSpace("COBSEO Charity - Single - Free");
+  assert.equal(savings.hidden, true, "A free allocation must not invent a 50% saving");
+  set(f, "power-required-yes", true); set(f, "power-count", "3");
+  assert.match(savings.textContent, /save £180\.00 including VAT on power sockets\./);
+  set(f, "organisation-category", "Employer - Automotive Sector");
+  selectSpace("Any other business - Single - £499 + VAT");
+  assert.equal(savings.hidden, true); assert.equal(savings.textContent, "");
+});
+
+test("logo submission keeps identity and booking reference without a declaration or checkbox", () => {
+  const f = complete(fixture("logo-upload.html"));
+  assert.equal(f.form.querySelector('[data-sf-field="Declaration_Name__c"]'), null);
+  assert.equal(f.form.querySelector('[data-sf-field="Declaration_Date__c"]'), null);
+  assert.equal(f.form.querySelector('[type="checkbox"]'), null);
+  f.form.requestSubmit();
+  assert.equal(f.document.posts.length, 1);
+  assert.match(payload(f)[fieldName(f, "Target_Booking_Reference__c")], /^NTE-/);
+  assert(payload(f).company && payload(f).first_name && payload(f).last_name && payload(f).email);
+});
+
+test("volunteer conduct: closed and partially scrolled readers cannot unlock or submit", () => {
+  const f = complete(fixture("volunteer-application.html"), {conduct:false});
+  const box = f.get("volunteer-conduct-acknowledgement");
+  const reader = f.form.querySelector("[data-conduct-reader]");
+  reader.clientHeight = 0; reader.scrollHeight = 0; reader.scrollTop = 0;
+  reader.dispatchEvent(new FixtureEvent("scroll"));
+  f.window.dispatchEvent(new FixtureEvent("resize"));
+  assert.equal(box.disabled, true);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+  assert.equal(f.document.activeElement, reader);
+  readConduct(f, 799 - 2); assert.equal(box.disabled, true);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+});
+test("volunteer conduct: reaching the end unlocks without auto-ticking; explicit acknowledgement is required", () => {
+  const f = complete(fixture("volunteer-application.html"), {conduct:false});
+  const box = f.get("volunteer-conduct-acknowledgement");
+  readConduct(f, 799.5);
+  assert.equal(box.disabled, false); assert.equal(box.checked, false);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+  assert.equal(f.document.activeElement, box);
+  set(f, box, true); f.form.requestSubmit();
+  assert.equal(f.document.posts.length, 1);
+  assert.equal(payload(f)[fieldName(f, "Volunteer_Code_Consent__c")], "1");
+  assert.equal(payload(f)[fieldName(f, "Volunteer_Code_Version__c")], "September 2026");
+  assert.equal(payload(f)[fieldName(f, "Volunteer_Form_Version__c")], "volunteer-application-v3");
+});
+test("volunteer conduct: prefilled acknowledgement and hidden version cannot bypass reading", () => {
+  const f = complete(fixture("volunteer-application.html"), {conduct:false});
+  const box = f.get("volunteer-conduct-acknowledgement");
+  box.disabled = false; box.checked = true;
+  const version = f.form.querySelector("[data-conduct-version]"); version.disabled = false; version.value = "September 2026";
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+  assert.equal(box.checked, false); assert.equal(box.disabled, true);
+  assert.equal(version.value, ""); assert.equal(version.disabled, true);
+});
+test("volunteer conduct: reopening and restoring a completed reader preserve an explicit acknowledgement", () => {
+  const f = complete(fixture("volunteer-application.html"));
+  const details = f.form.querySelector("[data-conduct-document]");
+  details.open = false; details.dispatchEvent(new FixtureEvent("toggle"));
+  details.open = true; details.dispatchEvent(new FixtureEvent("toggle"));
+  f.window.dispatchEvent(new FixtureEvent("pageshow", {persisted:true}));
+  assert.equal(f.get("volunteer-conduct-acknowledgement").checked, true);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
+});
+test("volunteer conduct: fresh page restoration clears browser-restored ticks", () => {
+  const f = complete(fixture("volunteer-application.html"), {conduct:false});
+  f.get("volunteer-conduct-acknowledgement").checked = true;
+  f.window.dispatchEvent(new FixtureEvent("pageshow", {persisted:false}));
+  assert.equal(f.get("volunteer-conduct-acknowledgement").checked, false);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+});
+test("volunteer conduct: unticking and form reset remove acknowledgement evidence", () => {
+  const f = complete(fixture("volunteer-application.html"));
+  set(f, "volunteer-conduct-acknowledgement", false);
+  const version = f.form.querySelector("[data-conduct-version]");
+  assert.equal(version.disabled, true); assert.equal(version.value, "");
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+  set(f, "volunteer-conduct-acknowledgement", true);
+  f.form.dispatchEvent(new FixtureEvent("reset"));
+  assert.equal(f.get("volunteer-conduct-acknowledgement").checked, false);
+  assert.equal(f.get("volunteer-conduct-acknowledgement").disabled, true);
+  assert.equal(f.form.querySelector("[data-conduct-document]").open, false);
+  assert.equal(f.form.querySelector("[data-conduct-reader]").scrollTop, 0);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 0);
+});
+test("volunteer conduct: a fully visible document still requires opening and a separate tick", () => {
+  const f = complete(fixture("volunteer-application.html"), {conduct:false});
+  const reader = f.form.querySelector("[data-conduct-reader]");
+  reader.clientHeight = 400; reader.scrollHeight = 400; reader.scrollTop = 0;
+  f.window.dispatchEvent(new FixtureEvent("resize"));
+  assert.equal(f.get("volunteer-conduct-acknowledgement").disabled, true);
+  const details = f.form.querySelector("[data-conduct-document]");
+  details.open = true; details.dispatchEvent(new FixtureEvent("toggle"));
+  assert.equal(f.get("volunteer-conduct-acknowledgement").disabled, false);
+  assert.equal(f.get("volunteer-conduct-acknowledgement").checked, false);
+  assert.equal(f.document.activeElement, reader);
+});
+test("volunteer conduct: submission restores the actual document version", () => {
+  const f = complete(fixture("volunteer-application.html"));
+  const version = f.form.querySelector("[data-conduct-version]"); version.disabled = true; version.value = "Outdated";
+  f.form.requestSubmit(); assert.equal(f.document.posts.length, 1);
+  assert.equal(payload(f)[fieldName(f, "Volunteer_Code_Version__c")], "September 2026");
+});
+
+
+for (const filename of ['exhibitor-application.html','partner-sponsor-application.html']) {
+  for (const method of ['Stripe','Bank transfer']) for (const invoice of ['Yes','No']) {
+    test(filename + ': ' + method + ' and invoice ' + invoice + ' are independent', () => {
+      const f=complete(fixture(filename));
+      set(f,f.form.querySelector('[data-sf-field="Payment_Method__c"]'),method);
+      set(f,f.form.querySelector('[data-sf-field="Invoice_Requested__c"]'),invoice);
+      set(f,f.form.querySelector('[data-sf-field="Quote_Required_for_PO__c"]'),'Yes');
+      f.form.requestSubmit();
+      assert.equal(f.document.posts.length,1,f.form.querySelector('[data-form-status]').textContent);
+      assert.equal(payload(f)[fieldName(f,'Payment_Method__c')],method);
+      assert.equal(payload(f)[fieldName(f,'Invoice_Requested__c')],invoice);
+      assert.equal(payload(f)[fieldName(f,'Quote_Required_for_PO__c')],'Yes');
+      const choices=f.form.querySelectorAll('select').filter(c=>['Payment_Method__c','Invoice_Requested__c','Quote_Required_for_PO__c'].includes(c.dataset.sfField));
+      assert.equal(choices[0].dataset.sfField,'Payment_Method__c');
+    });
+  }
+}
+test('free exhibitor hides and omits finance; paid extras restore all independent choices', () => {
+  const f=complete(fixture('exhibitor-application.html'));
+  set(f,'organisation-category','Charity - member of Cobseo');
+  set(f,f.form.querySelectorAll('[name="exhibitor-space"]').find(c=>c.value==='COBSEO Charity - Single - Free'),true);
+  set(f,'planned-count','2');
+  set(f,f.form.querySelectorAll('[name="power-required"]').find(c=>c.value==='No'),true);
+  const billing=f.document.getElementById('billing');
+  assert.equal(billing.hidden,true);
+  for (const control of billing.querySelectorAll('input, select, textarea')) assert.equal(control.disabled,true);
+  const quote=f.document.getElementById('quote-for-po'); quote.value='Yes';
+  const invoice=f.document.getElementById('invoice-requested'); invoice.value='Yes';
+  set(f,'power-required-yes',true); set(f,'power-count','1');
+  assert.equal(billing.hidden,false); assert.equal(quote.required,true); assert.equal(invoice.required,true);
+  set(f,'payment-method','Stripe'); set(f,'invoice-requested','Yes');
+  set(f,f.form.querySelectorAll('[name="power-required"]').find(c=>c.value==='No'),true);
+  assert.equal(billing.hidden,true);
+  set(f,'planned-count','3'); assert.equal(billing.hidden,false,'A paid staff extra enables all requirements.');
+  set(f,'planned-count','2'); assert.equal(billing.hidden,true);
+  f.form.requestSubmit(); assert.equal(f.document.posts.length,1);
+  for (const api of ['Invoice_Requested__c','Quote_Required_for_PO__c','Payment_Method__c','Purchase_Order__c','Supplier_Agreement_Required__c','Invoice_Additional_Information__c']) assert.equal(payload(f)[fieldName(f,api)],undefined,api);
+  assert.equal(payload(f)[fieldName(f,'Listed_Price_Total__c')],'0');
+});
 
 if (process.env.NTE_FORM_SCHEMA) fs.writeFileSync(path.resolve(process.env.NTE_FORM_SCHEMA), JSON.stringify(filenames.map(filename => { const f=fixture(filename); return {filename, formKind:f.form.dataset.formKind || null, webFormType:f.form.querySelector('[data-sf-field="Web_Form_Type__c"]').value, leadSource:f.form.dataset.leadSource, controls:f.form.querySelectorAll("input, select, textarea").filter(control=>!control.dataset.formHoneypot).map(control=>({id:control.id || null, type:control.type || control.tagName.toLowerCase(), salesforceField:control.dataset.sfField || null, required:control.required, requiredWhenVisible:control.hasAttribute("data-required-when-visible"), maxlength:control.maxLength, min:control.min || null,max:control.max || null,pattern:control.pattern || null,conditionalSource:control.closest("[data-conditional-for]")?.dataset.conditionalFor || null, options:control.tagName === "SELECT" ? control.querySelectorAll("option").map(option=>option.value) : undefined}))}; }),null,2)+"\n");
 

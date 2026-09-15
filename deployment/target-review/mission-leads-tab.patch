@@ -1,0 +1,10 @@
+--- applications/Mission.app.before
++++ applications/Mission.app.after
+@@ -165,6 +165,7 @@
+         <profile>Admin</profile>
+     </profileActionOverrides>
+     <tabs>standard-home</tabs>
++    <tabs>standard-Lead</tabs>
+     <tabs>standard-Account</tabs>
+     <tabs>standard-Contact</tabs>
+     <tabs>Programme__c</tabs>

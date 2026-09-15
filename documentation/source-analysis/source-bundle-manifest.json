@@ -1,0 +1,237 @@
+{
+  "path": "/Users/stevo/Downloads/mission community updated datamodel/output/doc/NTE_Salesforce_Reconstruction_Source.zip",
+  "files": 785,
+  "bytes": 5564862,
+  "sha256": "2ba738d2925f41a44fafb85693ac39b70e2fa31a7caf592529937d2e2deac8ee",
+  "excludedReviewedFiles": [
+    {
+      "path": ".DS_Store",
+      "reason": "Operating-system file"
+    },
+    {
+      "path": "_org-audit/LeadConvertSettings/LeadConvertSettings.LeadConvertSetting-meta.xml",
+      "reason": "Historical local native snapshot"
+    },
+    {
+      "path": "_org-audit/assignmentRules/Lead.assignmentRules-meta.xml",
+      "reason": "Historical local native snapshot"
+    },
+    {
+      "path": "_org-audit/autoResponseRules/Lead.autoResponseRules-meta.xml",
+      "reason": "Historical local native snapshot"
+    },
+    {
+      "path": "audit/NTE_ADDITIONAL_CLIENT_TEST_RECORDS_2026-09-10.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_CLIENT_FOLLOWUPS_QUALIFICATION_2026-09-10.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_CLIENT_PREVIEW_UPDATE_2026-09-05.patch",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_CLIENT_REVISIONS_QUALIFICATION_2026-09-10.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_CLIENT_TEST_RECORDS_2026-09-10.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_CODE_METRICS_2026-09-08.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_COSMETIC_BRANDING_QUALIFICATION_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_DEPENDENCY_QUALIFICATION_2026-09-08.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_EMAIL_QUALIFICATION_2026-09-09.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_MANAGEMENT_ACCESS_QUALIFICATION_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_PACKAGE_DEPENDENCIES_2026-09-08.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_REPRESENTATIVE_JOURNEY_JOURNAL_2026-09-08.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_STRIPE_DEMO_QUALIFICATION_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_STRIPE_FAILURE_DEMO_QUALIFICATION_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_STRIPE_FEASIBILITY_2026-09-08.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_STRIPE_LIVE_READINESS_QUALIFICATION_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_STRIPE_NEUTRAL_DESCRIPTION_QUALIFICATION_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_STRIPE_QUALIFICATION_2026-09-08.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/NTE_YEAR_DUMMY_CLEANUP_2026-09-11.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/VOLUNTEER_CODE_OF_CONDUCT_QUALIFICATION_2026-09-10.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/VOLUNTEER_CODE_OF_CONDUCT_TRIM_2026-09-10.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/VOLUNTEER_FORM_QUALIFICATION_2026-09-09.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/backups/2026-09-10-application-received/SHA256.json",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/backups/2026-09-10-application-received/application-received-originals.zip",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/backups/2026-09-10-volunteer-code-of-conduct/Mission Motorsport - Volunteer Code of Conduct.docx",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/01-forms-hub.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/02-exhibitor-interest.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/03-partner-interest.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/04-exhibitor-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/05-partner-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/06-guest-registration.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/07-staff-update.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/08-heavy-vehicle-update.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/09-logo-update.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/solution-risk-2026-08-25/10-volunteer-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-flow-2026-08-25/01-exhibitor-staff-step.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-flow-2026-08-25/02-exhibitor-additional-staff-step.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-flow-2026-08-25/03-partner-sponsor-staff-step.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-flow-2026-08-25/04-staff-update-step.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-revision-2026-09-01/01-current-exhibitor-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-revision-2026-09-01/02-current-partner-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/staff-revision-2026-09-01/03-current-staff-update.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/01-partner-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/02-partner-pricing.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/03-exhibitor-application.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/04-exhibitor-discounted-pricing.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/05-exhibitor-interest.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/06-exhibitor-interest-qualification.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/07-exhibitor-interest-mobile-before-fix.png",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "audit/ux-2026-08-17/07-exhibitor-interest-mobile.jpg",
+      "reason": "Historical raw evidence or media; dated narrative retained"
+    },
+    {
+      "path": "force-app/.DS_Store",
+      "reason": "Operating-system file"
+    }
+  ],
+  "archiveIntegrity": "All member SHA256 values verified",
+  "archiveRebuild": {
+    "result": "Passed",
+    "generatedFilesCompared": 594,
+    "differences": [],
+    "command": "node scripts/build-metadata.js",
+    "extractedArchiveSha256": "2ba738d2925f41a44fafb85693ac39b70e2fa31a7caf592529937d2e2deac8ee",
+    "log": "tmp/project-documentation/archive-rebuild-final.log"
+  }
+}

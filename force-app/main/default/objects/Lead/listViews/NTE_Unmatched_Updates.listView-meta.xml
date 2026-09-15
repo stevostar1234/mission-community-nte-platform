@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>NTE_Unmatched_Updates</fullName>
+    <booleanFilter>1 AND (2 OR (3 AND 4))</booleanFilter>
     <columns>FULL_NAME</columns>
     <columns>LEAD.COMPANY</columns>
     <columns>LEAD.EMAIL</columns>
@@ -8,12 +9,29 @@
     <columns>Target_Booking_Reference__c</columns>
     <columns>NTE_Update_Status__c</columns>
     <columns>NTE_Update_Error__c</columns>
+    <columns>NTE_Applicant_Email_Status__c</columns>
+    <columns>NTE_Email_Error__c</columns>
     <columns>LEAD.CREATED_DATE</columns>
     <filterScope>Everything</filterScope>
+    <filters>
+        <field>Web_Form_Type__c</field>
+        <operation>equals</operation>
+        <value>Partner / Sponsor Staff Update,Exhibitor Staff Update,Heavy Vehicle Details,Logo Update</value>
+    </filters>
     <filters>
         <field>NTE_Update_Status__c</field>
         <operation>equals</operation>
         <value>No Matching Booking,Ambiguous Booking Reference,Failed</value>
     </filters>
-    <label>NTE Unmatched Updates</label>
+    <filters>
+        <field>NTE_Update_Status__c</field>
+        <operation>equals</operation>
+        <value>Matched and Applied</value>
+    </filters>
+    <filters>
+        <field>NTE_Applicant_Email_Status__c</field>
+        <operation>equals</operation>
+        <value>Failed</value>
+    </filters>
+    <label>NTE Update Issues</label>
 </ListView>

@@ -1,4 +1,4 @@
-// Test connection metadata. Secret principal values are populated in Salesforce, never here.
+// Separate test and live credentials. Secret principal values are populated in Salesforce, never here.
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
@@ -9,8 +9,10 @@ function write(relative, type, body) {
     fs.mkdirSync(path.dirname(file), {recursive: true});
     fs.writeFileSync(file, `<?xml version="1.0" encoding="UTF-8"?>\n<${type} xmlns="${ns}">\n${body}\n</${type}>\n`);
 }
-write('externalCredentials/NTE_Stripe_Test.externalCredential-meta.xml', 'ExternalCredential', `    <authenticationProtocol>Custom</authenticationProtocol>
-    <description>Stripe test account. Populate the ApiKey authentication parameter securely on the NTEApplication principal.</description>
+for (const mode of ['Test', 'Live']) {
+const credential = `NTE_Stripe_${mode}`;
+write(`externalCredentials/${credential}.externalCredential-meta.xml`, 'ExternalCredential', `    <authenticationProtocol>Custom</authenticationProtocol>
+    <description>Stripe ${mode.toLowerCase()} account. Populate the ApiKey authentication parameter securely on the NTEApplication principal.</description>
     <externalCredentialParameters>
         <parameterName>NTEApplication</parameterName>
         <parameterType>NamedPrincipal</parameterType>
@@ -19,34 +21,36 @@ write('externalCredentials/NTE_Stripe_Test.externalCredential-meta.xml', 'Extern
     <externalCredentialParameters>
         <parameterName>Authorization</parameterName>
         <parameterType>AuthHeader</parameterType>
-        <parameterValue>{!'Bearer ' &amp; $Credential.NTE_Stripe_Test.ApiKey}</parameterValue>
+        <parameterValue>{!'Bearer ' &amp; $Credential.${credential}.ApiKey}</parameterValue>
         <sequenceNumber>1</sequenceNumber>
     </externalCredentialParameters>
-    <label>NTE Stripe Test</label>`);
-write('namedCredentials/NTE_Stripe_Test.namedCredential-meta.xml', 'NamedCredential', `    <allowMergeFieldsInBody>false</allowMergeFieldsInBody>
+    <label>NTE Stripe ${mode}</label>`);
+write(`namedCredentials/${credential}.namedCredential-meta.xml`, 'NamedCredential', `    <allowMergeFieldsInBody>false</allowMergeFieldsInBody>
     <allowMergeFieldsInHeader>true</allowMergeFieldsInHeader>
     <calloutStatus>Enabled</calloutStatus>
     <generateAuthorizationHeader>false</generateAuthorizationHeader>
-    <label>NTE Stripe Test</label>
+    <label>NTE Stripe ${mode}</label>
     <namedCredentialParameters>
         <parameterName>Url</parameterName>
         <parameterType>Url</parameterType>
         <parameterValue>https://api.stripe.com</parameterValue>
     </namedCredentialParameters>
     <namedCredentialParameters>
-        <externalCredential>NTE_Stripe_Test</externalCredential>
+        <externalCredential>${credential}</externalCredential>
         <parameterName>ExternalCredential</parameterName>
         <parameterType>Authentication</parameterType>
     </namedCredentialParameters>
     <namedCredentialType>SecuredEndpoint</namedCredentialType>`);
+}
 write('permissionsets/NTE_Stripe_Test_Operator.permissionset-meta.xml', 'PermissionSet', `    <classAccesses><apexClass>NTEStripeClient</apexClass><enabled>true</enabled></classAccesses>
-    <description>Allows an authorised sandbox operator to use the secure NTE Stripe test principal.</description>
+    <description>Allows an authorised NTE operator to use the configured Stripe payment principals.</description>
     <externalCredentialPrincipalAccesses><enabled>true</enabled><externalCredentialPrincipal>NTE_Stripe_Test-NTEApplication</externalCredentialPrincipal></externalCredentialPrincipalAccesses>
-    <label>NTE Stripe Test Operator</label>`);
+    <externalCredentialPrincipalAccesses><enabled>true</enabled><externalCredentialPrincipal>NTE_Stripe_Live-NTEApplication</externalCredentialPrincipal></externalCredentialPrincipalAccesses>
+    <label>NTE Stripe Payment Operator</label>`);
 
 const components = {
     ApexClass: ['NTEStripeClient', 'NTEStripeClientTest'],
-    ExternalCredential: ['NTE_Stripe_Test'], NamedCredential: ['NTE_Stripe_Test'],
+    ExternalCredential: ['NTE_Stripe_Test', 'NTE_Stripe_Live'], NamedCredential: ['NTE_Stripe_Test', 'NTE_Stripe_Live'],
     PermissionSet: ['NTE_Stripe_Test_Operator']
 };
 const file = path.join(root, 'manifest/production-package.xml');

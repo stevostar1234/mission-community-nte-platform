@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <classAccesses><apexClass>VolunteerInboundLeadService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>NTELeadEmailRetryService</apexClass><enabled>true</enabled></classAccesses>
     <description>Access Mission Motorsport volunteer applications and their application details.</description>
     <fieldPermissions>
         <editable>true</editable>
         <field>Lead.Web_Form_Type__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.NOK_Address__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.NOK_Postcode__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -34,6 +45,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Lead.Volunteer_Hours__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.Volunteer_Availability__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Lead.Volunteer_Travel_Regions__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -45,6 +66,16 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Lead.Volunteer_Consent__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.Volunteer_Code_Consent__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.Volunteer_Code_Version__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

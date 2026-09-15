@@ -1,4 +1,4 @@
-// Durable test payment requests and explicit sandbox rollout settings.
+// Durable payment requests and explicit merchant/environment configuration.
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
@@ -22,6 +22,7 @@ register('CustomObject', object);
 const fields = [
     ['Opportunity__c', 'Booking', 'Lookup'], ['Charge_Key__c', 'Charge Key', 'Text', 100],
     ['Kind__c', 'Charge Type', 'Text', 20], ['Status__c', 'Status', 'Text', 30],
+    ['Live_Mode__c', 'Live Payment', 'Checkbox'],
     ['Amount_Minor__c', 'Amount in Minor Units', 'Number'], ['Net_Minor__c', 'Net in Minor Units', 'Number'],
     ['Tax_Rate__c', 'Tax Rate', 'Number', 2], ['Currency__c', 'Currency', 'Text', 3],
     ['Stripe_Account__c', 'Stripe Account', 'Text', 60], ['Source_Fingerprint__c', 'Charge Snapshot', 'Text', 64],
@@ -37,6 +38,7 @@ for (const [api, label, type, length] of fields) {
     if (type === 'Lookup') body.push('<deleteConstraint>SetNull</deleteConstraint><referenceTo>Opportunity</referenceTo><relationshipLabel>NTE Payment Requests</relationshipLabel><relationshipName>NTE_Payment_Requests</relationshipName>');
     if (api === 'Charge_Key__c') body.push('<externalId>true</externalId><unique>true</unique>');
     if (type === 'Text' || type === 'LongTextArea') body.push(`<length>${length}</length>`);
+    if (type === 'Checkbox') body.push('<defaultValue>false</defaultValue>');
     if (type === 'Number') body.push(`<precision>18</precision><scale>${length || 0}</scale>`);
     if (type === 'LongTextArea') body.push('<visibleLines>3</visibleLines>');
     body.push(`<type>${type}</type>`);
@@ -48,11 +50,12 @@ write(`objects/${config}/${config}.object-meta.xml`, 'CustomObject', '    <label
 register('CustomObject', config);
 const settings = [
     ['Enabled__c', 'Enabled', 'Checkbox', false],
+    ['Live_Mode__c', 'Live Payments', 'Checkbox', false],
     ['Expected_Account_Id__c', 'Expected Stripe Account', 'Text', 'acct_1UD8GwBcW1MkMYQ1'],
     ['Expected_Org_Id__c', 'Expected Salesforce Org', 'Text', '00DAd00000A95VlMAJ'],
-    ['Reference_Prefix__c', 'Test Booking Reference Prefix', 'Text', 'NTE-STRIPE-'],
-    ['Allowed_Email__c', 'Allowed Test Email', 'Text', 'steven.skyba@anthrion.com'],
-    ['Tax_Rate__c', 'Provisional Test Tax Rate', 'Number', 20]
+    ['Reference_Prefix__c', 'Booking Reference Filter', 'Text', ''],
+    ['Allowed_Email__c', 'Recipient Email Filter', 'Text', ''],
+    ['Tax_Rate__c', 'Tax Rate (%)', 'Number', require('../config/nte-pricing.json').vatRate]
 ];
 for (const [api, label, type] of settings) {
     write(`objects/${config}/fields/${api}.field-meta.xml`, 'CustomField', `    <fullName>${api}</fullName>

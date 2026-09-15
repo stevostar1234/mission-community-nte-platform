@@ -22,9 +22,6 @@
         <field>Logo_Update_Form_URL__c</field>
         <value xsi:type="xsd:string">https://stevostar1234.github.io/nte27-web-to-lead-demo/logo-upload.html</value>
     </values>
-    <values><field>Application_Event_Code__c</field><value xsi:type="xsd:string">NTE2027</value></values>
     <values><field>Exhibitor_Application_URL__c</field><value xsi:type="xsd:string">https://stevostar1234.github.io/nte27-web-to-lead-demo/exhibitor-application.html</value></values>
     <values><field>Partner_Application_URL__c</field><value xsi:type="xsd:string">https://stevostar1234.github.io/nte27-web-to-lead-demo/partner-sponsor-application.html</value></values>
-    <values><field>Exhibitor_Final_Pack_URL__c</field><value xsi:type="xsd:string"></value></values>
-    <values><field>Partner_Final_Pack_URL__c</field><value xsi:type="xsd:string"></value></values>
 </CustomMetadata>

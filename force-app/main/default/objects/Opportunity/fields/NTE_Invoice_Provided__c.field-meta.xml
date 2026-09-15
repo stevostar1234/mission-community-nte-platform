@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>NTE_Invoice_Provided__c</fullName>
-    <description>Selected from the NTE Master Panel after the invoice or Stripe payment link has been sent.</description>
+    <description>Selected from the NTE Master Panel after the invoice has been provided. Payment requests are recorded separately.</description>
     <defaultValue>false</defaultValue>
-    <label>NTE Invoice / Stripe Link Provided</label>
+    <label>NTE Invoice Provided</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <type>Checkbox</type>

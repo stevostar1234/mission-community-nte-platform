@@ -73,7 +73,30 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Top_Up_VAT_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Top_Up_Total_Inc_VAT__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
         <field>Opportunity.NTE_Listed_Price_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Price_Adjustment__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_VAT_Rate__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_VAT_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Total_Including_VAT__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
@@ -90,6 +113,9 @@
     </columns>
     <columns>
         <field>Opportunity.NTE_Payment_Method__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Invoice_Requested__c</field>
     </columns>
     <columns>
         <field>Opportunity.NTE_Quote_Required_for_PO__c</field>
@@ -182,61 +208,37 @@
         <field>Opportunity.NTE_Pricing_Ready__c</field>
     </columns>
     <columns>
-        <field>Opportunity.NTE_Finance_Invoice_Due__c</field>
-    </columns>
-    <columns>
         <field>Opportunity.NTE_Finance_Payment_Due__c</field>
     </columns>
     <columns>
         <field>Opportunity.NTE_Finance_Payment_Confirmed__c</field>
     </columns>
+    <columns>
+        <field>Opportunity.NTE_Finance_Requirements_Due__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_PO_Confirmed__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Agreement_Provided__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Invoice_Details_Included__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Bank_Details_Provided__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Approval_Email_Sent_At__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Top_Up_Payment_Requested_At__c</field>
+    </columns>
     <description>Rolling seven-day Finance handoff for recently changed NTE bookings, with current quotation, invoice, payment, billing-contact and confirmed-value details. Use NTE 06 - Finance &amp; Invoicing for the complete all-time finance view.</description>
     <filter>
-        <booleanFilter>((1 OR 2 OR 3 OR 4 OR 6 OR 7) AND (5 OR 8)) AND 9</booleanFilter>
-        <criteriaItems>
-            <column>Opportunity.NTE_Invoice_Required__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>Yes</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.NTE_Listed_Price_Total__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterThan</operator>
-            <value>0</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.NTE_Top_Up_Invoice_Required__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>true</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.NTE_Top_Up_Staff_Total__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterThan</operator>
-            <value>0</value>
-        </criteriaItems>
+        <booleanFilter>(1 OR 2) AND 3 AND 4 AND (5 OR 6)</booleanFilter>
         <criteriaItems>
             <column>CLOSED</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>false</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.NTE_Quote_Required_for_PO__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>Yes</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.NTE_Pricing_Ready__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
@@ -255,6 +257,27 @@
             <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.NTE_Event_Opportunity</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.NTE_Event_Code__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value></value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.NTE_Source_Form_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Exhibitor Application</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.NTE_Source_Form_Type__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Partner / Sponsor Application</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

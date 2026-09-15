@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Allowed_Email__c</fullName>
     
-    <fieldManageability>DeveloperControlled</fieldManageability><label>Allowed Test Email</label>
+    <fieldManageability>DeveloperControlled</fieldManageability><label>Recipient Email Filter</label>
     <length>255</length>
     <type>Text</type>
 </CustomField>

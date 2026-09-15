@@ -1,0 +1,17 @@
+{
+  "maintained_files": 764,
+  "metadata_definitions": 473,
+  "field_definitions": 342,
+  "implementation_classes": 12,
+  "documented_methods_and_constructors": 301,
+  "test_classes": 17,
+  "lwc_bundles": 4,
+  "lwc_methods_getters": 148,
+  "form_routes": 10,
+  "form_mapped_controls": 374,
+  "form_engine_functions": 46,
+  "flows": 4,
+  "email_templates": 19,
+  "picklist_sets": 29,
+  "list_views": 25
+}

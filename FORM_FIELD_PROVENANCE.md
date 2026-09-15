@@ -72,8 +72,8 @@ This is the standalone exhibitor application Kate explicitly requested, separate
 
 ### Quotation and invoicing
 
-- **Quotation required before an invoice can be raised** — retained as a separate question at Kate's request on 28 August 2026 so quotation work is not inferred from the invoice choice.
-- **Payment method** — chargeable applicants choose Bank transfer or Stripe. This is stored separately from invoice readiness so both routes can receive an invoice and follow the same finance milestones.
+- **Quotation required** — retained as a separate finance requirement; the 13 September wording asks “Do you require a quotation?” independently of payment method and invoice choice.
+- **Payment method / Invoice requested** — the 13 September owner instruction places Payment Method first, followed by an independent invoice Yes/No choice. Bank transfer and Stripe can request any procurement document. `Lead.Invoice_Requested__c` maps to `Opportunity.NTE_Invoice_Requested__c`; the older derived Payment Required flag remains a separate pricing fact.
 - **Invoice required** — calculated automatically from the selected space and chargeable extras. Complimentary applications with no chargeable extras remain outside the finance workflow; every chargeable application enters it regardless of payment method.
 - **Legal organisation name for quotation and invoicing, billing address and trading name** — Mission Motorsport Customer Finance Information Sheet supplied on 18 August 2026, with the legal-name label clarified by Kate on 28 August 2026. Trading name uses a new field rather than repurposing the historical alternative-organisation-name field.
 - **Main contact name, email and telephone** — the same finance sheet; these are already captured in section 2 and are not duplicated.
@@ -83,7 +83,7 @@ This is the standalone exhibitor application Kate explicitly requested, separate
 - **Supplier agreement required** — explicitly retained at Kate's request.
 - **Question order** — quotation, payment method, purchase-order/reference and supplier-agreement requirements appear before the billing identity and finance-contact fields, following Kate's 28 August 2026 direction.
 - **Declaration name and automatic submission date** — fulfil the finance sheet's signature, name and date intent within the online form; no paper signature field is duplicated.
-- **Conditional display of billing details** — project implementation choice so applicants who genuinely need neither a quote nor invoice are not asked for irrelevant billing fields.
+- **Conditional display of finance requirements** — explicitly required on 13 September: hide and disable the entire section at £0; restore it for any paid space, power or staff extra. Hidden finance values are omitted from submission.
 
 ### Final details and declaration
 
@@ -118,7 +118,7 @@ This is the direct-link application used after Mission Community has discussed a
 
 - **Quotation requirement, purchase-order/reference requirement and supplier-agreement requirement** — the same revised Customer Finance Information questions used on the exhibitor application, reordered following Kate's 28 August 2026 direction.
 - **Legal organisation name, billing address, trading name and finance contact details** — the same revised Customer Finance Information questions used on the exhibitor application. The form explicitly asks for a finance contact different from the main NTE contact, following Kate's 28 August 2026 direction.
-- **Payment method and invoice workflow** — partner/sponsor applicants choose Bank transfer or Stripe. Both remain in the invoice workflow because an invoice accompanies either route; the payment method is copied to the NTE Opportunity on conversion.
+- **Payment method and requested documents** — partner/sponsor applicants choose Bank transfer or Stripe first, then independently request an invoice and any other procurement documents. The finance section is always visible because every package has a price. Conversion copies these preferences without sending or auto-ticking requirements.
 - **Main contact name, email and telephone** — already captured in section 1 and not duplicated in the finance section.
 - **Declaration name and automatic submission date** — fulfil the finance sheet's signature, name and date intent within the online form.
 - **Agreement to NTE27 Terms and Conditions and Privacy Policy** — Kate’s terms-link requirement plus the project lead’s current wording direction. Final URLs and wording still need client/legal approval.
@@ -183,6 +183,20 @@ This page has no Salesforce form fields.
 - **Visible copy and layout** — simplified after the client review on 13 August 2026 to use short, natural instructions and mention the secure upload only once. Approval-stage explanations were removed because only approved organisations receive this page.
 - **Microsoft 365 File Request destination** — proposed implementation. Mission Community must supply the final File Request URL and confirm the controlled SharePoint/OneDrive folder and access rules.
 
+## 8. Mission Motorsport volunteer form — approved 9 September 2026 revision
+
+Source: client email forwarded by the owner on 9 September, with explicit implementation approval and a requirement to preserve the existing form style.
+
+| Form change | Saved destination and treatment |
+| --- | --- |
+| Emergency contact address and postcode | New Lead `NOK_Address__c` (long text, 1,000) and `NOK_Postcode__c` (text, 20). The same-address checkbox copies the current applicant Street and PostalCode at submission; otherwise separate values are required. The checkbox is a form convenience, and the resulting address is stored. |
+| Marshalling, Pop up shop, Transport and Logistics | Updated `Volunteer_Opportunities__c` and `Volunteer_Skills__c`. New options use the client’s wording; transport examples are descriptive text. Previous transport/shop values remain inactive in metadata to preserve historical records. |
+| Hours willing to give | New `Volunteer_Hours__c` picklist: `0-4`, `4-8`, `8-16`, `16+`, `Don't know`. One checkbox selection. No period was supplied; no weekly/monthly assumption is added. |
+| Preference | New `Volunteer_Availability__c` multiselect: Weekdays, Weekends, Any. Any is exclusive; Weekdays and Weekends can be combined. |
+| Version and emails | Form version `volunteer-application-v2`. The internal email adds hours and preference using the same layout; both examples reflect the revised selections. |
+
+Code of Conduct content and branding clarification remain awaited; neither is invented in this revision. [Release evidence](audit/VOLUNTEER_FORM_UPDATE_2026-09-09.md).
+
 ## Email-template provenance
 
 - **Exhibitor application received and internal notification** — adapted from the supplied exhibitor HTML templates and Kate’s application-autoresponder wording.
@@ -199,10 +213,26 @@ This page has no Salesforce form fields.
 - Final NTE27 Terms and Conditions URL, Privacy Policy URL and approved agreement wording.
 - Final Microsoft 365 File Request URL and storage ownership/access rules.
 - Any future automatic Stripe reconciliation requires the selected payment provider and webhook/notification design. Until then, staff use **Invoice / Stripe link provided** after sending the relevant document/link and **Has paid** after payment is confirmed.
-- Confirmation whether finance needs dedicated quote number, invoice number and manually entered issue-date fields. The current actions record the quote-provided, invoice/Stripe-link-provided and paid milestones with an automatic action timestamp and user, but do not store external document numbers or a separately chosen finance date.
+- Confirmation whether finance needs dedicated quote number, invoice number and manually entered issue-date fields. The current independent checkboxes record provided-document reminders separately from manual request and receipt facts; the build does not store external document numbers or a separately chosen finance issue date.
 - Confirmation whether partner/sponsor application submission should also automatically move or convert the Salesforce record, or whether the NTE team will continue to complete that internal step after checking the submitted requirements.
 - Approved sender, reply-to address, subject lines and final copy for each email.
 - Any approved Escapade ticket add-on price, VAT, quantity and capacity rules; the current sponsor package is not the same as a bookable ticket add-on.
 - End-to-end security review, privacy review, accessibility testing and user acceptance testing before production submissions are enabled.
 
 Pricing catalogue update, 6 September 2026: the client retired the two unpriced application choices. Browser and Salesforce catalogues now require a defined price; complimentary spaces remain available to eligible categories.
+
+## 9. Mission Motorsport volunteer follow-up — approved 10 September 2026
+
+Tony’s emails at 08:37 and 08:40 UTC supply the actual Code of Conduct and the missing monthly period. The owner requested implementation while excluding branding.
+
+| Client input | Current implementation |
+| --- | --- |
+| Hours willing to give per month | Existing `Volunteer_Hours__c`, same five values and field ID. Updated form legend/error, Salesforce label and team email label. This supersedes section 8’s earlier unknown period. |
+| September 2026 Code of Conduct | Full 101-paragraph supplied text and version in the form reader; native keyboard/touch scrolling. Reaching the end enables a separate required tick, with no automatic agreement. |
+| Acknowledgement | `Volunteer_Code_Consent__c` checkbox and `Volunteer_Code_Version__c` text(80), current version `September 2026`. Form version `volunteer-application-v3`. New v3 volunteer Leads require both at native validation; historical applications are not re-consented. |
+| Document provenance | `config/volunteer-code-of-conduct.json` records the extracted text and source SHA256; the original DOCX is retained in `audit/backups/2026-09-10-volunteer-code-of-conduct/`. Paragraph parity is checked in the form suite. |
+| Branding | Excluded by the owner. No branding attachment was used and the existing logo/style conventions are retained. |
+
+[Release evidence](audit/VOLUNTEER_CODE_OF_CONDUCT_2026-09-10.md). Reaching the end records an interaction, not proof of reading; direct raw requests can also impersonate a client assertion, as with the existing public Web-to-Lead interface.
+
+10 September volunteer reader correction is published: the eight paper-signature paragraphs are removed; the policy/declaration, scroll gate, acknowledgement and digital signature remain. Preview `5fb41927a9e301aab921894af101891602ad72e6` changes one file; 6/6 hosted files match, `npm test` and 8 focused conduct checks pass. No Salesforce metadata change or deployment was needed. [Follow-up evidence](audit/VOLUNTEER_CODE_OF_CONDUCT_2026-09-10.md#later-owner-correction--paper-signature-section-removed).

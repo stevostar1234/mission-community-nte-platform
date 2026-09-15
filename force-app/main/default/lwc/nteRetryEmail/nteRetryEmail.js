@@ -2,8 +2,8 @@ import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { notifyRecordUpdateAvailable } from 'lightning/uiRecordApi';
 import retryDispatch from '@salesforce/apex/NTEEmailDispatchService.retryDispatch';
-import retryApprovalEmail from '@salesforce/apex/NTEExhibitorApprovalEmailService.retryApprovalEmail';
-import retryAcknowledgement from '@salesforce/apex/NTEUpdateSubmissionService.retryAcknowledgement';
+import retryBookingEmail from '@salesforce/apex/NTEBookingEmailRetryService.retryBookingEmail';
+import retryFailedEmails from '@salesforce/apex/NTELeadEmailRetryService.retryFailedEmails';
 
 export default class NteRetryEmail extends LightningElement {
     @api recordId;
@@ -18,11 +18,11 @@ export default class NteRetryEmail extends LightningElement {
             let result;
             let successTitle = 'Email queued';
             if (recordId?.startsWith('006')) {
-                result = await retryApprovalEmail({ opportunityId: recordId });
+                result = await retryBookingEmail({ opportunityId: recordId });
             } else if (recordId?.startsWith('00Q')) {
-                const acknowledgement = await retryAcknowledgement({ leadId: recordId });
-                result = { queuedCount: acknowledgement.success ? 1 : 0, message: acknowledgement.message };
-                successTitle = 'Acknowledgement processed';
+                const retry = await retryFailedEmails({ leadId: recordId });
+                result = { queuedCount: retry.success ? 1 : 0, message: retry.message };
+                successTitle = 'Email processed';
             } else {
                 result = await retryDispatch({ dispatchId: recordId });
             }

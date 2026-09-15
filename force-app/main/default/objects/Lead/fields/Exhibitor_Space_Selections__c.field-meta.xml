@@ -11,29 +11,29 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Garage Space - reduced size with power - £600 + VAT</fullName>
+                <fullName>Garage Space - reduced size with power - £599 + VAT</fullName>
                 <default>false</default>
-                <label>Garage Space - reduced size with power - £600 + VAT</label>
+                <label>Garage Space - reduced size with power - £599 + VAT</label>
             </value>
             <value>
-                <fullName>Single Garage - Paddock Side with power - £800 + VAT</fullName>
+                <fullName>Single Garage - Paddock Side with power - £799 + VAT</fullName>
                 <default>false</default>
-                <label>Single Garage - Paddock Side with power - £800 + VAT</label>
+                <label>Single Garage - Paddock Side with power - £799 + VAT</label>
             </value>
             <value>
-                <fullName>Double Garage - Paddock Side with power - £1,300 + VAT</fullName>
+                <fullName>Double Garage - Paddock Side with power - £1,299 + VAT</fullName>
                 <default>false</default>
-                <label>Double Garage - Paddock Side with power - £1,300 + VAT</label>
+                <label>Double Garage - Paddock Side with power - £1,299 + VAT</label>
             </value>
             <value>
-                <fullName>Single Garage - Track Side - £800 + VAT</fullName>
+                <fullName>Single Garage - Track Side - £799 + VAT</fullName>
                 <default>false</default>
-                <label>Single Garage - Track Side - £800 + VAT</label>
+                <label>Single Garage - Track Side - £799 + VAT</label>
             </value>
             <value>
-                <fullName>Double Garage - Track Side - £1,300 + VAT</fullName>
+                <fullName>Double Garage - Track Side - £1,299 + VAT</fullName>
                 <default>false</default>
-                <label>Double Garage - Track Side - £1,300 + VAT</label>
+                <label>Double Garage - Track Side - £1,299 + VAT</label>
             </value>
             <value>
                 <fullName>Clean Energy Zone - Single - £499 + VAT</fullName>

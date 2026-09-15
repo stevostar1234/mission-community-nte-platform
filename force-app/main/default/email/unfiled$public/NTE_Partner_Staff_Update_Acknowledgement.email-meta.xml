@@ -6,7 +6,7 @@
     <name>NTE partner / sponsor staff update acknowledgement</name>
     <style>none</style>
     <subject>NTE partner / sponsor staff details updated</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Partner / sponsor staff details
+    <textOnly>NTE27 · Partner / sponsor staff details
 
 Your staff details have been received.
 
@@ -26,7 +26,7 @@ Kind regards,
 The National Transition Event Team
 Mission Community
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

@@ -125,7 +125,7 @@ function expressionOfInterest() {
 const scenarios = [
   ["paid exhibitor", exhibitor({
     company: "NTE E2E Paid Garage 0817", firstName: "Parker", email: "skybasteven+nte-exhibitor-paid-0817@gmail.com", bookingReference: "NTE27-E2E-EX-PAID-0817",
-    category: "Employer - Automotive Sector", space: "Single Garage - Paddock Side with power - £800 + VAT", power: "Yes", sockets: 2, staff: "Yes", staffCount: 5, invoice: "Yes"
+    category: "Employer - Automotive Sector", space: "Single Garage - Paddock Side with power - £799 + VAT", power: "Yes", sockets: 2, staff: "Yes", staffCount: 5, invoice: "Yes"
   })],
   ["discounted exhibitor", exhibitor({
     company: "NTE E2E Local Government 0817", firstName: "Drew", email: "skybasteven+nte-exhibitor-discount-0817@gmail.com", bookingReference: "NTE27-E2E-EX-DISCOUNT-0817",

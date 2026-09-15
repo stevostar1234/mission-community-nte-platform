@@ -5,8 +5,8 @@
     <columns>OPPORTUNITY.NAME</columns>
     <columns>ACCOUNT.NAME</columns>
     <columns>NTE_Event_Code__c</columns>
-    <columns>NTE_Listed_Price_Total__c</columns>
-    <columns>NTE_Top_Up_Staff_Total__c</columns>
+    <columns>NTE_Total_Including_VAT__c</columns>
+    <columns>NTE_Top_Up_Total_Inc_VAT__c</columns>
     <columns>NTE_Invoice_Provided__c</columns>
     <columns>NTE_Top_Up_Invoice_Provided__c</columns>
     <columns>NTE_Payment_Received__c</columns>

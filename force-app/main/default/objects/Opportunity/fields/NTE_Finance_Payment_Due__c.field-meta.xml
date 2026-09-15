@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>NTE_Finance_Payment_Due__c</fullName>
-    <description>An unpaid charge has its own invoice provided, following the booking-first payment order.</description>
-    <formula>AND(NTE_Pricing_Ready__c, OR(AND(OR(NTE_Invoice_Required__c = &quot;Yes&quot;, NTE_Listed_Price_Total__c &gt; 0, NOT(NTE_Pricing_Ready__c)), NTE_Invoice_Provided__c, NOT(NTE_Payment_Received__c)), AND(OR(NOT(OR(NTE_Invoice_Required__c = &quot;Yes&quot;, NTE_Listed_Price_Total__c &gt; 0, NOT(NTE_Pricing_Ready__c))), NTE_Payment_Received__c), OR(NTE_Top_Up_Invoice_Required__c, BLANKVALUE(NTE_Top_Up_Staff_Total__c, 0) &gt; 0), NTE_Top_Up_Invoice_Provided__c, NOT(NTE_Top_Up_Payment_Received__c))))</formula>
+    <description>An unpaid booking or staff top-up has an accepted manual payment request.</description>
+    <formula>AND(NTE_Pricing_Ready__c, NOT(NTE_Finance_Requirements_Due__c), OR(AND(OR(NTE_Invoice_Required__c = &quot;Yes&quot;, NTE_Listed_Price_Total__c &gt; 0, NOT(NTE_Pricing_Ready__c)), NOT(ISBLANK(NTE_Approval_Email_Sent_At__c)), NOT(NTE_Payment_Received__c)), AND(OR(NTE_Top_Up_Invoice_Required__c, BLANKVALUE(NTE_Top_Up_Staff_Total__c, 0) &gt; 0), NOT(ISBLANK(NTE_Top_Up_Payment_Requested_At__c)), NOT(NTE_Top_Up_Payment_Received__c))))</formula>
     <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
     <label>NTE Payment Required</label>
     <required>false</required>

@@ -39,8 +39,11 @@ private class NTEMasterPanelFinanceTest {
             AccountId = accountId, RecordTypeId = recordTypeId, Name = name, StageName = stageName,
             CloseDate = Date.today().addDays(30), Booking_Reference__c = 'NTE-FINANCE-' + name,
             NTE_Event_Code__c = EVENT_CODE, NTE_Source_Form_Type__c = 'Exhibitor Application',
-            Amount = baseAmount, NTE_Listed_Price_Total__c = baseAmount, NTE_Pricing_Status__c = 'Calculated',
+            Amount = baseAmount * 1.2, NTE_Listed_Price_Total__c = baseAmount, NTE_Pricing_Status__c = 'Calculated',
             NTE_Quote_Required_for_PO__c = 'No', NTE_Invoice_Required__c = baseAmount > 0 ? 'Yes' : 'No',
+            NTE_Free_Space_Confirmed__c = baseAmount == 0,
+            NTE_Approval_Email_Sent_At__c = baseInvoiced || basePaid || baseAmount == 0 ? ORIGINAL_RECORDED_AT : null,
+            NTE_Top_Up_Payment_Requested_At__c = topUpInvoiced || topUpPaid ? ORIGINAL_RECORDED_AT : null,
             NTE_Invoice_Provided__c = baseInvoiced,
             NTE_Invoice_Provided_At__c = baseInvoiced ? ORIGINAL_RECORDED_AT : null,
             NTE_Invoice_Provided_By__c = baseInvoiced ? 'Original finance user' : null,
@@ -64,38 +67,60 @@ private class NTEMasterPanelFinanceTest {
         Test.startTest();
         NTE_MasterPanelController.DashboardResponse response = dashboard('TOP_UP_INVOICE_REQUIRED');
         Test.stopTest();
-        System.assertEquals('INVOICE_REQUIRED', response.selectedViewKey);
+        System.assertEquals('REQUIREMENTS', response.selectedViewKey);
         System.assertEquals(new Set<String>{'BOTH-INVOICES', 'BOOKING-PAYMENT', 'TOPUP-INVOICED-FIRST',
             'TOPUP-ONLY', 'BOOKING-PAID'}, names(response));
         Map<String, Integer> queueCounts = counts(response);
-        System.assertEquals(0, queueCounts.get('QUOTE_REQUIRED'));
-        System.assertEquals(5, queueCounts.get('INVOICE_REQUIRED'));
-        System.assertEquals(2, queueCounts.get('PAYMENT_DUE'));
-        System.assertEquals(1, queueCounts.get('PAYMENT_COMPLETE'));
-        System.assertEquals(7, queueCounts.get('FINANCE_DUE'));
+        System.assertEquals(false, queueCounts.containsKey('QUOTE_REQUIRED'));
+        System.assertEquals(5, queueCounts.get('REQUIREMENTS'));
+        System.assertEquals(1, queueCounts.get('PAYMENT_DUE'));
+        System.assertEquals(2, queueCounts.get('PAYMENT_COMPLETE'));
+        System.assertEquals(8, queueCounts.get('FINANCE_DUE'));
         for (String alias : new List<String>{'TOP_UP_INVOICE_REQUIRED', 'TOP_UP_PAYMENT_DUE', 'TOP_UP_PAYMENT_COMPLETE'}) {
             System.assertEquals(false, queueCounts.containsKey(alias));
         }
         List<String> financeLabels = new List<String>();
         for (NTE_MasterPanelController.WorkQueue queue : response.workQueues) {
-            if (new Set<String>{'QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'}.contains(queue.key)) {
+            if (new Set<String>{'REQUIREMENTS', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'}.contains(queue.key)) {
                 financeLabels.add(queue.label);
-                System.assertEquals(null, queue.listUrl);
+                if (queue.key != 'REQUIREMENTS') System.assertEquals(null, queue.listUrl);
             }
         }
-        System.assertEquals(new List<String>{'Quotes required', 'Invoice required', 'Payment required', 'Payment confirmed'}, financeLabels);
+        System.assertEquals(new List<String>{'Requirements', 'Payment required', 'Payment confirmed'}, financeLabels);
         for (NTE_MasterPanelController.EventOverviewRow item : response.overview) {
-            if (item.key == 'invoices') {
-                System.assertEquals(7, item.total);
+            if (item.key == 'requirements') {
+                System.assertEquals(8, item.total);
                 System.assertEquals(response.totalRows, item.inProgress);
-                System.assertEquals(2, item.completed);
-                System.assertEquals('INVOICE_REQUIRED', item.viewKey);
+                System.assertEquals(3, item.completed);
+                System.assertEquals('REQUIREMENTS', item.viewKey);
             } else if (item.key == 'payments') {
                 System.assertEquals(3, item.total);
-                System.assertEquals(2, item.inProgress);
-                System.assertEquals(1, item.completed);
+                System.assertEquals(1, item.inProgress);
+                System.assertEquals(2, item.completed);
                 System.assertEquals('PAYMENT_DUE', item.viewKey);
             }
+        }
+    }
+
+    @IsTest
+    static void retiredQuoteAndInvoiceRoutesStillOpenRequirements() {
+        Test.startTest();
+        NTE_MasterPanelController.DashboardResponse quote = dashboard('QUOTE_REQUIRED');
+        NTE_MasterPanelController.DashboardResponse invoice = dashboard('INVOICE_REQUIRED');
+        Test.stopTest();
+        Set<String> expected = new Set<String>{'BOTH-INVOICES', 'BOOKING-PAYMENT',
+            'TOPUP-INVOICED-FIRST', 'TOPUP-ONLY', 'BOOKING-PAID'};
+        for (NTE_MasterPanelController.DashboardResponse response :
+            new List<NTE_MasterPanelController.DashboardResponse>{quote, invoice}) {
+            System.assertEquals('REQUIREMENTS', response.selectedViewKey);
+            System.assertEquals(expected, names(response));
+            System.assertEquals('Requirements', response.selectedView.label);
+            Map<String, Integer> queues = counts(response);
+            System.assertEquals(false, queues.containsKey('QUOTE_REQUIRED'));
+            System.assertEquals(false, queues.containsKey('INVOICE_REQUIRED'));
+            System.assertEquals(5, queues.get('REQUIREMENTS'));
+            System.assertEquals(1, queues.get('PAYMENT_DUE'));
+            System.assertEquals(2, queues.get('PAYMENT_COMPLETE'));
         }
     }
 
@@ -106,29 +131,28 @@ private class NTEMasterPanelFinanceTest {
         NTE_MasterPanelController.DashboardResponse confirmed = dashboard('TOP_UP_PAYMENT_COMPLETE');
         Test.stopTest();
         System.assertEquals('PAYMENT_DUE', due.selectedViewKey);
-        System.assertEquals(new Set<String>{'BOTH-PAYMENTS', 'BOOKING-PAYMENT'}, names(due),
-            'An old booking invoice must not make an uninvoiced top-up payable, or bypass booking-first order.');
+        System.assertEquals(new Set<String>{'BOTH-PAYMENTS'}, names(due),
+            'Requirements takes precedence until every needed request has been issued.');
         for (NTE_MasterPanelController.DashboardRow item : due.rows) {
-            System.assertEquals(true, item.canMarkPaid);
-            System.assertEquals(false, item.canMarkTopUpPaid);
+            System.assertEquals(item.name != 'TOPUP-INVOICED-FIRST', item.canMarkPaid);
+            System.assertEquals(item.name != 'BOOKING-PAYMENT', item.canMarkTopUpPaid);
             System.assertEquals(false, item.paymentReceived);
         }
         System.assertEquals('PAYMENT_COMPLETE', confirmed.selectedViewKey);
-        System.assertEquals(new Set<String>{'ALL-PAID'}, names(confirmed));
+        System.assertEquals(new Set<String>{'ALL-PAID', 'FREE'}, names(confirmed));
         System.assertEquals(true, confirmed.rows[0].paymentReceived);
-        System.assertEquals(1100, confirmed.rows[0].amount);
+        System.assertEquals(1320.0, row(confirmed, 'ALL-PAID').amount);
     }
 
     @IsTest
-    static void bookingInvoicePrecedesTopUpWithoutCombiningStoredMilestones() {
+    static void invoiceMarksAreIndependentAndPreserveTheirAudit() {
         Opportunity source = financeBooking('BOTH-INVOICES');
-        NTE_MasterPanelController.DashboardRow before = row(dashboard('INVOICE_REQUIRED'), source.Name);
+        NTE_MasterPanelController.DashboardRow before = row(dashboard('REQUIREMENTS'), source.Name);
         System.assertEquals(true, before.canMarkInvoice);
-        System.assertEquals(false, before.canMarkTopUpInvoice);
-        expectRejected(source.Id, 'TOP_UP_INVOICE_PROVIDED');
+        System.assertEquals(true, before.canMarkTopUpInvoice);
         Test.startTest();
         NTE_MasterPanelController.ActionResult bookingInvoice = NTE_MasterPanelController.updateMilestone(source.Id, 'INVOICE_PROVIDED');
-        NTE_MasterPanelController.DashboardRow after = row(dashboard('INVOICE_REQUIRED'), source.Name);
+        NTE_MasterPanelController.DashboardRow after = row(dashboard('REQUIREMENTS'), source.Name);
         System.assertEquals(false, after.canMarkInvoice);
         System.assertEquals(true, after.canMarkTopUpInvoice);
         System.assertEquals(true, after.baseInvoiceProvided);
@@ -149,12 +173,11 @@ private class NTEMasterPanelFinanceTest {
     }
 
     @IsTest
-    static void bookingPaymentPrecedesTopUpAndPreservesSpaceConfirmation() {
+    static void bookingAndTopUpPaymentsPreserveSeparateFacts() {
         Opportunity source = financeBooking('BOTH-PAYMENTS');
         NTE_MasterPanelController.DashboardRow before = row(dashboard('PAYMENT_DUE'), source.Name);
         System.assertEquals(true, before.canMarkPaid);
-        System.assertEquals(false, before.canMarkTopUpPaid);
-        expectRejected(source.Id, 'TOP_UP_PAYMENT_RECEIVED');
+        System.assertEquals(true, before.canMarkTopUpPaid);
         Test.startTest();
         NTE_MasterPanelController.ActionResult bookingPayment = NTE_MasterPanelController.updateMilestone(source.Id, 'PAYMENT_RECEIVED');
         NTE_MasterPanelController.DashboardRow after = row(dashboard('PAYMENT_DUE'), source.Name);
@@ -178,24 +201,25 @@ private class NTEMasterPanelFinanceTest {
     }
 
     @IsTest
-    static void bookingPaymentDoesNotWaitForTheTopUpInvoice() {
+    static void bookingPaymentAndTopUpDoNotWaitForTheTopUpInvoice() {
         Opportunity source = financeBooking('BOOKING-PAYMENT');
+        update new Opportunity(Id=source.Id,NTE_Top_Up_Payment_Requested_At__c=ORIGINAL_RECORDED_AT);
         NTE_MasterPanelController.DashboardRow before = row(dashboard('PAYMENT_DUE'), source.Name);
         System.assertEquals(true, before.canMarkPaid);
         System.assertEquals(true, before.canMarkTopUpInvoice);
         System.assertEquals(false, before.invoiceProvided);
-        System.assertEquals(1000, before.baseAmount);
-        System.assertEquals(100, before.topUpAmount);
+        System.assertEquals(1200.0, before.baseAmount);
+        System.assertEquals(120.0, before.topUpAmount);
         Test.startTest();
         NTE_MasterPanelController.updateMilestone(source.Id, 'PAYMENT_RECEIVED');
-        NTE_MasterPanelController.DashboardResponse after = dashboard('INVOICE_REQUIRED');
+        NTE_MasterPanelController.DashboardResponse after = dashboard('PAYMENT_DUE');
         Test.stopTest();
         NTE_MasterPanelController.DashboardRow remaining = row(after, source.Name);
         System.assertEquals(true, remaining.basePaymentReceived);
         System.assertEquals(true, remaining.canMarkTopUpInvoice);
-        System.assertEquals(false, remaining.canMarkTopUpPaid);
-        System.assertEquals(1, counts(after).get('PAYMENT_DUE'));
-        System.assertEquals(1, counts(after).get('PAYMENT_COMPLETE'));
+        System.assertEquals(true, remaining.canMarkTopUpPaid);
+        System.assertEquals(2, counts(after).get('PAYMENT_DUE'));
+        System.assertEquals(2, counts(after).get('PAYMENT_COMPLETE'));
         Opportunity updated = financeBooking(source.Name);
         System.assertEquals(true, updated.NTE_Payment_Received__c);
         System.assertEquals(ORIGINAL_RECORDED_AT, updated.NTE_Invoice_Provided_At__c);
@@ -205,39 +229,32 @@ private class NTEMasterPanelFinanceTest {
     }
 
     @IsTest
-    static void prematurelyInvoicedTopUpStillWaitsForBookingPayment() {
+    static void independentlyIssuedTopUpDoesNotRequireBasePayment() {
         Opportunity source = financeBooking('TOPUP-INVOICED-FIRST');
-        expectRejected(source.Id, 'TOP_UP_PAYMENT_RECEIVED');
-        NTE_MasterPanelController.updateMilestone(source.Id, 'INVOICE_PROVIDED');
-        NTE_MasterPanelController.DashboardRow bookingDue = row(dashboard('PAYMENT_DUE'), source.Name);
-        System.assertEquals(true, bookingDue.canMarkPaid);
-        System.assertEquals(false, bookingDue.canMarkTopUpPaid);
-        Test.startTest();
-        NTE_MasterPanelController.updateMilestone(source.Id, 'PAYMENT_RECEIVED');
-        NTE_MasterPanelController.DashboardRow topUpDue = row(dashboard('PAYMENT_DUE'), source.Name);
-        System.assertEquals(false, topUpDue.canMarkPaid);
-        System.assertEquals(true, topUpDue.canMarkTopUpPaid);
+        update new Opportunity(Id=source.Id,NTE_Approval_Email_Sent_At__c=ORIGINAL_RECORDED_AT);
+        NTE_MasterPanelController.DashboardRow due = row(dashboard('PAYMENT_DUE'), source.Name);
+        System.assertEquals(true, due.canMarkPaid); System.assertEquals(true, due.canMarkTopUpPaid);
         NTE_MasterPanelController.updateMilestone(source.Id, 'TOP_UP_PAYMENT_RECEIVED');
-        Test.stopTest();
         Opportunity updated = financeBooking(source.Name);
+        System.assertEquals(true, updated.NTE_Top_Up_Payment_Received__c);
+        System.assertEquals(false, updated.NTE_Payment_Received__c);
         System.assertEquals(ORIGINAL_RECORDED_AT, updated.NTE_Top_Up_Invoice_At__c);
-        System.assertEquals('Original finance user', updated.NTE_Top_Up_Invoice_By__c);
-        System.assertEquals(true, NTE_MasterPanelController.isComplete(updated));
+        System.assertEquals(false, NTE_MasterPanelController.isComplete(updated));
     }
 
     @IsTest
     static void complimentaryBookingSkipsOnlyItsOwnFinanceMilestones() {
         Opportunity source = financeBooking('TOPUP-ONLY');
         System.assertEquals(true, NTE_MasterPanelController.isComplete(financeBooking('FREE')));
-        NTE_MasterPanelController.DashboardRow before = row(dashboard('INVOICE_REQUIRED'), source.Name);
+        NTE_MasterPanelController.DashboardRow before = row(dashboard('REQUIREMENTS'), source.Name);
         System.assertEquals(false, before.canMarkInvoice);
         System.assertEquals(false, before.canMarkPaid);
         System.assertEquals(true, before.canMarkTopUpInvoice);
         expectRejected(source.Id, 'INVOICE_PROVIDED');
         expectRejected(source.Id, 'PAYMENT_RECEIVED');
-        expectRejected(source.Id, 'TOP_UP_PAYMENT_RECEIVED');
         Test.startTest();
         NTE_MasterPanelController.updateMilestone(source.Id, 'TOP_UP_INVOICE_PROVIDED');
+        update new Opportunity(Id=source.Id, NTE_Top_Up_Payment_Requested_At__c=System.now());
         NTE_MasterPanelController.updateMilestone(source.Id, 'TOP_UP_PAYMENT_RECEIVED');
         NTE_MasterPanelController.DashboardResponse completed = dashboard('COMPLETED');
         Test.stopTest();
@@ -251,21 +268,18 @@ private class NTEMasterPanelFinanceTest {
     }
 
     @IsTest
-    static void quoteMustBeProvidedBeforeEitherInvoiceCanBeRecorded() {
+    static void quotationAndInvoicesCanBeRecordedInAnyOrder() {
         Opportunity source = financeBooking('BOTH-INVOICES');
-        update new Opportunity(Id = source.Id, NTE_Quote_Required_for_PO__c = 'Yes');
-        NTE_MasterPanelController.DashboardResponse before = dashboard('QUOTE_REQUIRED');
-        System.assertEquals(new Set<String>{source.Name}, names(before));
-        System.assertEquals(4, counts(before).get('INVOICE_REQUIRED'));
-        expectRejected(source.Id, 'INVOICE_PROVIDED');
-        expectRejected(source.Id, 'TOP_UP_INVOICE_PROVIDED');
-        Test.startTest();
-        NTE_MasterPanelController.updateMilestone(source.Id, 'QUOTE_PROVIDED');
-        NTE_MasterPanelController.DashboardResponse after = dashboard('INVOICE_REQUIRED');
-        Test.stopTest();
-        System.assertEquals(5, after.totalRows);
-        System.assertEquals(true, row(after, source.Name).canMarkInvoice);
-        System.assertEquals(false, row(after, source.Name).canMarkTopUpInvoice);
+        update new Opportunity(Id=source.Id,NTE_Quote_Required_for_PO__c='Yes');
+        NTE_MasterPanelController.updateMilestone(source.Id,'TOP_UP_INVOICE_PROVIDED');
+        NTE_MasterPanelController.updateMilestone(source.Id,'INVOICE_PROVIDED');
+        Opportunity updated=financeBooking(source.Name);
+        System.assert(!updated.NTE_Quote_Provided__c); System.assert(updated.NTE_Invoice_Provided__c); System.assert(updated.NTE_Top_Up_Invoice_Provided__c);
+        System.assertEquals(null,updated.NTE_Approval_Email_Sent_At__c);
+        System.assertEquals(null,updated.NTE_Top_Up_Payment_Requested_At__c);
+        System.assertEquals(true,row(dashboard('REQUIREMENTS'),source.Name).requirementsDue);
+        NTE_MasterPanelController.updateMilestone(source.Id,'QUOTE_PROVIDED');
+        System.assertEquals(true,financeBooking(source.Name).NTE_Quote_Provided__c);
     }
 
     @IsTest
@@ -312,7 +326,7 @@ private class NTEMasterPanelFinanceTest {
         };
         Set<String> invalidNames = new Set<String>{review.Name, unknownZero.Name, missingTotal.Name, negativeTotal.Name};
         Test.startTest();
-        NTE_MasterPanelController.DashboardResponse response = dashboard('INVOICE_REQUIRED');
+        NTE_MasterPanelController.DashboardResponse response = dashboard('REQUIREMENTS');
         for (String name : invalidNames) {
             NTE_MasterPanelController.DashboardRow invalid = row(response, name);
             System.assertEquals(true, invalid.pricingReviewRequired);
@@ -349,53 +363,41 @@ private class NTEMasterPanelFinanceTest {
     static void homePreservesPaidBookingMoneyWhenTopUpIsStillOutstanding() {
         Test.startTest();
         NTE_MasterPanelController.HomeDashboardResponse home = NTE_MasterPanelController.getHomeDashboard(EVENT_CODE);
-        NTE_MasterPanelController.DashboardResponse panel = dashboard('INVOICE_REQUIRED');
+        NTE_MasterPanelController.DashboardResponse panel = dashboard('REQUIREMENTS');
         Test.stopTest();
         Map<String, NTE_MasterPanelController.HomeMetric> headlines = homeMetrics(home.headlines);
-        System.assertEquals(6700, headlines.get('CONFIRMED_APPLICATIONS').value);
+        System.assertEquals(8040.0, headlines.get('CONFIRMED_APPLICATIONS').value);
         System.assertEquals(5, headlines.get('INVOICED').count);
-        System.assertEquals(4300, headlines.get('INVOICED').value,
+        System.assertEquals(5160.0, headlines.get('INVOICED').value,
             'Only issued booking and top-up invoices contribute their own charge amounts.');
         System.assertEquals(2, headlines.get('PAID').count);
-        System.assertEquals(2100, headlines.get('PAID').value,
+        System.assertEquals(2520.0, headlines.get('PAID').value,
             'A paid booking keeps its paid value when its top-up still needs an invoice.');
         System.assertEquals(6, headlines.get('STILL_TO_COLLECT').count);
-        System.assertEquals(4600, headlines.get('STILL_TO_COLLECT').value);
+        System.assertEquals(5520.0, headlines.get('STILL_TO_COLLECT').value);
         System.assertEquals(headlines.get('CONFIRMED_APPLICATIONS').value,
             headlines.get('PAID').value + headlines.get('STILL_TO_COLLECT').value);
         Map<String, NTE_MasterPanelController.HomeMetric> readiness = homeMetrics(home.revenueReadiness);
         Map<String, Integer> panelCounts = counts(panel);
-        System.assertEquals(panelCounts.get('QUOTE_REQUIRED'), readiness.get('QUOTE_REQUIRED').count);
-        System.assertEquals(panelCounts.get('INVOICE_REQUIRED'), readiness.get('INVOICE_REQUIRED').count);
+        System.assertEquals(panelCounts.get('REQUIREMENTS'), readiness.get('REQUIREMENTS').count);
         System.assertEquals(panelCounts.get('PAYMENT_DUE'), readiness.get('PAYMENT_REQUIRED').count);
         System.assertEquals(panelCounts.get('PAYMENT_COMPLETE'), readiness.get('PAID').count);
-        System.assertEquals(2400, readiness.get('INVOICE_REQUIRED').value);
-        System.assertEquals(2100, readiness.get('PAYMENT_REQUIRED').value);
-        System.assertEquals(1100, readiness.get('PAID').value);
-        System.assertEquals(1, readiness.get('PAID').count,
-            'Payment confirmed remains the bookings whose applicable charges are all invoiced and paid.');
+        System.assertEquals(4200.0, readiness.get('REQUIREMENTS').value);
+        System.assertEquals(1320.0, readiness.get('PAYMENT_REQUIRED').value);
+        System.assertEquals(1320.0, readiness.get('PAID').value);
+        System.assertEquals(2, readiness.get('PAID').count,
+            'Payment confirmed remains the bookings whose applicable payments are complete, including confirmed free bookings.');
     }
 
     @IsTest
-    static void complimentaryQuoteRemainsVisibleWithoutInventingAPayment() {
-        Opportunity free = financeBooking('FREE');
-        update new Opportunity(Id = free.Id, NTE_Quote_Required_for_PO__c = 'Yes');
-        Test.startTest();
-        NTE_MasterPanelController.DashboardResponse quoteView = dashboard('QUOTE_REQUIRED');
-        NTE_MasterPanelController.HomeDashboardResponse home = NTE_MasterPanelController.getHomeDashboard(EVENT_CODE);
-        Test.stopTest();
-        NTE_MasterPanelController.DashboardRow quote = row(quoteView, free.Name);
-        System.assertEquals('Quote required', quote.financeStatus);
-        System.assertEquals(true, quote.canMarkQuote);
-        System.assertEquals(false, quote.invoiceRequired);
-        System.assertEquals(false, quote.canMarkPaid);
-        System.assertEquals(false, quote.complete);
-        System.assertEquals(1, homeMetrics(home.revenueReadiness).get('QUOTE_REQUIRED').count);
-        NTE_MasterPanelController.updateMilestone(free.Id, 'QUOTE_PROVIDED');
-        Opportunity quoted = financeBooking('FREE');
-        System.assertEquals(true, NTE_MasterPanelController.isComplete(quoted));
-        System.assertEquals(false, quoted.NTE_Invoice_Provided__c);
-        System.assertEquals(false, quoted.NTE_Payment_Received__c);
+    static void complimentaryQuoteIsARecordOnlyRequirement() {
+        Opportunity free=financeBooking('FREE'); update new Opportunity(Id=free.Id,NTE_Quote_Required_for_PO__c='Yes');
+        NTE_MasterPanelController.DashboardRow record=row(dashboard('APPROVED'),free.Name);
+        System.assert(record.canMarkQuote); System.assert(record.complete); System.assert(!record.canMarkPaid);
+        System.assert(!record.requirementsDue);
+        NTE_MasterPanelController.updateMilestone(free.Id,'QUOTE_PROVIDED');
+        Opportunity updated=financeBooking(free.Name); System.assert(updated.NTE_Quote_Provided__c);
+        System.assert(NTE_MasterPanelController.isComplete(updated)); System.assert(!updated.NTE_Payment_Received__c);
     }
 
     @IsTest
@@ -422,33 +424,32 @@ private class NTEMasterPanelFinanceTest {
             Opportunity stored = byId.get(item.recordId);
             System.assertEquals(!stored.NTE_Invoice_Provided__c, item.canMarkInvoice);
             System.assertEquals(stored.NTE_Invoice_Provided__c && !stored.NTE_Payment_Received__c, item.canMarkPaid);
-            System.assertEquals(stored.NTE_Invoice_Provided__c && !stored.NTE_Top_Up_Invoice_Provided__c,
+            System.assertEquals(!stored.NTE_Top_Up_Invoice_Provided__c,
                 item.canMarkTopUpInvoice);
-            System.assertEquals(stored.NTE_Payment_Received__c && stored.NTE_Top_Up_Invoice_Provided__c
+            System.assertEquals(stored.NTE_Top_Up_Invoice_Provided__c
                 && !stored.NTE_Top_Up_Payment_Received__c, item.canMarkTopUpPaid);
-            Boolean complete = stored.NTE_Invoice_Provided__c && stored.NTE_Payment_Received__c
-                && stored.NTE_Top_Up_Invoice_Provided__c && stored.NTE_Top_Up_Payment_Received__c;
+            Boolean complete = stored.NTE_Payment_Received__c && stored.NTE_Top_Up_Payment_Received__c;
             System.assertEquals(complete, item.complete, stored.Name);
         }
         Map<String, Integer> panelCounts = counts(response);
-        System.assertEquals(12, panelCounts.get('INVOICE_REQUIRED'));
-        System.assertEquals(6, panelCounts.get('PAYMENT_DUE'));
-        System.assertEquals(1, panelCounts.get('PAYMENT_COMPLETE'));
-        System.assertEquals(1, panelCounts.get('COMPLETED'));
+        System.assertEquals(7, panelCounts.get('REQUIREMENTS'));
+        System.assertEquals(5, panelCounts.get('PAYMENT_DUE'));
+        System.assertEquals(4, panelCounts.get('PAYMENT_COMPLETE'));
+        System.assertEquals(4, panelCounts.get('COMPLETED'));
         Map<String, NTE_MasterPanelController.HomeMetric> readiness = homeMetrics(home.revenueReadiness);
-        System.assertEquals(12, readiness.get('INVOICE_REQUIRED').count);
-        System.assertEquals(6, readiness.get('PAYMENT_REQUIRED').count);
-        System.assertEquals(1, readiness.get('PAID').count);
+        System.assertEquals(7, readiness.get('REQUIREMENTS').count);
+        System.assertEquals(5, readiness.get('PAYMENT_REQUIRED').count);
+        System.assertEquals(4, readiness.get('PAID').count);
         Map<String, NTE_MasterPanelController.HomeMetric> headlines = homeMetrics(home.headlines);
-        System.assertEquals(8800, headlines.get('PAID').value);
-        System.assertEquals(8800, headlines.get('STILL_TO_COLLECT').value);
-        System.assertEquals(17600, headlines.get('CONFIRMED_APPLICATIONS').value);
+        System.assertEquals(10560.0, headlines.get('PAID').value);
+        System.assertEquals(10560.0, headlines.get('STILL_TO_COLLECT').value);
+        System.assertEquals(21120.0, headlines.get('CONFIRMED_APPLICATIONS').value);
     }
 
     @IsTest
     static void knownPositiveLegacyChargeDoesNotRequireAMigration() {
         Opportunity source = financeBooking('BOOKING-PAYMENT');
-        update new Opportunity(Id = source.Id, NTE_Pricing_Status__c = null);
+        update new Opportunity(Id = source.Id, NTE_Pricing_Status__c = null, NTE_Top_Up_Payment_Requested_At__c=ORIGINAL_RECORDED_AT);
         Test.startTest();
         NTE_MasterPanelController.DashboardRow payable = row(dashboard('PAYMENT_DUE'), source.Name);
         System.assertEquals(false, payable.pricingReviewRequired);
@@ -487,7 +488,7 @@ private class NTEMasterPanelFinanceTest {
         return result;
     }
     private static Opportunity financeBooking(String name) {
-        return [SELECT Id, Name, NTE_Pricing_Status__c, NTE_Listed_Price_Total__c, NTE_Invoice_Required__c,
+        return [SELECT Id, Name, NTE_Approval_Email_Sent_At__c, NTE_Free_Space_Confirmed__c, NTE_Top_Up_Payment_Requested_At__c, NTE_Pricing_Status__c, NTE_Listed_Price_Total__c, NTE_Invoice_Required__c,
             NTE_Quote_Required_for_PO__c, NTE_Quote_Provided__c,
             NTE_Invoice_Provided__c, NTE_Invoice_Provided_At__c, NTE_Invoice_Provided_By__c,
             NTE_Payment_Received__c, NTE_Payment_Received_At__c, NTE_Payment_Recorded_By__c,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>NTE_Invoice_Provided_By__c</fullName>
-    <label>NTE Invoice / Stripe Link Provided By</label>
+    <label>NTE Invoice Provided By</label>
     <length>120</length>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>

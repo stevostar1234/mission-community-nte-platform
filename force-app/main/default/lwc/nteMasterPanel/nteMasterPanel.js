@@ -10,6 +10,11 @@ import previewMessageJson from '@salesforce/apex/NTEEmailDispatchService.preview
 import queueMessagesJson from '@salesforce/apex/NTEEmailDispatchService.queueMessagesJson';
 import updateLeadDecision from '@salesforce/apex/NTE_MasterPanelController.updateLeadDecision';
 import updateMilestone from '@salesforce/apex/NTE_MasterPanelController.updateMilestone';
+import getPaymentReceiptPreview from '@salesforce/apex/NTE_MasterPanelController.getPaymentReceiptPreview';
+import recordReviewedPayment from '@salesforce/apex/NTE_MasterPanelController.recordReviewedPayment';
+import setRequirement from '@salesforce/apex/NTEFinanceService.setRequirement';
+import setJoiningInstructions from '@salesforce/apex/NTEFinanceService.setJoiningInstructions';
+import sendFinanceAction from '@salesforce/apex/NTEFinanceService.sendFinanceAction';
 
 const PAGE_SIZE = 25;
 const STAGE_CONFIGURATION = {
@@ -30,8 +35,8 @@ const STAGE_CONFIGURATION = {
     },
     finance: {
         combinedView: 'FINANCE_DUE',
-        views: ['FINANCE_DUE', 'QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'],
-        options: ['QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_DUE', 'PAYMENT_COMPLETE']
+        views: ['FINANCE_DUE', 'REQUIREMENTS', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'],
+        options: ['REQUIREMENTS', 'PAYMENT_DUE', 'PAYMENT_COMPLETE']
     },
     readiness: {
         combinedView: 'READINESS_DUE',
@@ -53,6 +58,7 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     viewKey = 'INTEREST';
     offsetRows = 0;
     response;
+    knownUpdateIssueCount;
     rows = [];
     selectedRecordId;
     isLoading = true;
@@ -60,6 +66,10 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     errorMessage;
     requestSequence = 0;
     refreshTimer;
+    financeRefreshTimer;
+    financePollsRemaining = 0;
+    requirementPosition;
+    isDisconnected = false;
     conversionMonitor;
     communicationDraft;
     communicationSubject = '';
@@ -83,6 +93,7 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     modalFocusTarget;
     modalTabBackwards = false;
     modalNeedsFocus = false;
+    workbenchFocusView;
 
     timeOptions = [
         { label: 'All time', value: 'ALL' },
@@ -93,15 +104,20 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     ];
 
     connectedCallback() {
+        this.isDisconnected = false;
         window.addEventListener('focus', this.handleWindowFocus);
         document.addEventListener('visibilitychange', this.handleVisibilityChange);
         this.loadDashboard();
     }
 
     disconnectedCallback() {
+        this.isDisconnected = true;
+        this.requirementPosition = undefined;
+        this.workbenchFocusView = undefined;
         window.removeEventListener('focus', this.handleWindowFocus);
         document.removeEventListener('visibilitychange', this.handleVisibilityChange);
         window.clearTimeout(this.refreshTimer);
+        window.clearTimeout(this.financeRefreshTimer);
         window.clearInterval(this.conversionMonitor);
         window.clearTimeout(this.previewTimer);
         this.requestSequence++;
@@ -117,6 +133,28 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         if (this.modalNeedsFocus) {
             this.modalNeedsFocus = false;
             this.template.querySelector('[data-modal-focus]')?.focus();
+        }
+        if (this.workbenchFocusView && !this.panelControlsDisabled) {
+            const requestedView = this.workbenchFocusView;
+            this.workbenchFocusView = undefined;
+            if (!this.isDisconnected && this.viewKey === requestedView) {
+                const heading = this.template.querySelector('[data-workbench-heading]');
+                heading?.focus({ preventScroll: true });
+                heading?.scrollIntoView({ block: 'start' });
+            }
+        }
+        if (this.requirementPosition && !this.panelControlsDisabled) {
+            const position = this.requirementPosition;
+            this.requirementPosition = undefined;
+            const control = this.template.querySelector(`[data-id="${position.id}"][data-requirement="${position.requirement}"]`);
+            if (!control || window.scrollX !== position.scrollX || window.scrollY !== position.scrollY) return;
+            if (this.template.activeElement && this.template.activeElement !== control) return;
+            if (document.activeElement !== position.activeElement && document.activeElement !== document.body) return;
+            control.focus({ preventScroll: true });
+            const top = control.getBoundingClientRect?.().top;
+            if (Number.isFinite(position.top) && Number.isFinite(top) && top !== position.top) {
+                window.scrollBy(0, top - position.top);
+            }
         }
     }
 
@@ -172,16 +210,12 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         };
     }
 
-    get quoteBreakdown() {
-        return this.buildBreakdownMetric('quotes', 'outstanding', 'provided');
-    }
-
-    get invoiceBreakdown() {
-        return this.buildBreakdownMetric('invoices', 'outstanding', 'provided');
+    get requirementsBreakdown() {
+        return this.buildBreakdownMetric('requirements', 'awaiting action', 'requested or confirmed');
     }
 
     get paymentBreakdown() {
-        return this.buildBreakdownMetric('payments', 'outstanding', 'received');
+        return this.buildBreakdownMetric('payments', 'outstanding', 'confirmed');
     }
 
     get logisticsBreakdown() {
@@ -194,6 +228,18 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
 
     get logoBreakdown() {
         return this.buildBreakdownMetric('logos', 'outstanding', 'completed');
+    }
+
+    get updateIssuesBreakdown() {
+        const count = Math.max(0, Number(this.response?.updateIssueCount ?? this.knownUpdateIssueCount) || 0);
+        return {
+            count,
+            countLabel: count === 1 ? 'issue' : 'issues',
+            cssClass: `submission-metric update-issues-metric${count > 0 ? ' update-issues-metric-attention' : ''}`,
+            fillStyle: `width: ${count > 0 ? 100 : 0}%;`,
+            ariaLabel: `Update issues: ${count} ${count === 1 ? 'issue' : 'issues'} across all events, all time and all owners`,
+            ariaPressed: this.isUpdateIssuesView ? 'true' : 'false'
+        };
     }
 
     buildBreakdownMetric(key, inProgressLabel, completedLabel) {
@@ -227,7 +273,7 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     }
 
     get activeStage() {
-        return Object.keys(STAGE_CONFIGURATION).find((key) => STAGE_CONFIGURATION[key].views.includes(this.viewKey)) || 'interest';
+        return Object.keys(STAGE_CONFIGURATION).find((key) => STAGE_CONFIGURATION[key].views.includes(this.viewKey));
     }
 
     get stageOptions() {
@@ -248,10 +294,9 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     }
 
     get selectedQueue() {
-        return this.response?.selectedView || {
-            label: 'NTE records',
-            detail: 'Records matching the selected filters'
-        };
+        return this.response?.selectedView || (this.isUpdateIssuesView
+            ? { label: 'Update issues', detail: 'Across all events, dates and owners' }
+            : { label: 'NTE records', detail: 'Records matching the selected filters' });
     }
 
     get isGuestView() {
@@ -270,15 +315,34 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         return STAGE_CONFIGURATION.finance.views.includes(this.viewKey);
     }
 
+    get isRequirementsView() { return this.viewKey === 'REQUIREMENTS'; }
+
+    get isUpdateIssuesView() { return this.viewKey === 'UPDATE_ISSUES'; }
+
+    get workbenchClass() {
+        if (this.isUpdateIssuesView) return 'workbench update-issues-workbench';
+        return this.isRequirementsView ? 'workbench requirements-workbench' : 'workbench';
+    }
+
+    get showDetailPanel() { return !this.isRequirementsView && !this.isUpdateIssuesView; }
+
+    get emptyQueueTitle() { return this.isUpdateIssuesView ? 'No update issues' : 'No records in this queue'; }
+
+    get emptyQueueDetail() {
+        return this.isUpdateIssuesView ? 'No update issues across any event, time or owner.'
+            : 'Nothing matches the selected event, time and owner filters.';
+    }
+
     get financeAmountLabel() {
-        return 'Amount (ex VAT)';
+        return 'Amount (inc VAT)';
     }
 
     get hasRowActions() {
-        return this.rows.some((row) => row.showInterestDecision || row.showApplicationDecision
-            || row.showMarkQuote || row.showMarkInvoice || row.showMarkPaid
-            || row.showMarkTopUpInvoice || row.showMarkTopUpPaid);
+        if (this.isUpdateIssuesView) return false;
+        return this.isCompletedView || this.rows.some(row => row.showInterestDecision || row.showApplicationDecision || row.canSendBase || row.canSendTopUp || row.showMarkPaid || row.showMarkTopUpPaid || row.bookingEmailPending || row.topUpEmailPending || row.approvalEmailError || row.topUpEmailError);
     }
+
+    get showOwnerColumn() { return !this.isFinanceView; }
 
     get isApprovedView() {
         return ['APPROVED', 'APPROVED_EXHIBITOR', 'APPROVED_PARTNER'].includes(this.viewKey);
@@ -316,9 +380,6 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         return ['HEAVY_DUE', 'STAFF_DUE', 'LOGO_DUE'].includes(this.viewKey);
     }
 
-    get canDistributeFinalPack() {
-        return ['COMPLETED', 'FINAL_PACK_DUE'].includes(this.viewKey);
-    }
 
     get communicationBusy() {
         return this.isPreparingCommunication || this.isSendingCommunication;
@@ -326,6 +387,10 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
 
     get panelControlsDisabled() {
         return this.isLoading || this.isActionPending || this.communicationBusy || this.isCommunicationModalOpen;
+    }
+
+    get filterControlsDisabled() {
+        return this.panelControlsDisabled || this.isUpdateIssuesView;
     }
 
     get visibleRows() {
@@ -411,8 +476,8 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         return `${start}–${end} of ${total}${this.response?.rowsLimited ? ` · Latest ${this.response.accessibleRows.toLocaleString('en-GB')} available` : ''}`;
     }
 
-    async loadDashboard({ preserveSelection = true } = {}) {
-        if (this.isCommunicationModalOpen || this.communicationBusy) return;
+    async loadDashboard({ preserveSelection = true, showRefreshWarning = true } = {}) {
+        if (this.isDisconnected || this.isCommunicationModalOpen || this.communicationBusy) return false;
         const requestId = ++this.requestSequence;
         this.isLoading = true;
         this.errorMessage = undefined;
@@ -426,8 +491,9 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
                 pageSize: PAGE_SIZE,
                 offsetRows: this.offsetRows
             });
-            if (requestId !== this.requestSequence) return;
+            if (requestId !== this.requestSequence) return false;
             this.response = result;
+            if (result.updateIssueCount != null) this.knownUpdateIssueCount = result.updateIssueCount;
             this.eventCode = result.selectedEventCode;
             this.timeRange = result.selectedTimeRange;
             this.ownerId = result.selectedOwnerId || '';
@@ -438,12 +504,29 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
                 ? previousSelection
                 : this.rows[0]?.recordId;
             this.decorateRows();
+            window.clearTimeout(this.financeRefreshTimer);
+            if (this.financePollsRemaining > 0 && this.rows.some(row => row.bookingEmailPending || row.topUpEmailPending)) {
+                this.financePollsRemaining--;
+                this.scheduleFinanceRefresh();
+            }
+            return true;
         } catch (error) {
-            if (requestId !== this.requestSequence) return;
-            this.response = undefined;
-            this.rows = [];
-            this.selectedRecordId = undefined;
-            this.errorMessage = this.readError(error);
+            if (requestId !== this.requestSequence) return false;
+            const samePage = this.response && this.rows.length
+                && this.response.selectedEventCode === this.eventCode
+                && this.response.selectedTimeRange === this.timeRange
+                && (this.response.selectedOwnerId || '') === (this.ownerId || '')
+                && this.response.selectedViewKey === this.viewKey
+                && (this.response.offsetRows || 0) === this.offsetRows;
+            if (samePage) {
+                if (showRefreshWarning) this.dispatchEvent(new ShowToastEvent({title: 'Refresh failed', message: this.readError(error), variant: 'warning'}));
+            } else {
+                this.response = undefined;
+                this.rows = [];
+                this.selectedRecordId = undefined;
+                this.errorMessage = this.readError(error);
+            }
+            return false;
         } finally {
             if (requestId === this.requestSequence) {
                 this.isLoading = false;
@@ -451,17 +534,53 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         }
     }
 
+    scheduleFinanceRefresh() {
+        this.financeRefreshTimer = window.setTimeout(() => {
+            this.financeRefreshTimer = undefined;
+            if (this.isDisconnected) return;
+            if (this.isActionPending) this.scheduleFinanceRefresh();
+            else this.loadDashboard({preserveSelection: true});
+        }, 4000);
+    }
+
     decorateRow(row, selectedId) {
+        if (this.isUpdateIssuesView) return this.decorateUpdateIssueRow(row);
         const isGuest = row.sourceFormType === 'Guest Registration';
         const isInterest = (row.sourceFormType || '').includes('Expression of Interest');
         const isApplicationLead = row.objectApiName === 'Lead' && (row.sourceFormType || '').includes('Application');
         const isOpportunity = row.objectApiName === 'Opportunity';
         const scopedFinanceStatus = this.financeStatusForView(row);
-        const showQuoteActions = ['FINANCE_DUE', 'QUOTE_REQUIRED'].includes(this.viewKey);
-        const showInvoiceActions = ['FINANCE_DUE', 'INVOICE_REQUIRED'].includes(this.viewKey);
-        const showPaymentActions = ['FINANCE_DUE', 'PAYMENT_DUE'].includes(this.viewKey);
+        const showRequirementActions = isOpportunity && this.isRequirementsView;
+        const showPaymentActions = isOpportunity && this.viewKey === 'PAYMENT_DUE' && !row.requirementsDue;
+        const hasOutstandingTopUp = Number(row.topUpAmount) > 0 && !row.topUpPaymentReceived;
+        const onlyTopUpPayable = hasOutstandingTopUp && (row.basePaymentReceived
+            || (Number(row.baseAmount) === 0 && !row.pricingReviewRequired));
+        const requirementPaymentMethod = onlyTopUpPayable ? 'Stripe'
+            : row.baseAmount != null && Number(row.baseAmount) === 0 && !row.pricingReviewRequired
+                ? 'No payment required'
+                : hasOutstandingTopUp && row.paymentMethod === 'Bank transfer' ? 'Bank transfer; Stripe for staff top-up'
+                    : row.paymentMethod;
         return {
             ...row,
+            requirements: (row.requirements || []).map(requirement => ({
+                ...requirement,
+                detailIsLong: Boolean(requirement.detail && (requirement.detail.length > 280 || requirement.detail.split('\n').length > 4)),
+                detailPreview: requirement.detail ? requirement.detail.slice(0, 180).trimEnd() + '…' : ''
+            })),
+            canSendBase: Boolean(row.canSendBase && showRequirementActions),
+            canSendTopUp: Boolean(row.canSendTopUp && showRequirementActions),
+            bookingEmailPending: row.approvalEmailStatus === 'Pending',
+            approvalEmailError: row.basePaymentReceived ? null : row.approvalEmailError,
+            topUpEmailPending: row.topUpEmailStatus === 'Queued',
+            joiningSent: row.finalPackStatus === 'Sent',
+            hasRequirements: Boolean(row.requirements?.length),
+            requirementCardClass: row.requirements?.length ? 'requirement-card' : 'requirement-card requirement-card-compact',
+            requirementBookingType: onlyTopUpPayable
+                ? 'Staff top-up' : Number(row.baseAmount) === 0 && !row.pricingReviewRequired
+                    ? 'Complimentary space' : row.sourceFormType === 'Partner / Sponsor Application'
+                        ? (row.packageOrSpace || 'Partner / sponsor').replace(/;\s*/g, ' · ') : 'Exhibitor booking',
+            requirementAmountLabel: onlyTopUpPayable
+                ? 'Outstanding (inc VAT)' : 'Total (inc VAT)',
             rowClass: `data-row${row.recordId === selectedId ? ' data-row-selected' : ''}`,
             selectAriaLabel: `Select ${row.typeLabel || 'record'} ${row.organisation || row.name || ''}`.trim(),
             financeClass: this.statusClass(row.financeStatus),
@@ -482,10 +601,10 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
             hasInterestDetail: Boolean(row.interestDetail),
             hasPackageOrSpace: Boolean(row.packageOrSpace),
             hasVehicleDetails: Boolean(row.vehicleType || row.vehicleRegistration || row.vehicleDimensions || row.haulierName),
-            showMarkQuote: showQuoteActions && row.canMarkQuote,
-            showMarkInvoice: showInvoiceActions && row.canMarkInvoice,
+            showMarkQuote: false,
+            showMarkInvoice: false,
             showMarkPaid: showPaymentActions && row.canMarkPaid,
-            showMarkTopUpInvoice: showInvoiceActions && row.canMarkTopUpInvoice,
+            showMarkTopUpInvoice: false,
             showMarkTopUpPaid: showPaymentActions && row.canMarkTopUpPaid,
             showInterestDecision: this.isInterestView && isInterest,
             showApplicationDecision: this.isApplicationView && isApplicationLead,
@@ -508,7 +627,8 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
             interestAreasDisplay: row.interestAreas || 'Not stated',
             interestDetailDisplay: row.interestDetail || 'No additional detail',
             packageOrSpaceDisplay: row.packageOrSpace || 'Not stated',
-            paymentMethodDisplay: row.paymentMethod || (row.invoiceRequired ? 'Not stated' : 'No payment required'),
+            paymentMethodDisplay: (this.isRequirementsView ? requirementPaymentMethod : row.paymentMethod)
+                || (row.invoiceRequired ? 'Not stated' : 'No payment required'),
             vehicleTypeDisplay: row.vehicleType || 'Not supplied',
             vehicleRegistrationDisplay: row.vehicleRegistration || 'Registration not supplied',
             vehicleDimensionsDisplay: row.vehicleDimensions || 'Dimensions not supplied',
@@ -518,36 +638,150 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         };
     }
 
+    decorateUpdateIssueRow(row) {
+        const details = (row.updateDetails || []).filter(detail => detail.value != null && String(detail.value).trim() !== '')
+            .map(detail => {
+                const value = String(detail.value);
+                return {
+                    ...detail,
+                    value,
+                    detailIsLong: value.length > 280 || value.split('\n').length > 4,
+                    detailPreview: value.slice(0, 180).trimEnd() + '…'
+                };
+            });
+        return {
+            ...row,
+            organisation: row.organisation || 'Organisation not supplied',
+            contactName: row.contactName || row.name || 'Not supplied',
+            hasEmail: Boolean(row.email),
+            emailUrl: row.email ? `mailto:${row.email}` : null,
+            hasPhone: Boolean(row.phone),
+            phoneUrl: row.phone ? `tel:${row.phone.replace(/\s/g, '')}` : null,
+            updateReferenceDisplay: row.bookingReference || 'Not supplied',
+            updateTypeDisplay: row.sourceFormType || 'Not supplied',
+            updateEventDisplay: row.eventCode || 'Not supplied',
+            updateStatusDisplay: row.updateStatus || 'Not recorded',
+            updateDetails: details,
+            hasUpdateDetails: details.length > 0
+        };
+    }
+
     financeStatusForView(row) {
         if (row.pricingReviewRequired) return 'Check pricing';
-        if (this.viewKey === 'QUOTE_REQUIRED') return 'Quote required';
-        if (this.viewKey === 'INVOICE_REQUIRED') {
-            return row.baseInvoiceRequired && !row.baseInvoiceProvided
-                ? 'Booking invoice required' : 'Staff top-up invoice required';
-        }
-        if (this.viewKey === 'PAYMENT_DUE') {
-            return row.baseInvoiceRequired && !row.basePaymentReceived
-                ? 'Booking payment required' : 'Staff top-up payment required';
-        }
+        if (this.viewKey === 'REQUIREMENTS') return 'Requirements';
+        if (this.viewKey === 'PAYMENT_DUE') return 'Payment required';
         if (this.viewKey === 'PAYMENT_COMPLETE') return 'Payment confirmed';
         return row.financeStatus;
     }
 
     financeAmountForView(row) {
-        if (this.viewKey === 'QUOTE_REQUIRED') return row.baseAmount;
-        if (this.viewKey === 'INVOICE_REQUIRED') {
-            return row.baseInvoiceRequired && !row.baseInvoiceProvided ? row.baseAmount : row.topUpAmount;
-        }
-        if (this.viewKey === 'PAYMENT_DUE') {
-            return row.baseInvoiceRequired && !row.basePaymentReceived ? row.baseAmount : row.topUpAmount;
-        }
-        if (this.viewKey === 'FINANCE_DUE') {
-            if (row.canMarkQuote || row.canMarkInvoice) return row.baseAmount;
-            if (row.canMarkTopUpInvoice) return row.topUpAmount;
-            if (row.canMarkPaid) return row.baseAmount;
-            if (row.canMarkTopUpPaid) return row.topUpAmount;
-        }
+        if (this.viewKey === 'REQUIREMENTS') return (!row.basePaymentReceived ? Number(row.baseAmount) : 0)
+            + (!row.topUpPaymentReceived ? Number(row.topUpAmount) : 0);
+        if (this.viewKey === 'PAYMENT_DUE') return (row.canMarkPaid ? Number(row.baseAmount) : 0) + (row.canMarkTopUpPaid ? Number(row.topUpAmount) : 0);
         return row.amount;
+    }
+
+    handleControlClick(event) { event.stopPropagation(); }
+
+    async handleRequirement(event) {
+        event.stopPropagation();
+        if (this.panelControlsDisabled) return;
+        const {id, requirement} = event.currentTarget.dataset;
+        const completed = event.target.checked;
+        const previous = this.rows.find(row => row.recordId === id)?.requirements?.find(item => item.key === requirement)?.completed;
+        this.requirementPosition = {
+            id, requirement, top: event.currentTarget.getBoundingClientRect?.().top,
+            scrollX: window.scrollX, scrollY: window.scrollY, activeElement: document.activeElement
+        };
+        this.isActionPending = true;
+        this.updateRequirementValue(id, requirement, completed);
+        try {
+            await setRequirement({opportunityId: id, requirement, completed});
+        } catch (error) {
+            if (this.isDisconnected) return;
+            this.updateRequirementValue(id, requirement, previous);
+            event.target.checked = previous;
+            const refreshed = await this.loadDashboard({preserveSelection: true, showRefreshWarning: false});
+            if (this.isDisconnected) return;
+            const savedValue = refreshed
+                ? this.rows.find(row => row.recordId === id)?.requirements?.find(item => item.key === requirement)?.completed
+                : undefined;
+            if (typeof savedValue === 'boolean') {
+                event.target.checked = savedValue;
+                this.dispatchEvent(new ShowToastEvent(savedValue === completed
+                    ? {title: 'Requirement saved', message: 'Your change is saved.', variant: 'success'}
+                    : {title: 'Update not saved', message: this.readError(error), variant: 'error', mode: 'sticky'}));
+            } else {
+                this.dispatchEvent(new ShowToastEvent({title: 'Update could not be confirmed',
+                    message: 'Refresh the record to check whether your change was saved.', variant: 'warning', mode: 'sticky'}));
+            }
+        } finally {
+            this.isActionPending = false;
+        }
+    }
+    updateRequirementValue(id, requirement, completed) {
+        this.rows = this.rows.map(row => row.recordId === id ? {
+            ...row,
+            requirements: (row.requirements || []).map(item => item.key === requirement ? {...item, completed} : item)
+        } : row);
+    }
+    async handleJoiningInstructions(event) {
+        event.stopPropagation();
+        const id = event.currentTarget.dataset.id;
+        const completed = event.target.checked;
+        const previous = this.rows.find(row => row.recordId === id)?.joiningSent;
+        const outcome = await this.saveFinanceChange(id, () => setJoiningInstructions({opportunityId: id, completed}), {
+            onSaved: () => {
+                this.rows = this.rows.map(row => row.recordId === id ? {...row, joiningSent: completed} : row);
+            },
+            reconcileSaved: row => typeof row?.joiningSent === 'boolean' ? row.joiningSent === completed : undefined,
+            savedMessage: 'The joining instructions marker is saved.'
+        });
+        if (this.isDisconnected) return;
+        const current = this.rows.find(row => row.recordId === id)?.joiningSent;
+        event.target.checked = outcome?.saved === true ? completed : typeof current === 'boolean' ? current : previous;
+    }
+    async handleFinanceAction(event) {
+        event.stopPropagation();
+        const {id, action} = event.currentTarget.dataset;
+        await this.saveFinanceChange(id, async () => {
+            const result = await sendFinanceAction({opportunityId: id, actionName: action});
+            this.financePollsRemaining = result.queuedCount > 0 ? 15 : 0;
+            if (!this.isDisconnected) this.dispatchEvent(new ShowToastEvent({title: result.queuedCount > 0 ? 'Email queued' : 'Email not queued', message: result.message, variant: result.queuedCount > 0 ? 'success' : 'error'}));
+        }, {
+            recoverPolling: true,
+            reconcileSaved: row => {
+                if (action === 'TOP_UP') return row?.topUpRequested || row?.topUpEmailPending ? true : undefined;
+                return row?.bookingEmailPending ? true : undefined;
+            },
+            savedMessage: 'The payment email request is recorded. Check its current status.'
+        });
+    }
+    async saveFinanceChange(id, save, {onSaved, reconcileSaved, savedMessage, recoverPolling = false} = {}) {
+        if (this.panelControlsDisabled) return;
+        this.isActionPending = true;
+        try {
+            await save();
+            if (this.isDisconnected) return;
+            onSaved?.();
+            this.selectedRecordId = id;
+            await this.loadDashboard({preserveSelection: true});
+            return {saved: true};
+        }
+        catch (error) {
+            if (this.isDisconnected) return;
+            if (recoverPolling) this.financePollsRemaining = Math.max(this.financePollsRemaining, 15);
+            const refreshed = await this.loadDashboard({preserveSelection: true, showRefreshWarning: false});
+            if (this.isDisconnected) return;
+            const saved = refreshed ? reconcileSaved?.(this.rows.find(row => row.recordId === id)) : undefined;
+            this.dispatchEvent(new ShowToastEvent(saved === true
+                ? {title: 'Update confirmed', message: savedMessage, variant: 'success'}
+                : saved === false || error?.body?.message
+                    ? {title: 'Update not saved', message: this.readError(error), variant: 'error', mode: 'sticky'}
+                    : {title: 'Update could not be confirmed',
+                        message: 'Check the full record before trying again. ' + this.readError(error), variant: 'warning', mode: 'sticky'}));
+            return {saved};
+        } finally { this.isActionPending = false; }
     }
 
     decorateRows() {
@@ -590,19 +824,19 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     }
 
     handleEventChange(event) {
-        if (this.panelControlsDisabled) return;
+        if (this.filterControlsDisabled) return;
         this.eventCode = event.detail.value;
         this.resetAndLoad();
     }
 
     handleTimeChange(event) {
-        if (this.panelControlsDisabled) return;
+        if (this.filterControlsDisabled) return;
         this.timeRange = event.detail.value;
         this.resetAndLoad();
     }
 
     handleOwnerChange(event) {
-        if (this.panelControlsDisabled) return;
+        if (this.filterControlsDisabled) return;
         this.ownerId = event.detail.value;
         this.resetAndLoad();
     }
@@ -624,6 +858,7 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
     handleOverviewSelect(event) {
         if (this.panelControlsDisabled) return;
         this.viewKey = event.currentTarget.dataset.view;
+        if (this.isUpdateIssuesView) this.workbenchFocusView = this.viewKey;
         this.resetAndLoad();
     }
 
@@ -737,9 +972,11 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
             }));
             await this.loadDashboard({ preserveSelection: false });
         } catch (error) {
-            this.isLoading = false;
+            if (this.isDisconnected) return;
+            await this.loadDashboard({preserveSelection: true, showRefreshWarning: false});
+            if (this.isDisconnected) return;
             this.dispatchEvent(new ShowToastEvent({
-                title: 'Decision not saved',
+                title: 'Decision needs attention',
                 message: this.readError(error),
                 variant: 'error',
                 mode: 'sticky'
@@ -759,9 +996,6 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         this.openCommunication('INVITATION', event, event.currentTarget.dataset.id);
     }
 
-    handleOpenFinalPack(event) {
-        this.openCommunication('FINAL_PACK', event);
-    }
 
     async openCommunication(kind, event, recordId) {
         if (this.panelControlsDisabled) return;
@@ -1053,14 +1287,29 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
         if (!opportunityId || !labels[actionName]) return;
         this.isActionPending = true;
         try {
+            const isPayment = actionName === 'PAYMENT_RECEIVED' || actionName === 'TOP_UP_PAYMENT_RECEIVED';
+            let receipt;
+            let message = `Record “${labels[actionName]}” for this booking?`;
+            if (isPayment) {
+                receipt = await getPaymentReceiptPreview({ opportunityId, actionName });
+                const currency = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+                const charge = actionName === 'PAYMENT_RECEIVED' ? 'the booking' : 'the staff top-up';
+                message = `Record ${currency.format(receipt.amount)} including VAT as received for ${charge}?`;
+                if (receipt.stripeAmountDiffers) {
+                    message += `\n\nIssued Stripe request: ${currency.format(receipt.issuedStripeAmount)} including VAT.`
+                        + '\nOnly confirm once the full current amount has been received.';
+                }
+            }
             const confirmed = await LightningConfirm.open({
                 label: labels[actionName],
-                message: `Record “${labels[actionName]}” for this booking?`,
+                message,
                 theme: 'warning'
             });
             if (!confirmed) return;
             this.isLoading = true;
-            const result = await updateMilestone({ opportunityId, actionName });
+            const result = isPayment
+                ? await recordReviewedPayment({ opportunityId, actionName, expectedAmount: receipt.amount })
+                : await updateMilestone({ opportunityId, actionName });
             this.dispatchEvent(new ShowToastEvent({
                 title: labels[actionName],
                 message: result.message,
@@ -1069,9 +1318,11 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
             this.selectedRecordId = opportunityId;
             await this.loadDashboard({ preserveSelection: true });
         } catch (error) {
-            this.isLoading = false;
+            if (this.isDisconnected) return;
+            await this.loadDashboard({preserveSelection: true, showRefreshWarning: false});
+            if (this.isDisconnected) return;
             this.dispatchEvent(new ShowToastEvent({
-                title: 'Update not saved',
+                title: 'Update needs attention',
                 message: this.readError(error),
                 variant: 'error',
                 mode: 'sticky'

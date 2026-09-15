@@ -6,11 +6,11 @@
     <name>Internal NTE guest registration notification</name>
     <style>none</style>
     <subject>New NTE guest registration</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+    <textOnly>NTE27 · Internal notification
 
 New guest registration.
 
-{!Lead.FirstName} {!Lead.LastName} has registered to attend {!Lead.NTE_Event_Code__c}.
+{!Lead.FirstName} {!Lead.LastName} has registered to attend NTE27.
 
 Hello NTE team,
 
@@ -20,7 +20,7 @@ Next steps
 
 • Check for an existing attendee or duplicate registration.
 
-• Record the primary and accompanying guest against {!Lead.NTE_Event_Code__c}.
+• Record the primary and accompanying guest against NTE27.
 
 • Route accessibility requirements to the event operations owner.
 
@@ -43,7 +43,7 @@ Name {!Lead.Accompanying_Guest_Name__c}
 Email {!Lead.Accompanying_Guest_Email__c}
 Accessibility {!Lead.Guest_Accessibility_Required__c} - {!Lead.Guest_Accessibility_Details__c}
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

@@ -80,8 +80,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.StageName</fieldItem>
+                <identifier>RecordStageName0L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.CloseDate</fieldItem>
-                <identifier>RecordCloseDate0L1</identifier>
+                <identifier>RecordCloseDate0L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Amount</fieldItem>
+                <identifier>RecordAmount0L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -91,7 +111,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.Type</fieldItem>
-                <identifier>RecordType0L2</identifier>
+                <identifier>RecordType0L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.LeadSource</fieldItem>
+                <identifier>RecordLeadSource0L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -101,7 +131,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.CampaignId</fieldItem>
-                <identifier>RecordCampaignId0L3</identifier>
+                <identifier>RecordCampaignId0L6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -110,38 +140,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Booking_Reference__c</fieldItem>
-                <identifier>RecordBooking_Reference__c0L4</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Source_Form_Type__c</fieldItem>
-                <identifier>RecordNTE_Source_Form_Type__c0L5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Attendance_Status__c</fieldItem>
-                <identifier>RecordNTE_Attendance_Status__c0L6</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.ForecastCategoryName</fieldItem>
-                <identifier>RecordForecastCategoryName0L7</identifier>
+                <fieldItem>Record.OwnerId</fieldItem>
+                <identifier>RecordOwnerId0L7</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_1_Left</name>
@@ -154,38 +154,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.StageName</fieldItem>
-                <identifier>RecordStageName0R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Amount</fieldItem>
-                <identifier>RecordAmount0R1</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.LeadSource</fieldItem>
-                <identifier>RecordLeadSource0R2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.OwnerId</fieldItem>
-                <identifier>RecordOwnerId0R3</identifier>
+                <fieldItem>Record.Booking_Reference__c</fieldItem>
+                <identifier>RecordBooking_Reference__c0R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -195,7 +165,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Event_Code__c</fieldItem>
-                <identifier>RecordNTE_Event_Code__c0R4</identifier>
+                <identifier>RecordNTE_Event_Code__c0R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Source_Form_Type__c</fieldItem>
+                <identifier>RecordNTE_Source_Form_Type__c0R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -205,7 +185,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Form_Version__c</fieldItem>
-                <identifier>RecordNTE_Form_Version__c0R5</identifier>
+                <identifier>RecordNTE_Form_Version__c0R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Attendance_Status__c</fieldItem>
+                <identifier>RecordNTE_Attendance_Status__c0R4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -215,7 +205,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.Probability</fieldItem>
-                <identifier>RecordProbability0R6</identifier>
+                <identifier>RecordProbability0R5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.ForecastCategoryName</fieldItem>
+                <identifier>RecordForecastCategoryName0R6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -272,8 +272,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Event_Contact_Title__c</fieldItem>
+                <identifier>RecordNTE_Event_Contact_Title__c1L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Event_Contact_Email__c</fieldItem>
-                <identifier>RecordNTE_Event_Contact_Email__c1L1</identifier>
+                <identifier>RecordNTE_Event_Contact_Email__c1L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -282,28 +292,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Secondary_Contact_Prefix__c</fieldItem>
-                <identifier>RecordNTE_Secondary_Contact_Prefix__c1L2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Secondary_Contact_Title__c</fieldItem>
-                <identifier>RecordNTE_Secondary_Contact_Title__c1L3</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Secondary_Contact_Mobile__c</fieldItem>
-                <identifier>RecordNTE_Secondary_Contact_Mobile__c1L4</identifier>
+                <fieldItem>Record.NTE_Event_Contact_Mobile__c</fieldItem>
+                <identifier>RecordNTE_Event_Contact_Mobile__c1L3</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_2_Left</name>
@@ -316,18 +306,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Event_Contact_Title__c</fieldItem>
-                <identifier>RecordNTE_Event_Contact_Title__c1R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Event_Contact_Mobile__c</fieldItem>
-                <identifier>RecordNTE_Event_Contact_Mobile__c1R1</identifier>
+                <fieldItem>Record.NTE_Secondary_Contact_Prefix__c</fieldItem>
+                <identifier>RecordNTE_Secondary_Contact_Prefix__c1R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -337,7 +317,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Secondary_Contact_Name__c</fieldItem>
-                <identifier>RecordNTE_Secondary_Contact_Name__c1R2</identifier>
+                <identifier>RecordNTE_Secondary_Contact_Name__c1R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Secondary_Contact_Title__c</fieldItem>
+                <identifier>RecordNTE_Secondary_Contact_Title__c1R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -356,8 +346,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Secondary_Contact_Mobile__c</fieldItem>
+                <identifier>RecordNTE_Secondary_Contact_Mobile__c1R4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Secondary_Contact_Phone__c</fieldItem>
-                <identifier>RecordNTE_Secondary_Contact_Phone__c1R4</identifier>
+                <identifier>RecordNTE_Secondary_Contact_Phone__c1R5</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_2_Right</name>
@@ -404,8 +404,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Alternative_Organisation_Name__c</fieldItem>
+                <identifier>RecordNTE_Alternative_Organisation_Name__c2L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Sponsor_Package__c</fieldItem>
-                <identifier>RecordNTE_Sponsor_Package__c2L1</identifier>
+                <identifier>RecordNTE_Sponsor_Package__c2L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -414,18 +424,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Industry_Body_Details__c</fieldItem>
-                <identifier>RecordNTE_Industry_Body_Details__c2L2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Declaration_Date__c</fieldItem>
-                <identifier>RecordNTE_Declaration_Date__c2L3</identifier>
+                <fieldItem>Record.NTE_Event_Discovery_Source__c</fieldItem>
+                <identifier>RecordNTE_Event_Discovery_Source__c2L3</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_3_Left</name>
@@ -438,18 +438,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Alternative_Organisation_Name__c</fieldItem>
-                <identifier>RecordNTE_Alternative_Organisation_Name__c2R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Event_Discovery_Source__c</fieldItem>
-                <identifier>RecordNTE_Event_Discovery_Source__c2R1</identifier>
+                <fieldItem>Record.NTE_Industry_Body_Details__c</fieldItem>
+                <identifier>RecordNTE_Industry_Body_Details__c2R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -459,7 +449,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Declaration_Name__c</fieldItem>
-                <identifier>RecordNTE_Declaration_Name__c2R2</identifier>
+                <identifier>RecordNTE_Declaration_Name__c2R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Declaration_Date__c</fieldItem>
+                <identifier>RecordNTE_Declaration_Date__c2R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -516,8 +516,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Exhibitor_Space_Selections__c</fieldItem>
+                <identifier>RecordNTE_Exhibitor_Space_Selections__c3L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Exhibitor_Space_Size__c</fieldItem>
-                <identifier>RecordNTE_Exhibitor_Space_Size__c3L1</identifier>
+                <identifier>RecordNTE_Exhibitor_Space_Size__c3L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -526,18 +536,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Exhibitor_Hall_Schedule__c</fieldItem>
-                <identifier>RecordNTE_Exhibitor_Hall_Schedule__c3L2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Has_Special_Requirements__c</fieldItem>
-                <identifier>RecordNTE_Has_Special_Requirements__c3L3</identifier>
+                <fieldItem>Record.NTE_Exhibitor_Space_Position__c</fieldItem>
+                <identifier>RecordNTE_Exhibitor_Space_Position__c3L3</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_4_Left</name>
@@ -550,18 +550,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Exhibitor_Space_Selections__c</fieldItem>
-                <identifier>RecordNTE_Exhibitor_Space_Selections__c3R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Exhibitor_Space_Position__c</fieldItem>
-                <identifier>RecordNTE_Exhibitor_Space_Position__c3R1</identifier>
+                <fieldItem>Record.NTE_Exhibitor_Hall_Schedule__c</fieldItem>
+                <identifier>RecordNTE_Exhibitor_Hall_Schedule__c3R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -571,7 +561,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Previous_Events__c</fieldItem>
-                <identifier>RecordNTE_Previous_Events__c3R2</identifier>
+                <identifier>RecordNTE_Previous_Events__c3R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Has_Special_Requirements__c</fieldItem>
+                <identifier>RecordNTE_Has_Special_Requirements__c3R2</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_4_Right</name>
@@ -618,8 +618,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Power_Socket_Count__c</fieldItem>
+                <identifier>RecordNTE_Power_Socket_Count__c4L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Stand_Equipment__c</fieldItem>
-                <identifier>RecordNTE_Stand_Equipment__c4L1</identifier>
+                <identifier>RecordNTE_Stand_Equipment__c4L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Stand_Special_Requirements__c</fieldItem>
+                <identifier>RecordNTE_Stand_Special_Requirements__c4L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -629,7 +649,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Stand_Colleagues__c</fieldItem>
-                <identifier>RecordNTE_Stand_Colleagues__c4L2</identifier>
+                <identifier>RecordNTE_Stand_Colleagues__c4L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Stand_Extra_Notes__c</fieldItem>
+                <identifier>RecordNTE_Stand_Extra_Notes__c4L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -639,7 +669,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Planned_Exhibitor_Count__c</fieldItem>
-                <identifier>RecordNTE_Planned_Exhibitor_Count__c4L3</identifier>
+                <identifier>RecordNTE_Planned_Exhibitor_Count__c4L6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -648,38 +678,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Included_Staff_Count__c</fieldItem>
-                <identifier>RecordNTE_Included_Staff_Count__c4L4</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Additional_Staff_Required__c</fieldItem>
-                <identifier>RecordNTE_Additional_Staff_Required__c4L5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Staff_Required__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Staff_Required__c4L6</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Staff_Names__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Staff_Names__c4L7</identifier>
+                <fieldItem>Record.NTE_Initial_Staff_Count__c</fieldItem>
+                <identifier>RecordNTE_Initial_Staff_Count__c4L7</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_5_Left</name>
@@ -692,38 +692,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Power_Socket_Count__c</fieldItem>
-                <identifier>RecordNTE_Power_Socket_Count__c4R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Stand_Special_Requirements__c</fieldItem>
-                <identifier>RecordNTE_Stand_Special_Requirements__c4R1</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Stand_Extra_Notes__c</fieldItem>
-                <identifier>RecordNTE_Stand_Extra_Notes__c4R2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Initial_Staff_Count__c</fieldItem>
-                <identifier>RecordNTE_Initial_Staff_Count__c4R3</identifier>
+                <fieldItem>Record.NTE_Included_Staff_Count__c</fieldItem>
+                <identifier>RecordNTE_Included_Staff_Count__c4R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -733,7 +703,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Total_Staff_Count__c</fieldItem>
-                <identifier>RecordNTE_Total_Staff_Count__c4R4</identifier>
+                <identifier>RecordNTE_Total_Staff_Count__c4R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Additional_Staff_Required__c</fieldItem>
+                <identifier>RecordNTE_Additional_Staff_Required__c4R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -743,7 +723,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Additional_Staff_Count__c</fieldItem>
-                <identifier>RecordNTE_Additional_Staff_Count__c4R5</identifier>
+                <identifier>RecordNTE_Additional_Staff_Count__c4R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Top_Up_Staff_Required__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Staff_Required__c4R4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -753,7 +743,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Top_Up_Staff_Count__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Staff_Count__c4R6</identifier>
+                <identifier>RecordNTE_Top_Up_Staff_Count__c4R5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Top_Up_Staff_Names__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Staff_Names__c4R6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -810,8 +810,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Exhibitor_Space_Price__c</fieldItem>
+                <identifier>RecordNTE_Exhibitor_Space_Price__c5L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Power_Socket_Unit_Price__c</fieldItem>
-                <identifier>RecordNTE_Power_Socket_Unit_Price__c5L1</identifier>
+                <identifier>RecordNTE_Power_Socket_Unit_Price__c5L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Power_Socket_Total__c</fieldItem>
+                <identifier>RecordNTE_Power_Socket_Total__c5L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -821,7 +841,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Additional_Staff_Unit_Price__c</fieldItem>
-                <identifier>RecordNTE_Additional_Staff_Unit_Price__c5L2</identifier>
+                <identifier>RecordNTE_Additional_Staff_Unit_Price__c5L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Additional_Staff_Total__c</fieldItem>
+                <identifier>RecordNTE_Additional_Staff_Total__c5L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -831,7 +861,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Top_Up_Staff_Unit_Price__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Staff_Unit_Price__c5L3</identifier>
+                <identifier>RecordNTE_Top_Up_Staff_Unit_Price__c5L6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -840,18 +870,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Listed_Price_Total__c</fieldItem>
-                <identifier>RecordNTE_Listed_Price_Total__c5L4</identifier>
+                <fieldItem>Record.NTE_Top_Up_Staff_Total__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Staff_Total__c5L7</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>readonly</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Pricing_Version__c</fieldItem>
-                <identifier>RecordNTE_Pricing_Version__c5L5</identifier>
+                <fieldItem>Record.NTE_Price_Adjustment__c</fieldItem>
+                <identifier>RecordNTE_Price_Adjustment__c5L8</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_6_Left</name>
@@ -864,8 +894,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Exhibitor_Space_Price__c</fieldItem>
-                <identifier>RecordNTE_Exhibitor_Space_Price__c5R0</identifier>
+                <fieldItem>Record.NTE_Listed_Price_Total__c</fieldItem>
+                <identifier>RecordNTE_Listed_Price_Total__c5R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -874,8 +904,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Power_Socket_Total__c</fieldItem>
-                <identifier>RecordNTE_Power_Socket_Total__c5R1</identifier>
+                <fieldItem>Record.NTE_VAT_Rate__c</fieldItem>
+                <identifier>RecordNTE_VAT_Rate__c5R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -884,8 +914,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Additional_Staff_Total__c</fieldItem>
-                <identifier>RecordNTE_Additional_Staff_Total__c5R2</identifier>
+                <fieldItem>Record.NTE_VAT_Total__c</fieldItem>
+                <identifier>RecordNTE_VAT_Total__c5R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -894,8 +924,38 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Staff_Total__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Staff_Total__c5R3</identifier>
+                <fieldItem>Record.NTE_Total_Including_VAT__c</fieldItem>
+                <identifier>RecordNTE_Total_Including_VAT__c5R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Top_Up_VAT_Rate__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_VAT_Rate__c5R4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Top_Up_VAT_Total__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_VAT_Total__c5R5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Top_Up_Total_Inc_VAT__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Total_Inc_VAT__c5R6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -905,7 +965,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Pricing_Status__c</fieldItem>
-                <identifier>RecordNTE_Pricing_Status__c5R4</identifier>
+                <identifier>RecordNTE_Pricing_Status__c5R7</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Pricing_Version__c</fieldItem>
+                <identifier>RecordNTE_Pricing_Version__c5R8</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_6_Right</name>
@@ -942,8 +1012,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoice_Required__c</fieldItem>
-                <identifier>RecordNTE_Invoice_Required__c6L0</identifier>
+                <fieldItem>Record.NTE_Invoiced_Company__c</fieldItem>
+                <identifier>RecordNTE_Invoiced_Company__c6L0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -952,8 +1022,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoiced_Company__c</fieldItem>
-                <identifier>RecordNTE_Invoiced_Company__c6L1</identifier>
+                <fieldItem>Record.NTE_Trading_Name__c</fieldItem>
+                <identifier>RecordNTE_Trading_Name__c6L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -972,8 +1042,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Invoiced_Person__c</fieldItem>
+                <identifier>RecordNTE_Invoiced_Person__c6L3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Invoiced_Email__c</fieldItem>
-                <identifier>RecordNTE_Invoiced_Email__c6L3</identifier>
+                <identifier>RecordNTE_Invoiced_Email__c6L4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -982,108 +1062,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Purchase_Order__c</fieldItem>
-                <identifier>RecordNTE_Purchase_Order__c6L4</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Quote_Required_for_PO__c</fieldItem>
-                <identifier>RecordNTE_Quote_Required_for_PO__c6L5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Supplier_Agreement_Required__c</fieldItem>
-                <identifier>RecordNTE_Supplier_Agreement_Required__c6L6</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Quote_Provided_At__c</fieldItem>
-                <identifier>RecordNTE_Quote_Provided_At__c6L7</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoice_Provided__c</fieldItem>
-                <identifier>RecordNTE_Invoice_Provided__c6L8</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoice_Provided_By__c</fieldItem>
-                <identifier>RecordNTE_Invoice_Provided_By__c6L9</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Payment_Received_At__c</fieldItem>
-                <identifier>RecordNTE_Payment_Received_At__c6L10</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Invoice_Required__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Invoice_Required__c6L11</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Invoice_At__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Invoice_At__c6L12</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Payment_Received__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Payment_Received__c6L13</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Payment_By__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Payment_By__c6L14</identifier>
+                <fieldItem>Record.NTE_Invoice_Contact_Phone__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Contact_Phone__c6L5</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_7_Left</name>
@@ -1106,8 +1086,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Trading_Name__c</fieldItem>
-                <identifier>RecordNTE_Trading_Name__c6R1</identifier>
+                <fieldItem>Record.NTE_Invoice_Requested__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Requested__c6R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1116,8 +1096,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoiced_Person__c</fieldItem>
-                <identifier>RecordNTE_Invoiced_Person__c6R2</identifier>
+                <fieldItem>Record.NTE_Invoice_Required__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Required__c6R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1126,8 +1106,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoice_Contact_Phone__c</fieldItem>
-                <identifier>RecordNTE_Invoice_Contact_Phone__c6R3</identifier>
+                <fieldItem>Record.NTE_Quote_Required_for_PO__c</fieldItem>
+                <identifier>RecordNTE_Quote_Required_for_PO__c6R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Purchase_Order__c</fieldItem>
+                <identifier>RecordNTE_Purchase_Order__c6R4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1137,7 +1127,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Purchase_Order_Number__c</fieldItem>
-                <identifier>RecordNTE_Purchase_Order_Number__c6R4</identifier>
+                <identifier>RecordNTE_Purchase_Order_Number__c6R5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Supplier_Agreement_Required__c</fieldItem>
+                <identifier>RecordNTE_Supplier_Agreement_Required__c6R6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1147,87 +1147,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Invoice_Additional_Information__c</fieldItem>
-                <identifier>RecordNTE_Invoice_Additional_Information__c6R5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Quote_Provided__c</fieldItem>
-                <identifier>RecordNTE_Quote_Provided__c6R6</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Quote_Provided_By__c</fieldItem>
-                <identifier>RecordNTE_Quote_Provided_By__c6R7</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Invoice_Provided_At__c</fieldItem>
-                <identifier>RecordNTE_Invoice_Provided_At__c6R8</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Payment_Received__c</fieldItem>
-                <identifier>RecordNTE_Payment_Received__c6R9</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Payment_Recorded_By__c</fieldItem>
-                <identifier>RecordNTE_Payment_Recorded_By__c6R10</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Invoice_Provided__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Invoice_Provided__c6R11</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Invoice_By__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Invoice_By__c6R12</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Top_Up_Payment_At__c</fieldItem>
-                <identifier>RecordNTE_Top_Up_Payment_At__c6R13</identifier>
+                <identifier>RecordNTE_Invoice_Additional_Information__c6R7</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_7_Right</name>
@@ -1264,8 +1184,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Delivery_Window__c</fieldItem>
-                <identifier>RecordNTE_Delivery_Window__c7L0</identifier>
+                <fieldItem>Record.NTE_PO_Confirmed__c</fieldItem>
+                <identifier>RecordNTE_PO_Confirmed__c7L0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1274,8 +1194,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Registration__c7L1</identifier>
+                <fieldItem>Record.NTE_Agreement_Provided__c</fieldItem>
+                <identifier>RecordNTE_Agreement_Provided__c7L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1284,8 +1204,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Gross_Weight__c7L2</identifier>
+                <fieldItem>Record.NTE_Invoice_Details_Included__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Details_Included__c7L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1294,8 +1214,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Registration__c7L3</identifier>
+                <fieldItem>Record.NTE_Bank_Details_Provided__c</fieldItem>
+                <identifier>RecordNTE_Bank_Details_Provided__c7L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1304,8 +1224,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Gross_Weight__c7L4</identifier>
+                <fieldItem>Record.NTE_Quote_Provided__c</fieldItem>
+                <identifier>RecordNTE_Quote_Provided__c7L4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1314,8 +1234,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Registration__c7L5</identifier>
+                <fieldItem>Record.NTE_Quote_Provided_At__c</fieldItem>
+                <identifier>RecordNTE_Quote_Provided_At__c7L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1324,8 +1244,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Gross_Weight__c7L6</identifier>
+                <fieldItem>Record.NTE_Quote_Provided_By__c</fieldItem>
+                <identifier>RecordNTE_Quote_Provided_By__c7L6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1334,8 +1254,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Staff__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Staff__c7L7</identifier>
+                <fieldItem>Record.NTE_Invoice_Provided__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Provided__c7L7</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1344,8 +1264,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Gross_Weight__c7L8</identifier>
+                <fieldItem>Record.NTE_Invoice_Provided_At__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Provided_At__c7L8</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1354,8 +1274,48 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Registration__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Registration__c7L9</identifier>
+                <fieldItem>Record.NTE_Invoice_Provided_By__c</fieldItem>
+                <identifier>RecordNTE_Invoice_Provided_By__c7L9</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Payment_Received__c</fieldItem>
+                <identifier>RecordNTE_Payment_Received__c7L10</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Payment_Received_At__c</fieldItem>
+                <identifier>RecordNTE_Payment_Received_At__c7L11</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Payment_Recorded_By__c</fieldItem>
+                <identifier>RecordNTE_Payment_Recorded_By__c7L12</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Free_Space_Confirmed__c</fieldItem>
+                <identifier>RecordNTE_Free_Space_Confirmed__c7L13</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_8_Left</name>
@@ -1368,8 +1328,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Description__c7R0</identifier>
+                <fieldItem>Record.NTE_Top_Up_Invoice_Required__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Invoice_Required__c7R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1378,8 +1338,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Dimensions__c7R1</identifier>
+                <fieldItem>Record.NTE_Top_Up_Invoice_Provided__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Invoice_Provided__c7R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1388,8 +1348,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Description__c7R2</identifier>
+                <fieldItem>Record.NTE_Top_Up_Invoice_At__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Invoice_At__c7R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1398,8 +1358,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Dimensions__c7R3</identifier>
+                <fieldItem>Record.NTE_Top_Up_Invoice_By__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Invoice_By__c7R3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1408,8 +1368,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Description__c7R4</identifier>
+                <fieldItem>Record.NTE_Top_Up_Payment_Received__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Payment_Received__c7R4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1418,8 +1378,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Dimensions__c7R5</identifier>
+                <fieldItem>Record.NTE_Top_Up_Payment_At__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Payment_At__c7R5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1428,8 +1388,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Name__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Name__c7R6</identifier>
+                <fieldItem>Record.NTE_Top_Up_Payment_By__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Payment_By__c7R6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1438,18 +1398,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Type__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Type__c7R7</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Dimensions__c7R8</identifier>
+                <fieldItem>Record.NTE_Top_Up_Payment_Requested_At__c</fieldItem>
+                <identifier>RecordNTE_Top_Up_Payment_Requested_At__c7R7</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_8_Right</name>
@@ -1486,8 +1436,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Staff_Update_Completed_At__c</fieldItem>
-                <identifier>RecordNTE_Staff_Update_Completed_At__c8L0</identifier>
+                <fieldItem>Record.NTE_Delivery_Window__c</fieldItem>
+                <identifier>RecordNTE_Delivery_Window__c8L0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1496,8 +1446,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Logo_Update_Provided__c</fieldItem>
-                <identifier>RecordNTE_Logo_Update_Provided__c8L1</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Description__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Description__c8L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1506,8 +1456,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Type__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Type__c8L2</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Registration__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Registration__c8L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1516,8 +1466,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Processed_At__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Processed_At__c8L3</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Dimensions__c8L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1526,8 +1476,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Declaration_Date__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Declaration_Date__c8L4</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Gross_Weight__c8L4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1536,8 +1486,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Description</fieldItem>
-                <identifier>RecordDescription8L5</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_2_Description__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Description__c8L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1546,8 +1496,68 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.LastModifiedById</fieldItem>
-                <identifier>RecordLastModifiedById8L6</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_2_Registration__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Registration__c8L6</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_2_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Dimensions__c8L7</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_2_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Gross_Weight__c8L8</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Description__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Description__c8L9</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Registration__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Registration__c8L10</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Dimensions__c8L11</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Gross_Weight__c8L12</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_9_Left</name>
@@ -1560,8 +1570,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Vehicle_Update_Completed_At__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Vehicle_Update_Completed_At__c8R0</identifier>
+                <fieldItem>Record.NTE_Haulier_Name__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Name__c8R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1570,8 +1580,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Logo_Update_Provided_At__c</fieldItem>
-                <identifier>RecordNTE_Logo_Update_Provided_At__c8R1</identifier>
+                <fieldItem>Record.NTE_Haulier_Staff__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Staff__c8R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1580,8 +1590,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Form_Version__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Form_Version__c8R2</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Type__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Type__c8R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1590,8 +1600,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Declaration_Name__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Declaration_Name__c8R3</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Gross_Weight__c8R3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1600,8 +1610,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Error__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Error__c8R4</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Dimensions__c8R4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1610,8 +1620,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.CreatedById</fieldItem>
-                <identifier>RecordCreatedById8R5</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Registration__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Registration__c8R5</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_9_Right</name>
@@ -1639,6 +1649,300 @@
             </componentInstance>
         </itemInstances>
         <name>NTE_Section_9_Columns</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Staff_Update_Completed_At__c</fieldItem>
+                <identifier>RecordNTE_Staff_Update_Completed_At__c9L0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Vehicle_Update_Completed_At__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Vehicle_Update_Completed_At__c9L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logo_Update_Provided__c</fieldItem>
+                <identifier>RecordNTE_Logo_Update_Provided__c9L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logo_Update_Provided_At__c</fieldItem>
+                <identifier>RecordNTE_Logo_Update_Provided_At__c9L3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Type__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Type__c9L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Form_Version__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Form_Version__c9L5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Processed_At__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Processed_At__c9L6</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>NTE_Section_10_Left</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Declaration_Name__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Declaration_Name__c9R0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Declaration_Date__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Declaration_Date__c9R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Error__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Error__c9R2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Description</fieldItem>
+                <identifier>RecordDescription9R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CreatedById</fieldItem>
+                <identifier>RecordCreatedById9R4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.LastModifiedById</fieldItem>
+                <identifier>RecordLastModifiedById9R5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Joining_Instructions_By__c</fieldItem>
+                <identifier>RecordNTE_Joining_Instructions_By__c9R6</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>NTE_Section_10_Right</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>NTE_Section_10_Left</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>NTE_Section_10_Column_Left</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>NTE_Section_10_Right</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>NTE_Section_10_Column_Right</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>NTE_Section_10_Columns</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Kind__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Kind__c10L0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Status__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Status__c10L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Sent_At__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Sent_At__c10L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Recipient__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Recipient__c10L3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Error__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Error__c10L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>NTE_Section_11_Left</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Requested_At__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Requested_At__c10R0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Requested_By__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Requested_By__c10R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Final_Pack_Status__c</fieldItem>
+                <identifier>RecordNTE_Final_Pack_Status__c10R2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Final_Pack_Sent_At__c</fieldItem>
+                <identifier>RecordNTE_Final_Pack_Sent_At__c10R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>NTE_Section_11_Right</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>NTE_Section_11_Left</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>NTE_Section_11_Column_Left</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>NTE_Section_11_Right</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>NTE_Section_11_Column_Right</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>NTE_Section_11_Columns</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -1780,7 +2084,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Heavy vehicle and logistics</value>
+                    <value>Finance requirements and payments</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>NTE_Section_8_FieldSection</identifier>
@@ -1798,10 +2102,46 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Update audit</value>
+                    <value>Heavy vehicle and logistics</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>NTE_Section_9_FieldSection</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
+                    <value>NTE_Section_10_Columns</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Update audit</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>NTE_Section_10_FieldSection</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
+                    <value>NTE_Section_11_Columns</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Booking correspondence</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>NTE_Section_11_FieldSection</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>

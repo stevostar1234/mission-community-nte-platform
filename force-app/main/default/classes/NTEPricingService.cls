@@ -1,5 +1,5 @@
 public without sharing class NTEPricingService {
-    public static final String CATALOG_VERSION = 'NTE27-2026-09-06';
+    public static final String CATALOG_VERSION = 'NTE27-2026-09-13-VAT';
     public static final Decimal POWER_STANDARD_PRICE = 100;
     public static final Decimal POWER_DISCOUNTED_PRICE = 50;
     public static final Decimal ADDITIONAL_STAFF_PRICE = 50;
@@ -29,11 +29,11 @@ public without sharing class NTEPricingService {
     };
 
     private static final Map<String, Decimal> EXHIBITOR_SPACE_PRICES = new Map<String, Decimal>{
-        'Garage Space - reduced size with power - £600 + VAT' => 600,
-        'Single Garage - Paddock Side with power - £800 + VAT' => 800,
-        'Double Garage - Paddock Side with power - £1,300 + VAT' => 1300,
-        'Single Garage - Track Side - £800 + VAT' => 800,
-        'Double Garage - Track Side - £1,300 + VAT' => 1300,
+        'Garage Space - reduced size with power - £599 + VAT' => 599,
+        'Single Garage - Paddock Side with power - £799 + VAT' => 799,
+        'Double Garage - Paddock Side with power - £1,299 + VAT' => 1299,
+        'Single Garage - Track Side - £799 + VAT' => 799,
+        'Double Garage - Track Side - £1,299 + VAT' => 1299,
         'Clean Energy Zone - Single - £499 + VAT' => 499,
         'Clean Energy Zone - Double - £849 + VAT' => 849,
         'Built Environment Zone - Single - £499 + VAT' => 499,
@@ -58,8 +58,8 @@ public without sharing class NTEPricingService {
         'Non COBSEO Charity - Single - Free' => 0
     };
     private static final Set<String> FOUR_STAFF_SPACES = new Set<String>{
-        'Double Garage - Paddock Side with power - £1,300 + VAT',
-        'Double Garage - Track Side - £1,300 + VAT',
+        'Double Garage - Paddock Side with power - £1,299 + VAT',
+        'Double Garage - Track Side - £1,299 + VAT',
         'Clean Energy Zone - Double - £849 + VAT',
         'Built Environment Zone - Double - £849 + VAT',
         'Manufacturing Zone - Double - £849 + VAT',
@@ -184,6 +184,9 @@ public without sharing class NTEPricingService {
         lead.Additional_Staff_Required__c = pricing.additionalStaffCount > 0 ? 'Yes' : 'No';
         lead.Additional_Staff_Count__c = String.valueOf(pricing.additionalStaffCount.intValue());
         lead.Listed_Price_Total__c = pricing.listedTotal;
+        lead.VAT_Rate__c = NTEVat.RATE;
+        lead.VAT_Total__c = pricing.reviewRequired ? null : NTEVat.tax(pricing.listedTotal, lead.VAT_Rate__c);
+        lead.Total_Including_VAT__c = pricing.reviewRequired ? null : NTEVat.gross(pricing.listedTotal, lead.VAT_Rate__c);
         lead.Pricing_Status__c = pricing.status();
         lead.Pricing_Version__c = CATALOG_VERSION;
         lead.Invoice_Required__c = pricing.listedTotal > 0 || pricing.reviewRequired ? 'Yes' : 'No';
@@ -214,10 +217,12 @@ public without sharing class NTEPricingService {
         opportunity.NTE_Additional_Staff_Required__c = pricing.additionalStaffCount > 0 ? 'Yes' : 'No';
         opportunity.NTE_Additional_Staff_Count__c = String.valueOf(pricing.additionalStaffCount.intValue());
         if (opportunity.NTE_Total_Staff_Count__c == null) opportunity.NTE_Total_Staff_Count__c = pricing.totalStaffCount;
+        opportunity.NTE_Price_Adjustment__c = 0;
         opportunity.NTE_Listed_Price_Total__c = pricing.listedTotal;
         opportunity.NTE_Pricing_Status__c = pricing.status();
         opportunity.NTE_Pricing_Version__c = CATALOG_VERSION;
-        opportunity.Amount = pricing.listedTotal;
+        opportunity.NTE_VAT_Rate__c = NTEVat.RATE;
+        opportunity.Amount = pricing.reviewRequired ? null : NTEVat.gross(pricing.listedTotal, opportunity.NTE_VAT_Rate__c);
         opportunity.NTE_Invoice_Required__c = pricing.listedTotal > 0 || pricing.reviewRequired ? 'Yes' : 'No';
     }
 

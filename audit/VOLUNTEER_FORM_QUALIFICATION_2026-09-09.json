@@ -1,0 +1,39 @@
+{
+  "qualifiedAt": "2026-09-09T15:14:39.199293+00:00",
+  "actualDeployment": {
+    "id": "0AfAd00000Sr5RIKAZ",
+    "status": "Succeeded",
+    "components": 9,
+    "tests": 16,
+    "completedDate": "2026-09-09T15:05:37.000Z"
+  },
+  "fullValidation": {
+    "id": "0AfAd00000SrFnBKAV",
+    "status": "Succeeded",
+    "components": 468,
+    "tests": 299,
+    "completedDate": "2026-09-09T15:13:43.000Z",
+    "matchingMembers": 468,
+    "matchingSourceAndManifestHashes": 534,
+    "aggregateSha256": "965e81e8684c8ba0c1b74469444d32451d6d8f8a4965516b150ac278bb131e9e"
+  },
+  "formChecks": {
+    "passed": 132,
+    "failed": 0,
+    "combinations": 34986
+  },
+  "publication": {
+    "commit": "7911fc465ced1b555790f7a68eeb7ccc9a537eda",
+    "changedFiles": 6,
+    "hostedFilesVerified": 9,
+    "checkedAt": "2026-09-09T15:09:50.886333+00:00",
+    "url": "https://stevostar1234.github.io/nte27-web-to-lead-demo/volunteer-application.html"
+  },
+  "scope": {
+    "liveSubmissions": 0,
+    "liveEmailSends": 0,
+    "productionRelease": false,
+    "codeOfConduct": "Awaiting client document",
+    "branding": "Awaiting owner clarification"
+  }
+}

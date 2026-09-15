@@ -1,0 +1,16 @@
+--- reports/ActivityReports/NTE27.report.before
++++ reports/ActivityReports/NTE27.report.after
+@@ -49,6 +49,13 @@
+     <columns>
+         <field>OWNER</field>
+     </columns>
++    <filter>
++        <criteriaItems>
++            <column>Lead.Web_Form_Type__c</column>
++            <operator>notEqual</operator>
++            <value>Volunteer Application</value>
++        </criteriaItems>
++    </filter>
+     <format>Summary</format>
+     <groupingsDown>
+         <dateGranularity>Day</dateGranularity>

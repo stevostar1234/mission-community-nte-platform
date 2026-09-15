@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Volunteer_Code_Required</fullName>
+    <active>true</active>
+    <description>New v3 volunteer applications must acknowledge the supplied September 2026 Code of Conduct. Historical applications are unchanged.</description>
+    <errorConditionFormula>AND(ISNEW(), ISPICKVAL(Web_Form_Type__c, &quot;Volunteer Application&quot;), Volunteer_Form_Version__c = &quot;volunteer-application-v3&quot;, OR(NOT(Volunteer_Code_Consent__c), Volunteer_Code_Version__c &lt;&gt; &quot;September 2026&quot;))</errorConditionFormula>
+    <errorDisplayField>Volunteer_Code_Consent__c</errorDisplayField>
+    <errorMessage>Please read and acknowledge the September 2026 Code of Conduct.</errorMessage>
+</ValidationRule>

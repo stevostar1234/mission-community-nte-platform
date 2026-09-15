@@ -1,0 +1,47 @@
+{
+  "nte2027-preservation": {
+    "before": 44,
+    "after": 44,
+    "removed": [],
+    "added": [],
+    "changed": {}
+  },
+  "nte2027-leads": {
+    "before": 137,
+    "after": 137,
+    "removed": [],
+    "added": [],
+    "changed": {}
+  },
+  "nte2027-accounts": {
+    "before": 115,
+    "after": 115,
+    "removed": [],
+    "added": [],
+    "changed": {}
+  },
+  "nte2027-contacts": {
+    "before": 115,
+    "after": 115,
+    "removed": [],
+    "added": [],
+    "changed": {}
+  },
+  "sourceHashesUnchanged": 534,
+  "deleted": {
+    "Lead": 2,
+    "Opportunity": 1,
+    "NTE_Email_Dispatch__c": 2
+  },
+  "verifiedAt": "2026-09-11T08:26:56.413254+00:00",
+  "eventOptions": [
+    "NTE2027"
+  ],
+  "selectedEvent": "NTE2027",
+  "scope": "Two Leads, one Opportunity and two linked sent email histories only",
+  "retainedAssociatedAccounts": 6,
+  "retainedAssociatedContacts": 7,
+  "broaderIdentityDeletion": "Rejected by automatic approval review; not executed",
+  "allAccountsPreserved": 720,
+  "allContactsPreserved": 811
+}

@@ -4,7 +4,8 @@
     <values><field>Enabled__c</field><value xsi:type="xsd:boolean">true</value></values>
     <values><field>Expected_Account_Id__c</field><value xsi:type="xsd:string">acct_1UD8GwBcW1MkMYQ1</value></values>
     <values><field>Expected_Org_Id__c</field><value xsi:type="xsd:string">00DAd00000A95VlMAJ</value></values>
-    <values><field>Reference_Prefix__c</field><value xsi:type="xsd:string">NTE-STRIPE-</value></values>
-    <values><field>Allowed_Email__c</field><value xsi:type="xsd:string">steven.skyba@anthrion.com</value></values>
+    <values><field>Reference_Prefix__c</field><value xsi:type="xsd:string"></value></values>
+    <values><field>Allowed_Email__c</field><value xsi:type="xsd:string"></value></values>
     <values><field>Tax_Rate__c</field><value xsi:type="xsd:double">20</value></values>
+    <values><field>Live_Mode__c</field><value xsi:type="xsd:boolean">false</value></values>
 </CustomMetadata>

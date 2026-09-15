@@ -87,6 +87,21 @@
         <field>Opportunity.NTE_Listed_Price_Total__c</field>
     </columns>
     <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Price_Adjustment__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_VAT_Rate__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_VAT_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Total_Including_VAT__c</field>
+    </columns>
+    <columns>
         <field>Opportunity.NTE_Pricing_Status__c</field>
     </columns>
     <columns>
@@ -113,6 +128,14 @@
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
         <field>Opportunity.NTE_Top_Up_Staff_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Top_Up_VAT_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.NTE_Top_Up_Total_Inc_VAT__c</field>
     </columns>
     <columns>
         <field>Opportunity.NTE_Top_Up_Invoice_Required__c</field>
@@ -144,6 +167,9 @@
     </columns>
     <columns>
         <field>Opportunity.NTE_Payment_Method__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Invoice_Requested__c</field>
     </columns>
     <columns>
         <field>Opportunity.NTE_Quote_Required_for_PO__c</field>

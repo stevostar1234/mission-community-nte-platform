@@ -41,7 +41,7 @@ assert.strictEqual(
 assert.strictEqual(context.window.NTE_CONFIG.eventCodeOverride, "", "the hosted build should calculate the event code unless an override is explicitly configured");
 assert.strictEqual(context.window.NTE_CONFIG.eventCodeTimeZone, "Europe/London", "event-year boundaries must follow the event's local time zone");
 assert(context.window.NTE_CONFIG.returnUrl.includes("github.io/nte27-web-to-lead-demo/thank-you.html"));
-assert(context.window.NTE_CONFIG.termsUrl.includes("github.io/nte27-web-to-lead-demo/sandbox-testing-terms.html"));
+assert.strictEqual(context.window.NTE_CONFIG.termsUrl, "https://www.nationaltransitionevent.com/privacy");
 
 for (let year = 2026; year <= 2032; year += 1) {
   assert.strictEqual(utils.eventCodeFor(`${year}-01-01`), `NTE${year}`, `${year}: January must stay in the current event year`);
@@ -109,13 +109,11 @@ const expectedEmailPreviews = {
     "exhibitor-interest-internal-notification.html"
   ],
   "partner-sponsor-application.html": [
-    "partner-sponsor-application-received.html",
     "partner-sponsor-application-internal-notification.html",
     "partner-sponsor-approved-confirmation.html",
     "partner-sponsor-payment-confirmed.html"
   ],
   "exhibitor-application.html": [
-    "exhibitor-application-applicant-confirmation.html",
     "exhibitor-application-internal-notification.html",
     "exhibitor-approved-confirmation.html",
     "government-charity-approved-confirmation.html",
@@ -138,9 +136,11 @@ const fieldLimits = context.window.NTE_CONFIG.fieldLimits;
 const expectedAssetVersion = "20260908-1";
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
-  assert(html.includes(`assets/config.js?v=${expectedAssetVersion}`), `${file}: config asset version is stale`);
-  assert(html.includes(`assets/forms.js?v=${expectedAssetVersion}`), `${file}: forms asset version is stale`);
-  assert(html.includes(`assets/styles.css?v=${expectedAssetVersion}`), `${file}: stylesheet asset version is stale`);
+  const vatForm = ["partner-sponsor-application.html", "exhibitor-application.html", "exhibitor-staff-update.html"].includes(file);
+  const expectedScriptVersion = "20260914-staff-1";
+  assert(html.includes("assets/config.js?v=20260913-finance-2"), `${file}: config asset version is stale`);
+  assert(html.includes(`assets/forms.js?v=${expectedScriptVersion}`), `${file}: forms asset version is stale`);
+  assert(html.includes(`assets/styles.css?v=${vatForm ? "20260913-vat" : expectedAssetVersion}`), `${file}: stylesheet asset version is stale`);
   assert(html.includes('data-use-default-rule="0"'), `${file}: Salesforce default auto-response must remain disabled`);
   if (file === "volunteer-application.html") {
     assert(html.includes('data-lead-source="Volunteer Application"'), "the volunteer form must use its isolated Lead source");
@@ -190,8 +190,9 @@ for (const file of htmlFiles) {
 
 const logoUpdateHtml = fs.readFileSync(path.join(root, "logo-upload.html"), "utf8");
 assert(logoUpdateHtml.includes('data-use-default-rule="0"'), "logo update must not trigger the generic Web-to-Lead response");
-assert(logoUpdateHtml.includes('required autocomplete="name" data-sf-field="Declaration_Name__c"'), "logo update must require a digital signature");
-assert(logoUpdateHtml.includes('type="date" required data-sf-field="Declaration_Date__c"'), "logo update must require a declaration date");
+assert(!logoUpdateHtml.includes('data-sf-field="Declaration_Name__c"'), "logo update no longer collects a signature");
+assert(!logoUpdateHtml.includes('data-sf-field="Declaration_Date__c"'), "logo update no longer collects a declaration date");
+assert(!logoUpdateHtml.includes('type="checkbox"'), "logo update no longer requires an upload checkbox");
 
 const emailSourceDirectory = path.join(root, "email-templates", "source");
 const emailExampleDirectory = path.join(root, "email-templates", "examples");
@@ -202,7 +203,7 @@ assert(templateDeclarations, "the metadata generator must define its email sourc
 const templateMappings = [...templateDeclarations[1].matchAll(/\b([A-Za-z0-9_]+): \["([^"]+\.html)"/g)]
   .map((match) => [match[2], match[1]]);
 const templateApiBySourceFile = new Map(templateMappings);
-assert.strictEqual(emailSourceFiles.length, 21, "all deployed NTE and volunteer email templates must remain available for preview generation");
+assert.strictEqual(emailSourceFiles.length, 20, "all active NTE and volunteer email templates must remain available for preview generation");
 assert.strictEqual(templateMappings.length, emailSourceFiles.length, "source templates must not be duplicated under multiple generated names");
 assert.deepStrictEqual([...templateApiBySourceFile.keys()].sort(), emailSourceFiles, "every email source must map to exactly one generated Salesforce template");
 for (const file of emailSourceFiles) {
@@ -233,7 +234,7 @@ assert.strictEqual(currencyPreview("0.00"), "£0.00");
 assert.strictEqual(currencyPreview("-50"), "-£50.00");
 assert.throws(() => currencyPreview("£50.00"), /Invalid currency preview value/);
 const staffEmailPreview = fs.readFileSync(path.join(emailExampleDirectory, "exhibitor-staff-update-applicant-confirmation.html"), "utf8");
-assert(staffEmailPreview.includes(">£100.00 + VAT</td>"), "top-up currency must include exactly Salesforce's one pound symbol");
+assert(staffEmailPreview.includes(">£100.00</td>") && staffEmailPreview.includes(">£20.00</td>") && staffEmailPreview.includes(">£120.00</td>"), "top-up currency must include exactly Salesforce's one pound symbol");
 assert(staffEmailPreview.includes("Alex Morgan\n<br>Jordan Lee\n<br>Priya Shah\n<br>Daniel Evans"), "staff preview must reproduce Salesforce's HTML line-break merging");
 const internalExhibitorPreview = fs.readFileSync(path.join(emailExampleDirectory, "exhibitor-application-internal-notification.html"), "utf8");
 assert(internalExhibitorPreview.includes("2 at £50.00 each"), "the staff unit-price merge must retain one pound symbol in the internal notification");
@@ -241,10 +242,10 @@ assert.strictEqual(plainTextFromHtml('<head><title>Hidden title</title><style>.h
   'Hello <Team> & friends.\n\nNames Alex\nJo\nTotal £1,234.50\n\nOpen booking (https://example.com/?a=1&b=2)',
   "text email must separate rows and paragraphs, preserve names and links, and decode entities once");
 const staffTextMetadata = fs.readFileSync(path.join(root, "force-app", "main", "default", "email", "unfiled$public", "NTE_Exhibitor_Staff_Update_Acknowledgement.email-meta.xml"), "utf8");
-assert(staffTextMetadata.includes("Names covered by booking {!Lead.Staff_Base_Names__c}\nTop-up places {!Lead.Top_Up_Staff_Count__c}\nTop-up names {!Lead.Top_Up_Staff_Names__c}\nTop-up total {!Lead.Top_Up_Staff_Total__c} + VAT"),
+assert(staffTextMetadata.includes("Staff names {!Lead.Staff_Base_Names__c}\nTop-up places {!Lead.Top_Up_Staff_Count__c}\nTop-up names {!Lead.Top_Up_Staff_Names__c}\nSubtotal (ex VAT) {!Lead.Top_Up_Staff_Total__c}\nVAT (20%) {!Lead.Top_Up_VAT_Total__c}\nTop-up total (inc VAT) {!Lead.Top_Up_Total_Inc_VAT__c}"),
   "deployed staff acknowledgement must keep separate readable rows and unprefixed native currency merging");
 const previewLinkCount = Object.values(expectedEmailPreviews).reduce((total, previews) => total + previews.length, 0);
-assert.strictEqual(previewLinkCount, 20, "the nine submission forms must expose every relevant non-duplicate email preview");
+assert.strictEqual(previewLinkCount, 18, "the nine submission forms must expose every relevant non-duplicate email preview");
 
 const indexHtml = fs.readFileSync(path.join(root, "index.html"), "utf8");
 assert(indexHtml.includes('href="partner-sponsor-application.html"'), "partner application must be listed on the public hub");
@@ -272,21 +273,21 @@ for (const [value, label] of [["NTE2024", "NTE24"], ["NTE2025", "NTE25"], ["NTE2
 }
 assert(!exhibitorHtml.includes("No included power"), "garage-space wording must not use the rejected phrase");
 assert(exhibitorHtml.includes("No power included"), "garage spaces must state that no power is included");
-assert(exhibitorHtml.includes("Unless you have been allocated a free space, you will receive an invoice for your booking."), "the exhibitor form must use the approved invoicing wording");
+assert(exhibitorHtml.includes("Where payment is required, exhibitor space will only be confirmed once full payment has been received."), "the exhibitor introduction must not promise an invoice independently of the applicant choice");
 assert(exhibitorHtml.includes("Entering your name confirms that the information supplied is accurate and you have authority to proceed with booking."), "the declaration must use Kate's approved wording");
-for (const field of ["Trading_Name__c", "Invoice_Contact_Phone__c", "Invoice_Additional_Information__c", "Supplier_Agreement_Required__c"]) {
+for (const field of ["Invoice_Requested__c", "Trading_Name__c", "Invoice_Contact_Phone__c", "Invoice_Additional_Information__c", "Supplier_Agreement_Required__c"]) {
   assert(exhibitorHtml.includes(`data-sf-field="${field}"`), `exhibitor finance section must capture ${field}`);
 }
-assert(exhibitorHtml.includes("Do you require a purchase order or reference before an invoice can be issued?"), "exhibitor finance section must capture the revised PO or reference requirement");
-assert(exhibitorHtml.includes("Do you require a quotation before an invoice can be raised?"), "exhibitor finance section must ask separately about a quotation");
-assert(exhibitorHtml.includes("Do you require an invoice to be raised, or will you make payment by Stripe?"), "exhibitor finance section must ask separately about bank transfer or Stripe");
+assert(exhibitorHtml.includes("Do you require a purchase order or reference?"), "exhibitor finance section must capture the revised PO or reference requirement");
+assert(exhibitorHtml.includes("Do you require a quotation?"), "exhibitor finance section must ask separately about a quotation");
+assert(exhibitorHtml.includes("Payment Method"), "exhibitor finance section must ask separately about bank transfer or Stripe");
 assert(exhibitorHtml.includes("Legal organisation name for quotation and invoicing"), "exhibitor finance section must request the legal organisation name");
 assert(exhibitorHtml.includes("<strong>Please provide the finance contact below, even if it is the same person.</strong>"), "exhibitor finance-contact guidance must be prominent");
-assert(exhibitorHtml.includes('id="invoice-required" type="hidden" value="No" data-sf-field="Invoice_Required__c"'), "exhibitor pricing must control the shared invoice workflow automatically");
-assert(exhibitorHtml.includes('id="payment-method" data-sf-field="Payment_Method__c"'), "exhibitor applications must capture the selected payment method");
-assert(exhibitorHtml.includes('value="Bank transfer">Yes — invoice and payment by bank transfer'), "exhibitor applications must offer bank transfer");
-assert(exhibitorHtml.includes('value="Stripe">No — payment will be via Stripe'), "exhibitor applications must offer Stripe");
-assert(exhibitorHtml.indexOf('id="quote-for-po"') < exhibitorHtml.indexOf('id="payment-method"'), "the exhibitor quotation choice must precede the payment choice");
+assert(exhibitorHtml.includes('id="invoice-required" type="hidden" value="No" data-sf-field="Invoice_Required__c"'), "exhibitor pricing must control whether payment and finance questions apply");
+assert(exhibitorHtml.includes('id="payment-method" data-required-when-visible data-sf-field="Payment_Method__c"'), "exhibitor applications must capture the selected payment method");
+assert(exhibitorHtml.includes('<option>Bank transfer</option>'), "exhibitor applications must offer bank transfer");
+assert(exhibitorHtml.includes('<option>Stripe</option>'), "exhibitor applications must offer Stripe");
+assert(exhibitorHtml.indexOf('id="payment-method"') < exhibitorHtml.indexOf('id="invoice-requested"') && exhibitorHtml.indexOf('id="invoice-requested"') < exhibitorHtml.indexOf('id="quote-for-po"'), "payment method must precede independent invoice and quotation choices");
 assert(exhibitorHtml.indexOf('id="payment-method"') < exhibitorHtml.indexOf('id="purchase-order"'), "the exhibitor payment choice must precede purchase-order details");
 assert(exhibitorHtml.indexOf('id="purchase-order"') < exhibitorHtml.indexOf('id="supplier-agreement"'), "the exhibitor purchase-order choice must precede the supplier-agreement choice");
 assert(exhibitorHtml.includes('data-copy-value-from="job-title" data-sf-field="Event_Contact_Title__c"'));
@@ -298,7 +299,7 @@ for (const field of ["Exhibitor_Space_Price__c", "Power_Socket_Unit_Price__c", "
   assert(exhibitorHtml.includes(`data-sf-field="${field}"`), `exhibitor application must submit ${field}`);
 }
 const partnerHtml = fs.readFileSync(path.join(root, "partner-sponsor-application.html"), "utf8");
-assert(partnerHtml.includes("Jobs Fair"), "the partner form must use the approved Jobs Fair wording");
+assert(partnerHtml.includes("More than a traditional jobs fair, NTE27 is designed to foster meaningful connections"), "the partner form must use Kate's revised introduction");
 assert(partnerHtml.includes("All package benefits are listed in the NTE27 Partner and Sponsor Brochure."), "the package section must refer to the brochure");
 assert(partnerHtml.includes("There is no additional staff charge for partners and sponsors."), "partner staff guidance must state that additional people are free");
 assert(/id="partner-planned-count"[^>]+type="number"[^>]+min="1"[^>]+max="99"/.test(partnerHtml), "partner applications must capture a 1-99 planned staff total");
@@ -309,20 +310,20 @@ for (const [file, html] of [["partner-sponsor-application.html", partnerHtml], [
   assert(!/is confirmed|has been approved/i.test(receiptPreview[1]), `${file}: submitting an application must not confirm or approve the booking`);
 }
 assert(partnerHtml.includes('data-sf-field="Sponsor_Package_Total__c"'), "partner application must submit a numeric package total");
-assert(partnerHtml.includes('value="Yes" data-sf-field="Invoice_Required__c"'), "priced partner applications must always enter the invoice workflow");
+assert(partnerHtml.includes('value="Yes" data-sf-field="Invoice_Required__c"'), "priced partner applications must always require payment");
 assert(partnerHtml.includes('id="partner-quote" required data-sf-field="Quote_Required_for_PO__c"'), "quotation preference must not be confused with invoice requirement");
-for (const field of ["Trading_Name__c", "Invoice_Contact_Phone__c", "Invoice_Additional_Information__c", "Supplier_Agreement_Required__c", "Declaration_Name__c"]) {
+for (const field of ["Invoice_Requested__c", "Trading_Name__c", "Invoice_Contact_Phone__c", "Invoice_Additional_Information__c", "Supplier_Agreement_Required__c", "Declaration_Name__c"]) {
   assert(partnerHtml.includes(`data-sf-field="${field}"`), `partner finance and declaration sections must capture ${field}`);
 }
-assert(partnerHtml.includes("Do you require a purchase order or reference before an invoice can be issued?"), "partner finance section must capture the revised PO or reference requirement");
-assert(partnerHtml.includes("Do you require a quotation before an invoice can be raised?"), "partner finance section must ask separately about a quotation");
-assert(partnerHtml.includes("Do you require an invoice to be raised, or will you make payment by Stripe?"), "partner finance section must ask separately about bank transfer or Stripe");
+assert(partnerHtml.includes("Do you require a purchase order or reference?"), "partner finance section must capture the revised PO or reference requirement");
+assert(partnerHtml.includes("Do you require a quotation?"), "partner finance section must ask separately about a quotation");
+assert(partnerHtml.includes("Payment Method"), "partner finance section must ask separately about bank transfer or Stripe");
 assert(partnerHtml.includes("Legal organisation name for quotation and invoicing"), "partner finance section must request the legal organisation name");
 assert(partnerHtml.includes("<strong>Please provide the finance contact below — this should be different to the main contact.</strong>"), "partner finance-contact guidance must be prominent");
 assert(partnerHtml.includes('id="partner-payment-method" required data-sf-field="Payment_Method__c"'), "partner applications must require a payment method");
-assert(partnerHtml.includes('value="Bank transfer">Yes — invoice and payment by bank transfer'), "partner applications must offer bank transfer");
-assert(partnerHtml.includes('value="Stripe">No — payment will be via Stripe'), "partner applications must offer Stripe");
-assert(partnerHtml.indexOf('id="partner-quote"') < partnerHtml.indexOf('id="partner-payment-method"'), "the partner quotation choice must precede the payment choice");
+assert(partnerHtml.includes('<option>Bank transfer</option>'), "partner applications must offer bank transfer");
+assert(partnerHtml.includes('<option>Stripe</option>'), "partner applications must offer Stripe");
+assert(partnerHtml.indexOf('id="partner-payment-method"') < partnerHtml.indexOf('id="partner-invoice-requested"') && partnerHtml.indexOf('id="partner-invoice-requested"') < partnerHtml.indexOf('id="partner-quote"'), "partner payment method must precede independent invoice and quotation choices");
 assert(partnerHtml.indexOf('id="partner-payment-method"') < partnerHtml.indexOf('id="partner-po"'), "the partner payment choice must precede purchase-order details");
 assert(partnerHtml.indexOf('id="partner-po"') < partnerHtml.indexOf('id="partner-supplier-agreement"'), "the partner purchase-order choice must precede the supplier-agreement choice");
 for (const [id, limit] of [["partner-day-first-name", 40], ["partner-day-last-name", 80], ["partner-day-title", 128], ["partner-day-email", 80], ["partner-day-mobile", 40]]) {
@@ -345,7 +346,7 @@ assert(staffHubHtml.includes('href="exhibitor-staff-update.html"') && staffHubHt
 assert(partnerStaffHtml.includes("Partners and sponsors are not charged for additional staff places."), "partner staff updates must remain free");
 assert(/id="partner-staff-total"[^>]+type="number"[^>]+min="1"[^>]+max="99"/.test(partnerStaffHtml), "partner updates must capture the final 1-99 attendance total");
 assert(partnerStaffHtml.includes('data-sf-field="Staff_Base_Names__c"'), "partner updates must provide the final roster source of truth");
-assert(exhibitorStaffHtml.includes("Top-up places cost £50 + VAT per person and are invoiced separately."), "exhibitor top-ups must explain their separate charge");
+assert(exhibitorStaffHtml.includes("Top-up places cost £50 + VAT per person and are paid separately by Stripe."), "exhibitor top-ups must explain their separate charge");
 assert(exhibitorStaffHtml.includes("You can request additional staff once for this booking."), "the staff form must explain the one-time purchase before submission");
 assert(exhibitorStaffHtml.includes("You can still update names afterwards."), "the one-time purchase must still allow roster corrections");
 assert(exhibitorStaffHtml.includes("enter the same number of places"), "a names correction must explain how to retain the accepted quantity");
@@ -362,6 +363,13 @@ assert(logoHtml.includes('value="Logo Update" data-sf-field="Web_Form_Type__c"')
 assert(logoHtml.includes('data-sf-field="Target_Booking_Reference__c"'), "logo confirmation must capture the exact booking reference");
 assert(logoHtml.includes('pattern="NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]"'), "logo confirmation must reject malformed booking references in the browser");
 const volunteerHtml = fs.readFileSync(path.join(root, "volunteer-application.html"), "utf8");
+const conductSource = JSON.parse(fs.readFileSync(path.join(root, "config/volunteer-code-of-conduct.json"), "utf8"));
+const conductReader = volunteerHtml.match(/<div[^>]*data-conduct-reader[^>]*>([\s\S]*?)<\/div>/)[1];
+const conductParagraphs = [...conductReader.matchAll(/<(p|h3|h4|li)(?:\s[^>]*)?>(.*?)<\/\1>/g)].map(([, , content]) => content.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim());
+assert.deepStrictEqual(conductParagraphs, ["Version " + conductSource.version, ...conductSource.paragraphs.filter(paragraph => !paragraph.omitFromReader).map(paragraph => paragraph.text.trim())], "the reader must preserve every approved Code of Conduct paragraph, in order");
+assert(volunteerHtml.includes('Hours willing to give per month</legend>'), "availability must state the client-supplied monthly period");
+assert(volunteerHtml.includes(`data-conduct-document="${conductSource.version}"`), "the stored acknowledgement must identify the document shown");
+assert(volunteerHtml.includes('data-conduct-reader tabindex="0" role="region"'), "the scroll reader must support keyboard focus and have a region label");
 for (const field of ["Date_of_Birth__c", "NOK_Name__c", "NOK_Relationship__c", "NOK_Phone__c", "Volunteer_Armed_Forces_Service__c", "Volunteer_Service_Details__c", "Volunteer_Service_Dates__c", "Volunteer_Opportunities__c", "Volunteer_Skills__c", "Volunteer_Travel_Regions__c", "Volunteer_DBS_Willing__c", "Volunteer_Consent__c", "Volunteer_Form_Version__c", "Declaration_Name__c", "Declaration_Date__c"]) {
   assert(volunteerHtml.includes(`data-sf-field="${field}"`), `volunteer application must capture ${field}`);
 }
@@ -374,28 +382,26 @@ assert(volunteerHtml.includes('data-checkbox-copy-from="volunteer-consent" data-
 assert(formsJs.includes('Street: "street"'), "street address must use Salesforce Web-to-Lead's standard field name");
 assert(formsJs.includes('PostalCode: "zip"'), "postcode must use Salesforce Web-to-Lead's standard field name");
 assert(formsJs.includes('[data-checkbox-copy-from]'), "consent copy fields must be synchronized before submission");
-assert(logoHtml.includes("I confirm that I have uploaded the latest logo for this booking."), "logo confirmation must require an explicit upload attestation");
+assert(logoHtml.includes('type="submit">Confirm logo upload</button>'), "logo updates retain an explicit submission action");
 assert(heavyHtml.includes('pattern="NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]"'), "heavy-vehicle updates must validate booking-reference shape");
 assert(formsJs.includes("normalizeBookingReferences"), "supplementary booking references must be trimmed and normalized before matching");
-assert(formsJs.includes('form.dataset.formKind === "partner-staff-update"'), "partner staff updates must reconcile final names and count");
-assert(formsJs.includes('form.dataset.formKind === "exhibitor-staff-update"'), "exhibitor staff updates must reconcile booked and top-up names");
+assert(formsJs.includes('form.dataset.formKind === "partner-staff-update"'), "partner staff updates retain validation of their declared quantity");
+assert(formsJs.includes('form.dataset.formKind === "exhibitor-staff-update"'), "exhibitor staff updates retain purchased-quantity and field-length validation");
 assert(formsJs.includes("validateHeavyItems"), "optional heavy-item groups must be complete and ordered");
 assert(formsJs.includes("control.max = londonDate"), "declaration dates must reject future dates");
 
-const partnerConfirmationEmail = fs.readFileSync(path.join(root, "email-templates", "source", "partner-sponsor-application-received.html"), "utf8");
-assert(partnerConfirmationEmail.includes("We have received your partner / sponsor application for {!Lead.Company}."), "partner auto-response must acknowledge the application");
-assert(partnerConfirmationEmail.includes("The NTE team is reviewing it and will email you with a decision."), "partner receipt must make the outstanding decision clear");
-for (const field of ["Booking_Reference__c", "NTE_Event_Code__c", "Sponsor_Package__c", "Total_Staff_Count__c"]) {
-  assert(partnerConfirmationEmail.includes(`{!Lead.${field}}`), `partner receipt must retain ${field}`);
+for (const retiredSource of ["partner-sponsor-application-received.html", "exhibitor-application-applicant-confirmation.html"]) {
+  assert(!emailSourceFiles.includes(retiredSource), "retired application receipts must only remain in the restoration backup");
 }
-assert(!/confirmed booking|delighted to confirm|Upload your latest logo|NTE_PREPARATION_LINKS/i.test(partnerConfirmationEmail), "an application receipt must not confirm a booking or request post-conversion preparation");
 const exhibitorApplicationNotice = fs.readFileSync(path.join(root, "email-templates", "source", "exhibitor-application-internal-notification.html"), "utf8");
 assert(exhibitorApplicationNotice.includes("{!Lead.Payment_Method__c}"), "the exhibitor internal notice must retain the submitted payment choice");
 for (const filename of ["partner-sponsor-approved-confirmation.html", "exhibitor-approved-confirmation.html", "government-charity-approved-confirmation.html", "partner-sponsor-payment-confirmed.html", "exhibitor-payment-confirmed.html"]) {
   const email = fs.readFileSync(path.join(root, "email-templates", "source", filename), "utf8");
   assert(compileEmailPresentation(email).includes("{!Contact.FirstName}") && email.includes("{!Opportunity.Booking_Reference__c}"), `${filename}: approval must use the booking and its Primary Contact as merge context`);
   assert(!email.includes("{!Lead."), `${filename}: post-conversion approval must not merge a potentially stale Lead snapshot`);
-  const requiredTokens = ["NTE_EVENT_LABEL", "NTE_ORGANISATION", "NTE_FINANCE_SUMMARY", "NTE_PREPARATION_LINKS"];
+  const requiredTokens = [filename === "partner-sponsor-approved-confirmation.html" ? "NTE_EVENT_SHORT_LABEL" : "NTE_EVENT_LABEL", "NTE_ORGANISATION", "NTE_FINANCE_SUMMARY", "NTE_PREPARATION_LINKS"];
+  const emailPreview = fs.readFileSync(path.join(root, "email-templates", "examples", filename), "utf8");
+  assert(emailPreview.includes("NTE27") && !emailPreview.includes("NTE2027"), `${filename}: event branding is static presentation, separate from booking identity`);
   if (!filename.includes("payment-confirmed")) requiredTokens.push("NTE_PAYMENT_NOTE");
   for (const token of requiredTokens) {
     assert(email.includes(`{${token}}`), `${filename}: approval must include the current ${token} content`);
@@ -403,7 +409,7 @@ for (const filename of ["partner-sponsor-approved-confirmation.html", "exhibitor
 }
 for (const filename of ["exhibitor-approved-confirmation.html", "government-charity-approved-confirmation.html", "exhibitor-payment-confirmed.html"]) {
   const email = fs.readFileSync(path.join(emailSourceDirectory, filename), "utf8");
-  for (const wording of ["Final event details will be sent approximately two weeks before the event.", "Livery Bay", "website logo montage", "Use your booking reference to provide the final staff names.", "additional staff places as separately invoiced top-ups if required"]) {
+  for (const wording of ["Final event details will be sent approximately two weeks before the event.", "Livery Bay", "website logo montage", "Use your booking reference to provide the final staff names.", "additional staff places as separately charged top-ups if required"]) {
     assert(email.includes(wording), `${filename}: restored client wording must preserve ${wording}`);
   }
   assert(email.indexOf("Use your booking reference to provide the final staff names.") < email.indexOf("{NTE_PREPARATION_LINKS}"), `${filename}: preparation buttons must follow the staff guidance`);
@@ -411,7 +417,7 @@ for (const filename of ["exhibitor-approved-confirmation.html", "government-char
 for (const filename of ["partner-sponsor-approved-confirmation.html", "partner-sponsor-payment-confirmed.html"]) {
   const email = fs.readFileSync(path.join(emailSourceDirectory, filename), "utf8");
   const preview = fs.readFileSync(path.join(root, 'email-templates', 'examples', filename), 'utf8');
-  assert(preview.includes("partnership / sponsorship agreement") && preview.includes("signing"), `${filename}: rendered signing-agreement guidance must remain available`);
+  assert(preview.includes("partnership / sponsorship agreement") && /signing|signed/.test(preview), `${filename}: rendered signing-agreement guidance must remain available`);
   for (const field of ["NTE_Stand_Equipment__c", "NTE_Total_Staff_Count__c", "NTE_Invoice_Address__c", "NTE_Invoiced_Email__c", "NTE_Purchase_Order_Number__c", "NTE_Supplier_Agreement_Required__c"]) {
     assert(email.includes(`{!Opportunity.${field}}`), `${filename}: retain the current booking's ${field} detail`);
   }
@@ -462,8 +468,8 @@ assert(formsJs.includes('value = value.trim()'), "form values must be trimmed be
 assert(formsJs.includes('String(control.value || "").trim() === ""'), "required text fields must reject whitespace-only values");
 assert(formsJs.includes('control.closest("[data-conditional-for]") !== target'), "nested conditionals must not be re-enabled by their parent section");
 assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.calculatePartnerPricing(["6000", "5000"]))), {packageTotal: 11000, total: 11000});
-assert.strictEqual(utils.includedStaffForSpace("Single Garage - Track Side - £800 + VAT"), 2);
-assert.strictEqual(utils.includedStaffForSpace("Double Garage - Track Side - £1,300 + VAT"), 4);
+assert.strictEqual(utils.includedStaffForSpace("Single Garage - Track Side - £799 + VAT"), 2);
+assert.strictEqual(utils.includedStaffForSpace("Double Garage - Track Side - £1,299 + VAT"), 4);
 assert.strictEqual(utils.includedStaffForSpace("Unknown space"), null);
 const commercialPricing = JSON.parse(JSON.stringify(utils.calculateExhibitorPricing({spacePrice: "800", category: "Employer - Automotive Sector", powerRequired: "Yes", socketCount: 2, plannedStaffCount: 7, includedStaffCount: 2})));
 assert.strictEqual(commercialPricing.total, 1250);
@@ -481,24 +487,25 @@ for (const invalidPrice of [undefined, null, "", " ", "unknown", "poa", -1, NaN,
   assert.throws(() => utils.calculatePartnerPricing(["3000", invalidPrice]), /price/i, "unknown package prices must block calculation");
   assert.throws(() => utils.calculateExhibitorPricing({spacePrice: invalidPrice, category: "Employer - Manufacturing Sector", powerRequired: "No", socketCount: 0, plannedStaffCount: 2, includedStaffCount: 2}), /price/i, "unknown space prices must never become complimentary");
 }
-assert(formsJs.includes('invoiceValue = pricing.invoiceRequired ? "Yes" : "No"'), "exhibitor pricing must place only chargeable selections into the invoice workflow");
-assert(formsJs.includes('paymentMethod.required = pricing.invoiceRequired'), "calculated chargeable exhibitor selections must require a payment method");
-assert(formsJs.includes('paymentMethod.disabled = !pricing.invoiceRequired'), "complimentary exhibitors must not be offered a payment method");
+assert(formsJs.includes('invoiceValue = pricing.invoiceRequired ? "Yes" : "No"'), "exhibitor pricing must identify whether payment is required");
+assert(exhibitorHtml.includes('id="billing" data-conditional-for="invoice-required" data-conditional-value="Yes" hidden'), "all exhibitor finance questions must belong to the conditional paid-booking section");
 const paymentConversionFlow = fs.readFileSync(path.join(root, "force-app", "main", "default", "flows", "NTE_Copy_Converted_Lead_to_Opportunity.flow-meta.xml"), "utf8");
 assert(paymentConversionFlow.includes("<field>NTE_Payment_Method__c</field>"), "Lead conversion must populate the Opportunity payment method");
 assert(paymentConversionFlow.includes("<elementReference>$Record.Payment_Method__c</elementReference>"), "Lead conversion must source the applicant's payment choice");
+assert(paymentConversionFlow.includes("<field>NTE_Invoice_Requested__c</field>") && paymentConversionFlow.includes("<elementReference>$Record.Invoice_Requested__c</elementReference>"), "Lead conversion must preserve the independent invoice request");
 const paymentMasterPanelHtml = fs.readFileSync(path.join(root, "force-app", "main", "default", "lwc", "nteMasterPanel", "nteMasterPanel.html"), "utf8");
-for (const label of ["Booking invoice provided", "Staff top-up invoice provided", "Booking payment received", "Staff top-up payment received"]) {
+for (const label of ["Send Stripe link", "Final joining instructions sent", "Booking payment received", "Staff top-up payment received"]) {
   assert(paymentMasterPanelHtml.includes(label), `finance actions must identify their charge: ${label}`);
 }
 for (const report of ["NTE_02_Partner_Sponsor_Event_Operations", "NTE_03_Exhibitor_Event_Operations", "NTE_06_Finance_and_Invoicing", "NTE_08_Event_Delivery_Readiness"]) {
   const xml = fs.readFileSync(path.join(root, "force-app", "main", "default", "reports", "NTE_Operations", `${report}.report-meta.xml`), "utf8");
   assert(xml.includes("Opportunity.NTE_Payment_Method__c"), `${report} must include the Opportunity payment method`);
+  assert(xml.includes("Opportunity.NTE_Invoice_Requested__c"), `${report} must include the independent invoice request`);
 }
 assert(fs.readFileSync(path.join(root, "force-app", "main", "default", "reports", "NTE_Operations", "NTE_07_Application_and_EOI_Pipeline.report-meta.xml"), "utf8").includes("Lead.Payment_Method__c"), "the application pipeline report must include the Lead payment method");
 assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("COBSEO Charity - Single - Free"))), ["Charity - member of Cobseo"]);
 assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("Blue Light - Single - £249.50 + VAT"))), ["Employer - Blue Light & NHS"]);
-assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("Single Garage - Track Side - £800 + VAT"))), []);
+assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.eligibleCategoriesForSpace("Single Garage - Track Side - £799 + VAT"))), []);
 assert(exhibitorHtml.includes('data-sf-field="Logo_Upload_URL__c"'), "exhibitor application must store the configured logo-upload URL for confirmation emails");
 assert(partnerHtml.includes('data-sf-field="Logo_Upload_URL__c"'), "partner application must store the configured logo-upload URL for confirmation emails");
 
@@ -606,6 +613,13 @@ assert(homeTemplateComponent.includes('name="main" type="Aura.Component[]"'), "t
 assert(homeTemplateDesign.includes('name="main"') && homeTemplateDesign.includes('defaultWidth="LARGE"'), "the Home template must expose its region as large");
 const productionManifest = fs.readFileSync(path.join(root, "manifest", "production-package.xml"), "utf8");
 for (const block of productionManifest.matchAll(/<types>([\s\S]*?)<\/types>/g)) {
+  if (block[1].includes("<name>EmailTemplate</name>")) {
+    for (const member of block[1].matchAll(/<members>([^<]+)<\/members>/g)) {
+      for (const extension of [".email", ".email-meta.xml"]) {
+        assert(fs.existsSync(path.join(metadataRoot, "email", `${member[1]}${extension}`)), `manifest email has no deployable source: ${member[1]}${extension}`);
+      }
+    }
+  }
   if (!block[1].includes("<name>CustomField</name>")) continue;
   for (const member of block[1].matchAll(/<members>([^<]+)<\/members>/g)) {
     const [object, field] = member[1].split(".");
@@ -616,7 +630,7 @@ assert(productionManifest.includes("<members>NTE_OneRegionHomeTemplate</members>
 const conversionFlow = fs.readFileSync(path.join(metadataRoot, "flows", "NTE_Copy_Converted_Lead_to_Opportunity.flow-meta.xml"), "utf8");
 assert(conversionFlow.includes("<name>Classify_Converted_Account</name>"), "conversion must classify NTE accounts");
 assert(conversionFlow.includes("<name>Classify_Converted_Contact</name>"), "conversion must classify NTE contacts");
-assert(conversionFlow.includes("<actionName>NTEExhibitorApprovalEmailService</actionName>"), "conversion must enter the explicit booking email coordinator");
+assert(!conversionFlow.includes("<actionName>NTEExhibitorApprovalEmailService</actionName>"), "conversion must remain silent until an explicit finance action");
 assert(conversionFlow.includes("<doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>"), "conversion automation must run when the Lead enters the converted criteria");
 const approvalEmailService = fs.readFileSync(path.join(metadataRoot, "classes", "NTEExhibitorApprovalEmailService.cls"), "utf8");
 assert(approvalEmailService.includes("implements Queueable"), "approval mail must be prepared after the conversion transaction commits");
@@ -662,7 +676,7 @@ assert(weeklyFinanceReport.includes("<dateColumn>LAST_UPDATE</dateColumn>"), "th
 assert(weeklyFinanceReport.includes("<interval>INTERVAL_LAST7</interval>"), "the weekly Finance report must cover Salesforce's rolling last-seven-days interval");
 assert(!weeklyFinanceReport.includes("<startDate>"), "the rolling weekly Finance interval must not be pinned to a fixed start date");
 assert(weeklyFinanceReport.includes("<sortColumn>LAST_UPDATE</sortColumn>") && weeklyFinanceReport.includes("<sortOrder>Desc</sortOrder>"), "the weekly Finance report must show the most recently changed bookings first");
-assert(weeklyFinanceReport.includes("<booleanFilter>((1 OR 2 OR 3 OR 4 OR 6 OR 7) AND (5 OR 8)) AND 9</booleanFilter>"), "weekly finance must include quote-only and pricing-check work within active NTE bookings");
+assert(weeklyFinanceReport.includes("<booleanFilter>(1 OR 2) AND 3 AND 4 AND (5 OR 6)</booleanFilter>"), "weekly finance must scope active and won application bookings to a populated event");
 assert(/<column>CLOSED<\/column>[\s\S]*?<value>false<\/value>/.test(weeklyFinanceReport) && /<column>WON<\/column>[\s\S]*?<value>true<\/value>/.test(weeklyFinanceReport), "weekly finance must exclude closed losses by semantic flags while retaining won bookings");
 assert(/<column>RECORDTYPE<\/column>[\s\S]*?<isUnlocked>false<\/isUnlocked>[\s\S]*?<value>Opportunity\.NTE_Event_Opportunity<\/value>/.test(weeklyFinanceReport), "the weekly Finance report must lock its scope to NTE Opportunities");
 assert(weeklyFinanceReport.includes("Use NTE 06 - Finance &amp; Invoicing for the complete all-time finance view."), "the weekly Finance report description must direct users to the complementary all-time report");
@@ -774,7 +788,7 @@ for (const permissionSetName of ["NTE_Management_User", "NTE_Forms_Administratio
     assert(productionManifest.includes(`<members>${api}</members>`), `${api}: the production manifest must include the email action dependency`);
   }
 }
-for (const routingField of ["Heavy_Vehicle_Form_URL__c", "Exhibitor_Staff_Form_URL__c", "Partner_Staff_Form_URL__c", "Logo_Update_Form_URL__c", "Exhibitor_Application_URL__c", "Partner_Application_URL__c", "Exhibitor_Final_Pack_URL__c", "Partner_Final_Pack_URL__c"]) {
+for (const routingField of ["Heavy_Vehicle_Form_URL__c", "Exhibitor_Staff_Form_URL__c", "Partner_Staff_Form_URL__c", "Logo_Update_Form_URL__c", "Exhibitor_Application_URL__c", "Partner_Application_URL__c"]) {
   assert(dispatchService.includes(routingField), `bulk mail must use configured ${routingField}`);
   const routingFieldMetadata = fs.readFileSync(path.join(metadataRoot, "objects", "NTE_Routing_Config__mdt", "fields", `${routingField}.field-meta.xml`), "utf8");
   assert(routingFieldMetadata.includes("<type>Text</type>"), `${routingField} must be deployable configuration metadata`);
@@ -793,7 +807,7 @@ assert(relatedOpportunityController.includes("RecordType.DeveloperName = 'NTE_Ev
 assert(relatedOpportunityController.includes("WITH USER_MODE"), "NTE related lists must enforce user-mode access");
 assert(relatedOpportunityController.includes("Security.stripInaccessible(AccessType.READABLE"), "NTE related lists must sanitize fields before returning them to the UI");
 
-for (const listView of ["NTE_Event_Participation", "NTE_Quotes_Required", "NTE_Invoices_Required", "NTE_Payments_Due", "NTE_Heavy_Vehicle_Updates_Due", "NTE_Staff_Updates_Due", "NTE_Logo_Updates_Due"]) {
+for (const listView of ["NTE_Event_Participation", "NTE_Requirements", "NTE_Payment_Confirmed", "NTE_Payments_Due", "NTE_Heavy_Vehicle_Updates_Due", "NTE_Staff_Updates_Due", "NTE_Logo_Updates_Due"]) {
   const listMetadata = fs.readFileSync(path.join(metadataRoot, "objects", "Opportunity", "listViews", `${listView}.listView-meta.xml`), "utf8");
   assert(listMetadata.includes("<field>OPPORTUNITY.RECORDTYPE</field>"), `${listView} must filter by Opportunity record type`);
   assert(listMetadata.includes("<value>Opportunity.NTE_Event_Opportunity</value>"), `${listView} must select only the NTE Event Opportunity record type`);
@@ -822,5 +836,76 @@ assert(masterPanelHtml.includes('class="reminder-message"'), "the reminder messa
 assert(masterPanelCss.includes("--slds-c-textarea-sizing-min-height: 15rem"), "the reminder message editor must show the complete default copy with editing room");
 assert(/primary contact email (?:address|required)/i.test(masterPanelHtml + masterPanelController + dispatchService), "booking guidance must identify the Primary Contact email requirement");
 assert(/recipient email address is missing/i.test(dispatchService), "the recipient preview must explain when an email address is missing");
+
+// Payable totals use one aggregate VAT charge, including half-penny rounding.
+for (const [net, vat, gross] of [[799,159.80,958.80],[349.50,69.90,419.40],[0,0,0],[100,20,120],[5000,1000,6000],[2.53,0.51,3.04]]) {
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(utils.vatTotals(net))), {net,vat,gross});
+}
+assert(utils.totalText(799).includes("£799.00 + £159.80 VAT (20%)"));
+assert(utils.totalText(799).includes("£958.80 including VAT"));
+
+// Exercise the public form handler in the inert DOM used by the stress suite.
+// Its submit method captures data in memory and never makes an HTTP request.
+const emailHarnessSource = fs.readFileSync(path.join(root, "tests/stress-form-engine.test.js"), "utf8");
+const emailHarness = new (require("node:module"))(path.join(root, "tests/email-parity-harness.js"), module);
+emailHarness.filename = path.join(root, "tests/email-parity-harness.js");
+emailHarness.paths = module.paths;
+emailHarness._compile(emailHarnessSource.slice(0, emailHarnessSource.indexOf('test("all current public forms are covered"'))
+  + "\nmodule.exports = {fixture,set,complete,filenames};", emailHarness.filename);
+const emailForms = emailHarness.exports;
+for (const filename of emailForms.filenames) {
+  const f = emailForms.complete(emailForms.fixture(filename));
+  const email = f.form.querySelector('[data-sf-field="Email"]');
+  emailForms.set(f, email, "name@singlelabel");
+  f.form.requestSubmit();
+  assert.strictEqual(f.document.posts.length, 0, filename + ": native-invalid email must be rejected before transport");
+  assert.strictEqual(f.document.activeElement, email, filename + ": focus the email that needs correcting");
+  assert.match(email.validationMessage, /complete email address/i);
+  emailForms.set(f, email, "alex.bennett+nte@example.invalid");
+  f.form.requestSubmit();
+  assert.strictEqual(f.document.posts.length, 1, filename + ": correcting the address permits submission");
+}
+for (const [filename, sourceId, toggleId, toggleValue] of [
+  ["exhibitor-application.html", "invoice-email", null, null],
+  ["exhibitor-application.html", "second-email", "second-contact-toggle", "Yes"],
+  ["partner-sponsor-application.html", "partner-invoice-email", null, null],
+  ["partner-sponsor-application.html", "partner-day-email", "partner-day-contact-same", "No"],
+  ["guest-registration.html", "guest-companion-email", "guest-accompanying", "Yes"],
+  ["heavy-vehicle-details.html", "vehicle-second-email", null, null]
+]) {
+  const f = emailForms.complete(emailForms.fixture(filename));
+  if (toggleId) emailForms.set(f, toggleId, toggleValue);
+  emailForms.complete(f);
+  emailForms.set(f, sourceId, "name@singlelabel");
+  f.form.requestSubmit();
+  assert.strictEqual(f.document.posts.length, 0, sourceId + ": native Email targets have the same address rule");
+  assert.strictEqual(f.document.activeElement, f.get(sourceId));
+}
+for (const address of ["alex.bennett+nte@example.invalid", "o'hara@example.invalid", "UPPER.Case@sub-domain.example.invalid",
+  "customer/department=shipping@example.invalid", "person_2027@example.travel"]) {
+  const f = emailForms.complete(emailForms.fixture("exhibitor-interest.html"));
+  emailForms.set(f, f.form.querySelector('[data-sf-field="Email"]'), address);
+  f.form.requestSubmit();
+  assert.strictEqual(f.document.posts.length, 1, "Preserve native-qualified address variant: " + address);
+  assert.strictEqual(f.document.posts[0].email, address);
+}
+{
+  const f = emailForms.complete(emailForms.fixture("exhibitor-application.html"));
+  emailForms.set(f, "invoice-email", "name@singlelabel");
+  emailForms.set(f, "organisation-category", "Charity - member of Cobseo");
+  emailForms.set(f, f.form.querySelectorAll('[name="exhibitor-space"]').find(c => c.value === "COBSEO Charity - Single - Free"), true);
+  emailForms.set(f, f.form.querySelectorAll('[name="power-required"]').find(c => c.value === "No"), true);
+  emailForms.set(f, "planned-count", 2);
+  f.form.requestSubmit();
+  assert.strictEqual(f.document.posts.length, 1, "A disabled old finance address must not block a complimentary application");
+}
+{
+  const f = emailForms.complete(emailForms.fixture("exhibitor-application.html"));
+  emailForms.set(f, "second-contact-toggle", "Yes");
+  emailForms.complete(f);
+  emailForms.set(f, "second-email", "");
+  f.form.requestSubmit();
+  assert.strictEqual(f.document.posts.length, 1, "An optional blank secondary email remains optional");
+}
 
 console.log("NTE form tests passed.");

@@ -9,18 +9,38 @@ public with sharing class NTE_MasterPanelController {
         'Partner / Sponsor Expression of Interest', 'Exhibitor Expression of Interest',
         'Partner / Sponsor Application', 'Exhibitor Application', 'Guest Registration'
     };
+    private static final Set<String> UPDATE_TYPES = new Set<String>{
+        'Partner / Sponsor Staff Update', 'Exhibitor Staff Update', 'Heavy Vehicle Details', 'Logo Update'
+    };
+    private static final Set<String> UPDATE_FAILURE_STATUSES = new Set<String>{
+        'No Matching Booking', 'Ambiguous Booking Reference', 'Failed'
+    };
+    private static final List<String> UPDATE_DETAIL_FIELDS = new List<String>{
+        'Staff_Base_Names__c', 'Total_Staff_Count__c', 'Top_Up_Staff_Required__c',
+        'Top_Up_Staff_Count__c', 'Top_Up_Staff_Names__c', 'Event_Contact_Name__c',
+        'Secondary_Contact_Name__c', 'Secondary_Contact_Email__c', 'Secondary_Contact_Phone__c',
+        'Delivery_Window__c', 'Heavy_Item_1_Description__c', 'Heavy_Item_1_Registration__c',
+        'Heavy_Item_1_Dimensions__c', 'Heavy_Item_1_Gross_Weight__c',
+        'Heavy_Item_2_Description__c', 'Heavy_Item_2_Registration__c',
+        'Heavy_Item_2_Dimensions__c', 'Heavy_Item_2_Gross_Weight__c',
+        'Heavy_Item_3_Description__c', 'Heavy_Item_3_Registration__c',
+        'Heavy_Item_3_Dimensions__c', 'Heavy_Item_3_Gross_Weight__c',
+        'Haulier_Name__c', 'Haulier_Staff__c', 'Haulier_Vehicle_Type__c',
+        'Haulier_Vehicle_Gross_Weight__c', 'Haulier_Vehicle_Dimensions__c',
+        'Haulier_Vehicle_Registration__c', 'Logo_Upload_URL__c', 'Declaration_Name__c', 'Declaration_Date__c'
+    };
     private static final Set<String> OPPORTUNITY_VIEWS = new Set<String>{
-        'QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_DUE', 'HEAVY_DUE',
+        'REQUIREMENTS', 'PAYMENT_DUE', 'HEAVY_DUE',
         'PAYMENT_COMPLETE',
         'STAFF_DUE', 'LOGO_DUE', 'APPROVED', 'APPROVED_EXHIBITOR',
         'APPROVED_PARTNER', 'FINANCE_DUE', 'READINESS_DUE', 'COMPLETED', 'FINAL_PACK_DUE', 'FINAL_PACK_SENT'
     };
     private static final Set<String> LEAD_VIEWS = new Set<String>{
         'APPLICATION_REVIEW', 'APPLICATION_EXHIBITOR', 'APPLICATION_PARTNER',
-        'INTEREST', 'INTEREST_EXHIBITOR', 'INTEREST_PARTNER', 'GUESTS'
+        'INTEREST', 'INTEREST_EXHIBITOR', 'INTEREST_PARTNER', 'GUESTS', 'UPDATE_ISSUES'
     };
     private static final Set<String> FINANCE_VIEWS = new Set<String>{
-        'FINANCE_DUE', 'QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'
+        'FINANCE_DUE', 'REQUIREMENTS', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'
     };
     private static final Set<String> REMINDER_VIEWS = new Set<String>{
         'HEAVY_DUE', 'STAFF_DUE', 'LOGO_DUE'
@@ -28,12 +48,9 @@ public with sharing class NTE_MasterPanelController {
     private static final String WEEKLY_FINANCE_REPORT = 'NTE_09_Weekly_Finance_Report';
     private static final Integer REMINDER_LIMIT = 100;
     private static final Integer DASHBOARD_ROW_LIMIT = 2000;
-    @TestVisible private static Boolean bypassReminderDelivery = false;
-    @TestVisible private static String cachedClosedTaskStatus;
     @TestVisible private static Map<String, String> reportUrlOverride;
     private static final Map<String, String> REPORT_BY_VIEW = new Map<String, String>{
-        'QUOTE_REQUIRED' => 'NTE_06_Finance_and_Invoicing',
-        'INVOICE_REQUIRED' => 'NTE_06_Finance_and_Invoicing',
+        'REQUIREMENTS' => 'NTE_06_Finance_and_Invoicing',
         'PAYMENT_DUE' => 'NTE_06_Finance_and_Invoicing',
         'PAYMENT_COMPLETE' => 'NTE_06_Finance_and_Invoicing',
         'FINANCE_DUE' => 'NTE_06_Finance_and_Invoicing',
@@ -143,7 +160,33 @@ public with sharing class NTE_MasterPanelController {
         }
     }
 
+    public class UpdateIssueDetail {
+        @AuraEnabled public String key;
+        @AuraEnabled public String label;
+        @AuraEnabled public String value;
+        public UpdateIssueDetail(String field, String fieldLabel, String fieldValue) {
+            key = field; label = fieldLabel; value = fieldValue;
+        }
+    }
+
     public class DashboardRow implements Comparable {
+        @AuraEnabled public Datetime submittedAt;
+        @AuraEnabled public String updateStatus;
+        @AuraEnabled public String updateIssueKind;
+        @AuraEnabled public String updateIssueLabel;
+        @AuraEnabled public String updateIssueReason;
+        @AuraEnabled public List<UpdateIssueDetail> updateDetails;
+        @AuraEnabled public List<NTEFinanceService.Requirement> requirements;
+        @AuraEnabled public String billingDetails;
+        @AuraEnabled public Boolean requirementsDue;
+        @AuraEnabled public Boolean canSendBase;
+        @AuraEnabled public Boolean canSendTopUp;
+        @AuraEnabled public String baseSendAction;
+        @AuraEnabled public String baseSendLabel;
+        @AuraEnabled public Boolean topUpRequested;
+        @AuraEnabled public String topUpEmailStatus;
+        @AuraEnabled public String topUpEmailError;
+
         @AuraEnabled public Id recordId;
         @AuraEnabled public String objectApiName;
         @AuraEnabled public String recordUrl;
@@ -236,6 +279,7 @@ public with sharing class NTE_MasterPanelController {
     }
 
     public class DashboardResponse {
+        @AuraEnabled public Integer updateIssueCount;
         @AuraEnabled public String selectedEventCode;
         @AuraEnabled public String selectedTimeRange;
         @AuraEnabled public String selectedOwnerId;
@@ -329,6 +373,12 @@ public with sharing class NTE_MasterPanelController {
         @AuraEnabled public Datetime completedAt;
     }
 
+    public class PaymentReceiptPreview {
+        @AuraEnabled public Decimal amount;
+        @AuraEnabled public Decimal issuedStripeAmount;
+        @AuraEnabled public Boolean stripeAmountDiffers;
+    }
+
     public class ReminderDraft {
         @AuraEnabled public String viewKey;
         @AuraEnabled public String title;
@@ -348,17 +398,6 @@ public with sharing class NTE_MasterPanelController {
         @AuraEnabled public Integer skippedCount;
         @AuraEnabled public String message;
         @AuraEnabled public Datetime completedAt;
-    }
-
-    private class ReminderRecipient {
-        public Opportunity booking;
-        public Contact primaryContact;
-        public String updateUrl;
-        public ReminderRecipient(Opportunity bookingValue, Contact primaryContactValue, String formUrl) {
-            booking = bookingValue;
-            primaryContact = primaryContactValue;
-            updateUrl = formUrl;
-        }
     }
 
     @AuraEnabled
@@ -386,8 +425,7 @@ public with sharing class NTE_MasterPanelController {
                 'COMPLETED' => new HomePipelineRow('COMPLETED', 'Completed')
             };
             Map<String, HomeMetric> readinessByKey = new Map<String, HomeMetric>{
-                'QUOTE_REQUIRED' => new HomeMetric('QUOTE_REQUIRED', 'Quotes required', 0, 0),
-                'INVOICE_REQUIRED' => new HomeMetric('INVOICE_REQUIRED', 'Invoice required', 0, 0),
+                'REQUIREMENTS' => new HomeMetric('REQUIREMENTS', 'Requirements', 0, 0),
                 'PAYMENT_REQUIRED' => new HomeMetric('PAYMENT_REQUIRED', 'Payment required', 0, 0),
                 'PAID' => new HomeMetric('PAID', 'Payment confirmed', 0, 0)
             };
@@ -402,7 +440,7 @@ public with sharing class NTE_MasterPanelController {
             String selectedLeadWhere = leadBaseWhere(response.selectedEventCode, null, null)
                 + ' AND IsConverted = false AND Web_Form_Type__c IN :commercialLeadTypes';
             List<Lead> leadRecords = (List<Lead>)Database.queryWithBinds(
-                'SELECT Web_Form_Type__c, Listed_Price_Total__c, Pricing_Status__c, '
+                'SELECT Web_Form_Type__c, Listed_Price_Total__c, VAT_Rate__c, Pricing_Status__c, '
                 + 'NTE_Interest_Progressed__c, NTE_Interest_Not_Progressed__c, NTE_Application_Rejected__c '
                 + 'FROM Lead WHERE ' + selectedLeadWhere,
                 leadBinds,
@@ -435,9 +473,9 @@ public with sharing class NTE_MasterPanelController {
             };
             String selectedOpportunityWhere = opportunityBaseWhere(response.selectedEventCode, null, null);
             List<Opportunity> opportunityRecords = (List<Opportunity>)Database.queryWithBinds(
-                'SELECT NTE_Source_Form_Type__c, NTE_Listed_Price_Total__c, Amount, NTE_Pricing_Status__c, '
+                'SELECT NTE_Approval_Email_Sent_At__c, NTE_Free_Space_Confirmed__c, NTE_Top_Up_Payment_Requested_At__c, NTE_Finance_Requirements_Due__c, NTE_Source_Form_Type__c, NTE_Listed_Price_Total__c, NTE_VAT_Rate__c, Amount, NTE_Pricing_Status__c, '
                 + 'NTE_Invoice_Required__c, NTE_Quote_Required_for_PO__c, NTE_Quote_Provided__c, '
-                + 'NTE_Invoice_Provided__c, NTE_Payment_Received__c, NTE_Top_Up_Staff_Total__c, '
+                + 'NTE_Invoice_Provided__c, NTE_Payment_Received__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_VAT_Rate__c, '
                 + 'NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Invoice_Provided__c, NTE_Top_Up_Payment_Received__c, '
                 + 'NTE_Heavy_Vehicle_Required__c, '
                 + 'NTE_Heavy_Vehicle_Update_Completed_At__c, NTE_Staff_Update_Completed_At__c, NTE_Logo_Update_Provided__c '
@@ -456,19 +494,18 @@ public with sharing class NTE_MasterPanelController {
                 addToPipeline(pipelineByKey.get('APPROVED'), exhibitor, value);
                 addToBookingMix(response.bookingMix, exhibitor, value);
 
-                if (billable || opportunityRecord.NTE_Quote_Required_for_PO__c == 'Yes') {
+                {
                     addToPipeline(pipelineByKey.get('FINANCES'), exhibitor, value);
                 }
                 if (updateRequired) addToPipeline(pipelineByKey.get('UPDATES'), exhibitor, value);
                 if (complete) addToPipeline(pipelineByKey.get('COMPLETED'), exhibitor, value);
 
                 Boolean pricingReady = !pricingNeedsReview(opportunityRecord);
-                Boolean invoicesComplete = pricingReady && baseInvoiceComplete(opportunityRecord) && topUpInvoiceComplete(opportunityRecord);
-                Boolean paymentsComplete = invoicesComplete && basePaymentComplete(opportunityRecord) && topUpPaymentComplete(opportunityRecord);
+                Boolean paymentsComplete = pricingReady && basePaymentComplete(opportunityRecord) && topUpPaymentComplete(opportunityRecord);
                 Boolean baseBillable = isBaseBillable(opportunityRecord);
                 Boolean topUpBillable = isTopUpBillable(opportunityRecord);
                 Decimal baseValue = pricingReady ? knownBaseOpportunityValue(opportunityRecord) : 0;
-                Decimal topUpValue = pricingReady ? valueOrZero(opportunityRecord.NTE_Top_Up_Staff_Total__c) : 0;
+                Decimal topUpValue = pricingReady ? NTEVat.gross(valueOrZero(opportunityRecord.NTE_Top_Up_Staff_Total__c), opportunityRecord.NTE_Top_Up_VAT_Rate__c) : 0;
                 Decimal invoicedValue = (baseBillable && opportunityRecord.NTE_Invoice_Provided__c ? baseValue : 0)
                     + (topUpBillable && opportunityRecord.NTE_Top_Up_Invoice_Provided__c ? topUpValue : 0);
                 Decimal paidValue = (baseBillable && opportunityRecord.NTE_Payment_Received__c ? baseValue : 0)
@@ -488,26 +525,15 @@ public with sharing class NTE_MasterPanelController {
                 }
                 if (!pricingReady) response.pricingReviewCount++;
 
-                Boolean quoteOutstanding = opportunityRecord.NTE_Quote_Required_for_PO__c == 'Yes'
-                    && !opportunityRecord.NTE_Quote_Provided__c;
-                if (quoteOutstanding) addToMetric(readinessByKey.get('QUOTE_REQUIRED'), baseValue);
-                if (!pricingReady || (!quoteOutstanding && !invoicesComplete)) {
-                    Decimal invoiceValue = (baseBillable && !opportunityRecord.NTE_Invoice_Provided__c ? baseValue : 0)
-                        + (topUpBillable && !opportunityRecord.NTE_Top_Up_Invoice_Provided__c ? topUpValue : 0);
-                    addToMetric(readinessByKey.get('INVOICE_REQUIRED'), invoiceValue);
+                if (opportunityRecord.NTE_Finance_Requirements_Due__c) {
+                    Decimal requiredValue = (!opportunityRecord.NTE_Payment_Received__c ? baseValue : 0)
+                        + (!opportunityRecord.NTE_Top_Up_Payment_Received__c ? topUpValue : 0);
+                    addToMetric(readinessByKey.get('REQUIREMENTS'), requiredValue);
                 }
-                Boolean actionablePayment = (baseBillable && opportunityRecord.NTE_Invoice_Provided__c
-                        && !opportunityRecord.NTE_Payment_Received__c)
-                    || (basePaymentComplete(opportunityRecord) && topUpBillable
-                        && opportunityRecord.NTE_Top_Up_Invoice_Provided__c && !opportunityRecord.NTE_Top_Up_Payment_Received__c);
-                if (pricingReady && actionablePayment) {
-                    Decimal paymentValue = (baseBillable && opportunityRecord.NTE_Invoice_Provided__c
-                            && !opportunityRecord.NTE_Payment_Received__c ? baseValue : 0)
-                        + (topUpBillable && opportunityRecord.NTE_Top_Up_Invoice_Provided__c
-                            && !opportunityRecord.NTE_Top_Up_Payment_Received__c ? topUpValue : 0);
-                    addToMetric(readinessByKey.get('PAYMENT_REQUIRED'), paymentValue);
-                }
-                if (billable && paymentsComplete) addToMetric(readinessByKey.get('PAID'), value);
+                Decimal requestedValue = (baseBillable && opportunityRecord.NTE_Approval_Email_Sent_At__c != null && !opportunityRecord.NTE_Payment_Received__c ? baseValue : 0)
+                    + (topUpBillable && opportunityRecord.NTE_Top_Up_Payment_Requested_At__c != null && !opportunityRecord.NTE_Top_Up_Payment_Received__c ? topUpValue : 0);
+                if (pricingReady && !opportunityRecord.NTE_Finance_Requirements_Due__c && requestedValue > 0) addToMetric(readinessByKey.get('PAYMENT_REQUIRED'), requestedValue);
+                if (paymentsComplete) addToMetric(readinessByKey.get('PAID'), value);
             }
 
             finalizeBookingMix(response.bookingMix);
@@ -518,7 +544,7 @@ public with sharing class NTE_MasterPanelController {
                 'INTEREST', 'APPLICATIONS', 'APPROVED', 'FINANCES', 'UPDATES', 'COMPLETED'
             });
             response.revenueReadiness = orderedMetrics(readinessByKey, new List<String>{
-                'QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_REQUIRED', 'PAID'
+                'REQUIREMENTS', 'PAYMENT_REQUIRED', 'PAID'
             });
             response.refreshedAt = System.now();
             return response;
@@ -545,6 +571,8 @@ public with sharing class NTE_MasterPanelController {
             String leadBase = leadBaseWhere(response.selectedEventCode, response.selectedOwnerId, sinceAt);
             String opportunityBase = opportunityBaseWhere(response.selectedEventCode, response.selectedOwnerId, sinceAt);
             Map<String, Integer> counts = counts(leadBase, opportunityBase, leadBinds, opportunityBinds);
+            response.updateIssueCount = countLead(updateIssueWhereClause(), updateIssueBinds());
+            counts.put('UPDATE_ISSUES', response.updateIssueCount);
             Map<String, String> reportUrls = reportUrls();
 
             response.summary = summary(counts);
@@ -573,13 +601,13 @@ public with sharing class NTE_MasterPanelController {
         Datetime since = sinceAt(communicationTimeRange(timeRange));
         String view = normalizeViewKey(viewKey);
         Boolean interest = new Set<String>{'INTEREST', 'INTEREST_EXHIBITOR', 'INTEREST_PARTNER'}.contains(view);
-        if (!interest && !REMINDER_VIEWS.contains(view) && view != 'FINAL_PACK_DUE' && view != 'COMPLETED') {
-            throw handled('Choose an interest, outstanding update or final-pack view.');
+        if (!interest && !REMINDER_VIEWS.contains(view)) {
+            throw handled('Choose an interest or outstanding update view.');
         }
         String query = interest
             ? 'SELECT Id FROM Lead WHERE ' + leadBaseWhere(selectedEvent, owner, since) + leadViewClause(view)
             : 'SELECT Id FROM Opportunity WHERE ' + opportunityBaseWhere(selectedEvent, owner, since)
-                + opportunityViewClause(view == 'COMPLETED' ? 'FINAL_PACK_DUE' : view);
+                + opportunityViewClause(view);
         List<Id> ids = new List<Id>();
         for (SObject record : Database.queryWithBinds(query + ' ORDER BY LastModifiedDate DESC, Id DESC LIMIT 501',
             baseBinds(selectedEvent, owner, since), AccessLevel.USER_MODE)) ids.add(record.Id);
@@ -721,6 +749,91 @@ public with sharing class NTE_MasterPanelController {
 
     @AuraEnabled
     public static ActionResult updateMilestone(Id opportunityId, String actionName) {
+        return saveMilestone(opportunityId, actionName, null);
+    }
+
+    @AuraEnabled
+    public static PaymentReceiptPreview getPaymentReceiptPreview(Id opportunityId, String actionName) {
+        String normalizedAction = receiptAction(actionName);
+        if (opportunityId == null || opportunityId.getSObjectType() != Opportunity.SObjectType) {
+            throw handled('Select an NTE Opportunity before recording a payment.');
+        }
+        try {
+            List<Opportunity> currentBookings = [
+                SELECT Id, Amount, NTE_Invoice_Required__c, NTE_Payment_Received__c,
+                       NTE_Listed_Price_Total__c, NTE_VAT_Rate__c, NTE_Pricing_Status__c,
+                       NTE_Top_Up_Staff_Total__c, NTE_Top_Up_VAT_Rate__c,
+                       NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Payment_Received__c
+                FROM Opportunity
+                WHERE Id = :opportunityId
+                  AND RecordType.DeveloperName = 'NTE_Event_Opportunity'
+                  AND NTE_Event_Code__c != null
+                  AND NTE_Source_Form_Type__c IN :APPLICATION_TYPES
+                  AND (IsClosed = false OR IsWon = true)
+                WITH USER_MODE
+                LIMIT 1
+            ];
+            if (currentBookings.isEmpty()) {
+                throw handled('This booking is no longer available in the panel. Refresh and select an active booking.');
+            }
+            Opportunity booking = currentBookings[0];
+            if (pricingNeedsReview(booking)) {
+                throw handled('Check the booking pricing before recording a finance milestone.');
+            }
+            checkReceiptAvailable(booking, normalizedAction);
+            PaymentReceiptPreview result = new PaymentReceiptPreview();
+            result.amount = receiptAmount(booking, normalizedAction);
+            String requestKind = normalizedAction == 'PAYMENT_RECEIVED' ? 'Booking' : 'Staff top-up';
+            List<NTE_Payment_Request__c> issuedRequests = [
+                SELECT Amount_Minor__c
+                FROM NTE_Payment_Request__c
+                WHERE Opportunity__c = :opportunityId AND Kind__c = :requestKind AND Delivered_At__c != null
+                WITH USER_MODE
+                ORDER BY Delivered_At__c DESC, CreatedDate DESC, Id DESC
+                LIMIT 1
+            ];
+            result.issuedStripeAmount = issuedRequests.isEmpty() || issuedRequests[0].Amount_Minor__c == null
+                ? null : issuedRequests[0].Amount_Minor__c / 100;
+            result.stripeAmountDiffers = result.issuedStripeAmount != null && result.issuedStripeAmount != result.amount;
+            return result;
+        } catch (AuraHandledException handledException) {
+            throw handledException;
+        } catch (Exception exceptionValue) {
+            throw handled('The payment amount could not be loaded. ' + safeMessage(exceptionValue));
+        }
+    }
+
+    @AuraEnabled
+    public static ActionResult recordReviewedPayment(Id opportunityId, String actionName, Decimal expectedAmount) {
+        String normalizedAction = receiptAction(actionName);
+        if (expectedAmount == null) throw handled('Review the current payment amount before recording receipt.');
+        return saveMilestone(opportunityId, normalizedAction, expectedAmount);
+    }
+
+    private static String receiptAction(String actionName) {
+        String normalizedAction = String.isBlank(actionName) ? '' : actionName.trim().toUpperCase();
+        if (normalizedAction != 'PAYMENT_RECEIVED' && normalizedAction != 'TOP_UP_PAYMENT_RECEIVED') {
+            throw handled('Select a booking or staff top-up payment to record.');
+        }
+        return normalizedAction;
+    }
+
+    private static Decimal receiptAmount(Opportunity booking, String actionName) {
+        return actionName == 'PAYMENT_RECEIVED' ? knownBaseOpportunityValue(booking)
+            : NTEVat.gross(valueOrZero(booking.NTE_Top_Up_Staff_Total__c), booking.NTE_Top_Up_VAT_Rate__c);
+    }
+
+    private static void checkReceiptAvailable(Opportunity booking, String actionName) {
+        if (actionName == 'PAYMENT_RECEIVED') {
+            if (!isBaseBillable(booking)) throw handled('This booking has no booking payment requirement.');
+            if (booking.NTE_Payment_Received__c) throw handled('The booking payment has already been recorded.');
+        } else {
+            if (!isTopUpBillable(booking)) throw handled('This booking has no staff top-up payment requirement.');
+            if (booking.NTE_Top_Up_Payment_Received__c) throw handled('The staff top-up payment has already been recorded.');
+        }
+    }
+
+    private static ActionResult saveMilestone(Id opportunityId, String actionName, Decimal expectedAmount) {
         if (opportunityId == null || opportunityId.getSObjectType() != Opportunity.SObjectType) {
             throw handled('Select an NTE Opportunity before updating a milestone.');
         }
@@ -731,10 +844,10 @@ public with sharing class NTE_MasterPanelController {
         }
         try {
             List<Opportunity> currentBookings = [
-                SELECT Id, NTE_Event_Code__c, NTE_Invoice_Required__c, NTE_Quote_Required_for_PO__c,
+                SELECT Id, Amount, NTE_Approval_Email_Sent_At__c, NTE_Free_Space_Confirmed__c, NTE_Top_Up_Payment_Requested_At__c, NTE_Event_Code__c, NTE_Invoice_Required__c, NTE_Quote_Required_for_PO__c,
                        NTE_Quote_Provided__c, NTE_Invoice_Provided__c, NTE_Payment_Received__c,
-                       NTE_Listed_Price_Total__c, NTE_Pricing_Status__c,
-                       NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Invoice_Required__c,
+                       NTE_Listed_Price_Total__c, NTE_VAT_Rate__c, NTE_Pricing_Status__c,
+                       NTE_Top_Up_Staff_Total__c, NTE_Top_Up_VAT_Rate__c, NTE_Top_Up_Invoice_Required__c,
                        NTE_Top_Up_Invoice_Provided__c, NTE_Top_Up_Payment_Received__c
                 FROM Opportunity
                 WHERE Id = :opportunityId
@@ -757,6 +870,9 @@ public with sharing class NTE_MasterPanelController {
             if (pricingNeedsReview(booking)) {
                 throw handled('Check the booking pricing before recording a finance milestone.');
             }
+            if (expectedAmount != null && receiptAmount(booking, normalizedAction) != expectedAmount) {
+                throw handled('The payment amount has changed. Review the current amount before recording receipt.');
+            }
             if (normalizedAction == 'QUOTE_PROVIDED') {
                 if (booking.NTE_Quote_Required_for_PO__c != 'Yes') throw handled('This booking does not require a quote.');
                 if (booking.NTE_Quote_Provided__c) throw handled('The quote has already been recorded.');
@@ -766,46 +882,26 @@ public with sharing class NTE_MasterPanelController {
                 message = 'Quote marked as provided.';
             } else if (normalizedAction == 'INVOICE_PROVIDED') {
                 if (!isBaseBillable(booking)) throw handled('This booking has no booking invoice requirement.');
-                if (booking.NTE_Quote_Required_for_PO__c == 'Yes' && !booking.NTE_Quote_Provided__c) {
-                    throw handled('Mark the required quote as provided before recording the invoice.');
-                }
-                if (booking.NTE_Invoice_Provided__c) throw handled('The booking invoice / payment link has already been recorded.');
+                if (booking.NTE_Invoice_Provided__c) throw handled('The booking invoice has already been recorded.');
                 updateRecord.NTE_Invoice_Provided__c = true;
                 updateRecord.NTE_Invoice_Provided_At__c = completedAt;
                 updateRecord.NTE_Invoice_Provided_By__c = completedBy;
-                message = 'Booking invoice / Stripe link marked as provided.';
+                message = 'Booking invoice marked as provided.';
             } else if (normalizedAction == 'PAYMENT_RECEIVED') {
-                if (!isBaseBillable(booking)) throw handled('This booking has no booking payment requirement.');
-                if (!booking.NTE_Invoice_Provided__c) {
-                    throw handled('Mark the booking invoice / payment link as provided before recording its payment.');
-                }
-                if (booking.NTE_Payment_Received__c) throw handled('The booking payment has already been recorded.');
+                checkReceiptAvailable(booking, normalizedAction);
                 updateRecord.NTE_Payment_Received__c = true;
                 updateRecord.NTE_Payment_Received_At__c = completedAt;
                 updateRecord.NTE_Payment_Recorded_By__c = completedBy;
                 message = 'Booking payment marked as received.';
             } else if (normalizedAction == 'TOP_UP_INVOICE_PROVIDED') {
                 if (!isTopUpBillable(booking)) throw handled('This booking has no staff top-up invoice requirement.');
-                if (!baseInvoiceComplete(booking)) {
-                    throw handled('Mark the booking invoice as provided before the staff top-up invoice.');
-                }
-                if (booking.NTE_Quote_Required_for_PO__c == 'Yes' && !booking.NTE_Quote_Provided__c) {
-                    throw handled('Mark the required quote as provided before recording the invoice.');
-                }
                 if (booking.NTE_Top_Up_Invoice_Provided__c) throw handled('The staff top-up invoice has already been recorded.');
                 updateRecord.NTE_Top_Up_Invoice_Provided__c = true;
                 updateRecord.NTE_Top_Up_Invoice_At__c = completedAt;
                 updateRecord.NTE_Top_Up_Invoice_By__c = completedBy;
                 message = 'Staff top-up invoice marked as provided.';
             } else if (normalizedAction == 'TOP_UP_PAYMENT_RECEIVED') {
-                if (!isTopUpBillable(booking)) throw handled('This booking has no staff top-up payment requirement.');
-                if (!basePaymentComplete(booking)) {
-                    throw handled('Record the booking payment before the staff top-up payment.');
-                }
-                if (!booking.NTE_Top_Up_Invoice_Provided__c) {
-                    throw handled('Mark the staff top-up invoice as provided before recording its payment.');
-                }
-                if (booking.NTE_Top_Up_Payment_Received__c) throw handled('The staff top-up payment has already been recorded.');
+                checkReceiptAvailable(booking, normalizedAction);
                 updateRecord.NTE_Top_Up_Payment_Received__c = true;
                 updateRecord.NTE_Top_Up_Payment_At__c = completedAt;
                 updateRecord.NTE_Top_Up_Payment_By__c = completedBy;
@@ -847,14 +943,10 @@ public with sharing class NTE_MasterPanelController {
         result.put('APPROVED', countOpportunity(opportunityBase, opportunityBinds));
         result.put('APPROVED_EXHIBITOR', countOpportunity(opportunityBase + ' AND NTE_Source_Form_Type__c = \'Exhibitor Application\'', opportunityBinds));
         result.put('APPROVED_PARTNER', countOpportunity(opportunityBase + ' AND NTE_Source_Form_Type__c = \'Partner / Sponsor Application\'', opportunityBinds));
-        result.put('QUOTE_TOTAL', countOpportunity(opportunityBase + ' AND NTE_Quote_Required_for_PO__c = \'Yes\'', opportunityBinds));
-        result.put('QUOTE_REQUIRED', countOpportunity(opportunityBase + ' AND NTE_Quote_Required_for_PO__c = \'Yes\' AND NTE_Quote_Provided__c = false', opportunityBinds));
-        result.put('INVOICE_REQUIRED', countOpportunity(opportunityBase + opportunityViewClause('INVOICE_REQUIRED'), opportunityBinds));
-        result.put('INVOICE_COMPLETE', countOpportunity(opportunityBase + ' AND ' + pricingReadyClause()
-            + ' AND ' + billableClause() + ' AND ' + allInvoicesProvidedClause(), opportunityBinds));
         result.put('PAYMENT_DUE', countOpportunity(opportunityBase + opportunityViewClause('PAYMENT_DUE'), opportunityBinds));
         result.put('PAYMENT_COMPLETE', countOpportunity(opportunityBase + opportunityViewClause('PAYMENT_COMPLETE'), opportunityBinds));
-        result.put('FINANCE_DUE', countOpportunity(opportunityBase + ' AND (NTE_Quote_Required_for_PO__c = \'Yes\' OR ' + billableClause() + ')', opportunityBinds));
+        result.put('FINANCE_DUE', result.get('APPROVED'));
+        result.put('REQUIREMENTS', countOpportunity(opportunityBase + opportunityViewClause('REQUIREMENTS'), opportunityBinds));
         result.put('HEAVY_DUE', countOpportunity(opportunityBase + opportunityViewClause('HEAVY_DUE'), opportunityBinds));
         result.put('HEAVY_TOTAL', result.get('APPROVED'));
         result.put('STAFF_DUE', countOpportunity(opportunityBase + ' AND NTE_Staff_Update_Completed_At__c = null', opportunityBinds));
@@ -868,8 +960,6 @@ public with sharing class NTE_MasterPanelController {
         result.put('INTEREST_COMPLETED', Math.max(0, result.get('INTEREST_TOTAL') - result.get('INTEREST')));
         result.put('APPLICATION_TOTAL', result.get('APPLICATION_REVIEW') + result.get('APPROVED'));
         result.put('PAYMENT_TOTAL', result.get('PAYMENT_DUE') + result.get('PAYMENT_COMPLETE'));
-        result.put('INVOICE_TOTAL', result.get('INVOICE_REQUIRED') + result.get('INVOICE_COMPLETE'));
-        result.put('QUOTE_COMPLETE', Math.max(0, result.get('QUOTE_TOTAL') - result.get('QUOTE_REQUIRED')));
         result.put('HEAVY_COMPLETE', Math.max(0, result.get('HEAVY_TOTAL') - result.get('HEAVY_DUE')));
         result.put('STAFF_COMPLETE', Math.max(0, result.get('APPROVED') - result.get('STAFF_DUE')));
         result.put('LOGO_COMPLETE', Math.max(0, result.get('APPROVED') - result.get('LOGO_DUE')));
@@ -896,10 +986,8 @@ public with sharing class NTE_MasterPanelController {
                 counts.get('INTEREST'), counts.get('INTEREST_COMPLETED'), 'Open and decided expressions of interest', 'standard:contact_request', 'INTEREST'),
             new EventOverviewRow('applications', 'SUBMISSIONS', 'Applications', counts.get('APPLICATION_TOTAL'),
                 counts.get('APPLICATION_REVIEW'), counts.get('APPROVED'), 'Awaiting review and converted to approved bookings', 'standard:lead', 'APPLICATION_REVIEW'),
-            new EventOverviewRow('quotes', 'FINANCE', 'Quotes required', counts.get('QUOTE_TOTAL'),
-                counts.get('QUOTE_REQUIRED'), counts.get('QUOTE_COMPLETE'), 'Required quotes awaiting issue or already provided', 'standard:quotes', 'QUOTE_REQUIRED'),
-            new EventOverviewRow('invoices', 'FINANCE', 'Invoice required', counts.get('INVOICE_TOTAL'),
-                counts.get('INVOICE_REQUIRED'), counts.get('INVOICE_COMPLETE'), 'Booking and staff top-up invoices awaiting issue or provided', 'standard:orders', 'INVOICE_REQUIRED'),
+            new EventOverviewRow('requirements', 'FINANCE', 'Requirements', counts.get('APPROVED'),
+                counts.get('REQUIREMENTS'), counts.get('APPROVED') - counts.get('REQUIREMENTS'), 'Booking requirements and confirmation', 'standard:orders', 'REQUIREMENTS'),
             new EventOverviewRow('payments', 'FINANCE', 'Payment required', counts.get('PAYMENT_TOTAL'),
                 counts.get('PAYMENT_DUE'), counts.get('PAYMENT_COMPLETE'), 'Booking and staff top-up payments outstanding or confirmed', 'standard:currency', 'PAYMENT_DUE'),
             new EventOverviewRow('approved', 'DELIVERY', 'Approved bookings', counts.get('APPROVED'),
@@ -921,7 +1009,7 @@ public with sharing class NTE_MasterPanelController {
             new PipelineStep('interest', 'Interest', counts.get('INTEREST'), 'Expressions of interest', 'standard:contact_request', 'INTEREST'),
             new PipelineStep('applications', 'Applications', counts.get('APPLICATION_REVIEW'), 'Applications awaiting conversion', 'standard:lead', 'APPLICATION_REVIEW'),
             new PipelineStep('approved', 'Approved', counts.get('APPROVED'), 'Approved bookings', 'standard:approval', 'APPROVED'),
-            new PipelineStep('finance', 'Finances', counts.get('FINANCE_DUE'), 'Bookings with quote, invoice or payment activity', 'standard:currency', 'FINANCE_DUE'),
+            new PipelineStep('finance', 'Finances', counts.get('FINANCE_DUE'), 'Booking requirements and payments', 'standard:currency', 'FINANCE_DUE'),
             new PipelineStep('readiness', 'Updates', counts.get('READINESS_DUE'), 'Staff, vehicle or logo details outstanding', 'standard:people', 'READINESS_DUE'),
             new PipelineStep('complete', 'Completed', completed, percentage + '% of approved bookings complete', 'standard:task2', 'COMPLETED')
         };
@@ -938,17 +1026,17 @@ public with sharing class NTE_MasterPanelController {
             queue('APPROVED', 'Approved bookings', counts, 'Combined approved exhibitor and partner / sponsor bookings', 'standard:approval', reports, '/lightning/o/Opportunity/list?filterName=NTE_Event_Participation'),
             queue('APPROVED_EXHIBITOR', 'Approved exhibitors', counts, 'Approved exhibitor bookings', 'standard:store_group', reports, null),
             queue('APPROVED_PARTNER', 'Approved partners / sponsors', counts, 'Approved partner and sponsor bookings', 'standard:people', reports, null),
-            queue('QUOTE_REQUIRED', 'Quotes required', counts, 'Required quotes not yet provided', 'standard:quotes', reports, null),
-            queue('INVOICE_REQUIRED', 'Invoice required', counts, 'Booking or staff top-up invoice not yet provided', 'standard:orders', reports, null),
-            queue('PAYMENT_DUE', 'Payment required', counts, 'An invoice has been provided and payment is outstanding', 'standard:currency', reports, null),
+            queue('REQUIREMENTS', 'Requirements', counts, 'Booking requirements and confirmation', 'standard:orders', reports, '/lightning/o/Opportunity/list?filterName=NTE_Requirements'),
+            queue('PAYMENT_DUE', 'Payment required', counts, 'Payment has been requested and is outstanding', 'standard:currency', reports, null),
             queue('PAYMENT_COMPLETE', 'Payment confirmed', counts, 'All applicable booking and staff top-up payments confirmed', 'standard:currency', reports, null),
-            queue('FINANCE_DUE', 'Finance records', counts, 'Bookings with quote, invoice or payment activity', 'standard:currency', reports, null),
+            queue('FINANCE_DUE', 'Finance records', counts, 'Booking requirements and payments', 'standard:currency', reports, null),
             queue('READINESS_DUE', 'Updates required', counts, 'Bookings awaiting staff, heavy-vehicle or logo details', 'standard:work_order', reports, null),
             queue('HEAVY_DUE', 'Logistics outstanding', counts, 'Vehicle requirements or details still need confirmation', 'standard:shipment', reports, '/lightning/o/Opportunity/list?filterName=NTE_Heavy_Vehicle_Updates_Due'),
             queue('STAFF_DUE', 'Staff updates', counts, 'Staff details still required', 'standard:people', reports, '/lightning/o/Opportunity/list?filterName=NTE_Staff_Updates_Due'),
             queue('LOGO_DUE', 'Logo updates', counts, 'Bookings awaiting the latest organisation logo', 'standard:photo', reports, '/lightning/o/Opportunity/list?filterName=NTE_Logo_Updates_Due'),
-            queue('FINAL_PACK_DUE', 'Final pack not sent', counts, 'Completed bookings still needing their final pack', 'utility:email', reports, null),
-            queue('FINAL_PACK_SENT', 'Final pack sent', counts, 'Completed bookings with their final pack sent', 'utility:email', reports, null),
+            queue('UPDATE_ISSUES', 'Update issues', counts, 'Failed supplementary updates and acknowledgement emails across all events, dates and owners', 'utility:warning', reports, '/lightning/o/Lead/list?filterName=NTE_Unmatched_Updates'),
+            queue('FINAL_PACK_DUE', 'Joining instructions not sent', counts, 'Completed bookings still needing their joining instructions', 'utility:email', reports, null),
+            queue('FINAL_PACK_SENT', 'Joining instructions sent', counts, 'Completed bookings with their joining instructions sent', 'utility:email', reports, null),
             queue('COMPLETED', 'Completed bookings', counts, 'Bookings with every applicable step complete', 'standard:task2', reports, null),
             queue('GUESTS', 'Guest list', counts, 'Registered guests', 'standard:people', reports, '/lightning/o/Lead/list?filterName=NTE_Guest_Registrations'),
             queue('RECENT', 'Most recent', counts, 'Latest NTE records across the selected view', 'standard:recent', reports, null)
@@ -968,6 +1056,7 @@ public with sharing class NTE_MasterPanelController {
 
     private static List<DashboardRow> rows(String viewKey, String leadBase, String opportunityBase,
         Map<String, Object> leadBinds, Map<String, Object> opportunityBinds, Integer pageSize, Integer offsetRows, String reportUrl) {
+        if (viewKey == 'UPDATE_ISSUES') return updateIssueRows(pageSize, offsetRows);
         List<DashboardRow> allRows = new List<DashboardRow>();
         Integer queryLimit = Math.min(DASHBOARD_ROW_LIMIT, offsetRows + pageSize);
         if (LEAD_VIEWS.contains(viewKey) || viewKey == 'RECENT') {
@@ -986,7 +1075,7 @@ public with sharing class NTE_MasterPanelController {
                 + 'Partnership_Interest_Detail__c, Exhibitor_Interest_Areas__c, Exhibitor_Interest_Detail__c, '
                 + 'Exhibitor_Community_Contribution__c, '
                 + 'Preferred_Contact_Method__c, Preferred_Contact_Time__c, Sponsor_Package__c, '
-                + 'Exhibitor_Space_Selections__c, Listed_Price_Total__c, Pricing_Status__c, '
+                + 'Exhibitor_Space_Selections__c, Listed_Price_Total__c, VAT_Rate__c, Pricing_Status__c, '
                 + 'Quote_Required_for_PO__c, Payment_Method__c, Additional_Staff_Count__c, Power_Socket_Count__c, '
                 + 'CreatedDate, LastModifiedDate FROM Lead WHERE ' + leadBase + leadExtra
                 + ' ORDER BY LastModifiedDate DESC, Id DESC LIMIT :queryLimit', binds, AccessLevel.USER_MODE
@@ -995,25 +1084,26 @@ public with sharing class NTE_MasterPanelController {
         }
         if (OPPORTUNITY_VIEWS.contains(viewKey) || viewKey == 'RECENT') {
             String opportunityExtra = opportunityViewClause(viewKey);
+            String opportunityOrder = viewKey == 'REQUIREMENTS' ? 'CreatedDate DESC, Id DESC' : 'LastModifiedDate DESC, Id DESC';
             Map<String, Object> binds = new Map<String, Object>(opportunityBinds);
             binds.put('queryLimit', queryLimit);
             List<Opportunity> records = (List<Opportunity>)Database.queryWithBinds(
-                'SELECT Id, Name, Account.Name, StageName, NTE_Event_Code__c, NTE_Source_Form_Type__c, Owner.Name, '
+                'SELECT ' + NTEFinanceService.FIELDS + ', Id, Name, Account.Name, StageName, NTE_Event_Code__c, NTE_Source_Form_Type__c, Owner.Name, '
                 + 'Booking_Reference__c, NTE_Event_Contact_Name__c, NTE_Event_Contact_Email__c, NTE_Event_Contact_Mobile__c, '
                 + 'NTE_Sponsor_Package__c, NTE_Exhibitor_Space_Selections__c, NTE_Power_Socket_Count__c, '
                 + 'NTE_Additional_Staff_Count__c, NTE_Planned_Exhibitor_Count__c, NTE_Total_Staff_Count__c, '
-                + 'NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Total__c, NTE_Listed_Price_Total__c, NTE_Pricing_Status__c, Amount, '
+                + 'NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_VAT_Rate__c, NTE_Listed_Price_Total__c, NTE_VAT_Rate__c, NTE_Pricing_Status__c, Amount, '
                 + 'NTE_Invoice_Required__c, NTE_Payment_Method__c, NTE_Quote_Required_for_PO__c, NTE_Quote_Provided__c, '
                 + 'NTE_Invoice_Provided__c, NTE_Payment_Received__c, NTE_Top_Up_Invoice_Required__c, '
                 + 'NTE_Top_Up_Invoice_Provided__c, NTE_Top_Up_Payment_Received__c, NTE_Heavy_Vehicle_Required__c, '
                 + 'NTE_Heavy_Vehicle_Update_Completed_At__c, NTE_Staff_Update_Completed_At__c, '
                 + 'NTE_Logo_Update_Provided__c, NTE_Logo_Update_Provided_At__c, '
-                + 'NTE_Approval_Email_Status__c, NTE_Approval_Email_Error__c, NTE_Approval_Email_Sent_At__c, '
+                + 'NTE_Approval_Email_Status__c, NTE_Approval_Email_Error__c, NTE_Approval_Email_Sent_At__c, NTE_Free_Space_Confirmed__c, '
                 + 'NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c, '
                 + 'NTE_Haulier_Vehicle_Type__c, NTE_Haulier_Vehicle_Registration__c, '
                 + 'NTE_Haulier_Vehicle_Dimensions__c, NTE_Haulier_Name__c, LastModifiedDate '
                 + 'FROM Opportunity WHERE ' + opportunityBase + opportunityExtra
-                + ' ORDER BY LastModifiedDate DESC, Id DESC LIMIT :queryLimit', binds, AccessLevel.USER_MODE
+                + ' ORDER BY ' + opportunityOrder + ' LIMIT :queryLimit', binds, AccessLevel.USER_MODE
             );
             Map<Id, Contact> contacts = NTEBookingContactService.primaryContacts(new Map<Id, Opportunity>(records).keySet(), AccessLevel.USER_MODE);
             for (Opportunity recordValue : records) {
@@ -1026,7 +1116,8 @@ public with sharing class NTE_MasterPanelController {
                 allRows.add(row);
             }
         }
-        allRows.sort();
+        // Requirements already use creation order in SOQL, including the page boundary.
+        if (viewKey != 'REQUIREMENTS') allRows.sort();
         List<DashboardRow> pagedRows = new List<DashboardRow>();
         Integer endIndex = Math.min(allRows.size(), offsetRows + pageSize);
         for (Integer index = offsetRows; index < endIndex; index++) pagedRows.add(allRows[index]);
@@ -1038,7 +1129,74 @@ public with sharing class NTE_MasterPanelController {
             AND Kind__c IN ('STAFF_DUE', 'HEAVY_DUE', 'LOGO_DUE') WITH USER_MODE GROUP BY Opportunity__c]) {
             pageById.get((Id)result.get('booking')).lastReminderSentAt = (Datetime)result.get('latest');
         }
+        for (NTE_Payment_Request__c request : [SELECT Opportunity__c, Status__c, Error__c FROM NTE_Payment_Request__c
+            WHERE Opportunity__c IN :pageIds AND Kind__c = 'Staff top-up' WITH USER_MODE]) {
+            DashboardRow row = pageById.get(request.Opportunity__c);
+            if (row == null) continue;
+            row.topUpEmailStatus = request.Status__c; row.topUpEmailError = request.Error__c;
+            if (request.Status__c == 'Queued') row.canSendTopUp = false;
+        }
         return pagedRows;
+    }
+
+    private static String updateIssueWhereClause() {
+        return 'Web_Form_Type__c IN :updateTypes AND (NTE_Update_Status__c IN :updateFailureStatuses'
+            + ' OR (NTE_Update_Status__c = \'Matched and Applied\' AND NTE_Applicant_Email_Status__c = \'Failed\'))';
+    }
+
+    private static Map<String, Object> updateIssueBinds() {
+        return new Map<String, Object>{'updateTypes' => UPDATE_TYPES, 'updateFailureStatuses' => UPDATE_FAILURE_STATUSES};
+    }
+
+    private static List<DashboardRow> updateIssueRows(Integer pageSize, Integer offsetRows) {
+        Map<String, Object> binds = updateIssueBinds();
+        binds.put('pageSize', Math.min(pageSize, DASHBOARD_ROW_LIMIT - offsetRows));
+        binds.put('offsetRows', offsetRows);
+        List<Lead> submissions = (List<Lead>)Database.queryWithBinds(
+            'SELECT Id, Name, Company, Email, Phone, Owner.Name, CreatedDate, LastModifiedDate, '
+            + 'Web_Form_Type__c, NTE_Event_Code__c, Target_Booking_Reference__c, '
+            + 'NTE_Update_Status__c, NTE_Update_Error__c, NTE_Applicant_Email_Status__c, NTE_Email_Error__c, '
+            + String.join(UPDATE_DETAIL_FIELDS, ', ') + ' FROM Lead WHERE ' + updateIssueWhereClause()
+            + ' ORDER BY CreatedDate DESC, Id DESC LIMIT :pageSize OFFSET :offsetRows', binds, AccessLevel.USER_MODE);
+        Map<String, Schema.SObjectField> leadFields = Schema.sObjectType.Lead.fields.getMap();
+        List<DashboardRow> result = new List<DashboardRow>();
+        for (Lead submission : submissions) {
+            DashboardRow row = new DashboardRow();
+            row.recordId = submission.Id;
+            row.objectApiName = 'Lead';
+            row.recordUrl = '/lightning/r/Lead/' + submission.Id + '/view';
+            row.name = submission.Name;
+            row.organisation = submission.Company;
+            row.contactName = submission.Name;
+            row.email = submission.Email;
+            row.phone = submission.Phone;
+            row.ownerName = submission.Owner == null ? null : submission.Owner.Name;
+            row.eventCode = submission.NTE_Event_Code__c;
+            row.bookingReference = submission.Target_Booking_Reference__c;
+            row.sourceFormType = submission.Web_Form_Type__c;
+            row.typeLabel = submission.Web_Form_Type__c;
+            row.typeIcon = 'utility:warning';
+            row.submittedAt = submission.CreatedDate;
+            row.modifiedAt = submission.LastModifiedDate;
+            row.updateStatus = submission.NTE_Update_Status__c;
+            Boolean applied = submission.NTE_Update_Status__c == 'Matched and Applied';
+            row.updateIssueKind = applied ? 'EMAIL_FAILED' : 'NOT_APPLIED';
+            row.updateIssueLabel = applied ? 'Acknowledgement email failed' : 'Update not applied';
+            row.stage = row.updateIssueLabel;
+            row.updateIssueReason = applied ? submission.NTE_Email_Error__c : submission.NTE_Update_Error__c;
+            if (String.isBlank(row.updateIssueReason)) row.updateIssueReason = applied
+                ? 'The update was applied, but its acknowledgement email failed.'
+                : 'The update was not applied. Open the submission to review its details.';
+            row.updateDetails = new List<UpdateIssueDetail>();
+            for (String field : UPDATE_DETAIL_FIELDS) {
+                Object value = submission.get(field);
+                if (value != null && String.isNotBlank(String.valueOf(value))) {
+                    row.updateDetails.add(new UpdateIssueDetail(field, leadFields.get(field).getDescribe().getLabel(), String.valueOf(value)));
+                }
+            }
+            result.add(row);
+        }
+        return result;
     }
 
     private static DashboardRow leadRow(Lead recordValue, String reportUrl) {
@@ -1073,7 +1231,7 @@ public with sharing class NTE_MasterPanelController {
         row.preferredContact = preferredContact(recordValue.Preferred_Contact_Method__c, recordValue.Preferred_Contact_Time__c);
         row.packageOrSpace = String.isNotBlank(recordValue.Sponsor_Package__c)
             ? recordValue.Sponsor_Package__c : recordValue.Exhibitor_Space_Selections__c;
-        row.amount = recordValue.Listed_Price_Total__c;
+        row.amount = leadPricingNeedsReview(recordValue) ? null : NTEVat.gross(recordValue.Listed_Price_Total__c, recordValue.VAT_Rate__c);
         row.baseAmount = row.amount;
         row.topUpAmount = 0;
         row.pricingReviewRequired = leadPricingNeedsReview(recordValue);
@@ -1125,7 +1283,7 @@ public with sharing class NTE_MasterPanelController {
             ? recordValue.NTE_Sponsor_Package__c
             : recordValue.NTE_Exhibitor_Space_Selections__c;
         row.amount = knownOpportunityValue(recordValue);
-        row.topUpAmount = valueOrZero(recordValue.NTE_Top_Up_Staff_Total__c);
+        row.topUpAmount = NTEVat.gross(valueOrZero(recordValue.NTE_Top_Up_Staff_Total__c), recordValue.NTE_Top_Up_VAT_Rate__c);
         row.pricingReviewRequired = pricingNeedsReview(recordValue);
         row.baseAmount = row.pricingReviewRequired ? null : row.amount - row.topUpAmount;
         row.quoteRequirement = recordValue.NTE_Quote_Required_for_PO__c == 'Yes' ? 'Required' : 'Not requested';
@@ -1150,14 +1308,22 @@ public with sharing class NTE_MasterPanelController {
         row.topUpInvoiceProvided = recordValue.NTE_Top_Up_Invoice_Provided__c;
         row.topUpPaymentReceived = recordValue.NTE_Top_Up_Payment_Received__c;
         row.invoiceProvided = !row.pricingReviewRequired && baseInvoiceComplete(recordValue) && topUpInvoiceComplete(recordValue);
-        row.paymentReceived = row.invoiceProvided && basePaymentComplete(recordValue) && topUpPaymentComplete(recordValue);
+        row.paymentReceived = !row.pricingReviewRequired && basePaymentComplete(recordValue) && topUpPaymentComplete(recordValue);
         row.canMarkQuote = !row.pricingReviewRequired && row.quoteRequired && !row.quoteProvided;
-        row.canMarkInvoice = row.baseInvoiceRequired && !row.pricingReviewRequired && !row.baseInvoiceProvided && (!row.quoteRequired || row.quoteProvided);
-        row.canMarkPaid = row.baseInvoiceRequired && !row.pricingReviewRequired && row.baseInvoiceProvided && !row.basePaymentReceived;
-        row.canMarkTopUpInvoice = !row.pricingReviewRequired && row.topUpInvoiceRequired && !row.topUpInvoiceProvided
-            && baseInvoiceComplete(recordValue) && (!row.quoteRequired || row.quoteProvided);
-        row.canMarkTopUpPaid = !row.pricingReviewRequired && row.topUpInvoiceRequired && row.topUpInvoiceProvided
-            && !row.topUpPaymentReceived && basePaymentComplete(recordValue);
+        row.canMarkInvoice = row.baseInvoiceRequired && !row.pricingReviewRequired && !row.baseInvoiceProvided;
+        row.canMarkPaid = row.baseInvoiceRequired && !row.pricingReviewRequired && recordValue.NTE_Approval_Email_Sent_At__c != null && !row.basePaymentReceived;
+        row.canMarkTopUpInvoice = !row.pricingReviewRequired && row.topUpInvoiceRequired && !row.topUpInvoiceProvided;
+        row.topUpRequested = recordValue.NTE_Top_Up_Payment_Requested_At__c != null;
+        row.canMarkTopUpPaid = !row.pricingReviewRequired && row.topUpInvoiceRequired && row.topUpRequested && !row.topUpPaymentReceived;
+        row.requirements = NTEFinanceService.requirements(recordValue);
+        row.billingDetails = NTEFinanceService.billingDetails(recordValue);
+        row.requirementsDue = recordValue.NTE_Finance_Requirements_Due__c;
+        row.baseSendAction = !row.baseInvoiceRequired ? 'FREE' : row.paymentMethod == 'Stripe' ? 'STRIPE' : row.paymentMethod == 'Bank transfer' ? 'BANK' : null;
+        row.baseSendLabel = row.baseSendAction == 'FREE' ? 'Confirm Free space' : row.baseSendAction == 'STRIPE' ? 'Requirements provided, send Stripe link' : 'Requirements provided, await payment';
+        row.canSendBase = !row.pricingReviewRequired && !row.basePaymentReceived
+            && (row.baseInvoiceRequired ? recordValue.NTE_Approval_Email_Sent_At__c == null : !recordValue.NTE_Free_Space_Confirmed__c)
+            && row.baseSendAction != null && recordValue.NTE_Approval_Email_Status__c != 'Pending';
+        row.canSendTopUp = !row.pricingReviewRequired && row.topUpInvoiceRequired && !row.topUpPaymentReceived && !row.topUpRequested;
         row.financeStatus = financeStatus(row);
         row.staffStatus = recordValue.NTE_Staff_Update_Completed_At__c == null ? 'Update required' : 'Complete';
         row.logoUpdateProvided = recordValue.NTE_Logo_Update_Provided__c;
@@ -1179,13 +1345,10 @@ public with sharing class NTE_MasterPanelController {
 
     public static Boolean isComplete(Opportunity booking) {
         if (pricingNeedsReview(booking)) return false;
-        Boolean quoteReady = booking.NTE_Quote_Required_for_PO__c != 'Yes' || booking.NTE_Quote_Provided__c;
-        Boolean financeReady = !isBillable(booking)
-            || (baseInvoiceComplete(booking) && topUpInvoiceComplete(booking)
-                && basePaymentComplete(booking) && topUpPaymentComplete(booking));
+        Boolean financeReady = basePaymentComplete(booking) && topUpPaymentComplete(booking);
         Boolean logisticsReady = booking.NTE_Heavy_Vehicle_Required__c == 'No'
             || (booking.NTE_Heavy_Vehicle_Required__c == 'Yes' && booking.NTE_Heavy_Vehicle_Update_Completed_At__c != null);
-        return quoteReady && financeReady && logisticsReady && booking.NTE_Staff_Update_Completed_At__c != null
+        return financeReady && logisticsReady && booking.NTE_Staff_Update_Completed_At__c != null
             && booking.NTE_Logo_Update_Provided__c;
     }
 
@@ -1199,19 +1362,19 @@ public with sharing class NTE_MasterPanelController {
     private static Decimal knownLeadValue(Lead recordValue) {
         if (leadPricingNeedsReview(recordValue)) return 0;
         return recordValue.Listed_Price_Total__c != null && recordValue.Listed_Price_Total__c > 0
-            ? recordValue.Listed_Price_Total__c : 0;
+            ? NTEVat.gross(recordValue.Listed_Price_Total__c, recordValue.VAT_Rate__c) : 0;
     }
 
     private static Decimal knownOpportunityValue(Opportunity recordValue) {
         if (pricingNeedsReview(recordValue)) return 0;
-        return knownBaseOpportunityValue(recordValue) + valueOrZero(recordValue.NTE_Top_Up_Staff_Total__c);
+        return knownBaseOpportunityValue(recordValue) + NTEVat.gross(valueOrZero(recordValue.NTE_Top_Up_Staff_Total__c), recordValue.NTE_Top_Up_VAT_Rate__c);
     }
 
     private static Decimal knownBaseOpportunityValue(Opportunity recordValue) {
         return recordValue.Amount != null && recordValue.Amount > 0
             ? recordValue.Amount
             : (recordValue.NTE_Listed_Price_Total__c != null && recordValue.NTE_Listed_Price_Total__c > 0
-                ? recordValue.NTE_Listed_Price_Total__c : 0);
+                ? NTEVat.gross(recordValue.NTE_Listed_Price_Total__c, recordValue.NTE_VAT_Rate__c) : 0);
     }
 
     private static void addToMetric(HomeMetric metric, Decimal value) {
@@ -1296,7 +1459,7 @@ public with sharing class NTE_MasterPanelController {
     }
 
     private static Boolean basePaymentComplete(Opportunity booking) {
-        return !isBaseBillable(booking) || booking.NTE_Payment_Received__c;
+        return booking.NTE_Payment_Received__c || (!isBaseBillable(booking) && booking.NTE_Free_Space_Confirmed__c);
     }
 
     private static Boolean topUpPaymentComplete(Opportunity booking) {
@@ -1309,12 +1472,8 @@ public with sharing class NTE_MasterPanelController {
 
     private static String financeStatus(DashboardRow row) {
         if (row.pricingReviewRequired) return 'Pricing review required';
-        if (row.quoteRequired && !row.quoteProvided) return 'Quote required';
-        if (!row.invoiceRequired) return 'Not required';
-        if (row.baseInvoiceRequired && !row.baseInvoiceProvided) return 'Booking invoice required';
-        if (row.topUpInvoiceRequired && !row.topUpInvoiceProvided) return 'Staff top-up invoice required';
-        if (row.baseInvoiceRequired && !row.basePaymentReceived) return 'Booking payment required';
-        if (row.topUpInvoiceRequired && !row.topUpPaymentReceived) return 'Staff top-up payment required';
+        if (row.requirementsDue) return 'Requirements';
+        if (row.canMarkPaid || row.canMarkTopUpPaid) return 'Payment required';
         return 'Payment confirmed';
     }
 
@@ -1376,14 +1535,10 @@ public with sharing class NTE_MasterPanelController {
     private static String opportunityViewClause(String viewKey) {
         if (viewKey == 'APPROVED_EXHIBITOR') return ' AND NTE_Source_Form_Type__c = \'Exhibitor Application\'';
         if (viewKey == 'APPROVED_PARTNER') return ' AND NTE_Source_Form_Type__c = \'Partner / Sponsor Application\'';
-        if (viewKey == 'QUOTE_REQUIRED') return ' AND NTE_Quote_Required_for_PO__c = \'Yes\' AND NTE_Quote_Provided__c = false';
-        if (viewKey == 'INVOICE_REQUIRED') return ' AND (' + pricingReviewClause()
-            + ' OR (' + quoteResolvedClause() + ' AND ' + anyInvoiceOutstandingClause() + '))';
-        if (viewKey == 'PAYMENT_DUE') return ' AND ' + pricingReadyClause() + ' AND '
-            + actionablePaymentClause();
-        if (viewKey == 'PAYMENT_COMPLETE') return ' AND ' + pricingReadyClause() + ' AND ' + billableClause()
-            + ' AND ' + allInvoicesProvidedClause() + ' AND ' + allPaymentsReceivedClause();
-        if (viewKey == 'FINANCE_DUE') return ' AND (NTE_Quote_Required_for_PO__c = \'Yes\' OR ' + billableClause() + ')';
+        if (viewKey == 'REQUIREMENTS') return ' AND NTE_Finance_Requirements_Due__c = true';
+        if (viewKey == 'PAYMENT_DUE') return ' AND NTE_Finance_Payment_Due__c = true';
+        if (viewKey == 'PAYMENT_COMPLETE') return ' AND NTE_Finance_Payment_Confirmed__c = true';
+        if (viewKey == 'FINANCE_DUE') return '';
         if (viewKey == 'HEAVY_DUE') return ' AND ' + logisticsOutstandingClause();
         if (viewKey == 'STAFF_DUE') return ' AND NTE_Staff_Update_Completed_At__c = null';
         if (viewKey == 'LOGO_DUE') return ' AND NTE_Logo_Update_Provided__c = false';
@@ -1402,75 +1557,10 @@ public with sharing class NTE_MasterPanelController {
     }
 
     private static String completeClause() {
-        return ' AND ' + pricingReadyClause()
-            + ' AND (NTE_Quote_Required_for_PO__c != \'Yes\' OR NTE_Quote_Required_for_PO__c = null OR NTE_Quote_Provided__c = true)'
-            + ' AND (' + notBillableClause() + ' OR (' + allInvoicesProvidedClause() + ' AND ' + allPaymentsReceivedClause() + '))'
+        return ' AND NTE_Finance_Payment_Confirmed__c = true'
             + ' AND (NTE_Heavy_Vehicle_Required__c = \'No\' OR '
             + '(NTE_Heavy_Vehicle_Required__c = \'Yes\' AND NTE_Heavy_Vehicle_Update_Completed_At__c != null))'
             + ' AND NTE_Staff_Update_Completed_At__c != null AND NTE_Logo_Update_Provided__c = true';
-    }
-
-    private static String billableClause() {
-        return '(' + baseBillableClause() + ' OR ' + topUpBillableClause() + ')';
-    }
-
-    private static String baseBillableClause() {
-        return '(NTE_Invoice_Required__c = \'Yes\' OR NTE_Listed_Price_Total__c > 0 OR ' + pricingReviewClause() + ')';
-    }
-
-    private static String pricingReadyClause() {
-        return '((NTE_Pricing_Status__c = \'Calculated\' AND NTE_Listed_Price_Total__c >= 0)'
-            + ' OR (NTE_Pricing_Status__c = null AND NTE_Listed_Price_Total__c > 0))';
-    }
-
-    private static String pricingReviewClause() {
-        return '(NTE_Listed_Price_Total__c = null OR NTE_Listed_Price_Total__c < 0'
-            + ' OR (NTE_Pricing_Status__c != null AND NTE_Pricing_Status__c != \'Calculated\')'
-            + ' OR (NTE_Pricing_Status__c = null AND NTE_Listed_Price_Total__c = 0))';
-    }
-
-    private static String topUpBillableClause() {
-        return '(NTE_Top_Up_Invoice_Required__c = true OR NTE_Top_Up_Staff_Total__c > 0)';
-    }
-
-    private static String anyInvoiceOutstandingClause() {
-        return '((' + baseBillableClause() + ' AND NTE_Invoice_Provided__c = false) OR ('
-            + topUpBillableClause() + ' AND NTE_Top_Up_Invoice_Provided__c = false))';
-    }
-
-    private static String allInvoicesProvidedClause() {
-        return '((' + baseNotBillableClause() + ' OR NTE_Invoice_Provided__c = true) AND ('
-            + topUpNotBillableClause() + ' OR NTE_Top_Up_Invoice_Provided__c = true))';
-    }
-
-    private static String actionablePaymentClause() {
-        return '((' + baseBillableClause() + ' AND NTE_Invoice_Provided__c = true AND NTE_Payment_Received__c = false) OR ('
-            + '(' + baseNotBillableClause() + ' OR NTE_Payment_Received__c = true) AND '
-            + topUpBillableClause() + ' AND NTE_Top_Up_Invoice_Provided__c = true AND NTE_Top_Up_Payment_Received__c = false))';
-    }
-
-    private static String allPaymentsReceivedClause() {
-        return '((' + baseNotBillableClause() + ' OR NTE_Payment_Received__c = true) AND ('
-            + topUpNotBillableClause() + ' OR NTE_Top_Up_Payment_Received__c = true))';
-    }
-
-    private static String quoteResolvedClause() {
-        return '(NTE_Quote_Required_for_PO__c != \'Yes\' OR NTE_Quote_Required_for_PO__c = null OR NTE_Quote_Provided__c = true)';
-    }
-
-    private static String notBillableClause() {
-        return '(' + baseNotBillableClause() + ' AND ' + topUpNotBillableClause() + ')';
-    }
-
-    private static String baseNotBillableClause() {
-        return '((NTE_Invoice_Required__c != \'Yes\' OR NTE_Invoice_Required__c = null)'
-            + ' AND (NTE_Listed_Price_Total__c <= 0 OR NTE_Listed_Price_Total__c = null)'
-            + ' AND ' + pricingReadyClause() + ')';
-    }
-
-    private static String topUpNotBillableClause() {
-        return '((NTE_Top_Up_Invoice_Required__c = false OR NTE_Top_Up_Invoice_Required__c = null)'
-            + ' AND (NTE_Top_Up_Staff_Total__c <= 0 OR NTE_Top_Up_Staff_Total__c = null))';
     }
 
     private static Integer viewCount(String viewKey, Map<String, Integer> counts) {
@@ -1623,9 +1713,10 @@ public with sharing class NTE_MasterPanelController {
     }
 
     private static String normalizeViewKey(String value) {
-        String normalized = String.isBlank(value) ? 'INVOICE_REQUIRED' : value.trim().toUpperCase();
+        String normalized = String.isBlank(value) ? 'REQUIREMENTS' : value.trim().toUpperCase();
         Map<String, String> legacyViews = new Map<String, String>{
-            'TOP_UP_INVOICE_REQUIRED' => 'INVOICE_REQUIRED',
+            'TOP_UP_INVOICE_REQUIRED' => 'REQUIREMENTS',
+            'QUOTE_REQUIRED' => 'REQUIREMENTS', 'INVOICE_REQUIRED' => 'REQUIREMENTS',
             'TOP_UP_PAYMENT_DUE' => 'PAYMENT_DUE',
             'TOP_UP_PAYMENT_COMPLETE' => 'PAYMENT_COMPLETE'
         };
@@ -1634,7 +1725,7 @@ public with sharing class NTE_MasterPanelController {
         allowed.addAll(OPPORTUNITY_VIEWS);
         allowed.addAll(LEAD_VIEWS);
         allowed.add('RECENT');
-        return allowed.contains(normalized) ? normalized : 'INVOICE_REQUIRED';
+        return allowed.contains(normalized) ? normalized : 'REQUIREMENTS';
     }
 
     private static String normalizeOwnerId(String value) {
@@ -1715,56 +1806,6 @@ public with sharing class NTE_MasterPanelController {
         return sourceFormType == 'Partner / Sponsor Application'
             ? routing.Partner_Staff_Form_URL__c
             : routing.Exhibitor_Staff_Form_URL__c;
-    }
-
-    private static String personaliseReminder(String templateBody, ReminderRecipient recipient) {
-        Opportunity booking = recipient.booking;
-        String contactName = recipient.primaryContact == null || String.isBlank(recipient.primaryContact.Name)
-            ? 'there' : recipient.primaryContact.Name;
-        String organisation = booking.Account == null || String.isBlank(booking.Account.Name)
-            ? 'your organisation' : booking.Account.Name;
-        String reference = String.isBlank(booking.Booking_Reference__c) ? 'not supplied' : booking.Booking_Reference__c;
-        return templateBody
-            .replace('{ContactName}', contactName)
-            .replace('{Organisation}', organisation)
-            .replace('{BookingReference}', reference)
-            .replace('{UpdateLink}', recipient.updateUrl);
-    }
-
-    private static Task reminderAuditTask(ReminderRecipient recipient, String viewKey, String subject,
-        Boolean sent, String errorMessage) {
-        Opportunity booking = recipient.booking;
-        Contact primaryContact = recipient.primaryContact;
-        String category = viewKey == 'HEAVY_DUE' ? 'logistics'
-            : (viewKey == 'STAFF_DUE' ? 'staff' : 'logo');
-        String outcome = sent ? 'sent' : 'failed';
-        String description = sent
-            ? 'Reminder email sent to ' + primaryContact.Email + '.\nSubject: ' + subject
-            : 'Reminder email could not be sent to ' + primaryContact.Email
-                + '.\nSubject: ' + subject + '\nReason: ' + errorMessage;
-        return new Task(
-            Subject = 'NTE ' + category + ' reminder ' + outcome,
-            WhatId = booking.Id,
-            WhoId = primaryContact.Id,
-            OwnerId = UserInfo.getUserId(),
-            Status = closedTaskStatus(),
-            Priority = 'Normal',
-            ActivityDate = Date.today(),
-            Description = description
-        );
-    }
-
-    private static String closedTaskStatus() {
-        if (String.isBlank(cachedClosedTaskStatus)) {
-            cachedClosedTaskStatus = [
-                SELECT MasterLabel
-                FROM TaskStatus
-                WHERE IsClosed = true
-                ORDER BY SortOrder
-                LIMIT 1
-            ].MasterLabel;
-        }
-        return cachedClosedTaskStatus;
     }
 
     private static Datetime sinceAt(String timeRange) {

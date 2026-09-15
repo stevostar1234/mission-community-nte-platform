@@ -6,11 +6,11 @@
     <name>Internal NTE expression of interest notification</name>
     <style>none</style>
     <subject>New NTE partner / sponsor expression of interest</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+    <textOnly>NTE27 · Internal notification
 
 New partner / sponsor interest.
 
-{!Lead.Company} would like to discuss partnering with or sponsoring {!Lead.NTE_Event_Code__c}.
+{!Lead.Company} would like to discuss partnering with or sponsoring NTE27.
 
 Hello NTE team,
 
@@ -47,7 +47,7 @@ Preferred contact {!Lead.Preferred_Contact_Method__c}
 Best time {!Lead.Preferred_Contact_Time__c}
 Discovery source {!Lead.Event_Discovery_Source__c}
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

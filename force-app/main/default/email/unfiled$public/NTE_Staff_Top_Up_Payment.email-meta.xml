@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+<available>true</available><description>NTE staff top-up payment request</description><encodingKey>UTF-8</encodingKey>
+<name>NTE staff top-up payment request</name><style>none</style><subject>Your NTE staff top-up payment</subject>
+<textOnly>NTE · Staff top-up
+
+Your additional staff places.
+
+{!IF(ISBLANK(Contact.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Contact.FirstName}{!IF(ISBLANK(Contact.FirstName),&quot;&quot;,&quot;,&quot;)}
+
+Please use the payment link below to pay for your additional staff places.
+
+Your staff top-up charges
+
+{NTE_FINANCE_SUMMARY}
+
+Organisation: {NTE_ORGANISATION}
+Booking reference: {!Opportunity.Booking_Reference__c}
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+NTE • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly><type>custom</type><uiType>Aloha</uiType>
+</EmailTemplate>

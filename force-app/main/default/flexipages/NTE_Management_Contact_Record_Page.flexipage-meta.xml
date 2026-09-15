@@ -74,8 +74,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Source_Form_Type__c</fieldItem>
-                <identifier>RecordNTE_Source_Form_Type__c0L1</identifier>
+                <fieldItem>Record.NTE_Event_Code__c</fieldItem>
+                <identifier>RecordNTE_Event_Code__c0L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -84,8 +84,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Application_Date__c</fieldItem>
-                <identifier>RecordNTE_Last_Application_Date__c0L2</identifier>
+                <fieldItem>Record.NTE_Source_Form_Type__c</fieldItem>
+                <identifier>RecordNTE_Source_Form_Type__c0L2</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_1_Left</name>
@@ -98,8 +98,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Event_Code__c</fieldItem>
-                <identifier>RecordNTE_Event_Code__c0R0</identifier>
+                <fieldItem>Record.NTE_Booking_Reference__c</fieldItem>
+                <identifier>RecordNTE_Booking_Reference__c0R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -108,8 +108,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Booking_Reference__c</fieldItem>
-                <identifier>RecordNTE_Booking_Reference__c0R1</identifier>
+                <fieldItem>Record.NTE_Last_Application_Date__c</fieldItem>
+                <identifier>RecordNTE_Last_Application_Date__c0R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -166,8 +166,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.AccountId</fieldItem>
+                <identifier>RecordAccountId1L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Title</fieldItem>
-                <identifier>RecordTitle1L1</identifier>
+                <identifier>RecordTitle1L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Department</fieldItem>
+                <identifier>RecordDepartment1L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -177,7 +197,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.Email</fieldItem>
-                <identifier>RecordEmail1L2</identifier>
+                <identifier>RecordEmail1L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Phone</fieldItem>
+                <identifier>RecordPhone1L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -187,37 +217,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.MobilePhone</fieldItem>
-                <identifier>RecordMobilePhone1L3</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.ReportsToId</fieldItem>
-                <identifier>RecordReportsToId1L4</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.AssistantPhone</fieldItem>
-                <identifier>RecordAssistantPhone1L5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.OwnerId</fieldItem>
-                <identifier>RecordOwnerId1L6</identifier>
+                <identifier>RecordMobilePhone1L6</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_2_Left</name>
@@ -230,38 +230,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.AccountId</fieldItem>
-                <identifier>RecordAccountId1R0</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Department</fieldItem>
-                <identifier>RecordDepartment1R1</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Phone</fieldItem>
-                <identifier>RecordPhone1R2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
                 <fieldItem>Record.LeadSource</fieldItem>
-                <identifier>RecordLeadSource1R3</identifier>
+                <identifier>RecordLeadSource1R0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.ReportsToId</fieldItem>
+                <identifier>RecordReportsToId1R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -271,7 +251,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.AssistantName</fieldItem>
-                <identifier>RecordAssistantName1R4</identifier>
+                <identifier>RecordAssistantName1R2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.AssistantPhone</fieldItem>
+                <identifier>RecordAssistantPhone1R3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -281,7 +271,17 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.Description</fieldItem>
-                <identifier>RecordDescription1R5</identifier>
+                <identifier>RecordDescription1R4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.OwnerId</fieldItem>
+                <identifier>RecordOwnerId1R5</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_2_Right</name>
@@ -328,8 +328,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.LastModifiedById</fieldItem>
-                <identifier>RecordLastModifiedById2L1</identifier>
+                <fieldItem>Record.CreatedById</fieldItem>
+                <identifier>RecordCreatedById2L1</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_3_Left</name>
@@ -342,8 +342,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.CreatedById</fieldItem>
-                <identifier>RecordCreatedById2R0</identifier>
+                <fieldItem>Record.LastModifiedById</fieldItem>
+                <identifier>RecordLastModifiedById2R0</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_3_Right</name>

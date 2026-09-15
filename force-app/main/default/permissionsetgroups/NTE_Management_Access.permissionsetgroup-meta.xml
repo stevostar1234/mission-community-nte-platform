@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSetGroup xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Assign to administrators and authorised staff who manage NTE enquiries, applications, bookings, communications and payments. Uses the configured NTE Stripe test connection.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>NTE Management Access</label>
+    <permissionSets>NTE_Management_User</permissionSets>
+    <permissionSets>NTE_Stripe_Test_Operator</permissionSets>
+    <status>Updated</status>
+</PermissionSetGroup>

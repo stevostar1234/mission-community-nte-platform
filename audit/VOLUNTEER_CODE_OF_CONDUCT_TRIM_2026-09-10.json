@@ -1,0 +1,60 @@
+{
+  "commit": "5fb41927a9e301aab921894af101891602ad72e6",
+  "baseCommit": "24da51ef84e51f0b3bea7d12cc9eb4d8929b1a8d",
+  "changedFiles": [
+    "volunteer-application.html"
+  ],
+  "removedParagraphs": 8,
+  "remainingDocumentParagraphs": 93,
+  "hostedVerification": {
+    "checkedAt": "2026-09-10T12:06:37.593305+00:00",
+    "passed": 6,
+    "total": 6,
+    "results": [
+      {
+        "path": "volunteer-application.html",
+        "status": 200,
+        "sha256": "da7001ba830e2f0dd903971c2db77c8d170f7437d37f103ee9c024cb539c7534",
+        "matches": true
+      },
+      {
+        "path": "assets/config.js",
+        "status": 200,
+        "sha256": "559141819826595671014e45ed1303ea1a5d394d5b3c72d2b2072673f732e0ef",
+        "matches": true
+      },
+      {
+        "path": "assets/forms.js",
+        "status": 200,
+        "sha256": "e8a475a30c08591c8d01776cfb0b19d6f5eb0b40eb417a4ea07a1c99a8a22f7a",
+        "matches": true
+      },
+      {
+        "path": "assets/styles.css",
+        "status": 200,
+        "sha256": "82797314a40e0a77b4b8f6c8faf17f510ccafc35e0a9aec0297c73ea1e940d7b",
+        "matches": true
+      },
+      {
+        "path": "assets/volunteer-styles.css",
+        "status": 200,
+        "sha256": "a99d1148f2937f0feb1606633502c7d18aeefbbf211cbdd397aadb498a70c209",
+        "matches": true
+      },
+      {
+        "path": "assets/mission-motorsport-logo.png",
+        "status": 200,
+        "sha256": "91395bf1b56bee68fa758b9dc37dcebadc93b0a9c2ea141ccdc9164b6ede2d39",
+        "matches": true
+      }
+    ]
+  },
+  "formChecks": {
+    "npmTest": "passed",
+    "conductChecks": 8,
+    "failures": 0
+  },
+  "salesforceChanges": false,
+  "liveSubmissions": 0,
+  "liveEmails": 0
+}

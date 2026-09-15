@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <classAccesses><apexClass>NTEStripeClient</apexClass><enabled>true</enabled></classAccesses>
-    <description>Allows an authorised sandbox operator to use the secure NTE Stripe test principal.</description>
+    <description>Allows an authorised NTE operator to use the configured Stripe payment principals.</description>
     <externalCredentialPrincipalAccesses><enabled>true</enabled><externalCredentialPrincipal>NTE_Stripe_Test-NTEApplication</externalCredentialPrincipal></externalCredentialPrincipalAccesses>
-    <label>NTE Stripe Test Operator</label>
+    <externalCredentialPrincipalAccesses><enabled>true</enabled><externalCredentialPrincipal>NTE_Stripe_Live-NTEApplication</externalCredentialPrincipal></externalCredentialPrincipalAccesses>
+    <label>NTE Stripe Payment Operator</label>
+    
     
     
     
@@ -31,6 +33,7 @@
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Charge_Key__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Kind__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Status__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Live_Mode__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Amount_Minor__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Net_Minor__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Tax_Rate__c</field><readable>true</readable></fieldPermissions>

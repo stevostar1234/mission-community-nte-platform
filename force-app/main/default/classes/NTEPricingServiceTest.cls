@@ -30,7 +30,7 @@ private class NTEPricingServiceTest {
     static void calculatesExhibitorComponentsAndDiscounts() {
         Lead commercial = new Lead(
             Web_Form_Type__c = 'Exhibitor Application',
-            Exhibitor_Space_Selections__c = 'Single Garage - Paddock Side with power - £800 + VAT',
+            Exhibitor_Space_Selections__c = 'Single Garage - Paddock Side with power - £799 + VAT',
             Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector',
             Stand_Power__c = 'Yes',
             Power_Socket_Count__c = 2,
@@ -39,7 +39,7 @@ private class NTEPricingServiceTest {
             Additional_Staff_Count__c = '99'
         );
         NTEPricingService.applyLeadPricing(commercial);
-        System.assertEquals(800, commercial.Exhibitor_Space_Price__c);
+        System.assertEquals(799, commercial.Exhibitor_Space_Price__c);
         System.assertEquals(100, commercial.Power_Socket_Unit_Price__c);
         System.assertEquals(200, commercial.Power_Socket_Total__c);
         System.assertEquals(50, commercial.Additional_Staff_Unit_Price__c);
@@ -47,7 +47,7 @@ private class NTEPricingServiceTest {
         System.assertEquals(2, commercial.Included_Staff_Count__c);
         System.assertEquals(7, commercial.Total_Staff_Count__c);
         System.assertEquals('5', commercial.Additional_Staff_Count__c);
-        System.assertEquals(1250, commercial.Listed_Price_Total__c);
+        System.assertEquals(1249, commercial.Listed_Price_Total__c);
 
         Lead charity = new Lead(
             Web_Form_Type__c = 'Exhibitor Application',
@@ -106,7 +106,7 @@ private class NTEPricingServiceTest {
         NTEPricingService.applyOpportunityPricing(unavailable);
         System.assertEquals('Review required', unavailable.NTE_Pricing_Status__c);
         System.assertEquals('Yes', unavailable.NTE_Invoice_Required__c, 'A removed space is not a complimentary booking.');
-        System.assertEquals(0, unavailable.Amount);
+        System.assertEquals(null, unavailable.Amount);
         System.assertEquals(NTEPricingService.CATALOG_VERSION, unavailable.NTE_Pricing_Version__c);
         System.assertEquals(null, NTEPricingService.includedStaffForSpace(unavailable.NTE_Exhibitor_Space_Selections__c));
     }
@@ -144,7 +144,7 @@ private class NTEPricingServiceTest {
     static void derivesLargeSpaceAllowanceAndRejectsInvalidStaffTotals() {
         Lead large = new Lead(
             Web_Form_Type__c = 'Exhibitor Application',
-            Exhibitor_Space_Selections__c = 'Double Garage - Track Side - £1,300 + VAT',
+            Exhibitor_Space_Selections__c = 'Double Garage - Track Side - £1,299 + VAT',
             Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector',
             Stand_Power__c = 'No',
             Planned_Exhibitor_Count__c = '7'
@@ -153,11 +153,11 @@ private class NTEPricingServiceTest {
         System.assertEquals(4, large.Included_Staff_Count__c);
         System.assertEquals('3', large.Additional_Staff_Count__c);
         System.assertEquals(150, large.Additional_Staff_Total__c);
-        System.assertEquals(1450, large.Listed_Price_Total__c);
+        System.assertEquals(1449, large.Listed_Price_Total__c);
 
         Lead invalid = new Lead(
             Web_Form_Type__c = 'Exhibitor Application',
-            Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £800 + VAT',
+            Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £799 + VAT',
             Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector',
             Stand_Power__c = 'No',
             Planned_Exhibitor_Count__c = '100'

@@ -1,5 +1,7 @@
 # NTE forms release qualification
 
+Current 13 September manual-finance and invoice-choice qualification supersedes earlier workflow results: 351 native tests passed; MMUAT release `0AfAd00000SuVllKAF`, all 11 metadata retirements, nine native reports and the matching canonical preview are verified. Five fresh conversions and the £60 Stripe example are retained. See [the final audit](audit/NTE_MANUAL_FINANCE_FINAL_AUDIT_2026-09-13.md) and [current checkpoint](NTE_AUDIT_RESUME.md) for the completed 14 September cleanup evidence and remaining production decisions.
+
 Historical evidence: pricing-by-request scenarios and recommendations below were retired by the client on 6 September 2026. Follow NTE_DESIRED_WORKFLOW.md for current behaviour; do not restore those options or workflows.
 Qualification date: 17 August 2026
 

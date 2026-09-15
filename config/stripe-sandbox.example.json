@@ -7,7 +7,9 @@
   "currency": "gbp",
   "tax_policy": "unconfirmed",
   "fixture_tax_rate_percent": "20.00",
-  "payment_method_types": ["card"],
+  "payment_method_types": [
+    "card"
+  ],
   "invoice_creation_enabled": false,
   "automatic_tax_enabled": false,
   "allow_promotion_codes": false,
@@ -16,7 +18,6 @@
   "confirmation": "manual",
   "billing_address_collection": "auto",
   "customer_creation": "if_required",
-  "production_activation_allowed": false,
-  "booking_reference_prefix": "NTE-STRIPE-",
+  "booking_reference_prefix": "",
   "allowed_recipient_emails": []
 }

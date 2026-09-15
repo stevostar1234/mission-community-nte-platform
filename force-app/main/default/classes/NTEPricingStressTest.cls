@@ -3,14 +3,14 @@ private class NTEPricingStressTest {
     private static final String EXHIBITOR = 'Exhibitor Application';
     private static final String PARTNER = 'Partner / Sponsor Application';
     private static final String COMMERCIAL = 'Employer - Automotive Sector';
-    private static final String SINGLE = 'Single Garage - Track Side - £800 + VAT';
+    private static final String SINGLE = 'Single Garage - Track Side - £799 + VAT';
     private static final String FREE = 'COBSEO Charity - Single - Free';
     private static final Map<String, Decimal> SPACE_PRICES = new Map<String, Decimal>{
-        'Garage Space - reduced size with power - £600 + VAT' => 600,
-        'Single Garage - Paddock Side with power - £800 + VAT' => 800,
-        'Double Garage - Paddock Side with power - £1,300 + VAT' => 1300,
-        'Single Garage - Track Side - £800 + VAT' => 800,
-        'Double Garage - Track Side - £1,300 + VAT' => 1300,
+        'Garage Space - reduced size with power - £599 + VAT' => 599,
+        'Single Garage - Paddock Side with power - £799 + VAT' => 799,
+        'Double Garage - Paddock Side with power - £1,299 + VAT' => 1299,
+        'Single Garage - Track Side - £799 + VAT' => 799,
+        'Double Garage - Track Side - £1,299 + VAT' => 1299,
         'Clean Energy Zone - Single - £499 + VAT' => 499,
         'Clean Energy Zone - Double - £849 + VAT' => 849,
         'Built Environment Zone - Single - £499 + VAT' => 499,
@@ -76,7 +76,7 @@ private class NTEPricingStressTest {
                     System.assertEquals(extraStaff * 50, application.Additional_Staff_Total__c, label);
                     System.assertEquals(sockets * socketRate, application.Power_Socket_Total__c, label);
                     System.assertEquals(expected, application.Listed_Price_Total__c, label);
-                    System.assertEquals(expected, booking.Amount, label);
+                    System.assertEquals(application.Pricing_Status__c == 'Calculated' ? expected * 1.2 : null, booking.Amount, label);
                     System.assertEquals(application.Listed_Price_Total__c, booking.NTE_Listed_Price_Total__c, label);
                     System.assertEquals(application.Invoice_Required__c, booking.NTE_Invoice_Required__c, label);
                     System.assertEquals(expected > 0 ? 'Yes' : 'No', application.Invoice_Required__c, label);
@@ -232,7 +232,7 @@ private class NTEPricingStressTest {
         System.assertEquals(250, application.Additional_Staff_Total__c);
         System.assertEquals(200, application.Power_Socket_Total__c);
         System.assertEquals(0, application.Sponsor_Package_Total__c);
-        System.assertEquals(1250, application.Listed_Price_Total__c);
+        System.assertEquals(1249, application.Listed_Price_Total__c);
         System.assertEquals('Yes', application.Invoice_Required__c);
         System.assertEquals(NTEPricingService.CATALOG_VERSION, application.Pricing_Version__c);
         application.Planned_Exhibitor_Count__c = 'not a count';
@@ -270,8 +270,8 @@ private class NTEPricingStressTest {
         booking.NTE_Top_Up_Payment_At__c = recordedAt;
         booking.NTE_Top_Up_Payment_By__c = 'Morgan Ellis';
         booking.NTE_Final_Pack_Status__c = 'Sent';
-        booking.Amount = 1050;
-        booking.NTE_Listed_Price_Total__c = 1050;
+        booking.Amount = 1049;
+        booking.NTE_Listed_Price_Total__c = 1049;
         insert booking;
         Test.startTest();
         NTEPricingService.recalculateOpportunities(new Set<Id>{booking.Id});
@@ -285,15 +285,15 @@ private class NTEPricingStressTest {
             NTE_Top_Up_Payment_Received__c, NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c,
             NTE_Final_Pack_Status__c, NTE_Confirmed_Value__c FROM Opportunity WHERE Id = :booking.Id];
         System.assertEquals('Calculated', saved.NTE_Pricing_Status__c);
-        System.assertEquals(1050, saved.Amount);
-        System.assertEquals(1050, saved.NTE_Listed_Price_Total__c);
+        System.assertEquals(1258.80, saved.Amount);
+        System.assertEquals(1049, saved.NTE_Listed_Price_Total__c);
         System.assertEquals(50, saved.NTE_Additional_Staff_Total__c);
         System.assertEquals(3, saved.NTE_Initial_Staff_Count__c);
         System.assertEquals(5, saved.NTE_Total_Staff_Count__c);
         System.assertEquals(2, saved.NTE_Top_Up_Staff_Count__c);
         System.assertEquals(50, saved.NTE_Top_Up_Staff_Unit_Price__c);
         System.assertEquals(100, saved.NTE_Top_Up_Staff_Total__c);
-        System.assertEquals(1150, saved.NTE_Confirmed_Value__c);
+        System.assertEquals(1378.80, saved.NTE_Confirmed_Value__c);
         System.assertEquals(true, saved.NTE_Invoice_Provided__c);
         System.assertEquals(recordedAt, saved.NTE_Invoice_Provided_At__c);
         System.assertEquals('Morgan Ellis', saved.NTE_Invoice_Provided_By__c);
@@ -340,7 +340,7 @@ private class NTEPricingStressTest {
             System.assertEquals(people, application.Total_Staff_Count__c);
             System.assertEquals(2, application.Included_Staff_Count__c);
             System.assertEquals(Math.max(0, people - 2) * 50, application.Additional_Staff_Total__c);
-            System.assertEquals(800 + Math.max(0, people - 2) * 50, application.Listed_Price_Total__c);
+            System.assertEquals(799 + Math.max(0, people - 2) * 50, application.Listed_Price_Total__c);
             System.assertEquals('Calculated', application.Pricing_Status__c);
             System.assertEquals('Yes', application.Invoice_Required__c);
         }
@@ -375,7 +375,7 @@ private class NTEPricingStressTest {
         System.assertEquals(second.Id, responses[0].pricedLead.Id);
         System.assertEquals(17000, responses[0].pricedLead.Listed_Price_Total__c);
         System.assertEquals(first.Id, responses[1].pricedLead.Id);
-        System.assertEquals(1050, responses[1].pricedLead.Listed_Price_Total__c);
+        System.assertEquals(1049, responses[1].pricedLead.Listed_Price_Total__c);
         System.assertEquals(7, responses[1].pricedLead.Total_Staff_Count__c);
         System.assertEquals(250, responses[1].pricedLead.Additional_Staff_Total__c);
         System.assertEquals(second.Id, responses[2].pricedLead.Id);
@@ -425,7 +425,7 @@ private class NTEPricingStressTest {
         Lead legacy = exhibitor(SINGLE, COMMERCIAL, null, 'No', null);
         legacy.Total_Staff_Count__c = 3;
         NTEPricingService.applyLeadPricing(legacy);
-        System.assertEquals(850, legacy.Listed_Price_Total__c);
+        System.assertEquals(849, legacy.Listed_Price_Total__c);
         System.assertEquals('Calculated', legacy.Pricing_Status__c);
         System.assertEquals(249.50, NTEPricingService.componentTotal(null, 249.50, null, null));
         System.assertEquals(0, NTEPricingService.componentTotal(null, null, null, null));
@@ -453,7 +453,7 @@ private class NTEPricingStressTest {
         System.assertEquals(expected, application.Listed_Price_Total__c, 'Sponsor selection: ' + String.valueOf(selected));
         System.assertEquals(0, application.Power_Socket_Total__c, 'Sponsor selection: ' + String.valueOf(selected));
         System.assertEquals(0, application.Additional_Staff_Total__c, 'Sponsor selection: ' + String.valueOf(selected));
-        System.assertEquals(expected, booking.Amount, 'Sponsor selection: ' + String.valueOf(selected));
+        System.assertEquals(application.Pricing_Status__c == 'Calculated' ? expected * 1.2 : null, booking.Amount, 'Sponsor selection: ' + String.valueOf(selected));
         System.assertEquals('Yes', booking.NTE_Invoice_Required__c, 'Sponsor selection: ' + String.valueOf(selected));
     }
 

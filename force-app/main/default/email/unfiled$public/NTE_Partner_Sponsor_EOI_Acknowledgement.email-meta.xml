@@ -6,7 +6,7 @@
     <name>NTE expression of interest acknowledgement</name>
     <style>none</style>
     <subject>NTE expression of interest received</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Expression of interest received
+    <textOnly>NTE27 · Expression of interest received
 
 Thank you for expressing interest.
 
@@ -14,7 +14,7 @@ We have received your interest in partnering with or sponsoring the National Tra
 
 {!IF(ISBLANK(Lead.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Lead.FirstName}{!IF(ISBLANK(Lead.FirstName),&quot;&quot;,&quot;,&quot;)}
 
-Thank you for telling us how {!Lead.Company} would like to be involved with {!Lead.NTE_Event_Code__c}. A member of the Mission Community team will review your interests and contact you to explore the most suitable opportunities.
+Thank you for telling us how {!Lead.Company} would like to be involved with NTE27. A member of the Mission Community team will review your interests and contact you to explore the most suitable opportunities.
 
 What happens next
 
@@ -47,7 +47,7 @@ Kind regards,
 The National Transition Event Team
 Mission Community
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

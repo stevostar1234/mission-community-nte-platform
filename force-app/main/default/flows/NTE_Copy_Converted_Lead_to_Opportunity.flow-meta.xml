@@ -13,22 +13,23 @@
         <nameSegment>NTEPricingService</nameSegment>
         <outputParameters><assignToReference>Priced_Application</assignToReference><name>pricedLead</name></outputParameters>
     </actionCalls>
-    <actionCalls>
-        <name>Send_Exhibitor_Approval_Email</name>
-        <label>Queue NTE Provisional Email</label>
-        <locationX>176</locationX>
-        <locationY>396</locationY>
-        <actionName>NTEExhibitorApprovalEmailService</actionName>
-        <actionType>apex</actionType>
-        <connector><targetReference>Classify_Converted_Account</targetReference></connector>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters><name>leadId</name><value><elementReference>$Record.Id</elementReference></value></inputParameters>
-        <inputParameters><name>opportunityId</name><value><elementReference>$Record.ConvertedOpportunityId</elementReference></value></inputParameters>
-        <nameSegment>NTEExhibitorApprovalEmailService</nameSegment>
-    </actionCalls>
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
-    <description>Copies NTE application and event fields to the converted Opportunity and classifies the resulting Account and Contact for the NTE workspace. This avoids changing the org-wide LeadConvertSettings owned by another administrator.</description>
+    <decisions>
+        <name>Conversion_Just_Completed</name>
+        <label>Application Just Converted</label>
+        <locationX>176</locationX>
+        <locationY>12</locationY>
+        <defaultConnectorLabel>Already converted</defaultConnectorLabel>
+        <rules>
+            <name>New_Conversion</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions><leftValueReference>$Record__Prior.IsConverted</leftValueReference><operator>EqualTo</operator><rightValue><booleanValue>false</booleanValue></rightValue></conditions>
+            <connector><targetReference>Price_Application_For_Conversion</targetReference></connector>
+            <label>New conversion</label>
+        </rules>
+    </decisions>
+    <description>Copies and prices an NTE application only when it first converts, then classifies the resulting Account and Contact. Later converted-Lead edits preserve the reviewed booking.</description>
     <environments>Default</environments>
     <interviewLabel>NTE Copy Converted Lead to Opportunity {!$Flow.CurrentDateTime}</interviewLabel>
     <label>NTE Copy Converted Lead to Opportunity</label>
@@ -53,7 +54,7 @@
         <label>Update Converted Opportunity</label>
         <locationX>176</locationX>
         <locationY>276</locationY>
-        <connector><targetReference>Send_Exhibitor_Approval_Email</targetReference></connector>
+        <connector><targetReference>Classify_Converted_Account</targetReference></connector>
         <inputAssignments><field>RecordTypeId</field><value><elementReference>Get_NTE_Opportunity_Record_Type.Id</elementReference></value></inputAssignments>
         <inputAssignments>
             <field>Booking_Reference__c</field>
@@ -260,8 +261,12 @@
             <value><elementReference>Priced_Application.Pricing_Version__c</elementReference></value>
         </inputAssignments>
         <inputAssignments>
+            <field>NTE_VAT_Rate__c</field>
+            <value><elementReference>Priced_Application.VAT_Rate__c</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Amount</field>
-            <value><elementReference>Priced_Application.Listed_Price_Total__c</elementReference></value>
+            <value><elementReference>Priced_Application.Total_Including_VAT__c</elementReference></value>
         </inputAssignments>
         <inputAssignments>
             <field>NTE_Heavy_Vehicle_Required__c</field>
@@ -274,6 +279,10 @@
         <inputAssignments>
             <field>NTE_Payment_Method__c</field>
             <value><elementReference>$Record.Payment_Method__c</elementReference></value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>NTE_Invoice_Requested__c</field>
+            <value><elementReference>$Record.Invoice_Requested__c</elementReference></value>
         </inputAssignments>
         <inputAssignments>
             <field>NTE_Invoiced_Company__c</field>
@@ -315,6 +324,7 @@
             <field>NTE_Supplier_Agreement_Required__c</field>
             <value><elementReference>$Record.Supplier_Agreement_Required__c</elementReference></value>
         </inputAssignments>
+        <inputAssignments><field>NTE_Approval_Email_Lead_Id__c</field><value><elementReference>$Record.Id</elementReference></value></inputAssignments>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -353,7 +363,7 @@
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
-        <connector><targetReference>Price_Application_For_Conversion</targetReference></connector>
+        <connector><targetReference>Conversion_Just_Completed</targetReference></connector>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
         <filterLogic>1 AND 2 AND (3 OR 4)</filterLogic>
         <filters><field>IsConverted</field><operator>EqualTo</operator><value><booleanValue>true</booleanValue></value></filters>

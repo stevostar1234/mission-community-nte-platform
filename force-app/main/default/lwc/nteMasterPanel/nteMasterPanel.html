@@ -28,7 +28,7 @@
                 options={eventOptions}
                 onchange={handleEventChange}
                 variant="label-stacked"
-                disabled={panelControlsDisabled}
+                disabled={filterControlsDisabled}
             ></lightning-combobox>
             <lightning-combobox
                 name="timeRange"
@@ -37,7 +37,7 @@
                 options={timeOptions}
                 onchange={handleTimeChange}
                 variant="label-stacked"
-                disabled={panelControlsDisabled}
+                disabled={filterControlsDisabled}
             ></lightning-combobox>
             <lightning-combobox
                 name="owner"
@@ -46,7 +46,7 @@
                 options={ownerOptions}
                 onchange={handleOwnerChange}
                 variant="label-stacked"
-                disabled={panelControlsDisabled}
+                disabled={filterControlsDisabled}
             ></lightning-combobox>
         </div>
 
@@ -108,12 +108,12 @@
                 </template>
             </section>
 
-            <section class="workbench" aria-labelledby="workbench-heading">
+            <section class={workbenchClass} aria-labelledby="workbench-heading">
                 <div class="record-table-panel">
                     <div class="table-toolbar">
                         <div>
                             <p class="section-kicker">Current view</p>
-                            <h3 id="workbench-heading">{selectedQueue.label}</h3>
+                            <h3 id="workbench-heading" data-workbench-heading tabindex="-1">{selectedQueue.label}</h3>
                             <span>{selectedQueue.detail}</span>
                         </div>
                         <div class="toolbar-actions">
@@ -122,9 +122,6 @@
                             </template>
                             <template lwc:if={canRemindAll}>
                                 <button class="primary-link toolbar-button" type="button" onclick={handleOpenReminders} disabled={panelControlsDisabled}>Remind All</button>
-                            </template>
-                            <template lwc:if={canDistributeFinalPack}>
-                                <button class="primary-link toolbar-button" type="button" onclick={handleOpenFinalPack} disabled={panelControlsDisabled}>Distribute final pack</button>
                             </template>
                             <template lwc:if={selectedQueue.listUrl}>
                                 <a class="secondary-link" href={selectedQueue.listUrl}>Open global list</a>
@@ -150,6 +147,108 @@
                     </template>
 
                     <template lwc:elseif={hasRows}>
+                        <template lwc:if={isUpdateIssuesView}>
+                            <div class="update-issue-cards" aria-label="Update issues across all events">
+                                <template for:each={visibleRows} for:item="row">
+                                    <article key={row.recordId} class="update-issue-card" aria-label={row.organisation}>
+                                        <header class="requirement-titlebar">
+                                            <div class="requirement-identity">
+                                                <h4 class="requirement-company">{row.organisation}</h4>
+                                                <div class="requirement-contact">
+                                                    <span>Contact: {row.contactName}</span>
+                                                    <template lwc:if={row.hasEmail}><a href={row.emailUrl}>{row.email}</a></template>
+                                                    <template lwc:if={row.hasPhone}><a href={row.phoneUrl}>{row.phone}</a></template>
+                                                </div>
+                                            </div>
+                                            <a class="secondary-link requirement-open-record" href={row.recordUrl}>Open full record</a>
+                                        </header>
+                                        <dl class="requirement-summary update-issue-summary">
+                                            <div><dt>Submitted</dt><dd><lightning-formatted-date-time value={row.submittedAt} day="2-digit" month="short" year="numeric" hour="2-digit" minute="2-digit"></lightning-formatted-date-time></dd></div>
+                                            <div><dt>Submitted reference</dt><dd>{row.updateReferenceDisplay}</dd></div>
+                                            <div><dt>Update type</dt><dd>{row.updateTypeDisplay}</dd></div>
+                                            <div><dt>Event code</dt><dd>{row.updateEventDisplay}</dd></div>
+                                        </dl>
+                                        <div class="update-issue-message">
+                                            <div class="update-issue-message-heading"><strong>{row.updateIssueLabel}</strong><span>Status: {row.updateStatusDisplay}</span></div>
+                                            <p>{row.updateIssueReason}</p>
+                                        </div>
+                                        <section class="update-issue-content" aria-label="Submitted details">
+                                            <h5>Submitted details</h5>
+                                            <template lwc:if={row.hasUpdateDetails}>
+                                                <dl class="update-issue-details">
+                                                    <template for:each={row.updateDetails} for:item="detail">
+                                                        <div key={detail.key}>
+                                                            <dt>{detail.label}</dt>
+                                                            <dd>
+                                                                <template lwc:if={detail.detailIsLong}>
+                                                                    <details class="requirement-expanded-detail">
+                                                                        <summary><span class="detail-preview">{detail.detailPreview}</span><span class="detail-expand-label">View full details</span><span class="detail-collapse-label">Show less</span></summary>
+                                                                        <div class="requirement-full-detail" tabindex="0">{detail.value}</div>
+                                                                    </details>
+                                                                </template>
+                                                                <template lwc:else>{detail.value}</template>
+                                                            </dd>
+                                                        </div>
+                                                    </template>
+                                                </dl>
+                                            </template>
+                                            <template lwc:else><p class="update-issue-no-details">No additional details supplied.</p></template>
+                                        </section>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+                        <template lwc:elseif={isRequirementsView}>
+                            <div class="requirements-cards" aria-label="Booking requirements">
+                                <template for:each={visibleRows} for:item="row">
+                                    <article key={row.recordId} class={row.requirementCardClass} aria-label={row.organisation}>
+                                        <header class="requirement-card-header">
+                                            <div class="requirement-titlebar">
+                                                <div class="requirement-identity">
+                                                    <h4 class="requirement-company">{row.organisation}</h4>
+                                                    <div class="requirement-contact"><span>Contact: {row.contactName}</span><template lwc:if={row.hasEmail}><a href={row.emailUrl}>{row.email}</a></template></div>
+                                                </div>
+                                                <a class="secondary-link requirement-open-record" href={row.recordUrl}>Open full record</a>
+                                            </div>
+                                            <dl class="requirement-summary">
+                                                <div><dt>Booking reference</dt><dd>{row.bookingReference}</dd></div>
+                                                <div><dt>Booking type</dt><dd>{row.requirementBookingType}</dd></div>
+                                                <div><dt>Payment method</dt><dd>{row.paymentMethodDisplay}</dd></div>
+                                                <div class="requirement-amount"><dt>{row.requirementAmountLabel}</dt><dd><template lwc:if={row.pricingReviewRequired}>Check pricing</template><template lwc:else><lightning-formatted-number value={row.financeAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template></dd></div>
+                                            </dl>
+                                        </header>
+                                        <template lwc:if={row.hasRequirements}>
+                                            <table class="requirement-ledger" aria-label="Requirements and details">
+                                                <colgroup><col class="requirement-label-column" /><col /></colgroup>
+                                                <thead><tr><th scope="col">Requirements</th><th scope="col">Details</th></tr></thead>
+                                                <tbody>
+                                                    <template for:each={row.requirements} for:item="requirement">
+                                                        <tr key={requirement.key}>
+                                                            <td><lightning-input class="requirement-checkbox" type="checkbox" label={requirement.label} checked={requirement.completed} data-id={row.recordId} data-requirement={requirement.key} onchange={handleRequirement} onclick={handleControlClick} disabled={row.actionDisabled}></lightning-input></td>
+                                                            <td class="requirement-detail"><template lwc:if={requirement.detailIsLong}><details class="requirement-expanded-detail"><summary><span class="detail-preview">{requirement.detailPreview}</span><span class="detail-expand-label">View full details</span><span class="detail-collapse-label">Show less</span></summary><div class="requirement-full-detail" tabindex="0">{requirement.detail}</div></details></template><template lwc:else>{requirement.detail}</template></td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </template>
+                                        <footer class="requirement-card-actions">
+                                            <div class="requirement-request-status">
+                                                <template lwc:if={row.contactIssue}><p class="request-error">{row.contactIssue}</p></template>
+                                                <template lwc:if={row.bookingEmailPending}><p class="request-status" role="status">Booking email queued</p></template>
+                                                <template lwc:if={row.approvalEmailError}><p class="request-error" role="status">{row.approvalEmailError}</p></template>
+                                                <template lwc:if={row.topUpEmailPending}><p class="request-status" role="status">Staff top-up email queued</p></template>
+                                                <template lwc:if={row.topUpEmailError}><p class="request-error" role="status">{row.topUpEmailError}</p></template>
+                                            </div>
+                                            <div class="requirement-send-actions">
+                                                <template lwc:if={row.canSendBase}><button class="table-action requirement-send" type="button" data-id={row.recordId} data-action={row.baseSendAction} onclick={handleFinanceAction} disabled={row.actionDisabled}>{row.baseSendLabel}</button></template>
+                                                <template lwc:if={row.canSendTopUp}><button class="table-action requirement-send" type="button" data-id={row.recordId} data-action="TOP_UP" onclick={handleFinanceAction} disabled={row.actionDisabled}>Send Stripe link</button></template>
+                                            </div>
+                                        </footer>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+                        <template lwc:else>
                         <div class="table-scroll" tabindex="0" aria-label={selectedQueue.label}>
                             <table class={tableClass}>
                                 <thead>
@@ -176,8 +275,6 @@
                                         </template>
                                         <template lwc:elseif={isFinanceView}>
                                             <th scope="col" class="col-status">Finance</th>
-                                            <th scope="col" class="col-status">Staff</th>
-                                            <th scope="col" class="col-status">Logistics</th>
                                             <th scope="col" class="col-amount">{financeAmountLabel}</th>
                                         </template>
                                         <template lwc:elseif={isApprovedView}>
@@ -226,7 +323,7 @@
                                             <th scope="col" class="col-amount">Amount</th>
                                             <th scope="col" class="col-contact">Contact</th>
                                         </template>
-                                        <th scope="col" class="col-owner">Owner</th>
+                                        <template lwc:if={showOwnerColumn}><th scope="col" class="col-owner">Owner</th></template>
                                         <template lwc:if={hasRowActions}><th scope="col" class="col-action">{actionColumnLabel}</th></template>
                                     </tr>
                                 </thead>
@@ -291,8 +388,7 @@
                                             </template>
                                             <template lwc:elseif={isFinanceView}>
                                                 <td><span class={row.scopedFinanceClass}>{row.scopedFinanceStatus}</span></td>
-                                                <td><span class={row.staffClass}>{row.staffStatus}</span></td>
-                                                <td><span class={row.logisticsClass}>{row.logisticsStatus}</span></td>
+
                                                 <td class="amount-cell">
                                                     <template lwc:if={row.pricingReviewRequired}><span>—</span></template>
                                                     <template lwc:else><lightning-formatted-number value={row.financeAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
@@ -354,7 +450,7 @@
                                                 </td>
                                                 <td class="stacked-cell"><strong>{row.contactName}</strong><span>{row.contactDisplay}</span></td>
                                             </template>
-                                            <td><span class="owner-name">{row.ownerName}</span></td>
+                                            <template lwc:if={showOwnerColumn}><td><span class="owner-name">{row.ownerName}</span></td></template>
                                             <template lwc:if={hasRowActions}>
                                             <td class="action-cell">
                                                 <template lwc:if={row.showInterestDecision}>
@@ -369,24 +465,16 @@
                                                         <button class="table-action danger-action" type="button" data-id={row.recordId} data-decision="APPLICATION_REJECTED" onclick={handleLeadDecision} disabled={row.actionDisabled}>Reject</button>
                                                     </div>
                                                 </template>
-                                                <template lwc:elseif={row.showMarkQuote}>
-                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="QUOTE_PROVIDED" onclick={handleMilestone} disabled={row.actionDisabled}>Quote provided</button>
-                                                </template>
-                                                <template lwc:elseif={row.showMarkInvoice}>
-                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="INVOICE_PROVIDED" onclick={handleMilestone} disabled={row.actionDisabled}>Booking invoice provided</button>
-                                                </template>
-                                                <template lwc:elseif={row.showMarkTopUpInvoice}>
-                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP_INVOICE_PROVIDED" onclick={handleMilestone} disabled={row.actionDisabled}>Staff top-up invoice provided</button>
-                                                </template>
-                                                <template lwc:elseif={row.showMarkPaid}>
-                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Booking payment received</button>
-                                                </template>
-                                                <template lwc:elseif={row.showMarkTopUpPaid}>
-                                                    <button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP_PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Staff top-up payment received</button>
-                                                </template>
-                                                <template lwc:else>
-                                                    <span>—</span>
-                                                </template>
+
+<template lwc:if={row.bookingEmailPending}><p class="request-status" role="status">Booking email queued</p></template>
+<template lwc:if={row.approvalEmailError}><p class="request-error" role="status">{row.approvalEmailError}</p></template>
+<template lwc:if={row.topUpEmailPending}><p class="request-status" role="status">Staff top-up email queued</p></template>
+<template lwc:if={row.topUpEmailError}><p class="request-error" role="status">{row.topUpEmailError}</p></template>
+<template lwc:if={row.canSendBase}><button class="table-action" type="button" data-id={row.recordId} data-action={row.baseSendAction} onclick={handleFinanceAction} disabled={row.actionDisabled}>{row.baseSendLabel}</button></template>
+<template lwc:if={row.canSendTopUp}><button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP" onclick={handleFinanceAction} disabled={row.actionDisabled}>Send Stripe link <span class="action-detail">Staff top-up</span></button></template>
+<template lwc:if={row.showMarkPaid}><button class="table-action" type="button" data-id={row.recordId} data-action="PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Booking payment received</button></template>
+<template lwc:if={row.showMarkTopUpPaid}><button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP_PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Staff top-up payment received</button></template>
+<template lwc:if={isCompletedView}><lightning-input type="checkbox" label="Final joining instructions sent" checked={row.joiningSent} data-id={row.recordId} onchange={handleJoiningInstructions} onclick={handleControlClick} disabled={row.actionDisabled}></lightning-input></template>
                                             </td>
                                             </template>
                                         </tr>
@@ -394,12 +482,13 @@
                                 </tbody>
                             </table>
                         </div>
+                        </template>
                     </template>
                     <template lwc:else>
                         <div class="empty-state">
                             <lightning-icon icon-name="utility:check" size="medium" alternative-text=""></lightning-icon>
-                            <strong>No records in this queue</strong>
-                            <p>Nothing matches the selected event, time and owner filters.</p>
+                            <strong>{emptyQueueTitle}</strong>
+                            <p>{emptyQueueDetail}</p>
                         </div>
                     </template>
 
@@ -412,6 +501,7 @@
                     </footer>
                 </div>
 
+                <template lwc:if={showDetailPanel}>
                 <aside class="detail-panel">
                     <template lwc:if={selectedRecord}>
                         <div class="detail-head">
@@ -499,14 +589,14 @@
                                     <div><dt>Stage</dt><dd>{selectedRecord.stage}</dd></div>
                                     <div><dt>Package / space</dt><dd>{selectedRecord.packageOrSpaceDisplay}</dd></div>
                                     <div>
-                                        <dt>Booking (ex VAT)</dt>
+                                        <dt>Booking (inc VAT)</dt>
                                         <dd>
                                             <template lwc:if={selectedRecord.pricingReviewRequired}>Check pricing</template>
                                             <template lwc:else><lightning-formatted-number value={selectedRecord.baseAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></template>
                                         </dd>
                                     </div>
                                     <template lwc:if={selectedRecord.hasTopUpAmount}>
-                                        <div><dt>Staff top-up (ex VAT)</dt><dd><lightning-formatted-number value={selectedRecord.topUpAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></dd></div>
+                                        <div><dt>Staff top-up (inc VAT)</dt><dd><lightning-formatted-number value={selectedRecord.topUpAmount} format-style="currency" currency-code="GBP"></lightning-formatted-number></dd></div>
                                     </template>
                                     <div><dt>Planned staff</dt><dd>{selectedRecord.plannedStaffDisplay}</dd></div>
                                     <div><dt>Heavy vehicle</dt><dd>{selectedRecord.heavyVehicleRequirement}</dd></div>
@@ -536,6 +626,7 @@
                         </div>
                     </template>
                 </aside>
+                </template>
             </section>
 
             <section class="overview-section event-breakdown" aria-labelledby="event-overview-heading">
@@ -571,11 +662,11 @@
                                 <span class="breakdown-icon icon-application"><lightning-icon icon-name={applicationBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
                                 <span class="breakdown-copy"><strong>{applicationBreakdown.label}</strong></span>
                                 <span class="metric-track split-track" aria-hidden="true">
-                                    <span class="metric-fill fill-review" style={applicationBreakdown.inProgressStyle}><b>{applicationBreakdown.inProgress}</b></span>
-                                    <span class="metric-fill fill-approved" style={applicationBreakdown.completedStyle}><b>{applicationBreakdown.completed}</b></span>
+                                    <span class="metric-fill fill-review" style={applicationBreakdown.inProgressStyle}></span>
+                                    <span class="metric-fill fill-approved" style={applicationBreakdown.completedStyle}></span>
                                 </span>
                                 <span class="metric-total"><strong>{applicationBreakdown.total}</strong><small>total</small></span>
-                                <span class="split-labels" aria-hidden="true"><small>awaiting review</small><small>approved</small></span>
+                                <span class="split-labels" aria-hidden="true"><small><b>{applicationBreakdown.inProgress}</b> awaiting review</small><small><b>{applicationBreakdown.completed}</b> approved</small></span>
                             </button>
                         </div>
                     </section>
@@ -598,30 +689,28 @@
                     <section class="breakdown-block finance-block" aria-labelledby="finance-actions-heading">
                         <h3 id="finance-actions-heading">Finance actions</h3>
                         <div class="action-list">
-                            <button class="action-metric" type="button" data-view={quoteBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={quoteBreakdown.ariaLabel}>
-                                <span class="breakdown-icon"><lightning-icon icon-name={quoteBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
-                                <strong class="action-label">{quoteBreakdown.label}</strong>
-                                <span class="action-track" aria-hidden="true">
-                                    <span class="action-fill fill-complete" style={quoteBreakdown.completedStyle}>{quoteBreakdown.completed} Provided</span>
-                                    <span class="action-fill fill-outstanding" style={quoteBreakdown.inProgressStyle}>{quoteBreakdown.inProgress} Outstanding</span>
+                            <button class="action-metric" type="button" data-view={requirementsBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={requirementsBreakdown.ariaLabel}>
+                                <span class="breakdown-icon"><lightning-icon icon-name={requirementsBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
+                                <strong class="action-label">{requirementsBreakdown.label}</strong>
+                                <span class="action-visual" aria-hidden="true">
+                                    <span class="action-track">
+                                        <span class="action-fill fill-complete" style={requirementsBreakdown.completedStyle}></span>
+                                        <span class="action-fill fill-outstanding" style={requirementsBreakdown.inProgressStyle}></span>
+                                    </span>
+                                    <span class="action-labels"><span class="complete-label"><b>{requirementsBreakdown.completed}</b> Requested / confirmed</span><span class="outstanding-label"><b>{requirementsBreakdown.inProgress}</b> Awaiting action</span></span>
                                 </span>
-                                <span class="metric-total compact-total"><strong>{quoteBreakdown.total}</strong><small>total</small></span>
+                                <span class="metric-total compact-total"><strong>{requirementsBreakdown.total}</strong><small>total</small></span>
                             </button>
-                            <button class="action-metric" type="button" data-view={invoiceBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={invoiceBreakdown.ariaLabel}>
-                                <span class="breakdown-icon"><lightning-icon icon-name={invoiceBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
-                                <strong class="action-label">{invoiceBreakdown.label}</strong>
-                                <span class="action-track" aria-hidden="true">
-                                    <span class="action-fill fill-complete" style={invoiceBreakdown.completedStyle}>{invoiceBreakdown.completed} Provided</span>
-                                    <span class="action-fill fill-outstanding" style={invoiceBreakdown.inProgressStyle}>{invoiceBreakdown.inProgress} Outstanding</span>
-                                </span>
-                                <span class="metric-total compact-total"><strong>{invoiceBreakdown.total}</strong><small>total</small></span>
-                            </button>
+
                             <button class="action-metric" type="button" data-view={paymentBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={paymentBreakdown.ariaLabel}>
                                 <span class="breakdown-icon"><lightning-icon icon-name={paymentBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
                                 <strong class="action-label">{paymentBreakdown.label}</strong>
-                                <span class="action-track" aria-hidden="true">
-                                    <span class="action-fill fill-complete" style={paymentBreakdown.completedStyle}>{paymentBreakdown.completed} Received</span>
-                                    <span class="action-fill fill-outstanding" style={paymentBreakdown.inProgressStyle}>{paymentBreakdown.inProgress} Outstanding</span>
+                                <span class="action-visual" aria-hidden="true">
+                                    <span class="action-track">
+                                        <span class="action-fill fill-complete" style={paymentBreakdown.completedStyle}></span>
+                                        <span class="action-fill fill-outstanding" style={paymentBreakdown.inProgressStyle}></span>
+                                    </span>
+                                    <span class="action-labels"><span class="complete-label"><b>{paymentBreakdown.completed}</b> Confirmed</span><span class="outstanding-label"><b>{paymentBreakdown.inProgress}</b> Outstanding</span></span>
                                 </span>
                                 <span class="metric-total compact-total"><strong>{paymentBreakdown.total}</strong><small>total</small></span>
                             </button>
@@ -634,32 +723,49 @@
                             <button class="action-metric" type="button" data-view={logisticsBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={logisticsBreakdown.ariaLabel}>
                                 <span class="breakdown-icon"><lightning-icon icon-name={logisticsBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
                                 <strong class="action-label">{logisticsBreakdown.label}</strong>
-                                <span class="action-track" aria-hidden="true">
-                                    <span class="action-fill fill-complete" style={logisticsBreakdown.completedStyle}>{logisticsBreakdown.completed} Completed</span>
-                                    <span class="action-fill fill-outstanding" style={logisticsBreakdown.inProgressStyle}>{logisticsBreakdown.inProgress} Outstanding</span>
+                                <span class="action-visual" aria-hidden="true">
+                                    <span class="action-track">
+                                        <span class="action-fill fill-complete" style={logisticsBreakdown.completedStyle}></span>
+                                        <span class="action-fill fill-outstanding" style={logisticsBreakdown.inProgressStyle}></span>
+                                    </span>
+                                    <span class="action-labels"><span class="complete-label"><b>{logisticsBreakdown.completed}</b> Completed</span><span class="outstanding-label"><b>{logisticsBreakdown.inProgress}</b> Outstanding</span></span>
                                 </span>
                                 <span class="metric-total compact-total"><strong>{logisticsBreakdown.total}</strong><small>total</small></span>
                             </button>
                             <button class="action-metric" type="button" data-view={staffBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={staffBreakdown.ariaLabel}>
                                 <span class="breakdown-icon"><lightning-icon icon-name={staffBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
                                 <strong class="action-label">{staffBreakdown.label}</strong>
-                                <span class="action-track" aria-hidden="true">
-                                    <span class="action-fill fill-complete" style={staffBreakdown.completedStyle}>{staffBreakdown.completed} Completed</span>
-                                    <span class="action-fill fill-outstanding" style={staffBreakdown.inProgressStyle}>{staffBreakdown.inProgress} Outstanding</span>
+                                <span class="action-visual" aria-hidden="true">
+                                    <span class="action-track">
+                                        <span class="action-fill fill-complete" style={staffBreakdown.completedStyle}></span>
+                                        <span class="action-fill fill-outstanding" style={staffBreakdown.inProgressStyle}></span>
+                                    </span>
+                                    <span class="action-labels"><span class="complete-label"><b>{staffBreakdown.completed}</b> Completed</span><span class="outstanding-label"><b>{staffBreakdown.inProgress}</b> Outstanding</span></span>
                                 </span>
                                 <span class="metric-total compact-total"><strong>{staffBreakdown.total}</strong><small>total</small></span>
                             </button>
                             <button class="action-metric" type="button" data-view={logoBreakdown.viewKey} onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={logoBreakdown.ariaLabel}>
                                 <span class="breakdown-icon"><lightning-icon icon-name={logoBreakdown.icon} size="small" alternative-text=""></lightning-icon></span>
                                 <strong class="action-label">{logoBreakdown.label}</strong>
-                                <span class="action-track" aria-hidden="true">
-                                    <span class="action-fill fill-complete" style={logoBreakdown.completedStyle}>{logoBreakdown.completed} Completed</span>
-                                    <span class="action-fill fill-outstanding" style={logoBreakdown.inProgressStyle}>{logoBreakdown.inProgress} Outstanding</span>
+                                <span class="action-visual" aria-hidden="true">
+                                    <span class="action-track">
+                                        <span class="action-fill fill-complete" style={logoBreakdown.completedStyle}></span>
+                                        <span class="action-fill fill-outstanding" style={logoBreakdown.inProgressStyle}></span>
+                                    </span>
+                                    <span class="action-labels"><span class="complete-label"><b>{logoBreakdown.completed}</b> Completed</span><span class="outstanding-label"><b>{logoBreakdown.inProgress}</b> Outstanding</span></span>
                                 </span>
                                 <span class="metric-total compact-total"><strong>{logoBreakdown.total}</strong><small>total</small></span>
                             </button>
                         </div>
                     </section>
+                </div>
+                <div class="update-issues-breakdown">
+                    <button class={updateIssuesBreakdown.cssClass} type="button" data-view="UPDATE_ISSUES" onclick={handleOverviewSelect} disabled={panelControlsDisabled} aria-label={updateIssuesBreakdown.ariaLabel} aria-pressed={updateIssuesBreakdown.ariaPressed}>
+                        <span class="breakdown-icon update-issues-icon"><lightning-icon icon-name="utility:warning" size="small" alternative-text=""></lightning-icon></span>
+                        <span class="breakdown-copy"><strong>Update issues</strong><small>All events</small></span>
+                        <span class="metric-track" aria-hidden="true"><span class="metric-fill fill-update-issues" style={updateIssuesBreakdown.fillStyle}></span></span>
+                        <span class="metric-total"><strong>{updateIssuesBreakdown.count}</strong><small>{updateIssuesBreakdown.countLabel}</small></span>
+                    </button>
                 </div>
             </section>
         </main>

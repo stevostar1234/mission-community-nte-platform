@@ -2,7 +2,8 @@
   "use strict";
 
   var config = window.NTE_CONFIG || window.NTE27_CONFIG || {};
-  var pricingVersion = "NTE27-2026-09-06";
+  var vatRate = 20;
+  var pricingVersion = "NTE27-2026-09-13-VAT";
   var syncConditionalSections = function () {};
   var derivedFieldSynchronizers = [];
   var sponsorPackagePrices = {
@@ -12,11 +13,11 @@
     "Auditorium Sponsor": 5000, "Live Stream Sponsor": 6000, "Wristband Sponsor": 3000, "Escapade Sponsor": 9000
   };
   var exhibitorSpacePrices = {
-    "Garage Space - reduced size with power - £600 + VAT": 600,
-    "Single Garage - Paddock Side with power - £800 + VAT": 800,
-    "Double Garage - Paddock Side with power - £1,300 + VAT": 1300,
-    "Single Garage - Track Side - £800 + VAT": 800,
-    "Double Garage - Track Side - £1,300 + VAT": 1300,
+    "Garage Space - reduced size with power - £599 + VAT": 599,
+    "Single Garage - Paddock Side with power - £799 + VAT": 799,
+    "Double Garage - Paddock Side with power - £1,299 + VAT": 1299,
+    "Single Garage - Track Side - £799 + VAT": 799,
+    "Double Garage - Track Side - £1,299 + VAT": 1299,
     "Clean Energy Zone - Single - £499 + VAT": 499,
     "Clean Energy Zone - Double - £849 + VAT": 849,
     "Built Environment Zone - Single - £499 + VAT": 499,
@@ -171,6 +172,31 @@
     });
   }
 
+  function enableCheckboxChoices() {
+    document.querySelectorAll("[data-single-choice-group], [data-exclusive-choice]").forEach(function (group) {
+      group.addEventListener("change", function (event) {
+        var selected = event.target;
+        if (!selected || selected.type !== "checkbox" || !selected.checked) return;
+        group.querySelectorAll('input[type="checkbox"]').forEach(function (control) {
+          if (control !== selected && (group.hasAttribute("data-single-choice-group") || selected.value === group.dataset.exclusiveChoice || control.value === group.dataset.exclusiveChoice)) {
+            control.checked = false;
+          }
+        });
+      });
+    });
+  }
+
+  function validateCheckboxChoices(form) {
+    var invalid = Array.prototype.slice.call(form.querySelectorAll("[data-single-choice-group], [data-exclusive-choice]")).find(function (group) {
+      var selected = Array.prototype.slice.call(group.querySelectorAll('input[type="checkbox"]:checked')).filter(function (control) { return !control.disabled; });
+      return selected.length > 1 && (group.hasAttribute("data-single-choice-group") || selected.some(function (control) { return control.value === group.dataset.exclusiveChoice; }));
+    });
+    if (!invalid) return true;
+    return setRuleError(form, invalid.querySelector('input[type="checkbox"]'), invalid.hasAttribute("data-single-choice-group")
+      ? "Please select one hours option."
+      : "Please select Any or your preferred days.");
+  }
+
   function syncCombinedFields(form) {
     form.querySelectorAll("[data-combine-fields]").forEach(function (target) {
       var ids = target.dataset.combineFields.split(",");
@@ -279,6 +305,19 @@
     return Number(value);
   }
 
+  function vatTotals(net) {
+    var netPence = Math.round(Number(net) * 100);
+    if (!Number.isSafeInteger(netPence) || netPence < 0) throw new RangeError("The total price is unavailable.");
+    var vatPence = Math.round(netPence * vatRate / 100);
+    return {net: netPence / 100, vat: vatPence / 100, gross: (netPence + vatPence) / 100};
+  }
+
+  function totalText(net) {
+    var totals = vatTotals(net);
+    var money = new Intl.NumberFormat("en-GB", {style: "currency", currency: "GBP"});
+    return money.format(totals.net) + " + " + money.format(totals.vat) + " VAT (" + vatRate + "%)\nTotal " + money.format(totals.gross) + " including VAT";
+  }
+
   function calculatePartnerPricing(selectedPrices) {
     var totalPence = selectedPrices.reduce(function (sum, rawPrice) { return sum + Math.round(catalogPrice(rawPrice) * 100); }, 0);
     if (!Number.isSafeInteger(totalPence)) throw new RangeError("The package price is unavailable. Refresh the page and try again.");
@@ -382,7 +421,7 @@
         }
         return;
       }
-      totalNode.textContent = "Package total: " + new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP",maximumFractionDigits:0}).format(pricing.total);
+      totalNode.textContent = totalText(pricing.total);
       if (form) {
         setPricingField(form, "Sponsor_Package_Total__c", pricing.packageTotal);
         setPricingField(form, "Listed_Price_Total__c", pricing.total);
@@ -407,6 +446,10 @@
       var category = document.getElementById("organisation-category");
       syncExhibitorEligibility(form, category ? category.value : "");
       var space = form.querySelector('[name="exhibitor-space"]:checked');
+      var complimentaryBenefits = form.querySelector('[data-complimentary-benefits]');
+      if (complimentaryBenefits) complimentaryBenefits.hidden = !space || !/^(?:COBSEO|Non COBSEO) Charity - Single - Free$/.test(space.value);
+      var savings = form.querySelector('[data-discount-savings]');
+      if (savings) { savings.hidden = true; savings.textContent = ""; }
       var powerIncluded = space && space.dataset.powerIncluded === "true";
       var powerLabel = document.getElementById("power-question-label");
       var powerHelp = document.getElementById("power-question-help");
@@ -434,7 +477,6 @@
         return;
       }
       var total = pricing.total;
-      var discounted = pricing.discounted;
       setPricingField(form, "Exhibitor_Space_Price__c", pricing.spacePrice);
       setPricingField(form, "Power_Socket_Unit_Price__c", pricing.powerUnitPrice);
       setPricingField(form, "Power_Socket_Total__c", pricing.powerTotal);
@@ -455,25 +497,24 @@
           invoiceField.dispatchEvent(new Event("change", {bubbles: true}));
         }
       }
-      var paymentMethod = document.getElementById("payment-method");
-      var paymentMethodField = document.querySelector("[data-payment-method-field]");
-      if (paymentMethodField) paymentMethodField.hidden = !pricing.invoiceRequired;
-      if (paymentMethod) {
-        paymentMethod.disabled = !pricing.invoiceRequired;
-        paymentMethod.required = pricing.invoiceRequired;
-        if (!pricing.invoiceRequired) paymentMethod.value = "";
-      }
+      var declarationNumber = document.getElementById("declaration-number");
+      if (declarationNumber) declarationNumber.textContent = pricing.invoiceRequired ? "8" : "7";
       if (output) {
-        if (!space) output.textContent = "Select a space to see an indicative ex-VAT total.";
-        else {
-          var parts = ["space " + new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP"}).format(pricing.spacePrice)];
-          if (pricing.powerTotal) parts.push(socketCount + " socket" + (socketCount === 1 ? "" : "s") + " " + new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP"}).format(pricing.powerTotal));
-          if (pricing.staffTotal) parts.push(pricing.additionalStaffCount + " additional staff " + new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP"}).format(pricing.staffTotal));
-          output.textContent = "Indicative ex-VAT total: " + new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP"}).format(total) + " (" + parts.join(" + ") + ").";
+        output.textContent = space ? totalText(total) : "Select a space to see your total including VAT.";
+      }
+
+      if (savings && space) {
+        var halfPriceSpace = /^(?:Local Government Authority|Blue Light) - Single - /.test(space.value)
+          && eligibleCategoriesForSpace(space.value).indexOf(category ? category.value : "") !== -1;
+        var spaceSaving = halfPriceSpace ? exhibitorSpacePrices["Any other business - Single - £499 + VAT"] - pricing.spacePrice : 0;
+        var powerSaving = pricing.discounted && pricing.powerTotal > 0 ? socketCount * 100 - pricing.powerTotal : 0;
+        var savingTotal = spaceSaving + powerSaving;
+        if (savingTotal > 0) {
+          var money = new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP"});
+          savings.textContent = "50% discount applied: you save " + money.format(vatTotals(savingTotal).gross) + " including VAT on " + (spaceSaving > 0 && powerSaving > 0 ? "your space and power sockets." : spaceSaving > 0 ? "your space." : "power sockets.");
+          savings.hidden = false;
         }
       }
-      var discount = document.querySelector("[data-power-discount]");
-      if (discount) discount.textContent = discounted ? "Your selected organisation category appears eligible for the 50% power discount; Mission Community will verify eligibility." : "Charities, government and blue-light organisations qualify for a 50% power discount.";
     }
     form.addEventListener("change", sync);
     form.addEventListener("input", sync);
@@ -481,23 +522,16 @@
     sync();
   }
 
-  function nonBlankLines(value) {
-    return String(value || "").split(/\r?\n/).filter(function (line) { return line.trim(); });
-  }
-
   function setupStaffUpdates() {
     var form = document.querySelector('[data-form-kind="exhibitor-staff-update"]');
     if (!form) return;
     function sync() {
-      var baseNames = nonBlankLines((document.getElementById("exhibitor-staff-names") || {}).value);
-      var baseCount = document.getElementById("exhibitor-base-count");
-      if (baseCount) baseCount.value = String(baseNames.length);
       var required = (document.getElementById("top-up-required") || {}).value === "Yes";
       var count = required ? Number((document.getElementById("top-up-count") || {}).value || 0) : 0;
       setPricingField(form, "Top_Up_Staff_Unit_Price__c", count > 0 ? 50 : 0);
       setPricingField(form, "Top_Up_Staff_Total__c", count > 0 ? count * 50 : 0);
       var estimate = document.querySelector("[data-top-up-estimate]");
-      if (estimate) estimate.textContent = "Top-up total: " + new Intl.NumberFormat("en-GB", {style:"currency",currency:"GBP"}).format(count * 50) + " + VAT";
+      if (estimate) estimate.textContent = totalText(count * 50);
     }
     form.addEventListener("change", sync);
     form.addEventListener("input", sync);
@@ -564,6 +598,14 @@
     return setRuleError(form, visible, "Please shorten this value to " + limit + " characters or fewer.");
   }
 
+  function validateEmailAddresses(form) {
+    var invalid = Array.prototype.slice.call(form.querySelectorAll('input[type="email"]')).find(function (control) {
+      var value = String(control.value || "").trim();
+      return !control.disabled && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    });
+    return !invalid || setRuleError(form, invalid, "Enter a complete email address, such as name@example.com.");
+  }
+
   function formatWebToLeadDate(value) {
     var match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!match || config.salesforceDateFormat !== "DMY") return value;
@@ -616,26 +658,20 @@
   function validateStaffUpdate(form) {
     if (form.dataset.formKind === "partner-staff-update") {
       var partnerTotalControl = document.getElementById("partner-staff-total");
-      var partnerNamesControl = document.getElementById("partner-staff-names");
       var partnerTotal = Number(partnerTotalControl && partnerTotalControl.value);
-      var partnerNames = nonBlankLines((partnerNamesControl || {}).value);
-      if (!Number.isInteger(partnerTotal) || partnerTotal < 1 || partnerTotal > 99 || partnerNames.length !== partnerTotal) {
-        return setRuleError(form, partnerNamesControl, "Enter one attendee name per line so the list matches the final number attending.");
+      if (!Number.isInteger(partnerTotal) || partnerTotal < 1 || partnerTotal > 99) {
+        return setRuleError(form, partnerTotalControl, "Enter a whole number between 1 and 99 for the final number attending.");
       }
     }
     if (form.dataset.formKind === "exhibitor-staff-update") {
       var baseNamesControl = document.getElementById("exhibitor-staff-names");
-      if (!nonBlankLines((baseNamesControl || {}).value).length) {
-        return setRuleError(form, baseNamesControl, "Enter the names already covered by your booking, one per line.");
-      }
       var topUpRequired = (document.getElementById("top-up-required") || {}).value === "Yes";
       if (topUpRequired) {
         var topUpCountControl = document.getElementById("top-up-count");
         var topUpNamesControl = document.getElementById("top-up-names");
         var topUpCount = Number((topUpCountControl || {}).value);
-        var topUpNames = nonBlankLines((topUpNamesControl || {}).value);
-        if (!Number.isInteger(topUpCount) || topUpCount < 1 || topUpCount > 99 || topUpNames.length !== topUpCount) {
-          return setRuleError(form, topUpNamesControl, "Enter one name per line so the list matches the number of top-up places.");
+        if (!Number.isInteger(topUpCount) || topUpCount < 1 || topUpCount > 99) {
+          return setRuleError(form, topUpCountControl, "Enter a whole number between 1 and 99 for the top-up places.");
         }
         var combinedNames = [String((baseNamesControl || {}).value || "").trim(), String((topUpNamesControl || {}).value || "").trim()].filter(Boolean).join("\n");
         if (combinedNames.length > 32768) return setRuleError(form, topUpNamesControl, "Please shorten the combined staff lists to 32768 characters or fewer.");
@@ -757,6 +793,7 @@
       // Normalise references and refresh conditional requirements before asking
       // the browser to validate; reportValidity still enforces native rules.
       form.noValidate = true;
+      var validateCodeOfConduct = setupCodeOfConduct(form);
       try {
         populateSystemFields(form);
       } catch (error) {
@@ -800,7 +837,9 @@
           return;
         }
         if (hasBlankRequiredText(form)) return;
-        if (!validateFieldLengths(form) || !validateBookingReferences(form) || !validateCatalogPricing(form) || !validateStaffUpdate(form) || !validateHeavyItems(form)) return;
+        if (!validateCheckboxChoices(form)) return;
+        if (!validateCodeOfConduct()) return;
+        if (!validateFieldLengths(form) || !validateEmailAddresses(form) || !validateBookingReferences(form) || !validateCatalogPricing(form) || !validateStaffUpdate(form) || !validateHeavyItems(form)) return;
         if (!form.checkValidity()) {
           setStatus(form, "Please complete the highlighted required fields.", "error");
           form.reportValidity();
@@ -863,8 +902,67 @@
     });
   }
 
+  function setupCodeOfConduct(form) {
+    if (!form.hasAttribute("data-require-code-of-conduct")) return function () { return true; };
+    var details = form.querySelector("[data-conduct-document]");
+    var reader = form.querySelector("[data-conduct-reader]");
+    var acknowledgement = form.querySelector("[data-conduct-acknowledgement]");
+    var version = form.querySelector("[data-conduct-version]");
+    var status = form.querySelector("[data-conduct-status]");
+    if (!details || !reader || !acknowledgement || !version || !status || !details.dataset.conductDocument) {
+      return function () { return setRuleError(form, null, "The Code of Conduct is unavailable. Reload the page and try again."); };
+    }
+    var documentVersion = details.dataset.conductDocument;
+    var reachedEnd = false;
+    function sync() {
+      acknowledgement.disabled = !reachedEnd;
+      if (!reachedEnd) acknowledgement.checked = false;
+      version.disabled = !reachedEnd || !acknowledgement.checked;
+      version.value = version.disabled ? "" : documentVersion;
+      status.textContent = reachedEnd ? "You can now tick the acknowledgement below." : "Read to the end to enable the acknowledgement.";
+    }
+    function checkEnd() {
+      // Closed details have no rendered height. Never count them as a short document.
+      if (!reachedEnd && details.open && reader.clientHeight > 0 && reader.scrollHeight > 0 &&
+          reader.scrollHeight - reader.clientHeight - reader.scrollTop <= 2) {
+        reachedEnd = true;
+        sync();
+      }
+    }
+    details.addEventListener("toggle", function () {
+      if (details.open) {
+        reader.focus();
+        checkEnd();
+      }
+    });
+    reader.addEventListener("scroll", checkEnd);
+    acknowledgement.addEventListener("change", sync);
+    window.addEventListener("resize", checkEnd);
+    window.addEventListener("pageshow", sync);
+    form.addEventListener("reset", function () {
+      reachedEnd = false;
+      details.open = false;
+      reader.scrollTop = 0;
+      acknowledgement.checked = false;
+      sync();
+    });
+    sync();
+    return function () {
+      sync();
+      if (!reachedEnd) {
+        details.open = true;
+        setRuleError(form, null, "Please open the Code of Conduct and read to the end.");
+        reader.focus();
+        return false;
+      }
+      if (!acknowledgement.checked) return setRuleError(form, acknowledgement, "Please tick to confirm that you have read and agree to follow the Code of Conduct.");
+      return true;
+    };
+  }
+
   configureShell();
   enableConditionalSections();
+  enableCheckboxChoices();
   configureFieldConstraints();
   setupPackageSummary();
   setupExhibitorEstimate();
@@ -875,6 +973,8 @@
     eventCodeFor: eventCodeFor,
     resolveEventCode: resolveEventCode,
     bookingReference: bookingReference,
+    vatTotals: vatTotals,
+    totalText: totalText,
     calculatePartnerPricing: calculatePartnerPricing,
     calculateExhibitorPricing: calculateExhibitorPricing,
     includedStaffForSpace: includedStaffForSpace,

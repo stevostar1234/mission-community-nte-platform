@@ -68,7 +68,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
     @IsTest
     static void partnerUsesPartnerTemplateAndPreparationForm() {
         Fixture fixture = booking('PARTNER', true);
-        fixture.booking.NTE_Payment_Method__c = 'Stripe';
+        fixture.booking.NTE_Payment_Method__c = 'Bank transfer';
         Database.update(fixture.booking, AccessLevel.SYSTEM_MODE);
         Test.startTest();
         deliver(fixture);
@@ -91,9 +91,9 @@ private class NTEExhibitorApprovalEmailServiceTest {
             fixture.booking.NTE_Exhibitor_Space_Selections__c = 'COBSEO Charity - Single - Free';
             fixture.booking.NTE_Exhibitor_Organisation_Category__c = 'Charity - member of Cobseo';
             fixture.booking.NTE_Exhibitor_Space_Price__c = 0;
-            fixture.booking.Amount = fixture == free ? 0 : 50;
-            fixture.booking.NTE_Listed_Price_Total__c = fixture.booking.Amount;
-            fixture.booking.NTE_Power_Socket_Total__c = fixture.booking.Amount;
+            fixture.booking.Amount = fixture == free ? 0 : 60;
+            fixture.booking.NTE_Listed_Price_Total__c = fixture == free ? 0 : 50;
+            fixture.booking.NTE_Power_Socket_Total__c = fixture == free ? 0 : 50;
             fixture.booking.NTE_Power_Socket_Count__c = fixture == free ? 0 : 1;
             fixture.booking.NTE_Power_Socket_Unit_Price__c = fixture == free ? 0 : 50;
             Database.update(fixture.booking, AccessLevel.SYSTEM_MODE);
@@ -108,6 +108,35 @@ private class NTEExhibitorApprovalEmailServiceTest {
         System.assert(!extrasHtml.contains('No payment is due.'));
         System.assertEquals('NTE_Exhibitor_Approved',
             NTEExhibitorApprovalEmailService.selectedTemplateByOpportunityId.get(extras.booking.Id));
+    }
+
+    @IsTest
+    static void partnerReservationUsesSelectedNamesAndPreservesSavedCombinedPrice() {
+        Fixture fixture = booking('PACKAGE-NAMES', true);
+        fixture.booking.NTE_Sponsor_Package__c = 'Gold Partner;Event Guide Sponsor';
+        fixture.booking.NTE_Heavy_Vehicle_Required__c = 'No';
+        fixture.booking.NTE_Event_Code__c = 'NTE2028';
+        Database.update(fixture.booking, AccessLevel.SYSTEM_MODE);
+        Test.startTest();
+        deliver(fixture);
+        Test.stopTest();
+        String html = NTEExhibitorApprovalEmailService.htmlByOpportunityId.get(fixture.booking.Id);
+        System.assertNotEquals(null, html, 'Reservation error: ' + state(fixture.booking.Id).NTE_Approval_Email_Error__c);
+        String charges = html.substring(html.indexOf('Allocation and charges'), html.indexOf('Staff details and event preparation'));
+        System.assert(charges.contains('Gold Partner + Event Guide Sponsor'));
+        System.assert(!charges.contains('Partner / sponsor package'));
+        System.assert(charges.contains('£2000.00'), 'Use the saved combined price, not the current catalogue sum.');
+        System.assert(html.contains('reserve your partner / sponsor package at NTE27.'));
+        System.assert(html.contains('Your partner / sponsor package will be confirmed once payment has been received.'));
+        System.assert(!html.contains('items on flatbed trailers'), 'Do not refer to an omitted Vehicle details link.');
+        System.assert(html.contains('setting up between 14:00-18:00 hrs on Sunday is required.'));
+        System.assert(!html.contains('{NTE_'));
+        String plain = NTEExhibitorApprovalEmailService.plainTextFromHtml(html);
+        System.assert(plain.contains('Gold Partner + Event Guide Sponsor'));
+        System.assert(plain.contains('NTE27'));
+        System.assertEquals('NTE2028', fixture.booking.NTE_Event_Code__c, 'Static email branding preserves the actual booking event.');
+        System.assert(!plain.contains('££'));
+        System.assertEquals(0, Limits.getEmailInvocations());
     }
 
     @IsTest
@@ -195,7 +224,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
         Test.stopTest();
         Opportunity result = state(fixture.booking.Id);
         System.assertEquals('Failed', result.NTE_Approval_Email_Status__c);
-        System.assert(result.NTE_Approval_Email_Error__c.contains('price needs review'));
+        System.assert(result.NTE_Approval_Email_Error__c.contains('existing payment'));
         System.assertEquals(null, result.NTE_Approval_Email_Sent_At__c);
         System.assertEquals(true, result.NTE_Payment_Received__c, 'Email validation must not rewrite existing payment history.');
         System.assertEquals(0, NTEExhibitorApprovalEmailService.acceptedDispatchCount);
@@ -260,7 +289,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
         System.assertEquals(850, [SELECT Amount FROM Opportunity WHERE Id = :affected.booking.Id].Amount,
             'Readiness validation must preserve the saved monetary facts.');
         update new Opportunity(Id = affected.booking.Id, NTE_Power_Socket_Total__c = 100,
-            Amount = 900, NTE_Listed_Price_Total__c = 900);
+            Amount = 1080, NTE_Listed_Price_Total__c = 900);
         deliver(affected);
         deliver(healthy);
         Test.stopTest();
@@ -277,7 +306,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
         for (String quantity : new List<String>{'two', '1.5', '-2', '0'}) {
             update new Opportunity(Id = fixture.booking.Id, NTE_Additional_Staff_Count__c = quantity,
                 NTE_Additional_Staff_Unit_Price__c = 50, NTE_Additional_Staff_Total__c = 100,
-                Amount = 900, NTE_Listed_Price_Total__c = 900);
+                Amount = 1080, NTE_Listed_Price_Total__c = 900);
             deliver(fixture);
             System.assertEquals('Failed', state(fixture.booking.Id).NTE_Approval_Email_Status__c,
                 'Invalid additional-staff quantity: ' + quantity);
@@ -391,10 +420,9 @@ private class NTEExhibitorApprovalEmailServiceTest {
             'NTE_Complimentary_Exhibitor_Approved', 'NTE_Exhibitor_Payment_Confirmed', 'NTE_Partner_Sponsor_Payment_Confirmed'};
         Set<String> names = new Set<String>(bookingNames);
         names.addAll(new Set<String>{'NTE_Exhibitor_EOI_Acknowledgement', 'NTE_Partner_Sponsor_EOI_Acknowledgement',
-            'NTE_Exhibitor_Application_Acknowledgement', 'NTE_Partner_Sponsor_Application_Acknowledgement',
             'NTE_Guest_Registration_Acknowledgement', 'Volunteer_Application_Acknowledgement'});
         List<EmailTemplate> templates = [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :names];
-        System.assertEquals(11, templates.size());
+        System.assertEquals(9, templates.size());
         Test.startTest();
         for (String firstName : new List<String>{'Alex', null, 'A <b>&{x}</b> "O\'Neil"'}) {
             update new Contact(Id = fixture.primary.Id, FirstName = firstName);
@@ -614,7 +642,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
             Email = 'applicant-' + suffix + '@example.invalid', Web_Form_Type__c = formType,
             NTE_Event_Code__c = 'NTE2099', Booking_Reference__c = 'NTE-APPROVAL-' + suffix,
             Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2, Stand_Power__c = 'No',
-            Exhibitor_Space_Selections__c = partner ? null : 'Single Garage - Track Side - £800 + VAT',
+            Exhibitor_Space_Selections__c = partner ? null : 'Single Garage - Track Side - £799 + VAT',
             Exhibitor_Organisation_Category__c = partner ? null : 'CIC or Not for Profit',
             Sponsor_Package__c = partner ? 'Champion Partner' : null
         );
@@ -636,7 +664,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
             NTE_Exhibitor_Organisation_Category__c = fixture.application.Exhibitor_Organisation_Category__c,
             NTE_Sponsor_Package__c = fixture.application.Sponsor_Package__c,
             NTE_Sponsor_Package_Total__c = partner ? 2000 : 0, NTE_Exhibitor_Space_Price__c = partner ? 0 : 800,
-            NTE_Listed_Price_Total__c = partner ? 2000 : 800, Amount = partner ? 2000 : 800,
+            NTE_Listed_Price_Total__c = partner ? 2000 : 800, Amount = partner ? 2400 : 960,
             NTE_Total_Staff_Count__c = 2, NTE_Initial_Staff_Count__c = 2, NTE_Included_Staff_Count__c = 2,
             NTE_Heavy_Vehicle_Required__c = 'Yes', NTE_Pricing_Status__c = 'Calculated',
             NTE_Payment_Method__c = 'Bank transfer', NTE_Invoice_Required__c = 'Yes'

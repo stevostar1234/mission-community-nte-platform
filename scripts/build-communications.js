@@ -32,9 +32,8 @@ for (const [api, label, type, length] of [
     ['NTE_Invitation_Recipient__c', 'NTE Invitation Recipient', 'Email']
 ]) field('Lead', api, label, type, length);
 for (const [api, label, type, length] of [
-    ['NTE_Final_Pack_Status__c', 'NTE Final Pack Status', 'Text', 20],
-    ['NTE_Final_Pack_Sent_At__c', 'NTE Final Pack Sent At', 'DateTime'],
-    ['NTE_Final_Pack_Recipient__c', 'NTE Final Pack Recipient', 'Email'],
+    ['NTE_Final_Pack_Status__c', 'NTE Joining Instructions Status', 'Text', 20],
+    ['NTE_Final_Pack_Sent_At__c', 'NTE Joining Instructions Sent At', 'DateTime'],
     ['NTE_Approval_Email_Status__c', 'NTE Provisional Email Status', 'Text', 40],
     ['NTE_Approval_Email_Batch__c', 'NTE Provisional Email Batch', 'Text', 64],
     ['NTE_Approval_Email_Lead_Id__c', 'NTE Provisional Email Lead ID', 'Text', 18],
@@ -49,7 +48,7 @@ const dispatchObject = 'NTE_Email_Dispatch__c';
 write(`objects/${dispatchObject}/${dispatchObject}.object-meta.xml`, `<?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="${ns}">
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Individual NTE invitation, reminder, booking-confirmation and final-pack email requests and outcomes.</description>
+    <description>Individual NTE invitation, reminder, booking-confirmation and email requests and outcomes.</description>
     <enableActivities>false</enableActivities>
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
@@ -71,11 +70,8 @@ for (const [api, label, type, length, target] of [
 ]) field(dispatchObject, api, label, type, length, target);
 
 const routing = {
-    Application_Event_Code__c: ['Final Pack Event Code', 'NTE2027', 20],
     Exhibitor_Application_URL__c: ['Exhibitor Application URL', 'https://stevostar1234.github.io/nte27-web-to-lead-demo/exhibitor-application.html', 255],
     Partner_Application_URL__c: ['Partner Application URL', 'https://stevostar1234.github.io/nte27-web-to-lead-demo/partner-sponsor-application.html', 255],
-    Exhibitor_Final_Pack_URL__c: ['Exhibitor Final Pack URL', '', 255],
-    Partner_Final_Pack_URL__c: ['Partner Final Pack URL', '', 255]
 };
 const configFile = path.join(md, 'customMetadata/NTE_Routing_Config.Default.md-meta.xml');
 let config = fs.readFileSync(configFile, 'utf8');
@@ -107,22 +103,14 @@ listView(dispatchObject, 'NTE_Email_Failures', 'NTE Email Failures',
     ['NAME', 'Kind__c', 'Recipient__c', 'Event_Code__c', 'Status__c', 'Opportunity__c', 'Lead__c', 'CREATED_DATE'], [['Status__c', 'equals', 'Failed']]);
 listView(dispatchObject, 'NTE_Recent_Emails', 'NTE Recent Emails',
     ['NAME', 'Kind__c', 'Recipient__c', 'Status__c', 'Sent_At__c', 'Opportunity__c', 'Lead__c', 'CREATED_DATE'], []);
-const oppBase = [['OPPORTUNITY.RECORDTYPE', 'equals', 'Opportunity.NTE_Event_Opportunity'], ['NTE_Event_Code__c', 'notEqual'], ['OPPORTUNITY.STAGE_NAME', 'notEqual', 'Closed Lost']];
-// The main generator owns the four combined finance views; do not overwrite them
+// The main generator owns the three combined finance views; do not overwrite them
 // with the former booking-only definitions.
 register('ListView', 'Opportunity.NTE_Payment_Confirmed');
-for (const api of ['NTE_Pricing_Ready__c', 'NTE_Finance_Invoice_Due__c', 'NTE_Finance_Payment_Due__c', 'NTE_Finance_Payment_Confirmed__c']) {
+for (const api of ['NTE_Pricing_Ready__c', 'NTE_Finance_Payment_Due__c', 'NTE_Finance_Payment_Confirmed__c']) {
     register('CustomField', `Opportunity.${api}`);
 }
 register('CustomField', 'Lead.NTE_Update_Booking_Id__c');
 register('ValidationRule', 'Lead.NTE_Intake_Event_Code');
-for (const [api, label, invoice, paid] of [
-    ['NTE_Top_Up_Invoices_Required', 'NTE Staff Top-up Invoices Required', '0', null],
-    ['NTE_Top_Up_Payments_Due', 'NTE Staff Top-up Payments Due', '1', '0'],
-    ['NTE_Top_Up_Paid', 'NTE Staff Top-up Paid', '1', '1']
-]) listView('Opportunity', api, label, ['OPPORTUNITY.NAME', 'ACCOUNT.NAME', 'NTE_Event_Code__c', 'NTE_Top_Up_Staff_Total__c', 'NTE_Top_Up_Invoice_Provided__c', 'NTE_Top_Up_Payment_Received__c'],
-    [...oppBase, ['NTE_Top_Up_Invoice_Required__c', 'equals', '1'], ['NTE_Top_Up_Staff_Total__c', 'greaterThan', '0'], ['NTE_Top_Up_Invoice_Provided__c', 'equals', invoice], ...(paid === null ? [] : [['NTE_Top_Up_Payment_Received__c', 'equals', paid]])],
-    `1 AND 2 AND 3 AND (4 OR 5) AND 6${paid === null ? '' : ' AND 7'}`);
 
 write(`layouts/${dispatchObject}-NTE Email Dispatch.layout-meta.xml`, `<?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="${ns}">
@@ -138,7 +126,7 @@ register('LightningComponentBundle', 'nteRetryEmail');
 for (const [api, label] of [
     ['NTE_Email_Dispatch__c.Retry_Email', 'Retry email'],
     ['Opportunity.Retry_Booking_Email', 'Retry booking email'],
-    ['Lead.Retry_Update_Email', 'Retry update email']
+    ['Lead.Retry_Update_Email', 'Retry email']
 ]) {
     write(`quickActions/${api}.quickAction-meta.xml`, `<?xml version="1.0" encoding="UTF-8"?>
 <QuickAction xmlns="${ns}">
@@ -155,7 +143,7 @@ for (const permission of ['NTE_Forms_Administration', 'NTE_Management_User']) {
     const additions = [];
     for (const api of fields.filter(api => !api.startsWith('NTE_Routing_Config__mdt.'))) if (!contents.includes(`<field>${api}</field>`))
         additions.push(`<fieldPermissions><editable>true</editable><field>${api}</field><readable>true</readable></fieldPermissions>`);
-    for (const cls of ['NTEEmailDispatchService', 'NTEUpdateSubmissionService']) if (!contents.includes(`<apexClass>${cls}</apexClass>`))
+    for (const cls of ['NTEEmailDispatchService', 'NTEUpdateSubmissionService', 'NTELeadEmailRetryService', 'NTEBookingEmailRetryService']) if (!contents.includes(`<apexClass>${cls}</apexClass>`))
         additions.push(`<classAccesses><apexClass>${cls}</apexClass><enabled>true</enabled></classAccesses>`);
     additions.push(`<objectPermissions><allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>${dispatchObject}</object><viewAllRecords>false</viewAllRecords></objectPermissions>`);
     // The main generator recreates these files before this extension runs.

@@ -69,11 +69,13 @@ private class NTE_MasterPanelControllerTest {
             NTE_Event_Contact_Email__c = 'master-panel@example.invalid',
             NTE_Event_Contact_Mobile__c = '+44 7700 900000',
             NTE_Listed_Price_Total__c = amount,
-            Amount = amount,
+            Amount = amount * 1.2,
             NTE_Pricing_Status__c = pricingReviewRequired ? 'Review required' : 'Calculated',
             NTE_Invoice_Required__c = (amount > 0 || pricingReviewRequired) ? 'Yes' : 'No',
             NTE_Quote_Required_for_PO__c = quoteRequired ? 'Yes' : 'No',
             NTE_Quote_Provided__c = quoteProvided,
+            NTE_Free_Space_Confirmed__c = amount == 0,
+            NTE_Approval_Email_Sent_At__c = invoiceProvided || paid || amount == 0 ? System.now() : null,
             NTE_Invoice_Provided__c = invoiceProvided,
             NTE_Payment_Received__c = paid,
             NTE_Heavy_Vehicle_Required__c = heavyRequired,
@@ -109,11 +111,11 @@ private class NTE_MasterPanelControllerTest {
             recordValue.Preferred_Contact_Method__c = 'Telephone';
             recordValue.Preferred_Contact_Time__c = 'Afternoons';
         } else if (formType == 'Exhibitor Application') {
-            recordValue.Exhibitor_Space_Selections__c = 'Single Garage - Paddock Side with power - £800 + VAT';
+            recordValue.Exhibitor_Space_Selections__c = 'Single Garage - Paddock Side with power - £799 + VAT';
             recordValue.Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector';
             recordValue.Planned_Exhibitor_Count__c = '2';
             recordValue.Stand_Power__c = 'No';
-            recordValue.Listed_Price_Total__c = 800;
+            recordValue.Listed_Price_Total__c = 799;
             recordValue.Pricing_Status__c = 'Calculated';
         }
         return recordValue;
@@ -139,18 +141,19 @@ private class NTE_MasterPanelControllerTest {
     static void dashboardReconcilesFiltersCountsPipelineAndRows() {
         Test.startTest();
         NTE_MasterPanelController.DashboardResponse response = NTE_MasterPanelController.getDashboard(
-            'NTE2027', 'ALL', null, 'QUOTE_REQUIRED', 25, 0
+            'NTE2027', 'ALL', null, 'REQUIREMENTS', 25, 0
         );
         Test.stopTest();
 
         System.assertEquals('NTE2027', response.selectedEventCode);
         System.assertEquals('ALL', response.selectedTimeRange);
-        System.assertEquals('QUOTE_REQUIRED', response.selectedViewKey);
-        System.assertEquals(1, response.totalRows);
-        System.assertEquals(1, response.rows.size());
-        System.assertEquals('Quote booking', response.rows[0].name);
-        System.assertEquals(true, response.rows[0].canMarkQuote);
-        System.assertEquals('Quote required', response.rows[0].financeStatus);
+        System.assertEquals('REQUIREMENTS', response.selectedViewKey);
+        System.assertEquals(2, response.totalRows);
+        System.assertEquals(2, response.rows.size());
+        Boolean foundQuote=false;
+        for (NTE_MasterPanelController.DashboardRow item : response.rows) if (item.name == 'Quote booking') { foundQuote=true; System.assert(item.canMarkQuote); }
+        System.assert(foundQuote);
+        System.assertEquals('Requirements', response.rows[0].financeStatus);
         System.assert(response.eventOptions.size() >= 2);
         System.assertEquals('NTE2028', response.eventOptions[0].value);
         System.assert(response.ownerOptions.size() >= 1);
@@ -164,10 +167,9 @@ private class NTE_MasterPanelControllerTest {
 
         Map<String, Integer> queueValues = new Map<String, Integer>();
         for (NTE_MasterPanelController.WorkQueue queue : response.workQueues) queueValues.put(queue.key, queue.count);
-        System.assertEquals(1, queueValues.get('QUOTE_REQUIRED'));
-        System.assertEquals(1, queueValues.get('INVOICE_REQUIRED'));
+        System.assertEquals(2, queueValues.get('REQUIREMENTS'));
         System.assertEquals(0, queueValues.get('PAYMENT_DUE'));
-        System.assertEquals(1, queueValues.get('PAYMENT_COMPLETE'));
+        System.assertEquals(2, queueValues.get('PAYMENT_COMPLETE'));
         System.assertEquals(0, queueValues.get('HEAVY_DUE'));
         System.assertEquals(2, queueValues.get('STAFF_DUE'));
         System.assertEquals(2, queueValues.get('LOGO_DUE'));
@@ -198,20 +200,17 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals(4, overviewByKey.get('approved').total);
         System.assertEquals(3, overviewByKey.get('approved').inProgress);
         System.assertEquals(1, overviewByKey.get('approved').completed);
-        System.assertEquals(1, overviewByKey.get('quotes').total);
-        System.assertEquals(1, overviewByKey.get('quotes').inProgress);
-        System.assertEquals(0, overviewByKey.get('quotes').completed);
-        System.assertEquals(2, overviewByKey.get('invoices').total);
-        System.assertEquals(1, overviewByKey.get('invoices').inProgress);
-        System.assertEquals(1, overviewByKey.get('invoices').completed);
-        System.assertEquals(1, overviewByKey.get('payments').total);
+        System.assertEquals(4, overviewByKey.get('requirements').total);
+        System.assertEquals(2, overviewByKey.get('requirements').inProgress);
+        System.assertEquals(2, overviewByKey.get('requirements').completed);
+        System.assertEquals(2, overviewByKey.get('payments').total);
         System.assertEquals(0, overviewByKey.get('payments').inProgress);
-        System.assertEquals(1, overviewByKey.get('payments').completed);
+        System.assertEquals(2, overviewByKey.get('payments').completed);
         System.assertEquals(4, overviewByKey.get('logos').total);
         System.assertEquals(2, overviewByKey.get('logos').inProgress);
         System.assertEquals(2, overviewByKey.get('logos').completed);
         System.assertEquals('LOGO_DUE', overviewByKey.get('logos').viewKey);
-        System.assertEquals('Quotes required', response.selectedView.label);
+        System.assertEquals('Requirements', response.selectedView.label);
     }
 
     @IsTest
@@ -298,7 +297,7 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals('STILL_TO_COLLECT', response.headlines[3].key);
         System.assertEquals('PAID', response.headlines[4].key);
         System.assertEquals(6, response.pipeline.size());
-        System.assertEquals(4, response.revenueReadiness.size());
+        System.assertEquals(3, response.revenueReadiness.size());
         System.assertEquals(2, response.pricingReviewCount,
             'Applications and bookings with unknown pricing are counted and excluded from known value totals.');
         System.assertNotEquals(null, response.refreshedAt);
@@ -308,7 +307,7 @@ private class NTE_MasterPanelControllerTest {
         for (NTE_MasterPanelController.HomeMetric metric : response.headlines) {
             headlineByKey.put(metric.key, metric);
         }
-        assertMetric(headlineByKey.get('APPLICATIONS'), 2, 800);
+        assertMetric(headlineByKey.get('APPLICATIONS'), 2, 799);
         assertMetric(headlineByKey.get('CONFIRMED_APPLICATIONS'), 5, 17000);
         assertMetric(headlineByKey.get('INVOICED'), 1, 1200);
         assertMetric(headlineByKey.get('PAID'), 1, 1200);
@@ -322,11 +321,10 @@ private class NTE_MasterPanelControllerTest {
             readinessByKey.put(metric.key, metric);
             readinessCount += metric.count;
         }
-        assertMetric(readinessByKey.get('QUOTE_REQUIRED'), 1, 15000);
-        assertMetric(readinessByKey.get('INVOICE_REQUIRED'), 2, 800);
+        assertMetric(readinessByKey.get('REQUIREMENTS'), 3, 15800);
         assertMetric(readinessByKey.get('PAYMENT_REQUIRED'), 0, 0);
-        assertMetric(readinessByKey.get('PAID'), 1, 1200);
-        System.assertEquals(4, readinessCount, 'This fixture has four finance requirements; top-ups may create overlapping requirements.');
+        assertMetric(readinessByKey.get('PAID'), 2, 1200);
+        System.assertEquals(5, readinessCount, 'This fixture has five finance records; top-ups may create overlapping requirements.');
 
         Map<String, NTE_MasterPanelController.HomePipelineRow> pipelineByKey =
             new Map<String, NTE_MasterPanelController.HomePipelineRow>();
@@ -336,18 +334,18 @@ private class NTE_MasterPanelControllerTest {
             System.assertEquals(row.totalValue, row.exhibitorValue + row.partnerValue);
         }
         assertPipeline(pipelineByKey.get('INTEREST'), 1, 0, 1, 0, 0);
-        assertPipeline(pipelineByKey.get('APPLICATIONS'), 2, 1, 1, 800, 0);
+        assertPipeline(pipelineByKey.get('APPLICATIONS'), 2, 1, 1, 799, 0);
         assertPipeline(pipelineByKey.get('APPROVED'), 5, 3, 2, 2000, 15000);
-        assertPipeline(pipelineByKey.get('FINANCES'), 4, 2, 2, 2000, 15000);
+        assertPipeline(pipelineByKey.get('FINANCES'), 5, 3, 2, 2000, 15000);
         assertPipeline(pipelineByKey.get('UPDATES'), 3, 2, 1, 800, 0);
         assertPipeline(pipelineByKey.get('COMPLETED'), 1, 1, 0, 1200, 0);
 
         System.assertEquals(4, response.bookingMix.exhibitor.count);
-        System.assertEquals(2800, response.bookingMix.exhibitor.value);
-        System.assertEquals(700, response.bookingMix.exhibitor.averageValue);
+        System.assertEquals(3358.8, response.bookingMix.exhibitor.value);
+        System.assertEquals(839.700, response.bookingMix.exhibitor.averageValue);
         System.assertEquals(3, response.bookingMix.partner.count);
-        System.assertEquals(15000, response.bookingMix.partner.value);
-        System.assertEquals(5000, response.bookingMix.partner.averageValue);
+        System.assertEquals(18000.0, response.bookingMix.partner.value);
+        System.assertEquals(6000.0, response.bookingMix.partner.averageValue);
     }
 
     @IsTest
@@ -361,7 +359,7 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals('NTE2028', response.eventOptions[0].value);
         for (NTE_MasterPanelController.HomeMetric metric : response.headlines) {
             System.assertEquals(0, metric.count);
-            System.assertEquals(0, metric.value);
+            System.assertEquals(0.0, metric.value);
         }
         System.assertEquals(1, response.pipeline[0].count);
         System.assertEquals(1, response.pipeline[0].exhibitorCount);
@@ -373,7 +371,7 @@ private class NTE_MasterPanelControllerTest {
     private static void assertMetric(NTE_MasterPanelController.HomeMetric metric, Integer count, Decimal value) {
         System.assertNotEquals(null, metric);
         System.assertEquals(count, metric.count);
-        System.assertEquals(value, metric.value);
+        System.assertEquals(value * 1.2, metric.value);
     }
 
     private static void assertPipeline(NTE_MasterPanelController.HomePipelineRow row, Integer count,
@@ -382,8 +380,8 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals(count, row.count);
         System.assertEquals(exhibitorCount, row.exhibitorCount);
         System.assertEquals(partnerCount, row.partnerCount);
-        System.assertEquals(exhibitorValue, row.exhibitorValue);
-        System.assertEquals(partnerValue, row.partnerValue);
+        System.assertEquals(exhibitorValue * 1.2, row.exhibitorValue);
+        System.assertEquals(partnerValue * 1.2, row.partnerValue);
     }
 
     @IsTest
@@ -401,7 +399,67 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals('Application review', response.rows[0].stage);
         System.assertEquals(false, response.rows[0].canMarkInvoice);
         System.assertEquals('Exhibitor', response.rows[0].typeLabel);
-        System.assertEquals(800, response.rows[0].amount);
+        System.assertEquals(958.8, response.rows[0].amount);
+    }
+
+    @IsTest
+    static void requirementsKeepCreationOrderAcrossPagesAndChecklistSaves() {
+        Id accountId = [SELECT Id FROM Account LIMIT 1].Id;
+        Id recordTypeId = nteOpportunityRecordTypeId();
+        String openStage = [SELECT MasterLabel FROM OpportunityStage WHERE IsActive = true
+            AND IsClosed = false ORDER BY SortOrder LIMIT 1].MasterLabel;
+        List<Opportunity> bookings = new List<Opportunity>();
+        for (Integer index = 0; index < 31; index++) {
+            bookings.add(new Opportunity(AccountId = accountId, RecordTypeId = recordTypeId,
+                Name = 'Stable requirements ' + index, StageName = openStage, CloseDate = Date.today().addDays(30),
+                NTE_Event_Code__c = 'NTE2094', NTE_Source_Form_Type__c = 'Exhibitor Application',
+                Booking_Reference__c = 'NTE-STABLE-REQ-' + index, NTE_Listed_Price_Total__c = 50,
+                NTE_Pricing_Status__c = 'Calculated', NTE_Invoice_Required__c = 'Yes',
+                NTE_Payment_Method__c = 'Bank transfer', NTE_Quote_Required_for_PO__c = 'Yes'));
+        }
+        insert bookings;
+        Datetime newestCreated = System.now().addDays(-1);
+        for (Integer index = 0; index < bookings.size(); index++) {
+            // The first pair share a creation time; insertion order otherwise opposes creation order.
+            Test.setCreatedDate(bookings[index].Id, newestCreated.addDays(-Math.max(0, index - 1)));
+        }
+        List<Id> expected = new List<Id>();
+        for (Opportunity booking : [SELECT Id FROM Opportunity WHERE NTE_Event_Code__c = 'NTE2094'
+            ORDER BY CreatedDate DESC, Id DESC]) expected.add(booking.Id);
+        NTE_MasterPanelController.DashboardResponse beforeSecond = NTE_MasterPanelController.getDashboard(
+            'NTE2094', 'ALL', null, 'REQUIREMENTS', 25, 25);
+        Id editedId = expected[expected.size() - 1];
+
+        Test.startTest();
+        NTEFinanceService.setRequirement(editedId, 'NTE_Quote_Provided__c', true);
+        NTE_MasterPanelController.DashboardResponse first = NTE_MasterPanelController.getDashboard(
+            'NTE2094', 'ALL', null, 'REQUIREMENTS', 25, 0);
+        NTE_MasterPanelController.DashboardResponse second = NTE_MasterPanelController.getDashboard(
+            'NTE2094', 'ALL', null, 'REQUIREMENTS', 25, 25);
+        Test.stopTest();
+
+        List<Id> actual = new List<Id>();
+        for (NTE_MasterPanelController.DashboardRow row : first.rows) actual.add(row.recordId);
+        for (Integer index = 0; index < second.rows.size(); index++) {
+            NTE_MasterPanelController.DashboardRow row = second.rows[index];
+            actual.add(row.recordId);
+            System.assertEquals(beforeSecond.rows[index].recordId, row.recordId,
+                'A checklist save must not change the current page or the position within it.');
+            if (row.recordId == editedId) System.assertEquals(true, row.quoteProvided);
+        }
+        System.assertEquals(expected, actual, 'Requirements must use newest creation time and descending ID across pages.');
+        System.assertEquals(31, first.totalRows, 'Independent ticks must not remove a Requirements booking.');
+        System.assertEquals(25, second.offsetRows);
+        System.assertEquals(6, second.rows.size());
+        System.assertEquals(actual.size(), new Set<Id>(actual).size(), 'Page boundaries cannot skip or repeat a booking.');
+
+        List<Id> expectedApproved = new List<Id>();
+        for (Opportunity booking : [SELECT Id FROM Opportunity WHERE NTE_Event_Code__c = 'NTE2094'
+            ORDER BY LastModifiedDate DESC, Id DESC LIMIT 25]) expectedApproved.add(booking.Id);
+        List<Id> actualApproved = new List<Id>();
+        for (NTE_MasterPanelController.DashboardRow row : NTE_MasterPanelController.getDashboard(
+            'NTE2094', 'ALL', null, 'APPROVED', 25, 0).rows) actualApproved.add(row.recordId);
+        System.assertEquals(expectedApproved, actualApproved, 'Other views retain their last-modified ordering.');
     }
 
     @IsTest
@@ -484,7 +542,7 @@ private class NTE_MasterPanelControllerTest {
         NTE_MasterPanelController.DashboardResponse financeResponse = NTE_MasterPanelController.getDashboard(
             'NTE2027', 'ALL', null, 'FINANCE_DUE', 25, 0
         );
-        System.assertEquals(3, financeResponse.totalRows);
+        System.assertEquals(4, financeResponse.totalRows);
         System.assertEquals('Finance records', financeResponse.selectedView.label);
     }
 
@@ -593,7 +651,7 @@ private class NTE_MasterPanelControllerTest {
             'NTE2027', 'ALL', null, 'READINESS_DUE', 25, 0
         );
 
-        System.assertEquals(1, paymentsComplete.totalRows);
+        System.assertEquals(2, paymentsComplete.totalRows);
         System.assertEquals('Payment confirmed', paymentsComplete.rows[0].financeStatus);
         System.assertEquals(2, updatesRequired.totalRows);
     }
@@ -658,7 +716,7 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals(1, paymentRequired.totalRows);
         System.assertEquals('Payment required', paymentRequired.selectedView.label);
         System.assertEquals(true, paymentRequired.rows[0].canMarkPaid);
-        System.assertEquals('Booking payment required', paymentRequired.rows[0].financeStatus);
+        System.assertEquals('Payment required', paymentRequired.rows[0].financeStatus);
     }
 
     @IsTest
@@ -683,15 +741,16 @@ private class NTE_MasterPanelControllerTest {
             if (row.recordId == topUpBooking.Id) invoiceRow = row;
         }
         System.assertNotEquals(null, invoiceRow);
-        System.assertEquals(1100, invoiceRow.amount);
-        System.assertEquals(100, invoiceRow.topUpAmount);
-        System.assertEquals('Staff top-up invoice required', invoiceRow.financeStatus);
+        System.assertEquals(1320.0, invoiceRow.amount);
+        System.assertEquals(120.0, invoiceRow.topUpAmount);
+        System.assertEquals('Requirements', invoiceRow.financeStatus);
         System.assertEquals(false, invoiceRow.canMarkInvoice);
         System.assertEquals(true, invoiceRow.canMarkTopUpInvoice);
 
         NTE_MasterPanelController.ActionResult invoiceResult =
             NTE_MasterPanelController.updateMilestone(topUpBooking.Id, 'TOP_UP_INVOICE_PROVIDED');
         System.assertEquals('Staff top-up invoice marked as provided.', invoiceResult.message);
+        update new Opportunity(Id=topUpBooking.Id,NTE_Top_Up_Payment_Requested_At__c=System.now());
 
         NTE_MasterPanelController.DashboardResponse paymentQueue = NTE_MasterPanelController.getDashboard(
             'NTE2027', 'ALL', null, 'TOP_UP_PAYMENT_DUE', 25, 0
@@ -701,7 +760,7 @@ private class NTE_MasterPanelControllerTest {
             if (row.recordId == topUpBooking.Id) paymentRow = row;
         }
         System.assertNotEquals(null, paymentRow);
-        System.assertEquals('Staff top-up payment required', paymentRow.financeStatus);
+        System.assertEquals('Payment required', paymentRow.financeStatus);
         System.assertEquals(false, paymentRow.canMarkPaid);
         System.assertEquals(true, paymentRow.canMarkTopUpPaid);
 
@@ -753,7 +812,7 @@ private class NTE_MasterPanelControllerTest {
         NTE_MasterPanelController.DashboardResponse beforeQuote = NTE_MasterPanelController.getDashboard(
             'NTE2027', 'ALL', null, 'COMPLETED', 25, 0
         );
-        System.assertEquals(1, beforeQuote.totalRows, 'A required quote must be provided before the booking is complete.');
+        System.assertEquals(2, beforeQuote.totalRows, 'Procurement ticks do not gate completion.');
 
         quoteBooking.NTE_Quote_Provided__c = true;
         update quoteBooking;
@@ -764,16 +823,8 @@ private class NTE_MasterPanelControllerTest {
     }
 
     @IsTest
-    static void milestonesEnforceOrderAndRecordAudit() {
+    static void milestonesRecordIndependentAudits() {
         Opportunity quoteBooking = [SELECT Id FROM Opportunity WHERE Name = 'Quote booking' LIMIT 1];
-        Boolean orderBlocked = false;
-        try {
-            NTE_MasterPanelController.updateMilestone(quoteBooking.Id, 'INVOICE_PROVIDED');
-        } catch (AuraHandledException expected) {
-            orderBlocked = true;
-        }
-        System.assertEquals(true, orderBlocked);
-
         Test.startTest();
         NTE_MasterPanelController.ActionResult quoteResult = NTE_MasterPanelController.updateMilestone(quoteBooking.Id, 'QUOTE_PROVIDED');
         NTE_MasterPanelController.ActionResult invoiceResult = NTE_MasterPanelController.updateMilestone(quoteBooking.Id, 'INVOICE_PROVIDED');
@@ -886,7 +937,7 @@ private class NTE_MasterPanelControllerTest {
     @IsTest
     static void everyFinanceViewLinksToTheWeeklyAndCrossEventReports() {
         Set<String> financeViews = new Set<String>{
-            'FINANCE_DUE', 'QUOTE_REQUIRED', 'INVOICE_REQUIRED', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'
+            'FINANCE_DUE', 'REQUIREMENTS', 'PAYMENT_DUE', 'PAYMENT_COMPLETE'
         };
         NTE_MasterPanelController.reportUrlOverride = new Map<String, String>{
             'NTE_06_Finance_and_Invoicing' => '/lightning/r/Report/00O000000000001AAA/view',
@@ -902,7 +953,7 @@ private class NTE_MasterPanelControllerTest {
             System.assert(String.isNotBlank(queue.weeklyReportUrl), queue.key + ' must link to the weekly finance report.');
             System.assert(queue.weeklyReportUrl.contains('/lightning/r/Report/'));
         }
-        System.assertEquals(5, checkedCount);
+        System.assertEquals(4, checkedCount);
     }
 
     @IsTest

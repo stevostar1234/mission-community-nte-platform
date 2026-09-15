@@ -21,6 +21,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
     @TestVisible private static Boolean simulateSendFailure = false;
     @TestVisible private static Boolean simulateQueueFailure = false;
     private static String transactionBatchKey;
+    private static Boolean manualSend = false;
     private static Set<Id> queuedInTransaction = new Set<Id>();
 
     public class Request {
@@ -66,6 +67,12 @@ public without sharing class NTEExhibitorApprovalEmailService {
         }
     }
 
+    public static ApprovalRetryResult sendManually(Id opportunityId) {
+        manualSend = true;
+        try { return retryApprovalEmail(opportunityId); }
+        finally { manualSend = false; }
+    }
+
     @AuraEnabled
     public static ApprovalRetryResult retryApprovalEmail(Id opportunityId) {
         if (opportunityId == null || opportunityId.getSObjectType() != Opportunity.SObjectType
@@ -73,13 +80,21 @@ public without sharing class NTEExhibitorApprovalEmailService {
             throw new AuraHandledException('Select an NTE booking you can update.');
         }
         Opportunity booking = [
-            SELECT Id, NTE_Source_Form_Type__c, NTE_Approval_Email_Status__c
+            SELECT Id, NTE_Source_Form_Type__c, NTE_Approval_Email_Status__c, NTE_Approval_Email_Sent_At__c, NTE_Approval_Email_Kind__c,
+                NTE_Listed_Price_Total__c, Amount, NTE_VAT_Rate__c, NTE_Free_Space_Confirmed__c, NTE_Payment_Received__c
             FROM Opportunity WHERE Id = :opportunityId WITH USER_MODE FOR UPDATE
         ];
         if (!APPLICATION_TYPES.contains(booking.NTE_Source_Form_Type__c)) {
             throw new AuraHandledException('Only NTE application bookings can receive this email.');
         }
-        if (booking.NTE_Approval_Email_Status__c == 'Sent' || booking.NTE_Approval_Email_Status__c == 'Pending') {
+        if (NTEVat.bookingGross(booking.NTE_Listed_Price_Total__c, booking.NTE_VAT_Rate__c, booking.Amount) == 0 && (booking.NTE_Free_Space_Confirmed__c
+            || booking.NTE_Payment_Received__c || confirmedBookingIds(new Set<Id>{booking.Id}).contains(booking.Id))) {
+            throw new AuraHandledException('This space has already been confirmed or its confirmation is waiting to send.');
+        }
+        Boolean newFreeConfirmation = NTEVat.bookingGross(booking.NTE_Listed_Price_Total__c, booking.NTE_VAT_Rate__c, booking.Amount) == 0
+            && (manualSend || (booking.NTE_Approval_Email_Status__c == 'Failed' && booking.NTE_Approval_Email_Kind__c == 'Free confirmation'));
+        if (((booking.NTE_Approval_Email_Status__c == 'Sent' || booking.NTE_Approval_Email_Sent_At__c != null) && !newFreeConfirmation)
+            || booking.NTE_Approval_Email_Status__c == 'Pending') {
             throw new AuraHandledException('This email has already been sent or is waiting to send.');
         }
         List<Lead> sourceLeads = [
@@ -109,21 +124,32 @@ public without sharing class NTEExhibitorApprovalEmailService {
         if (leadIdsByBooking.isEmpty()) return queuedIds;
         if (transactionBatchKey == null) transactionBatchKey = EncodingUtil.convertToHex(Crypto.generateAesKey(128));
         List<Opportunity> bookings = [
-            SELECT Id, NTE_Source_Form_Type__c, NTE_Approval_Email_Status__c
+            SELECT Id, NTE_Source_Form_Type__c, NTE_Approval_Email_Status__c, NTE_Approval_Email_Sent_At__c, NTE_Approval_Email_Kind__c,
+                NTE_Listed_Price_Total__c, Amount, NTE_VAT_Rate__c, NTE_Pricing_Status__c,
+                NTE_Free_Space_Confirmed__c, NTE_Payment_Received__c
             FROM Opportunity WHERE Id IN :leadIdsByBooking.keySet() FOR UPDATE
         ];
+        Set<Id> confirmedIds = confirmedBookingIds(leadIdsByBooking.keySet());
         Set<Id> legacySentIds = new Set<Id>();
         for (Task audit : [
             SELECT WhatId FROM Task WHERE WhatId IN :leadIdsByBooking.keySet() AND Subject IN :LEGACY_SENT_SUBJECTS
         ]) legacySentIds.add(audit.WhatId);
         List<Opportunity> updates = new List<Opportunity>();
         for (Opportunity booking : bookings) {
+            Boolean freeBooking = NTEVat.bookingGross(booking.NTE_Listed_Price_Total__c, booking.NTE_VAT_Rate__c, booking.Amount) == 0;
+            Boolean newFreeConfirmation = freeBooking && (manualSend
+                || (booking.NTE_Approval_Email_Status__c == 'Failed' && booking.NTE_Approval_Email_Kind__c == 'Free confirmation'));
             if (!APPLICATION_TYPES.contains(booking.NTE_Source_Form_Type__c)
-                || booking.NTE_Approval_Email_Status__c == 'Sent'
+                || (freeBooking && (booking.NTE_Free_Space_Confirmed__c
+                    || (booking.NTE_Payment_Received__c && booking.NTE_Pricing_Status__c == 'Calculated')
+                    || confirmedIds.contains(booking.Id)))
+                || ((booking.NTE_Approval_Email_Status__c == 'Sent' || booking.NTE_Approval_Email_Sent_At__c != null)
+                    && !newFreeConfirmation)
                 || booking.NTE_Approval_Email_Status__c == 'Pending'
-                || legacySentIds.contains(booking.Id)) continue;
+                || (legacySentIds.contains(booking.Id) && !newFreeConfirmation)) continue;
             updates.add(new Opportunity(
                 Id = booking.Id, NTE_Approval_Email_Status__c = 'Pending',
+                NTE_Approval_Email_Kind__c = freeBooking ? 'Free confirmation' : 'Provisional',
                 NTE_Approval_Email_Batch__c = transactionBatchKey,
                 NTE_Approval_Email_Lead_Id__c = String.valueOf(leadIdsByBooking.get(booking.Id)),
                 NTE_Approval_Email_Requested_At__c = System.now(),
@@ -134,6 +160,15 @@ public without sharing class NTEExhibitorApprovalEmailService {
         }
         if (!updates.isEmpty()) Database.update(updates, true, AccessLevel.SYSTEM_MODE);
         return queuedIds;
+    }
+
+    private static Set<Id> confirmedBookingIds(Set<Id> bookingIds) {
+        Set<Id> result = new Set<Id>();
+        for (NTE_Email_Dispatch__c dispatch : [SELECT Opportunity__c FROM NTE_Email_Dispatch__c
+            WHERE Opportunity__c IN :bookingIds AND Kind__c = 'BOOKING_CONFIRMED' AND Status__c IN ('Sent', 'Queued')]) {
+            result.add(dispatch.Opportunity__c);
+        }
+        return result;
     }
 
     private class ApprovalQueueable implements Queueable {
@@ -195,15 +230,17 @@ public without sharing class NTEExhibitorApprovalEmailService {
                 NTE_Sponsor_Package__c, NTE_Sponsor_Package_Total__c, NTE_Exhibitor_Space_Price__c,
                 NTE_Power_Socket_Count__c, NTE_Power_Socket_Unit_Price__c, NTE_Power_Socket_Total__c,
                 NTE_Additional_Staff_Count__c, NTE_Additional_Staff_Unit_Price__c, NTE_Additional_Staff_Total__c,
-                NTE_Listed_Price_Total__c, NTE_Heavy_Vehicle_Required__c,
-                NTE_Approval_Email_Status__c, NTE_Approval_Email_Lead_Id__c,
-                NTE_Approval_Email_Requested_At__c, NTE_Approval_Email_Requested_By__c
+                NTE_Listed_Price_Total__c, NTE_Price_Adjustment__c, NTE_VAT_Rate__c, NTE_Heavy_Vehicle_Required__c,
+                NTE_Free_Space_Confirmed__c,
+                NTE_Approval_Email_Status__c, NTE_Approval_Email_Kind__c, NTE_Approval_Email_Lead_Id__c,
+                NTE_Approval_Email_Requested_At__c, NTE_Approval_Email_Requested_By__c, NTE_Approval_Email_Sent_At__c
             FROM Opportunity WHERE NTE_Approval_Email_Batch__c = :batchKey
             AND NTE_Approval_Email_Status__c = 'Pending' AND Id IN :onlyBookingIds
             LIMIT :QUEUE_PAGE_SIZE FOR UPDATE
         ];
         if (bookings.isEmpty()) return;
         Set<Id> bookingIds = new Map<Id, Opportunity>(bookings).keySet();
+        Set<Id> confirmedIds = confirmedBookingIds(bookingIds);
         Set<Id> leadIds = new Set<Id>();
         for (Opportunity booking : bookings) {
             try { leadIds.add(Id.valueOf(booking.NTE_Approval_Email_Lead_Id__c)); }
@@ -215,7 +252,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
         Map<Id, Contact> contacts = NTEBookingContactService.primaryContacts(bookingIds, AccessLevel.SYSTEM_MODE, true);
         NTEStripeBookingService.preloadEmailRequests(bookingIds);
         Set<String> templateNames = new Set<String>{
-            'NTE_Exhibitor_Approved', 'NTE_Complimentary_Exhibitor_Approved', 'NTE_Partner_Sponsor_Approved'
+            'NTE_Exhibitor_Approved', 'NTE_Complimentary_Exhibitor_Approved', 'NTE_Partner_Sponsor_Approved', 'NTE_Partner_Sponsor_Free_Confirmed'
         };
         Map<String, Id> templateIds = new Map<String, Id>();
         for (EmailTemplate templateRecord : [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :templateNames]) {
@@ -227,6 +264,8 @@ public without sharing class NTEExhibitorApprovalEmailService {
         List<Opportunity> failedUpdates = new List<Opportunity>();
         List<Task> failureAudits = new List<Task>();
         for (Opportunity booking : bookings) {
+            Decimal gross = NTEVat.bookingGross(booking.NTE_Listed_Price_Total__c, booking.NTE_VAT_Rate__c, booking.Amount);
+            Boolean freeBooking = gross == 0;
             Contact contactRecord = contacts.get(booking.Id);
             String errorMessage;
             Lead sourceLead;
@@ -236,6 +275,14 @@ public without sharing class NTEExhibitorApprovalEmailService {
                 || sourceLead.Web_Form_Type__c != booking.NTE_Source_Form_Type__c
                 || ((!sourceLead.IsConverted || sourceLead.ConvertedOpportunityId != booking.Id) && !allowTestLead)) {
                 errorMessage = 'The converted application could not be matched to this booking.';
+            } else if (String.isNotBlank(booking.NTE_Approval_Email_Kind__c)
+                && booking.NTE_Approval_Email_Kind__c != (freeBooking ? 'Free confirmation' : 'Provisional')) {
+                errorMessage = 'The booking price changed after this email was requested. Review the booking and choose its current finance action.';
+            } else if (freeBooking
+                && (booking.NTE_Free_Space_Confirmed__c || confirmedIds.contains(booking.Id))) {
+                errorMessage = 'This space has already been confirmed or its confirmation is waiting to send.';
+            } else if (booking.NTE_Payment_Received__c || booking.StageName == 'Closed Lost') {
+                errorMessage = 'Review the existing payment or cancellation before sending a provisional email.';
             } else if (contactRecord == null || String.isBlank(contactRecord.Email)) {
                 errorMessage = 'A primary Contact with an email address is required. No email was sent.';
             } else if (String.isBlank(booking.NTE_Event_Code__c) || String.isBlank(booking.Booking_Reference__c)) {
@@ -246,7 +293,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
                 errorMessage = preparationConfigurationError(booking, routing);
             }
             if (errorMessage == null) errorMessage = savedPriceError(booking);
-            if (errorMessage == null) errorMessage = NTEStripeBookingService.emailReadinessError(booking, contactRecord);
+            if (errorMessage == null && gross > 0) errorMessage = NTEStripeBookingService.emailReadinessError(booking, contactRecord);
             String templateName = templateFor(booking);
             if (errorMessage == null && !templateIds.containsKey(templateName)) errorMessage = 'The provisional booking email template was not found.';
             if (errorMessage == null) {
@@ -298,13 +345,18 @@ public without sharing class NTEExhibitorApprovalEmailService {
                     accepted = result.isSuccess();
                     if (!accepted) errorMessage = result.getErrors().isEmpty() ? 'Salesforce did not accept the email.' : result.getErrors()[0].getMessage();
                 }
-                updates.add(new Opportunity(
+                Boolean freeConfirmation = NTEVat.bookingGross(candidate.booking.NTE_Listed_Price_Total__c,
+                    candidate.booking.NTE_VAT_Rate__c, candidate.booking.Amount) == 0;
+                Opportunity updateRecord = new Opportunity(
                     Id = candidate.booking.Id, NTE_Approval_Email_Status__c = accepted ? 'Sent' : 'Failed',
                     NTE_Approval_Email_Recipient__c = candidate.recipient.Email,
                     NTE_Approval_Email_Error__c = accepted ? null : truncate(errorMessage),
-                    NTE_Approval_Email_Sent_At__c = accepted ? System.now() : null
-                ));
-                if (accepted) NTEStripeBookingService.recordEmailAccepted(candidate.booking, updates[updates.size() - 1], candidate.recipient, paymentUpdates);
+                    NTE_Approval_Email_Sent_At__c = accepted && (!freeConfirmation || candidate.booking.NTE_Approval_Email_Sent_At__c == null)
+                        ? System.now() : candidate.booking.NTE_Approval_Email_Sent_At__c
+                );
+                if (accepted && freeConfirmation) updateRecord.NTE_Free_Space_Confirmed__c = true;
+                updates.add(updateRecord);
+                if (accepted && !freeConfirmation) NTEStripeBookingService.recordEmailAccepted(candidate.booking, updateRecord, candidate.recipient, paymentUpdates);
                 candidate.audit.Subject = TASK_PREFIX + (accepted ? 'sent' : 'failed');
                 candidate.audit.Description += accepted ? '\nSalesforce accepted the email for delivery.' : '\n' + truncate(errorMessage);
                 audits.add(candidate.audit);
@@ -319,17 +371,16 @@ public without sharing class NTEExhibitorApprovalEmailService {
 
     public static Messaging.SingleEmailMessage renderBookingEmail(Opportunity booking, Contact recipient, Id templateId,
         NTE_Routing_Config__mdt routing, Boolean paymentConfirmation) {
+        paymentConfirmation = paymentConfirmation && grossAmount(booking) > 0;
         Messaging.SingleEmailMessage rendered = Messaging.renderStoredEmailTemplate(templateId, recipient.Id, booking.Id);
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
         message.setSubject(rendered.getSubject());
         String html = rendered.getHtmlBody();
         if (String.isBlank(html)) throw new ApprovalEmailException('The HTML email template is empty.');
-        NTE_Payment_Request__c stripePayment = NTEStripeBookingService.paymentForEmail(booking.Id);
-        if (paymentConfirmation && stripePayment != null && stripePayment.Net_Minor__c / 100 != amount(booking)) {
-            throw new ApprovalEmailException('The booking amount differs from its saved Stripe request. Review the charge before sending confirmation.');
-        }
+        // Receipt records the team's reconciliation. An earlier request remains historical.
+        NTE_Payment_Request__c stripePayment = paymentConfirmation || grossAmount(booking) == 0 || booking.NTE_Payment_Method__c != 'Stripe'
+            ? null : NTEStripeBookingService.paymentForEmail(booking.Id);
         Map<String, String> replacements = new Map<String, String>{
-            '{NTE_EVENT_LABEL}' => escape(booking.NTE_Event_Code__c),
             '{NTE_ORGANISATION}' => escape(booking.Account == null ? booking.Name : booking.Account.Name),
             '{NTE_FINANCE_SUMMARY}' => financeSummary(booking, stripePayment, paymentConfirmation)
                 + (paymentConfirmation || stripePayment == null ? '' : stripePaymentButton(stripePayment)),
@@ -337,9 +388,14 @@ public without sharing class NTEExhibitorApprovalEmailService {
         };
         if (!paymentConfirmation) replacements.put('{NTE_PAYMENT_NOTE}', escape(paymentNote(booking, stripePayment)));
         if (booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE && !paymentConfirmation) {
+            replacements.put('{NTE_EVENT_SHORT_LABEL}', 'NTE27');
+            replacements.put('{NTE_VEHICLE_NOTE}', needsVehicleLink(booking)
+                ? '<p style="margin:0 0 18px;font-size:17px;line-height:28px;color:#263746;">If you are bringing any heavy vehicles or items on flatbed trailers use the <strong>Vehicle details</strong> link nearer to the event when information is known.</p>' : '');
             replacements.put('{NTE_AGREEMENT_NOTE}', stripePayment == null
-                ? 'Your partnership / sponsorship agreement will be sent to you shortly for signing, along with a quotation or invoice as requested.'
-                : 'Your partnership / sponsorship agreement will be sent to you shortly for signing.');
+                ? 'Please return your signed partnership / sponsorship agreement if you have not already done so.'
+                : 'Please return your signed partnership / sponsorship agreement if you have not already done so.');
+        } else {
+            replacements.put('{NTE_EVENT_LABEL}', 'NTE27');
         }
         html = replaceTemplateMarkers(html, replacements);
         message.setHtmlBody(html);
@@ -349,6 +405,22 @@ public without sharing class NTEExhibitorApprovalEmailService {
         message.setToAddresses(new List<String>{recipient.Email});
         message.setWhatId(booking.Id);
         message.setSaveAsActivity(false);
+        return message;
+    }
+    public static Messaging.SingleEmailMessage renderTopUpEmail(Opportunity booking, Contact recipient, NTE_Payment_Request__c payment) {
+        Id templateId = [SELECT Id FROM EmailTemplate WHERE DeveloperName = 'NTE_Staff_Top_Up_Payment' LIMIT 1].Id;
+        Messaging.SingleEmailMessage rendered = Messaging.renderStoredEmailTemplate(templateId, recipient.Id, booking.Id);
+        String summary = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0">'
+            + moneyRow('Staff top-up', payment.Net_Minor__c / 100)
+            + moneyRow('VAT (' + String.valueOf(payment.Tax_Rate__c.setScale(0)) + '%)', (payment.Amount_Minor__c - payment.Net_Minor__c) / 100)
+            + moneyRow('Total including VAT', payment.Amount_Minor__c / 100) + '</table>' + stripePaymentButton(payment);
+        String html = replaceTemplateMarkers(rendered.getHtmlBody(), new Map<String,String>{
+            '{NTE_FINANCE_SUMMARY}'=>summary, '{NTE_ORGANISATION}'=>escape(booking.Account == null ? booking.Name : booking.Account.Name)
+        });
+        Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
+        message.setSubject(rendered.getSubject()); message.setHtmlBody(html); message.setPlainTextBody(plainTextFromHtml(html));
+        message.setTargetObjectId(recipient.Id); message.setTreatTargetObjectAsRecipient(false);
+        message.setToAddresses(new List<String>{recipient.Email}); message.setWhatId(booking.Id); message.setSaveAsActivity(false);
         return message;
     }
     private static String replaceTemplateMarkers(String html, Map<String, String> replacements) {
@@ -389,14 +461,16 @@ public without sharing class NTEExhibitorApprovalEmailService {
         return text;
     }
     private static String templateFor(Opportunity booking) {
-        if (booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE) return 'NTE_Partner_Sponsor_Approved';
-        return isEligibleComplimentaryBooking(booking) && amount(booking) == 0
+        if (booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE) return grossAmount(booking) == 0
+            ? 'NTE_Partner_Sponsor_Free_Confirmed' : 'NTE_Partner_Sponsor_Approved';
+        return isEligibleComplimentaryBooking(booking) && grossAmount(booking) == 0
             ? 'NTE_Complimentary_Exhibitor_Approved' : 'NTE_Exhibitor_Approved';
     }
     public static String savedPriceError(Opportunity booking) {
         Decimal total = booking.NTE_Listed_Price_Total__c;
         if ((!String.isBlank(booking.NTE_Pricing_Status__c) && booking.NTE_Pricing_Status__c != 'Calculated')
-            || total == null || total < 0 || (booking.Amount != null && booking.Amount != total)
+            || total == null || total < 0 || NTEVat.rate(booking.NTE_VAT_Rate__c) < 0 || NTEVat.rate(booking.NTE_VAT_Rate__c) > 100
+            || !NTEVat.consistentTotal(total, booking.NTE_VAT_Rate__c, booking.Amount)
             || valueOrZero(booking.NTE_Sponsor_Package_Total__c) < 0
             || valueOrZero(booking.NTE_Exhibitor_Space_Price__c) < 0
             || valueOrZero(booking.NTE_Power_Socket_Total__c) < 0
@@ -405,8 +479,8 @@ public without sharing class NTEExhibitorApprovalEmailService {
             || !validLineItem(booking.NTE_Additional_Staff_Count__c, booking.NTE_Additional_Staff_Unit_Price__c, booking.NTE_Additional_Staff_Total__c)
             || (booking.NTE_Source_Form_Type__c == EXHIBITOR_FORM_TYPE && valueOrZero(booking.NTE_Sponsor_Package_Total__c) != 0)
             || (booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE && valueOrZero(booking.NTE_Exhibitor_Space_Price__c) != 0)
-            || componentTotal(booking) != total
-            || (total == 0 && (booking.NTE_Pricing_Status__c != 'Calculated' || !isEligibleComplimentaryBooking(booking)))) {
+            || componentTotal(booking) + valueOrZero(booking.NTE_Price_Adjustment__c) != total
+            || (grossAmount(booking) == 0 && (booking.NTE_Pricing_Status__c != 'Calculated' || !isEligibleComplimentaryBooking(booking)))) {
             return 'The booking price needs review. No provisional email was sent. Check the selected package or space and its saved charges.';
         }
         return null;
@@ -424,9 +498,9 @@ public without sharing class NTEExhibitorApprovalEmailService {
         return unitPrice != null && total != null && quantity * unitPrice == total;
     }
     public static String paymentConfirmationError(Opportunity booking, NTE_Routing_Config__mdt routing) {
-        if (booking == null || !booking.NTE_Payment_Received__c || !booking.NTE_Invoice_Provided__c
-            || booking.NTE_Listed_Price_Total__c == null || booking.NTE_Listed_Price_Total__c <= 0) {
-            return 'Record the booking invoice and booking payment before sending a space confirmation.';
+        if (booking == null || !booking.NTE_Payment_Received__c
+            || booking.NTE_Listed_Price_Total__c == null || booking.NTE_Listed_Price_Total__c < 0) {
+            return 'Record the booking payment before sending a space confirmation.';
         }
         if (!validBookingReference(booking.Booking_Reference__c)) {
             return 'The booking reference is not valid for the preparation forms. Correct it before retrying this email.';
@@ -437,28 +511,36 @@ public without sharing class NTEExhibitorApprovalEmailService {
     }
 
     private static String paymentNote(Opportunity booking, NTE_Payment_Request__c payment) {
-        if (isEligibleComplimentaryBooking(booking) && amount(booking) == 0) {
+        if (isEligibleComplimentaryBooking(booking) && grossAmount(booking) == 0) {
             return 'Your booking is complimentary and your space is confirmed. No payment is due.';
         }
+        if (booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE) {
+            return 'Your exhibitor space is provisionally reserved. '
+                + (payment == null ? 'Please pay by bank transfer using the payment instructions provided by the NTE team. ' : 'Please use the secure payment link below. ')
+                + 'Your partner / sponsor package will be confirmed once payment has been received.';
+        }
         if (payment != null) return 'Your space is provisionally reserved. Please use the secure payment link below. Your space will be confirmed by the NTE Team.';
-        return 'Your space is provisionally reserved. The NTE team will send your quotation or invoice with payment instructions. Your space will be confirmed when payment is recorded.';
+        return 'Your space is provisionally reserved. Please pay by bank transfer using the payment instructions provided by the NTE team. Your space will be confirmed when payment is recorded.';
     }
     private static String financeSummary(Opportunity booking, NTE_Payment_Request__c payment, Boolean paymentConfirmation) {
         String rows = booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE
-            ? moneyRow('Partner / sponsor package', booking.NTE_Sponsor_Package_Total__c)
+            ? moneyRow(!paymentConfirmation && String.isNotBlank(booking.NTE_Sponsor_Package__c)
+                ? booking.NTE_Sponsor_Package__c.replace(';', ' + ') : 'Partner / sponsor package', booking.NTE_Sponsor_Package_Total__c)
             : moneyRow('Exhibition space', booking.NTE_Exhibitor_Space_Price__c);
         if (valueOrZero(booking.NTE_Power_Socket_Total__c) > 0) rows += moneyRow(quantityLabel('Power sockets', booking.NTE_Power_Socket_Count__c, booking.NTE_Power_Socket_Unit_Price__c), booking.NTE_Power_Socket_Total__c);
         if (valueOrZero(booking.NTE_Additional_Staff_Total__c) > 0) rows += moneyRow(quantityLabel('Additional staff places', booking.NTE_Additional_Staff_Count__c, booking.NTE_Additional_Staff_Unit_Price__c), booking.NTE_Additional_Staff_Total__c);
-        rows += moneyRow(paymentConfirmation && payment == null ? 'Total paid · excluding VAT' : 'Booking total · excluding VAT', amount(booking));
-        if (payment != null) {
-            rows += moneyRow('VAT (' + String.valueOf(payment.Tax_Rate__c.setScale(2)) + '%)', (payment.Amount_Minor__c - payment.Net_Minor__c) / 100);
-            rows += moneyRow(paymentConfirmation ? 'Total paid' : 'Total payable', payment.Amount_Minor__c / 100);
-        }
+        if (valueOrZero(booking.NTE_Price_Adjustment__c) != 0) rows += moneyRow('Booking adjustment', booking.NTE_Price_Adjustment__c);
+        rows += moneyRow('Subtotal (ex VAT)', amount(booking));
+        Decimal vatRate = payment == null ? NTEVat.rate(booking.NTE_VAT_Rate__c) : payment.Tax_Rate__c;
+        Decimal vat = payment == null ? NTEVat.bookingTax(amount(booking), vatRate, booking.Amount) : (payment.Amount_Minor__c - payment.Net_Minor__c) / 100;
+        Decimal gross = payment == null ? NTEVat.bookingGross(amount(booking), vatRate, booking.Amount) : payment.Amount_Minor__c / 100;
+        rows += moneyRow('VAT (' + (vatRate == vatRate.setScale(0) ? String.valueOf(vatRate.intValue()) : String.valueOf(vatRate.setScale(2))) + '%)', vat);
+        rows += moneyRow(paymentConfirmation ? 'Total paid (inc VAT)' : 'Total payable (inc VAT)', gross);
         return '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;border:1px solid #dce7ed;border-radius:10px;overflow:hidden;">' + rows + '</table>';
     }
     private static String stripePaymentButton(NTE_Payment_Request__c payment) {
-        if (!NTEStripeClient.validTestUrl(payment.Payment_URL__c)) throw new ApprovalEmailException('The Stripe payment link is not ready.');
-        return '<table data-nte-payment-button="true" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:420px;margin:26px auto 10px;"><tr><td align="center" bgcolor="#0b668f" style="background-color:#0b668f;border-radius:10px;"><a href="' + escape(payment.Payment_URL__c) + '" aria-label="Pay Now with Stripe" style="display:block;padding:19px 20px;border-radius:10px;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:0;line-height:28px;text-align:left;"><span style="display:inline-block;width:56%;vertical-align:middle;font-size:21px;font-weight:bold;line-height:28px;">Pay Now </span><span style="display:inline-block;width:44%;vertical-align:middle;text-align:right;"><span style="display:inline-block;padding-left:14px;border-left:1px solid #b8d9e8;font-size:17px;font-weight:bold;line-height:26px;white-space:nowrap;"><img src="https://stevostar1234.github.io/nte27-web-to-lead-demo/assets/stripe-icon.png?v=20260909-1" width="22" height="22" alt="" role="presentation" style="display:inline-block;width:22px;height:22px;margin-right:7px;border:0;border-radius:4px;vertical-align:middle;">Stripe</span></span></a></td></tr></table>';
+        if (!NTEStripeClient.validPaymentUrl(payment.Payment_URL__c, payment.Live_Mode__c)) throw new ApprovalEmailException('The Stripe payment link is not ready.');
+        return '<table data-nte-payment-button="true" role="presentation" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:420px;margin:26px auto 10px;"><tr><td align="center" bgcolor="#0b668f" style="background-color:#0b668f;border-radius:10px;"><a href="' + escape(payment.Payment_URL__c) + '" aria-label="Pay Now with Stripe" style="display:block;padding:19px 20px;border-radius:10px;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:0;line-height:0;text-align:left;"><span style="display:inline-block;width:56%;vertical-align:middle;font-size:21px;font-weight:bold;line-height:28px;">Pay Now </span><span style="display:inline-block;width:44%;vertical-align:middle;text-align:right;line-height:0;"><span style="display:inline-block;vertical-align:middle;padding:4px 0 4px 14px;border-left:1px solid #b8d9e8;font-size:17px;font-weight:bold;line-height:26px;white-space:nowrap;"><img src="https://stevostar1234.github.io/nte27-web-to-lead-demo/assets/stripe-icon.png?v=20260909-1" width="22" height="22" alt="" role="presentation" style="display:inline-block;width:22px;height:22px;margin-right:7px;border:0;border-radius:4px;vertical-align:middle;">Stripe</span></span></a></td></tr></table>';
     }
     private static Decimal componentTotal(Opportunity booking) {
         return valueOrZero(booking.NTE_Sponsor_Package_Total__c) + valueOrZero(booking.NTE_Exhibitor_Space_Price__c)
@@ -474,7 +556,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
     }
     private static String preparationLinks(Opportunity booking, NTE_Routing_Config__mdt routing) {
         String colour = booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE ? '#0b668f'
-            : isEligibleComplimentaryBooking(booking) && amount(booking) == 0 ? '#176f66' : '#856624';
+            : isEligibleComplimentaryBooking(booking) && grossAmount(booking) == 0 ? '#176f66' : '#856624';
         Integer columnCount = needsVehicleLink(booking) ? 3 : 2;
         String html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;table-layout:fixed;"><tr>'
             + button('Provide staff details', staffUrl(booking, routing), colour, columnCount)
@@ -518,9 +600,11 @@ public without sharing class NTEExhibitorApprovalEmailService {
     }
     private static String moneyRow(String label, Decimal value) {
         return '<tr><td style="padding:12px 18px;border-bottom:1px solid #e4edf2;">' + escape(label)
-            + '</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e4edf2;white-space:nowrap;">£' + money(value) + '</td></tr>';
+            + '</td><td align="right" style="padding:12px 18px;border-bottom:1px solid #e4edf2;white-space:nowrap;">'
+            + (valueOrZero(value) < 0 ? '-£' : '£') + money(valueOrZero(value).abs()) + '</td></tr>';
     }
     private static Decimal amount(Opportunity booking) { return booking.NTE_Listed_Price_Total__c; }
+    private static Decimal grossAmount(Opportunity booking) { return NTEVat.bookingGross(amount(booking), booking.NTE_VAT_Rate__c, booking.Amount); }
     private static Decimal valueOrZero(Decimal value) { return value == null ? 0 : value; }
     private static String money(Decimal value) { return String.valueOf(valueOrZero(value).setScale(2)); }
     private static String escape(String value) { return value == null ? '' : value.escapeHtml4(); }
@@ -556,6 +640,10 @@ public without sharing class NTEExhibitorApprovalEmailService {
     }
     @TestVisible
     private static Boolean isEligibleComplimentaryBooking(Opportunity booking) {
+        if (booking != null && booking.NTE_Listed_Price_Total__c == 0 && booking.Amount == 0
+            && valueOrZero(booking.NTE_Price_Adjustment__c) < 0
+            && componentTotal(booking) + booking.NTE_Price_Adjustment__c == 0
+            && (booking.NTE_Source_Form_Type__c == EXHIBITOR_FORM_TYPE || booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE)) return true;
         return booking != null && booking.NTE_Source_Form_Type__c == EXHIBITOR_FORM_TYPE
             && ((booking.NTE_Exhibitor_Space_Selections__c == 'COBSEO Charity - Single - Free'
                 && booking.NTE_Exhibitor_Organisation_Category__c == 'Charity - member of Cobseo')

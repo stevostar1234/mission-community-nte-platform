@@ -1,0 +1,607 @@
+{
+  "date": "2026-09-11",
+  "org": "00DAd00000A95VlMAJ",
+  "stripe_account": "acct_1UD8GwBcW1MkMYQ1",
+  "account_name": "client test stripe sandbox",
+  "test_only": true,
+  "new_applications": 2,
+  "total_bookings": 4,
+  "payment_attempts": 5,
+  "refunds": [
+    {
+      "reason": "requested_by_customer",
+      "charge": "ch_3UEVaCBcW1MkMYQ110WDcndu",
+      "payment_intent": "pi_3UEVaCBcW1MkMYQ11baRgcB0",
+      "metadata": {},
+      "currency": "gbp",
+      "amount": 240000,
+      "status": "succeeded",
+      "created": 1789137705,
+      "object": "refund",
+      "id": "re_3UEVaCBcW1MkMYQ118rJtchG"
+    }
+  ],
+  "disputes": [
+    {
+      "evidence_details": {
+        "submission_count": 0,
+        "past_due": false,
+        "has_evidence": false,
+        "enhanced_eligibility": {},
+        "due_by": 1789862399
+      },
+      "is_charge_refundable": false,
+      "reason": "product_not_received",
+      "charge": "ch_3UEVVwBcW1MkMYQ11paksdGk",
+      "payment_intent": "pi_3UEVVwBcW1MkMYQ11IItk14x",
+      "metadata": {},
+      "currency": "gbp",
+      "amount": 240000,
+      "status": "needs_response",
+      "livemode": false,
+      "created": 1789137197,
+      "object": "dispute",
+      "id": "du_1UEVVxBcW1MkMYQ1nlzSmXD4"
+    }
+  ],
+  "cases": [
+    {
+      "scenario": "decline",
+      "company": "Eastmere Technical Careers Ltd",
+      "lead": "00QAd00000UZHERMA5",
+      "opportunity": "006Ad00000Uo39VIAR",
+      "reference": "NTE-1789133292558-EN9CMSBH",
+      "amount_minor": 71880,
+      "currency": "gbp",
+      "stripe_dashboard_url": "https://dashboard.stripe.com/acct_1UD8GwBcW1MkMYQ1/test/payments/pi_3UEVY8BcW1MkMYQ10TgXJHCJ",
+      "salesforce_url": "https://missionmotorsportnpc--mmuat.sandbox.lightning.force.com/lightning/r/Opportunity/006Ad00000Uo39VIAR/view",
+      "attempts": [
+        {
+          "attemptedAt": "2026-09-11T14:35:26.942897+00:00",
+          "scenario": "insufficient_funds",
+          "status": "requires_payment_method",
+          "checkout_message": "Your credit card was declined because of insufficient funds. Try paying with a debit card instead.",
+          "payment_intent": "pi_3UEVY8BcW1MkMYQ10TgXJHCJ",
+          "charge": "ch_3UEVY8BcW1MkMYQ10IGfkcHq",
+          "last_payment_error": {
+            "charge": "ch_3UEVY8BcW1MkMYQ10IGfkcHq",
+            "type": "card_error",
+            "message": "Your card has insufficient funds.",
+            "decline_code": "insufficient_funds",
+            "code": "card_declined"
+          }
+        }
+      ],
+      "charge": {
+        "card": {
+          "checks": {
+            "cvc_check": "pass",
+            "address_postal_code_check": null,
+            "address_line1_check": null
+          },
+          "three_d_secure": null,
+          "last4": "9995",
+          "brand": "visa"
+        },
+        "outcome": {
+          "type": "issuer_declined",
+          "seller_message": "The bank returned the decline code `insufficient_funds`.",
+          "risk_score": 5,
+          "risk_level": "normal",
+          "reason": "insufficient_funds",
+          "network_status": "declined_by_network",
+          "network_decline_code": "51",
+          "network_advice_code": "02",
+          "advice_code": "try_again_later"
+        },
+        "failure_message": "Your card has insufficient funds.",
+        "failure_code": "card_declined",
+        "disputed": false,
+        "refunded": false,
+        "captured": false,
+        "paid": false,
+        "payment_intent": "pi_3UEVY8BcW1MkMYQ10TgXJHCJ",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo39VIAR:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789133292558-EN9CMSBH"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789133292558-EN9CMSBH",
+        "currency": "gbp",
+        "amount_refunded": 0,
+        "amount": 71880,
+        "status": "failed",
+        "livemode": false,
+        "created": 1789137333,
+        "object": "charge",
+        "id": "ch_3UEVY8BcW1MkMYQ10IGfkcHq"
+      },
+      "payment_intent": {
+        "last_payment_error": {
+          "charge": "ch_3UEVY8BcW1MkMYQ10IGfkcHq",
+          "type": "card_error",
+          "message": "Your card has insufficient funds.",
+          "decline_code": "insufficient_funds",
+          "code": "card_declined"
+        },
+        "latest_charge": "ch_3UEVY8BcW1MkMYQ10IGfkcHq",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo39VIAR:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789133292558-EN9CMSBH"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789133292558-EN9CMSBH",
+        "currency": "gbp",
+        "amount_received": 0,
+        "amount": 71880,
+        "status": "requires_payment_method",
+        "livemode": false,
+        "created": 1789137332,
+        "object": "payment_intent",
+        "id": "pi_3UEVY8BcW1MkMYQ10TgXJHCJ"
+      },
+      "link": {
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo39VIAR:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789133292558-EN9CMSBH"
+        },
+        "customer_creation": "if_required",
+        "billing_address_collection": "auto",
+        "allow_promotion_codes": false,
+        "invoice_creation": {
+          "invoice_data": {
+            "rendering_options": null,
+            "metadata": {},
+            "issuer": null,
+            "footer": null,
+            "description": null,
+            "custom_fields": null,
+            "account_tax_ids": null
+          },
+          "enabled": false
+        },
+        "automatic_tax": {
+          "liability": null,
+          "enabled": false
+        },
+        "payment_method_types": [
+          "card"
+        ],
+        "restrictions": {
+          "completed_sessions": {
+            "limit": 1,
+            "count": 0
+          }
+        },
+        "livemode": false,
+        "active": true,
+        "id": "plink_1UEUnUBcW1MkMYQ1VerMQCoN"
+      },
+      "salesforce_payment_received": false
+    },
+    {
+      "scenario": "dispute",
+      "company": "Braeford Fleet Solutions Ltd",
+      "lead": "00QAd00000UZM2nMAH",
+      "opportunity": "006Ad00000Uo3SrIAJ",
+      "reference": "NTE-1789134324157-3CS4724Q",
+      "amount_minor": 240000,
+      "currency": "gbp",
+      "stripe_dashboard_url": "https://dashboard.stripe.com/acct_1UD8GwBcW1MkMYQ1/test/payments/pi_3UEVVwBcW1MkMYQ11IItk14x",
+      "salesforce_url": "https://missionmotorsportnpc--mmuat.sandbox.lightning.force.com/lightning/r/Opportunity/006Ad00000Uo3SrIAJ/view",
+      "attempts": [
+        {
+          "attemptedAt": "2026-09-11T14:33:05.673308+00:00",
+          "scenario": "product_not_received_dispute",
+          "status": "succeeded_then_disputed",
+          "session": "cs_test_a15srCudyUX9PEC2Wj5yaOILbwAywPb1L0gME5D5fnkdO832x24Qznogvu",
+          "payment_intent": "pi_3UEVVwBcW1MkMYQ11IItk14x",
+          "charge": "ch_3UEVVwBcW1MkMYQ11paksdGk",
+          "dispute": "du_1UEVVxBcW1MkMYQ1nlzSmXD4"
+        }
+      ],
+      "charge": {
+        "card": {
+          "checks": {
+            "cvc_check": "pass",
+            "address_postal_code_check": null,
+            "address_line1_check": null
+          },
+          "three_d_secure": null,
+          "last4": "2685",
+          "brand": "visa"
+        },
+        "outcome": {
+          "type": "authorized",
+          "seller_message": "Payment complete.",
+          "risk_score": 13,
+          "risk_level": "normal",
+          "reason": null,
+          "network_status": "approved_by_network",
+          "network_decline_code": null,
+          "network_advice_code": null,
+          "advice_code": null
+        },
+        "failure_message": null,
+        "failure_code": null,
+        "disputed": true,
+        "refunded": false,
+        "captured": true,
+        "paid": true,
+        "payment_intent": "pi_3UEVVwBcW1MkMYQ11IItk14x",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo3SrIAJ:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789134324157-3CS4724Q"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789134324157-3CS4724Q",
+        "currency": "gbp",
+        "amount_refunded": 0,
+        "amount": 240000,
+        "status": "succeeded",
+        "livemode": false,
+        "created": 1789137196,
+        "object": "charge",
+        "id": "ch_3UEVVwBcW1MkMYQ11paksdGk"
+      },
+      "payment_intent": {
+        "latest_charge": "ch_3UEVVwBcW1MkMYQ11paksdGk",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo3SrIAJ:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789134324157-3CS4724Q"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789134324157-3CS4724Q",
+        "currency": "gbp",
+        "amount_received": 240000,
+        "amount": 240000,
+        "status": "succeeded",
+        "livemode": false,
+        "created": 1789137196,
+        "object": "payment_intent",
+        "id": "pi_3UEVVwBcW1MkMYQ11IItk14x"
+      },
+      "link": {
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo3SrIAJ:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789134324157-3CS4724Q"
+        },
+        "customer_creation": "if_required",
+        "billing_address_collection": "auto",
+        "allow_promotion_codes": false,
+        "invoice_creation": {
+          "invoice_data": {
+            "rendering_options": null,
+            "metadata": {},
+            "issuer": null,
+            "footer": null,
+            "description": null,
+            "custom_fields": null,
+            "account_tax_ids": null
+          },
+          "enabled": false
+        },
+        "automatic_tax": {
+          "liability": null,
+          "enabled": false
+        },
+        "payment_method_types": [
+          "card"
+        ],
+        "restrictions": {
+          "completed_sessions": {
+            "limit": 1,
+            "count": 1
+          }
+        },
+        "livemode": false,
+        "active": false,
+        "id": "plink_1UEUpUBcW1MkMYQ1SiB4sGks"
+      },
+      "salesforce_payment_received": false
+    },
+    {
+      "scenario": "risk",
+      "company": "Caverton Precision Engineering Ltd",
+      "lead": "00QAd00000UZPFBMA5",
+      "opportunity": "006Ad00000Uo3r4IAB",
+      "reference": "NTE-1789136642775-VFVYW7QX",
+      "amount_minor": 95880,
+      "currency": "gbp",
+      "stripe_dashboard_url": "https://dashboard.stripe.com/acct_1UD8GwBcW1MkMYQ1/test/payments/pi_3UEVYvBcW1MkMYQ11hzwWm67",
+      "salesforce_url": "https://missionmotorsportnpc--mmuat.sandbox.lightning.force.com/lightning/r/Opportunity/006Ad00000Uo3r4IAB/view",
+      "attempts": [
+        {
+          "attemptedAt": "2026-09-11T14:36:16.476203+00:00",
+          "scenario": "highest_risk",
+          "status": "requires_payment_method",
+          "payment_intent": "pi_3UEVYvBcW1MkMYQ11hzwWm67",
+          "charge": "ch_3UEVYvBcW1MkMYQ11vFoTO8G",
+          "last_payment_error": {
+            "charge": "ch_3UEVYvBcW1MkMYQ11vFoTO8G",
+            "type": "card_error",
+            "message": "Your card was declined.",
+            "decline_code": "fraudulent",
+            "code": "card_declined"
+          },
+          "checkout_message": "Your card was declined. Please contact your card issuer."
+        }
+      ],
+      "charge": {
+        "card": {
+          "checks": {
+            "cvc_check": "unavailable",
+            "address_postal_code_check": null,
+            "address_line1_check": null
+          },
+          "three_d_secure": null,
+          "last4": "4954",
+          "brand": "visa"
+        },
+        "outcome": {
+          "type": "blocked",
+          "seller_message": "One of your rules blocked this payment.",
+          "rule": "block_if_high_fraud_dispute_score",
+          "risk_score": 86,
+          "risk_level": "highest",
+          "reason": "rule",
+          "network_status": "not_sent_to_network",
+          "network_decline_code": null,
+          "network_advice_code": null,
+          "advice_code": null
+        },
+        "failure_message": "Your card was declined.",
+        "failure_code": "card_declined",
+        "disputed": false,
+        "refunded": false,
+        "captured": false,
+        "paid": false,
+        "payment_intent": "pi_3UEVYvBcW1MkMYQ11hzwWm67",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo3r4IAB:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789136642775-VFVYW7QX"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789136642775-VFVYW7QX",
+        "currency": "gbp",
+        "amount_refunded": 0,
+        "amount": 95880,
+        "status": "failed",
+        "livemode": false,
+        "created": 1789137382,
+        "object": "charge",
+        "id": "ch_3UEVYvBcW1MkMYQ11vFoTO8G"
+      },
+      "payment_intent": {
+        "last_payment_error": {
+          "charge": "ch_3UEVYvBcW1MkMYQ11vFoTO8G",
+          "type": "card_error",
+          "message": "Your card was declined.",
+          "decline_code": "fraudulent",
+          "code": "card_declined"
+        },
+        "latest_charge": "ch_3UEVYvBcW1MkMYQ11vFoTO8G",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo3r4IAB:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789136642775-VFVYW7QX"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789136642775-VFVYW7QX",
+        "currency": "gbp",
+        "amount_received": 0,
+        "amount": 95880,
+        "status": "requires_payment_method",
+        "livemode": false,
+        "created": 1789137381,
+        "object": "payment_intent",
+        "id": "pi_3UEVYvBcW1MkMYQ11hzwWm67"
+      },
+      "link": {
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo3r4IAB:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789136642775-VFVYW7QX"
+        },
+        "customer_creation": "if_required",
+        "billing_address_collection": "auto",
+        "allow_promotion_codes": false,
+        "invoice_creation": {
+          "invoice_data": {
+            "rendering_options": null,
+            "metadata": {},
+            "issuer": null,
+            "footer": null,
+            "description": null,
+            "custom_fields": null,
+            "account_tax_ids": null
+          },
+          "enabled": false
+        },
+        "automatic_tax": {
+          "liability": null,
+          "enabled": false
+        },
+        "payment_method_types": [
+          "card"
+        ],
+        "restrictions": {
+          "completed_sessions": {
+            "limit": 1,
+            "count": 0
+          }
+        },
+        "livemode": false,
+        "active": true,
+        "id": "plink_1UEVR6BcW1MkMYQ17e80oCpl"
+      },
+      "salesforce_payment_received": false
+    },
+    {
+      "scenario": "authentication_refund",
+      "company": "Merehaven Technology Group Ltd",
+      "lead": "00QAd00000UZPGnMAP",
+      "opportunity": "006Ad00000Uo4n9IAB",
+      "reference": "NTE-1789136642845-E9N6AFHM",
+      "amount_minor": 240000,
+      "currency": "gbp",
+      "stripe_dashboard_url": "https://dashboard.stripe.com/acct_1UD8GwBcW1MkMYQ1/test/payments/pi_3UEVaCBcW1MkMYQ11baRgcB0",
+      "salesforce_url": "https://missionmotorsportnpc--mmuat.sandbox.lightning.force.com/lightning/r/Opportunity/006Ad00000Uo4n9IAB/view",
+      "attempts": [
+        {
+          "attemptedAt": "2026-09-11T14:37:30.704820+00:00",
+          "scenario": "3ds_fail",
+          "status": "authentication_failed",
+          "payment_intent": "pi_3UEVaCBcW1MkMYQ11baRgcB0",
+          "last_payment_error": {
+            "charge": null,
+            "type": "invalid_request_error",
+            "message": "The provided PaymentMethod has failed authentication. You can provide payment_method_data or a new PaymentMethod to attempt to fulfill this PaymentIntent again.",
+            "decline_code": null,
+            "code": "payment_intent_authentication_failure"
+          },
+          "checkout_message": "We are unable to authenticate your payment method. Please choose a different payment method and try again."
+        },
+        {
+          "attemptedAt": "2026-09-11T14:39:29.713714+00:00",
+          "scenario": "3ds_success_retry",
+          "status": "succeeded",
+          "payment_intent": "pi_3UEVaCBcW1MkMYQ11baRgcB0",
+          "charge": "ch_3UEVaCBcW1MkMYQ110WDcndu",
+          "three_d_secure": {
+            "version": "2.1.0",
+            "transaction_id": "371ef594-7419-48a5-93bf-14832bf0af49",
+            "result_reason": null,
+            "result": "authenticated",
+            "exemption_indicator": null,
+            "electronic_commerce_indicator": "05",
+            "authentication_flow": "challenge"
+          }
+        }
+      ],
+      "charge": {
+        "card": {
+          "checks": {
+            "cvc_check": "pass",
+            "address_postal_code_check": null,
+            "address_line1_check": null
+          },
+          "three_d_secure": {
+            "version": "2.1.0",
+            "transaction_id": "371ef594-7419-48a5-93bf-14832bf0af49",
+            "result_reason": null,
+            "result": "authenticated",
+            "exemption_indicator": null,
+            "electronic_commerce_indicator": "05",
+            "authentication_flow": "challenge"
+          },
+          "last4": "3184",
+          "brand": "visa"
+        },
+        "outcome": {
+          "type": "authorized",
+          "seller_message": "Payment complete.",
+          "risk_score": 42,
+          "risk_level": "normal",
+          "reason": null,
+          "network_status": "approved_by_network",
+          "network_decline_code": null,
+          "network_advice_code": null,
+          "advice_code": null
+        },
+        "failure_message": null,
+        "failure_code": null,
+        "disputed": false,
+        "refunded": true,
+        "captured": true,
+        "paid": true,
+        "payment_intent": "pi_3UEVaCBcW1MkMYQ11baRgcB0",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo4n9IAB:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789136642845-E9N6AFHM"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789136642845-E9N6AFHM",
+        "currency": "gbp",
+        "amount_refunded": 240000,
+        "amount": 240000,
+        "status": "succeeded",
+        "livemode": false,
+        "created": 1789137604,
+        "object": "charge",
+        "id": "ch_3UEVaCBcW1MkMYQ110WDcndu"
+      },
+      "payment_intent": {
+        "latest_charge": "ch_3UEVaCBcW1MkMYQ110WDcndu",
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo4n9IAB:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789136642845-E9N6AFHM"
+        },
+        "description": "NTE27 booking \u00b7 NTE-1789136642845-E9N6AFHM",
+        "currency": "gbp",
+        "amount_received": 240000,
+        "amount": 240000,
+        "status": "succeeded",
+        "livemode": false,
+        "created": 1789137460,
+        "object": "payment_intent",
+        "id": "pi_3UEVaCBcW1MkMYQ11baRgcB0"
+      },
+      "link": {
+        "metadata": {
+          "nte_operation": "00DAd00000A95VlMAJ:006Ad00000Uo4n9IAB:Booking",
+          "nte_charge_kind": "Booking",
+          "nte_booking": "NTE-1789136642845-E9N6AFHM"
+        },
+        "customer_creation": "if_required",
+        "billing_address_collection": "auto",
+        "allow_promotion_codes": false,
+        "invoice_creation": {
+          "invoice_data": {
+            "rendering_options": null,
+            "metadata": {},
+            "issuer": null,
+            "footer": null,
+            "description": null,
+            "custom_fields": null,
+            "account_tax_ids": null
+          },
+          "enabled": false
+        },
+        "automatic_tax": {
+          "liability": null,
+          "enabled": false
+        },
+        "payment_method_types": [
+          "card"
+        ],
+        "restrictions": {
+          "completed_sessions": {
+            "limit": 1,
+            "count": 1
+          }
+        },
+        "livemode": false,
+        "active": false,
+        "id": "plink_1UEVR9BcW1MkMYQ1ROAHv3SS"
+      },
+      "salesforce_payment_received": false
+    }
+  ],
+  "verifiedAt": "2026-09-11T14:43:13.399794+00:00",
+  "dashboard_ui_verified": false,
+  "dashboard_access": "Signed out; login requested. Native Stripe outcomes verified through the existing secure Salesforce Named Credential.",
+  "kate_workflow": "Not configured; primary-source feasibility confirmed, client account availability/filter and recipient access still require dashboard qualification.",
+  "source_code_changed": false,
+  "broad_risk_rules_changed": false,
+  "salesforce_manual_confirmation_preserved": true,
+  "browser_checks": [
+    "Insufficient funds error",
+    "Generic decline for Radar block",
+    "Failed 3DS challenge error",
+    "Successful 3DS challenge and hosted payment confirmation",
+    "Refunded original link is unavailable"
+  ]
+}

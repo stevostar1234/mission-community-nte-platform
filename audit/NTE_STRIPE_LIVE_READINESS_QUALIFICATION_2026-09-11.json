@@ -1,0 +1,146 @@
+{
+  "proposal": 20,
+  "completedAt": "2026-09-11T17:00:56.222045+00:00",
+  "release": {
+    "verifiedAt": "2026-09-11T17:00:56.222045+00:00",
+    "org": "00DAd00000A95VlMAJ",
+    "account": "acct_1UD8GwBcW1MkMYQ1",
+    "actual": {
+      "id": "0AfAd00000StiwNKAR",
+      "status": "Succeeded",
+      "numberComponentsTotal": 17,
+      "numberTestsCompleted": 51,
+      "numberTestErrors": 0
+    },
+    "full": {
+      "id": "0AfAd00000SttlJKAR",
+      "status": "Succeeded",
+      "numberComponentsTotal": 474,
+      "numberTestsCompleted": 314,
+      "numberTestErrors": 0
+    },
+    "componentIdentityCount": 474,
+    "sourceManifestHashCount": 538,
+    "aggregateSha256": "dd25528817f95098b45d242f0f107d5ce61ae6341d21ab7a5d378b8c08a9f2e8",
+    "nativeApexParityCount": 5,
+    "existingRequestsUnchanged": 9,
+    "newPaymentRequestIds": [
+      "a09Ad00000P3TyfIAF"
+    ],
+    "config": {
+      "Enabled__c": true,
+      "Live_Mode__c": false,
+      "Expected_Account_Id__c": "acct_1UD8GwBcW1MkMYQ1",
+      "Expected_Org_Id__c": "00DAd00000A95VlMAJ",
+      "Allowed_Email__c": null,
+      "Reference_Prefix__c": null,
+      "Tax_Rate__c": 20
+    },
+    "preservation": {
+      "Opportunity": {
+        "oldUnchanged": 166,
+        "newIds": [
+          "006Ad00000UoJPZIA3"
+        ]
+      },
+      "Lead": {
+        "oldUnchanged": 795,
+        "newIds": [
+          "00QAd00000UZXcXMAX"
+        ]
+      },
+      "Account": {
+        "oldUnchanged": 727,
+        "newIds": [
+          "001Ad000019Jk9XIAS"
+        ]
+      },
+      "Contact": {
+        "oldUnchanged": 818,
+        "newIds": [
+          "003Ad00001ABYhdIAH"
+        ]
+      },
+      "NTE_Email_Dispatch__c": {
+        "oldUnchanged": 107,
+        "newIds": []
+      }
+    },
+    "changedBaselineFiles": [
+      "config/stripe-sandbox.example.json",
+      "force-app/main/default/classes/NTEExhibitorApprovalEmailService.cls",
+      "force-app/main/default/classes/NTEStripeBookingService.cls",
+      "force-app/main/default/classes/NTEStripeBookingServiceTest.cls",
+      "force-app/main/default/classes/NTEStripeClient.cls",
+      "force-app/main/default/classes/NTEStripeClientTest.cls",
+      "force-app/main/default/customMetadata/NTE_Stripe_Config.Default.md-meta.xml",
+      "force-app/main/default/layouts/NTE_Payment_Request__c-NTE Payment Request.layout-meta.xml",
+      "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Allowed_Email__c.field-meta.xml",
+      "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Reference_Prefix__c.field-meta.xml",
+      "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Tax_Rate__c.field-meta.xml",
+      "force-app/main/default/permissionsets/NTE_Forms_Administration.permissionset-meta.xml",
+      "force-app/main/default/permissionsets/NTE_Management_User.permissionset-meta.xml",
+      "force-app/main/default/permissionsets/NTE_Stripe_Test_Operator.permissionset-meta.xml",
+      "manifest/production-package.xml",
+      "scripts/build-stripe-bookings.js",
+      "scripts/build-stripe.js",
+      "scripts/stripe-preflight.py",
+      "tests/stripe-preflight.test.py"
+    ],
+    "publicFilesChanged": [],
+    "capturedHashCountIncludingGitkeep": 539
+  },
+  "checkout": {
+    "interrupted": {
+      "paymentIntent": "pi_3UEXimBcW1MkMYQ104cKzsDr",
+      "status": "requires_payment_method",
+      "amountReceived": 0,
+      "chargeCount": 0,
+      "linkActive": true
+    },
+    "recovered": {
+      "paymentIntent": "pi_3UEXimBcW1MkMYQ104cKzsDr",
+      "charge": "ch_3UEXimBcW1MkMYQ10zv6dxON",
+      "chargeCount": 1,
+      "status": "succeeded",
+      "amountReceived": 95880,
+      "currency": "gbp",
+      "liveMode": false,
+      "threeDSecure": "authenticated",
+      "linkActive": false,
+      "completedUseCount": 1
+    },
+    "reference": "NTE-1789144940429-AWK58CK2",
+    "opportunityId": "006Ad00000UoJPZIA3",
+    "closeDate": "2026-06-11",
+    "stage": "Qualification",
+    "salesforcePaymentReceived": false,
+    "provisionalMessage": "1a0915a682198c42"
+  },
+  "notificationWorkflow": {
+    "id": "wf_test_61VNvYRKvATggSuZt16VMWEI38SQZq4ZJLRDaFVSi3lg",
+    "finalStatus": "Inactive",
+    "recipient": "steven.skyba@anthrion.com",
+    "negativeRun": "wfrun_test_61VNvZqe3EhVSmw8Y16VMWEI38SQZq4ZJLRDaFVSiK5g",
+    "negativeOutcome": "Condition false; email did not run",
+    "genericStripeFixture": "pi_3UEXcSBcW1MkMYQ11UOnITiU",
+    "positiveRun": "wfrun_test_61VNvhnf2g4DVihgP16VMWEI38SQZq4ZJLRDaFVSiWmW",
+    "positiveOutcome": "Condition true; email step completed",
+    "receivedMessage": "1a09166356545c4b",
+    "receivedAt": "2026-09-11T16:56:29Z"
+  },
+  "coverageBoundaries": {
+    "realMoney": false,
+    "clientAccountAccess": false,
+    "liveMerchantAcceptance": false,
+    "liveModeApiContracts": "mocked and passed",
+    "walletDeviceTransaction": false,
+    "mobileViewport": [
+      390,
+      844
+    ],
+    "manualChangedPriceConfirmation": "existing net mismatch hold retained; manual exception or approved reconciliation needed",
+    "nativeIssuedLinkEditing": "Edit disabled on inspected active NTE link"
+  },
+  "evidenceRoot": "tmp/nte-stripe-launch-readiness-20260911"
+}

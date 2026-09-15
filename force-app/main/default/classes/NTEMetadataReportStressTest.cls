@@ -7,9 +7,12 @@ private class NTEMetadataReportStressTest {
         Boolean topUpInvoice, Boolean topUpPaid) {
         return new Opportunity(
             Name = name, StageName = OPEN_STAGE, CloseDate = Date.today().addDays(30),
-            NTE_Event_Code__c = 'NTE2097', Amount = listed,
+            NTE_Event_Code__c = 'NTE2097', Amount = listed == null ? null : listed * 1.2,
             NTE_Listed_Price_Total__c = listed, NTE_Pricing_Status__c = pricingStatus,
             NTE_Invoice_Required__c = listed != null && listed > 0 ? 'Yes' : 'No',
+            NTE_Approval_Email_Sent_At__c = bookingInvoice || bookingPaid || listed == 0 ? System.now() : null,
+            NTE_Free_Space_Confirmed__c = listed == 0,
+            NTE_Top_Up_Payment_Requested_At__c = topUpInvoice || topUpPaid ? System.now() : null,
             NTE_Quote_Required_for_PO__c = 'No', NTE_Invoice_Provided__c = bookingInvoice,
             NTE_Payment_Received__c = bookingPaid, NTE_Top_Up_Staff_Total__c = topUp,
             NTE_Top_Up_Invoice_Required__c = topUp != null && topUp > 0,
@@ -34,7 +37,7 @@ private class NTEMetadataReportStressTest {
         insert bookings;
         Map<Id, Opportunity> actual = new Map<Id, Opportunity>([
             SELECT NTE_Confirmed_Value__c, NTE_Pricing_Ready__c,
-                NTE_Finance_Invoice_Due__c, NTE_Finance_Payment_Due__c,
+                NTE_Finance_Requirements_Due__c, NTE_Finance_Payment_Due__c,
                 NTE_Finance_Payment_Confirmed__c
             FROM Opportunity WHERE Id IN :bookings
         ]);
@@ -42,18 +45,18 @@ private class NTEMetadataReportStressTest {
             Opportunity record = actual.get(bookings[index].Id);
             System.assertEquals(null, record.NTE_Confirmed_Value__c, bookings[index].Name);
             System.assertEquals(false, record.NTE_Pricing_Ready__c, bookings[index].Name);
-            System.assertEquals(true, record.NTE_Finance_Invoice_Due__c, bookings[index].Name);
+            System.assertEquals(true, record.NTE_Finance_Requirements_Due__c, bookings[index].Name);
             System.assertEquals(false, record.NTE_Finance_Payment_Due__c, bookings[index].Name);
             System.assertEquals(false, record.NTE_Finance_Payment_Confirmed__c, bookings[index].Name);
         }
         System.assertEquals(0, actual.get(bookings[4].Id).NTE_Confirmed_Value__c);
-        System.assertEquals(800, actual.get(bookings[5].Id).NTE_Confirmed_Value__c);
-        System.assertEquals(750, actual.get(bookings[6].Id).NTE_Confirmed_Value__c,
+        System.assertEquals(960, actual.get(bookings[5].Id).NTE_Confirmed_Value__c);
+        System.assertEquals(760, actual.get(bookings[6].Id).NTE_Confirmed_Value__c,
             'Keep the saved booking amount and add the accepted top-up exactly once.');
     }
 
     @IsTest
-    static void nativeFinanceViewsFollowBothChargesAndBookingFirstOrder() {
+    static void nativeFinanceViewsFollowExclusiveStagesWithIndependentPayments() {
         List<Opportunity> bookings = new List<Opportunity>{
             booking('Both invoices outstanding', 800, 'Calculated', false, false, 50, false, false),
             booking('Booking invoice and top-up invoice work', 800, 'Calculated', true, false, 50, false, false),
@@ -71,13 +74,13 @@ private class NTEMetadataReportStressTest {
         };
         bookings[10].NTE_Quote_Required_for_PO__c = 'Yes';
         insert bookings;
-        Set<String> invoiceExpected = new Set<String>{bookings[0].Name, bookings[1].Name,
-            bookings[2].Name, bookings[7].Name, bookings[11].Name, bookings[12].Name};
-        Set<String> paymentExpected = new Set<String>{bookings[1].Name, bookings[3].Name,
+        Set<String> requirementsExpected = new Set<String>{bookings[0].Name, bookings[1].Name,
+            bookings[2].Name, bookings[7].Name, bookings[10].Name, bookings[11].Name};
+        Set<String> paymentExpected = new Set<String>{bookings[3].Name,
             bookings[4].Name, bookings[8].Name};
-        Set<String> confirmedExpected = new Set<String>{bookings[5].Name, bookings[9].Name};
-        System.assertEquals(invoiceExpected, names([
-            SELECT Name FROM Opportunity WHERE Id IN :bookings AND NTE_Finance_Invoice_Due__c = true
+        Set<String> confirmedExpected = new Set<String>{bookings[5].Name, bookings[6].Name, bookings[9].Name, bookings[12].Name};
+        System.assertEquals(requirementsExpected, names([
+            SELECT Name FROM Opportunity WHERE Id IN :bookings AND NTE_Finance_Requirements_Due__c = true
         ]));
         System.assertEquals(paymentExpected, names([
             SELECT Name FROM Opportunity WHERE Id IN :bookings AND NTE_Finance_Payment_Due__c = true
@@ -85,6 +88,7 @@ private class NTEMetadataReportStressTest {
         System.assertEquals(confirmedExpected, names([
             SELECT Name FROM Opportunity WHERE Id IN :bookings AND NTE_Finance_Payment_Confirmed__c = true
         ]));
+        System.assertEquals(bookings.size(),requirementsExpected.size()+paymentExpected.size()+confirmedExpected.size());
     }
 
     private static Set<String> names(List<Opportunity> records) {

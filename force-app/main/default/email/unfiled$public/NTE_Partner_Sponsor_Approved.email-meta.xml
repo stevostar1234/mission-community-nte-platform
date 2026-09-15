@@ -6,15 +6,15 @@
     <name>NTE approved partner / sponsor confirmation</name>
     <style>none</style>
     <subject>Your NTE space is provisionally reserved</subject>
-    <textOnly>{NTE_EVENT_LABEL} · Partner / sponsor provisional reservation
+    <textOnly>{NTE_EVENT_SHORT_LABEL} · Partner / sponsor provisional reservation
 
-Your provisional space is reserved.
+Your exhibitor space is provisionally reserved.
 
-{NTE_ORGANISATION} has been allocated partner / sponsor space at {NTE_EVENT_LABEL}.
+{NTE_ORGANISATION} has been allocated a partner / sponsor package at {NTE_EVENT_SHORT_LABEL}.
 
 {!IF(ISBLANK(Contact.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Contact.FirstName}{!IF(ISBLANK(Contact.FirstName),&quot;&quot;,&quot;,&quot;)}
 
-We are delighted to provisionally reserve your partner / sponsor space at {NTE_EVENT_LABEL}. The NTE team will review your requirements and contact you if anything needs clarification.
+We are delighted to provisionally reserve your partner / sponsor package at {NTE_EVENT_SHORT_LABEL}.
 
 Your provisional allocation
 
@@ -30,9 +30,11 @@ Allocation and charges
 
 Staff details and event preparation
 
-When your final attendee list is ready, submit the names using the partner / sponsor staff form.
+When your final attendee list is ready, submit the names using the Provide staff details link below.
 
-Please upload your latest company logo for {NTE_EVENT_LABEL} marketing and event materials. We request the latest artwork from every participating organisation, as branding may have changed.
+Please submit your latest artwork using the Upload your logo link below. We request latest artwork from every participating organisation, as branding may have changed.
+
+{NTE_VEHICLE_NOTE}For garage exhibits and large stands in the halls, setting up between 14:00-18:00 hrs on Sunday is required.
 
 {NTE_PREPARATION_LINKS}
 
@@ -54,7 +56,7 @@ Planned staff {!Opportunity.NTE_Total_Staff_Count__c}
 
 Quotation and invoicing
 Payment method {!Opportunity.NTE_Payment_Method__c}
-Invoice required {!Opportunity.NTE_Invoice_Required__c}
+Payment required {!Opportunity.NTE_Invoice_Required__c}
 Legal organisation name {!Opportunity.NTE_Invoiced_Company__c}
 Trading name {!Opportunity.NTE_Trading_Name__c}
 Billing address {!Opportunity.NTE_Invoice_Address__c}
@@ -70,7 +72,7 @@ Kind regards,
 The National Transition Event Team
 Mission Community
 
-{NTE_EVENT_LABEL} • The Wing, Silverstone
+{NTE_EVENT_SHORT_LABEL} • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

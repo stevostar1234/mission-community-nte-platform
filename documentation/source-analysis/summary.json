@@ -1,0 +1,33 @@
+{
+  "files": 764,
+  "metadata_files": 473,
+  "kinds": {
+    "applications": 1,
+    "aura": 1,
+    "classes": 29,
+    "contentassets": 1,
+    "customMetadata": 2,
+    "duplicateRules": 2,
+    "email": 19,
+    "externalCredentials": 2,
+    "flexipages": 5,
+    "flows": 4,
+    "layouts": 2,
+    "lwc": 4,
+    "namedCredentials": 2,
+    "objects": 376,
+    "permissionsetgroups": 1,
+    "permissionsets": 4,
+    "quickActions": 3,
+    "reports": 10,
+    "sharingRules": 1,
+    "standardValueSets": 2,
+    "staticresources": 1,
+    "tabs": 1
+  },
+  "classes": 29,
+  "production_classes": 12,
+  "production_methods": 301,
+  "lwcs": 4,
+  "fields": 342
+}

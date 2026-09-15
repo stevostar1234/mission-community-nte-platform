@@ -6,15 +6,15 @@
     <name>Internal NTE partner / sponsor application notification</name>
     <style>none</style>
     <subject>New NTE partner / sponsor application</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+    <textOnly>NTE27 · Internal notification
 
 New partner / sponsor application.
 
-{!Lead.Company} has applied to participate at {!Lead.NTE_Event_Code__c}.
+{!Lead.Company} has applied to participate at NTE27.
 
 Hello NTE team,
 
-A new partner / sponsor application is ready for review.
+A new partner / sponsor application has been submitted.
 
 Organisation and contact
 Organisation {!Lead.Company}
@@ -27,6 +27,9 @@ Telephone {!Lead.Phone}
 
 Package and arrangements
 Package(s) {!Lead.Sponsor_Package__c}
+Subtotal (ex VAT) {!Lead.Listed_Price_Total__c}
+VAT (20%) {!Lead.VAT_Total__c}
+Total (inc VAT) {!Lead.Total_Including_VAT__c}
 Power {!Lead.Stand_Power__c}
 Equipment {!Lead.Stand_Equipment__c}
 Heavy vehicle follow-up {!Lead.Heavy_Vehicle_Required__c}
@@ -34,7 +37,8 @@ Planned staff {!Lead.Total_Staff_Count__c}
 
 Quotation and invoicing
 Payment method {!Lead.Payment_Method__c}
-Invoice required {!Lead.Invoice_Required__c}
+Invoice requested {!Lead.Invoice_Requested__c}
+Payment required {!Lead.Invoice_Required__c}
 Legal organisation name {!Lead.Invoiced_Company__c}
 Trading name {!Lead.Trading_Name__c}
 Billing address {!Lead.Invoice_Address__c}
@@ -46,7 +50,7 @@ Supplier agreement {!Lead.Supplier_Agreement_Required__c}
 
 Open the Lead in Salesforce to review the application and record your decision.
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

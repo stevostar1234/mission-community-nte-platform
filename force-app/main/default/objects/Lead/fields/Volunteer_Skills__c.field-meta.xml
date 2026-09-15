@@ -16,14 +16,19 @@
                 <label>Fundraising</label>
             </value>
             <value>
-                <fullName>Driving / Transport</fullName>
+                <fullName>Transport and Logistics</fullName>
                 <default>false</default>
-                <label>Driving / Transport</label>
+                <label>Transport and Logistics</label>
             </value>
             <value>
                 <fullName>Motorsport Event Support</fullName>
                 <default>false</default>
                 <label>Motorsport Event Support</label>
+            </value>
+            <value>
+                <fullName>Marshalling</fullName>
+                <default>false</default>
+                <label>Marshalling</label>
             </value>
             <value>
                 <fullName>Community Outreach / Awareness</fullName>
@@ -51,9 +56,9 @@
                 <label>Vehicle Maintenance / Repairs (Wantage)</label>
             </value>
             <value>
-                <fullName>Charity Merchandise / Shop Support</fullName>
+                <fullName>Pop up shop</fullName>
                 <default>false</default>
-                <label>Charity Merchandise / Shop Support</label>
+                <label>Pop up shop</label>
             </value>
             <value>
                 <fullName>Storekeeping (Wantage)</fullName>
@@ -64,6 +69,18 @@
                 <fullName>Maintenance / DIY (Wantage)</fullName>
                 <default>false</default>
                 <label>Maintenance / DIY (Wantage)</label>
+            </value>
+            <value>
+                <fullName>Driving / Transport</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Driving / Transport</label>
+            </value>
+            <value>
+                <fullName>Charity Merchandise / Shop Support</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Charity Merchandise / Shop Support</label>
             </value>
         </valueSetDefinition>
     </valueSet>

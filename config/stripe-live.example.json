@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "environment": "live",
+  "enabled": false,
+  "expected_account_id": null,
+  "expected_salesforce_org_id": null,
+  "currency": "gbp",
+  "tax_policy": "unconfirmed",
+  "fixture_tax_rate_percent": null,
+  "payment_method_types": [
+    "card"
+  ],
+  "invoice_creation_enabled": false,
+  "automatic_tax_enabled": false,
+  "allow_promotion_codes": false,
+  "adjustable_quantity_enabled": false,
+  "completed_sessions_limit": 1,
+  "confirmation": "manual",
+  "billing_address_collection": "auto",
+  "customer_creation": "if_required",
+  "booking_reference_prefix": "",
+  "allowed_recipient_emails": []
+}

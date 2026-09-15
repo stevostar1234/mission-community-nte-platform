@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Opportunity.NTE_Finance_Invoice_Due__c</members>
+        <members>Opportunity.NTE_Final_Pack_Recipient__c</members>
+        <members>NTE_Routing_Config__mdt.Application_Event_Code__c</members>
+        <members>NTE_Routing_Config__mdt.Exhibitor_Final_Pack_URL__c</members>
+        <members>NTE_Routing_Config__mdt.Partner_Final_Pack_URL__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Opportunity.NTE_Quotes_Required</members>
+        <members>Opportunity.NTE_Invoices_Required</members>
+        <members>Opportunity.NTE_Top_Up_Invoices_Required</members>
+        <members>Opportunity.NTE_Top_Up_Payments_Due</members>
+        <members>Opportunity.NTE_Top_Up_Paid</members>
+        <name>ListView</name>
+    </types>
+    <types>
+        <members>unfiled$public/NTE_Staff_Update_Acknowledgement</members>
+        <name>EmailTemplate</name>
+    </types>
+    <version>67.0</version>
+</Package>

@@ -1,10 +1,11 @@
 public with sharing class NTEInboundLeadService {
     private static final String ACCEPTED = 'Accepted by Salesforce';
+    private static final String NOT_REQUIRED = 'Not required';
     private static final Map<String, List<String>> TEMPLATES_BY_FORM = new Map<String, List<String>>{
         'Partner / Sponsor Expression of Interest' => new List<String>{'NTE_Partner_Sponsor_EOI_Acknowledgement', 'NTE_Partner_Sponsor_EOI_Internal'},
         'Exhibitor Expression of Interest' => new List<String>{'NTE_Exhibitor_EOI_Acknowledgement', 'NTE_Exhibitor_EOI_Internal'},
-        'Partner / Sponsor Application' => new List<String>{'NTE_Partner_Sponsor_Application_Acknowledgement', 'NTE_Partner_Sponsor_Application_Internal'},
-        'Exhibitor Application' => new List<String>{'NTE_Exhibitor_Application_Acknowledgement', 'NTE_Exhibitor_Application_Internal'},
+        'Partner / Sponsor Application' => new List<String>{null, 'NTE_Partner_Sponsor_Application_Internal'},
+        'Exhibitor Application' => new List<String>{null, 'NTE_Exhibitor_Application_Internal'},
         'Guest Registration' => new List<String>{'NTE_Guest_Registration_Acknowledgement', 'NTE_Guest_Registration_Internal'}
     };
     private static Set<Id> initializedLeadIds = new Set<Id>();
@@ -69,17 +70,20 @@ public with sharing class NTEInboundLeadService {
         List<Lead> initialAudits = new List<Lead>();
         Set<Id> pendingLeadIds = new Set<Id>();
         for (Lead lead : leads) {
+            Boolean applicantRequired = String.isNotBlank(TEMPLATES_BY_FORM.get(lead.Web_Form_Type__c)[0]);
             if (newLeadIds.contains(lead.Id)) {
                 initialAudits.add(new Lead(Id = lead.Id,
                     NTE_Interest_Progressed__c = false, NTE_Interest_Not_Progressed__c = false,
                     NTE_Application_Rejected__c = false, NTE_Invitation_Status__c = null,
                     NTE_Invitation_Sent_At__c = null, NTE_Invitation_Recipient__c = null,
-                    NTE_Applicant_Email_Status__c = 'Not Attempted', NTE_Internal_Email_Status__c = 'Not Attempted',
+                    NTE_Applicant_Email_Status__c = applicantRequired ? 'Not Attempted' : NOT_REQUIRED, NTE_Internal_Email_Status__c = 'Not Attempted',
                     NTE_Email_Error__c = null));
-                lead.NTE_Applicant_Email_Status__c = 'Not Attempted';
+                lead.NTE_Applicant_Email_Status__c = applicantRequired ? 'Not Attempted' : NOT_REQUIRED;
                 lead.NTE_Internal_Email_Status__c = 'Not Attempted';
             }
-            if (lead.NTE_Applicant_Email_Status__c != ACCEPTED || lead.NTE_Internal_Email_Status__c != ACCEPTED) pendingLeadIds.add(lead.Id);
+            if (lead.NTE_Internal_Email_Status__c != ACCEPTED
+                || (applicantRequired && lead.NTE_Applicant_Email_Status__c != ACCEPTED)
+                || (!applicantRequired && lead.NTE_Applicant_Email_Status__c != ACCEPTED && lead.NTE_Applicant_Email_Status__c != NOT_REQUIRED)) pendingLeadIds.add(lead.Id);
         }
         if (!initialAudits.isEmpty()) {
             Database.update(initialAudits, true, AccessLevel.SYSTEM_MODE);
@@ -111,7 +115,9 @@ public with sharing class NTEInboundLeadService {
         if (!ownershipUpdates.isEmpty()) Database.update(ownershipUpdates, true, AccessLevel.SYSTEM_MODE);
 
         Set<String> names = new Set<String>();
-        for (List<String> pair : TEMPLATES_BY_FORM.values()) names.addAll(pair);
+        for (List<String> pair : TEMPLATES_BY_FORM.values()) {
+            for (String templateName : pair) if (String.isNotBlank(templateName)) names.add(templateName);
+        }
         Map<String, Id> templateIds = new Map<String, Id>();
         for (EmailTemplate templateRecord : [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :names]) {
             templateIds.put(templateRecord.DeveloperName, templateRecord.Id);
@@ -124,11 +130,11 @@ public with sharing class NTEInboundLeadService {
             if (!pendingLeadIds.contains(lead.Id)) continue;
             List<String> pair = TEMPLATES_BY_FORM.get(lead.Web_Form_Type__c);
             Lead audit = new Lead(Id = lead.Id,
-                NTE_Applicant_Email_Status__c = lead.NTE_Applicant_Email_Status__c == ACCEPTED ? ACCEPTED : 'Not Attempted',
+                NTE_Applicant_Email_Status__c = lead.NTE_Applicant_Email_Status__c == ACCEPTED ? ACCEPTED : String.isBlank(pair[0]) ? NOT_REQUIRED : 'Not Attempted',
                 NTE_Internal_Email_Status__c = lead.NTE_Internal_Email_Status__c == ACCEPTED ? ACCEPTED : 'Not Attempted');
             audits.put(lead.Id, audit);
 
-            if (lead.NTE_Applicant_Email_Status__c != ACCEPTED) {
+            if (String.isNotBlank(pair[0]) && lead.NTE_Applicant_Email_Status__c != ACCEPTED) {
                 if (!isUsableEmail(lead.Email)) {
                     fail(audit, true, errors, String.isBlank(lead.Email)
                         ? 'Applicant email was not sent because the Lead email address is blank.'

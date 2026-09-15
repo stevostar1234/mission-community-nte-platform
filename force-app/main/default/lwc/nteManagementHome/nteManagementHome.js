@@ -39,8 +39,7 @@ const STAGE_ICONS = {
 };
 
 const READINESS_CONFIG = [
-    { key: "quoteRequired", label: "Quotes required", aliases: ["quoteRequired", "quotesRequired"] },
-    { key: "invoiceRequired", label: "Invoice required", aliases: ["invoiceRequired", "invoicesRequired"] },
+    { key: "requirements", label: "Requirements", aliases: ["requirements"] },
     { key: "paymentRequired", label: "Payment required", aliases: ["paymentRequired", "paymentsRequired"] },
     { key: "paid", label: "Payment confirmed", aliases: ["paid", "completedPayments"] }
 ];

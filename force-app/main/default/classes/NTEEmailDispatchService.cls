@@ -2,10 +2,10 @@ public with sharing class NTEEmailDispatchService {
     private static final Integer MAX_RECIPIENTS = 500;
     private static final Integer MAX_REQUEST_JSON_LENGTH = 300000;
     private static final Integer PAGE_SIZE = 40;
-    private static final Set<String> KINDS = new Set<String>{'INVITATION', 'STAFF_DUE', 'HEAVY_DUE', 'LOGO_DUE', 'FINAL_PACK', 'BOOKING_CONFIRMED'};
+    private static final Set<String> KINDS = new Set<String>{'INVITATION', 'STAFF_DUE', 'HEAVY_DUE', 'LOGO_DUE', 'BOOKING_CONFIRMED'};
     private static final Set<String> INTEREST_TYPES = new Set<String>{'Exhibitor Expression of Interest', 'Partner / Sponsor Expression of Interest'};
     private static final Set<String> APPLICATION_TYPES = new Set<String>{'Exhibitor Application', 'Partner / Sponsor Application'};
-    private static final Set<String> TOKENS = new Set<String>{'ContactName', 'Organisation', 'BookingReference', 'EventCode', 'UpdateLink', 'ApplicationLink', 'FinalPackLink'};
+    private static final Set<String> TOKENS = new Set<String>{'ContactName', 'Organisation', 'BookingReference', 'EventCode', 'UpdateLink', 'ApplicationLink'};
     @TestVisible private static Boolean bypassEmailDelivery = false;
     @TestVisible private static Boolean skipEnqueue = false;
     @TestVisible private static Boolean simulateEnqueueFailure = false;
@@ -386,8 +386,8 @@ public with sharing class NTEEmailDispatchService {
         }
         Map<String, Id> confirmationTemplateIds = new Map<String, Id>();
         if (idsByKind.containsKey('BOOKING_CONFIRMED')) {
-            NTEStripeBookingService.preloadEmailRequests(new Set<Id>(idsByKind.get('BOOKING_CONFIRMED')));
-            Set<String> templateNames = new Set<String>{'NTE_Exhibitor_Payment_Confirmed', 'NTE_Partner_Sponsor_Payment_Confirmed'};
+            Set<String> templateNames = new Set<String>{'NTE_Exhibitor_Payment_Confirmed', 'NTE_Partner_Sponsor_Payment_Confirmed',
+                'NTE_Complimentary_Exhibitor_Approved', 'NTE_Partner_Sponsor_Free_Confirmed'};
             for (EmailTemplate emailTemplate : [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :templateNames]) {
                 confirmationTemplateIds.put(emailTemplate.DeveloperName, emailTemplate.Id);
             }
@@ -412,8 +412,11 @@ public with sharing class NTEEmailDispatchService {
             }
             Messaging.SingleEmailMessage email;
             if (dispatch.Kind__c == 'BOOKING_CONFIRMED') {
+                Boolean free = NTEVat.bookingGross(recipient.booking.NTE_Listed_Price_Total__c,
+                    recipient.booking.NTE_VAT_Rate__c, recipient.booking.Amount) == 0;
                 String templateName = recipient.sourceType == 'Partner / Sponsor Application'
-                    ? 'NTE_Partner_Sponsor_Payment_Confirmed' : 'NTE_Exhibitor_Payment_Confirmed';
+                    ? (free ? 'NTE_Partner_Sponsor_Free_Confirmed' : 'NTE_Partner_Sponsor_Payment_Confirmed')
+                    : (free ? 'NTE_Complimentary_Exhibitor_Approved' : 'NTE_Exhibitor_Payment_Confirmed');
                 try {
                     if (!confirmationTemplateIds.containsKey(templateName)) throw handled('The booking confirmation email template is missing.');
                     email = NTEExhibitorApprovalEmailService.renderBookingEmail(recipient.booking,
@@ -438,7 +441,7 @@ public with sharing class NTEEmailDispatchService {
                 if (String.isNotBlank(recipient.reference) && !plainText.contains(recipient.reference)) {
                     plainText += '\n\nBooking reference: ' + recipient.reference;
                 }
-                if (!plainText.contains(recipient.eventCode)) plainText += '\nEvent: ' + recipient.eventCode;
+                if (!plainText.contains('NTE27')) plainText += '\nEvent: NTE27';
                 if (!plainText.contains(recipient.link)) plainText += '\n\n' + recipient.link;
                 email.setPlainTextBody(plainText + '\n\nKind regards,\nThe National Transition Event Team\nMission Community');
                 email.setHtmlBody(htmlFor(dispatch.Kind__c, dispatch.Subject__c, dispatch.Message__c, recipient));
@@ -452,6 +455,7 @@ public with sharing class NTEEmailDispatchService {
                 renderedText.put(targetId(dispatch), email.getPlainTextBody());
             }
         }
+        List<Opportunity> freeConfirmations = new List<Opportunity>();
         for (Integer startIndex = 0; startIndex < messages.size(); startIndex += 10) {
             List<Messaging.SingleEmailMessage> batch = new List<Messaging.SingleEmailMessage>();
             Integer endIndex = Math.min(startIndex + 10, messages.size());
@@ -470,6 +474,11 @@ public with sharing class NTEEmailDispatchService {
                 if (sent) {
                     dispatch.Sent_At__c = System.now();
                     dispatch.Error__c = null;
+                    if (dispatch.Kind__c == 'BOOKING_CONFIRMED') {
+                        Opportunity booking = recipientsByKind.get('BOOKING_CONFIRMED').get(targetId(dispatch)).booking;
+                        if (NTEVat.bookingGross(booking.NTE_Listed_Price_Total__c, booking.NTE_VAT_Rate__c, booking.Amount) == 0
+                            && !booking.NTE_Free_Space_Confirmed__c) freeConfirmations.add(new Opportunity(Id=booking.Id, NTE_Free_Space_Confirmed__c=true));
+                    }
                 } else {
                     dispatch.Error__c = batchError != null ? batchError.left(32000) : outcomes == null ? 'Simulated delivery failure.'
                         : emailError(outcomes[index - startIndex]);
@@ -477,6 +486,7 @@ public with sharing class NTEEmailDispatchService {
             }
         }
         Database.update(dispatches, true, AccessLevel.USER_MODE);
+        if (!freeConfirmations.isEmpty()) Database.update(freeConfirmations, true, AccessLevel.SYSTEM_MODE);
         updateSourceStatuses(dispatches, AccessLevel.USER_MODE);
     }
 
@@ -528,7 +538,7 @@ public with sharing class NTEEmailDispatchService {
                 + 'NTE_Power_Socket_Count__c, NTE_Power_Socket_Unit_Price__c, NTE_Power_Socket_Total__c, '
                 + 'NTE_Additional_Staff_Count__c, NTE_Additional_Staff_Unit_Price__c, NTE_Additional_Staff_Total__c, '
                 + 'NTE_Pricing_Status__c, NTE_Quote_Required_for_PO__c, NTE_Quote_Provided__c, '
-                + 'NTE_Invoice_Required__c, NTE_Listed_Price_Total__c, NTE_Invoice_Provided__c, NTE_Payment_Received__c, '
+                + 'NTE_Invoice_Required__c, NTE_Listed_Price_Total__c, NTE_Price_Adjustment__c, NTE_Free_Space_Confirmed__c, NTE_VAT_Rate__c, NTE_Invoice_Provided__c, NTE_Payment_Received__c, '
                 + 'NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Invoice_Provided__c, NTE_Top_Up_Payment_Received__c, '
                 + 'NTE_Staff_Update_Completed_At__c, NTE_Heavy_Vehicle_Required__c, NTE_Heavy_Vehicle_Update_Completed_At__c, '
                 + 'NTE_Logo_Update_Provided__c, NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c '
@@ -552,6 +562,7 @@ public with sharing class NTEEmailDispatchService {
                 recipient.link = route(kind, recipient.sourceType, routing);
                 if (kind == 'BOOKING_CONFIRMED') recipient.bookingSnapshot = JSON.serialize(new List<String>{
                     String.valueOf(booking.NTE_Listed_Price_Total__c), String.valueOf(booking.Amount),
+                    String.valueOf(booking.NTE_VAT_Rate__c), String.valueOf(booking.NTE_Price_Adjustment__c),
                     String.valueOf(booking.NTE_Payment_Received_At__c), booking.NTE_Sponsor_Package__c,
                     booking.NTE_Exhibitor_Space_Selections__c, String.valueOf(booking.NTE_Sponsor_Package_Total__c),
                     String.valueOf(booking.NTE_Exhibitor_Space_Price__c), String.valueOf(booking.NTE_Power_Socket_Total__c),
@@ -581,14 +592,6 @@ public with sharing class NTEEmailDispatchService {
                 else if (kind == 'HEAVY_DUE' && (booking.NTE_Heavy_Vehicle_Required__c == 'No'
                     || (booking.NTE_Heavy_Vehicle_Required__c == 'Yes' && booking.NTE_Heavy_Vehicle_Update_Completed_At__c != null))) recipient.issue = 'Logistics details are already complete.';
                 else if (kind == 'LOGO_DUE' && booking.NTE_Logo_Update_Provided__c) recipient.issue = 'The logo has already been provided.';
-                else if (kind == 'FINAL_PACK') {
-                    recipient.lastSentAt = booking.NTE_Final_Pack_Sent_At__c;
-                    if (booking.NTE_Final_Pack_Status__c == 'Sent') recipient.issue = 'The final information has already been sent.';
-                    else if (booking.NTE_Final_Pack_Status__c == 'Queued' && allowedQueuedIds.isEmpty()) recipient.issue = 'Final information is already queued.';
-                    else if (routing == null || String.isBlank(routing.Application_Event_Code__c)
-                        || recipient.eventCode != routing.Application_Event_Code__c) recipient.issue = 'The final information link is not configured for this event.';
-                    else if (!NTE_MasterPanelController.isComplete(booking)) recipient.issue = 'This booking still has outstanding details or payment.';
-                }
                 recipients.put(booking.Id, recipient);
             }
         }
@@ -600,7 +603,7 @@ public with sharing class NTEEmailDispatchService {
             if (dispatch.Status__c == 'Queued' && !allowedQueuedIds.contains(dispatch.Id)) recipient.issue = 'An email of this kind is already queued.';
             if (dispatch.Status__c == 'Sent') {
                 if (recipient.lastSentAt == null || recipient.lastSentAt < dispatch.Sent_At__c) recipient.lastSentAt = dispatch.Sent_At__c;
-                if (kind == 'INVITATION' || kind == 'FINAL_PACK' || kind == 'BOOKING_CONFIRMED') recipient.issue = 'This email has already been sent.';
+                if (kind == 'INVITATION' || kind == 'BOOKING_CONFIRMED') recipient.issue = 'This email has already been sent.';
             }
         }
         List<RecipientDTO> ordered = new List<RecipientDTO>();
@@ -625,29 +628,22 @@ public with sharing class NTEEmailDispatchService {
 
     private static void updateSourceStatuses(List<NTE_Email_Dispatch__c> dispatches, AccessLevel accessLevel) {
         Map<Id, Lead> leads = new Map<Id, Lead>();
-        Map<Id, Opportunity> bookings = new Map<Id, Opportunity>();
         Set<Id> leadIds = new Set<Id>();
-        Set<Id> bookingIds = new Set<Id>();
         Set<Id> dispatchIds = new Set<Id>();
         for (NTE_Email_Dispatch__c dispatch : dispatches) {
             dispatchIds.add(dispatch.Id);
             if (dispatch.Kind__c == 'INVITATION' && dispatch.Lead__c != null) leadIds.add(dispatch.Lead__c);
-            if (dispatch.Kind__c == 'FINAL_PACK' && dispatch.Opportunity__c != null) bookingIds.add(dispatch.Opportunity__c);
         }
-        if (leadIds.isEmpty() && bookingIds.isEmpty()) return;
+        if (leadIds.isEmpty()) return;
         Map<Id, String> currentStatuses = new Map<Id, String>();
         if (!leadIds.isEmpty()) for (Lead interest : (List<Lead>)Database.queryWithBinds(
             'SELECT Id, NTE_Invitation_Status__c FROM Lead WHERE Id IN :ids',
             new Map<String, Object>{'ids' => leadIds}, accessLevel)) currentStatuses.put(interest.Id, interest.NTE_Invitation_Status__c);
-        if (!bookingIds.isEmpty()) for (Opportunity booking : (List<Opportunity>)Database.queryWithBinds(
-            'SELECT Id, NTE_Final_Pack_Status__c FROM Opportunity WHERE Id IN :ids',
-            new Map<String, Object>{'ids' => bookingIds}, accessLevel)) currentStatuses.put(booking.Id, booking.NTE_Final_Pack_Status__c);
         Set<Id> otherQueuedTargets = new Set<Id>();
         for (NTE_Email_Dispatch__c other : (List<NTE_Email_Dispatch__c>)Database.queryWithBinds(
             'SELECT Lead__c, Opportunity__c FROM NTE_Email_Dispatch__c WHERE Id NOT IN :dispatchIds '
-            + 'AND Status__c = \'Queued\' AND ((Kind__c = \'INVITATION\' AND Lead__c IN :leadIds) '
-            + 'OR (Kind__c = \'FINAL_PACK\' AND Opportunity__c IN :bookingIds))',
-            new Map<String, Object>{'dispatchIds' => dispatchIds, 'leadIds' => leadIds, 'bookingIds' => bookingIds}, accessLevel)) otherQueuedTargets.add(targetId(other));
+            + 'AND Status__c = \'Queued\' AND Kind__c = \'INVITATION\' AND Lead__c IN :leadIds',
+            new Map<String, Object>{'dispatchIds' => dispatchIds, 'leadIds' => leadIds}, accessLevel)) otherQueuedTargets.add(targetId(other));
         for (NTE_Email_Dispatch__c dispatch : dispatches) {
             if (dispatch.Status__c != 'Sent' && (currentStatuses.get(targetId(dispatch)) == 'Sent'
                 || (dispatch.Status__c != 'Queued' && otherQueuedTargets.contains(targetId(dispatch))))) continue;
@@ -663,21 +659,9 @@ public with sharing class NTEEmailDispatchService {
                     interest.NTE_Interest_Progressed__c = true;
                 }
                 leads.put(interest.Id, interest);
-            } else if (dispatch.Kind__c == 'FINAL_PACK' && dispatch.Opportunity__c != null) {
-                if (bookings.containsKey(dispatch.Opportunity__c) && bookings.get(dispatch.Opportunity__c).NTE_Final_Pack_Status__c == 'Sent'
-                    && dispatch.Status__c != 'Sent') continue;
-                if (bookings.containsKey(dispatch.Opportunity__c) && bookings.get(dispatch.Opportunity__c).NTE_Final_Pack_Status__c == 'Queued'
-                    && dispatch.Status__c != 'Queued' && dispatch.Status__c != 'Sent') continue;
-                Opportunity booking = new Opportunity(Id = dispatch.Opportunity__c, NTE_Final_Pack_Status__c = dispatch.Status__c);
-                if (dispatch.Status__c == 'Sent') {
-                    booking.NTE_Final_Pack_Sent_At__c = dispatch.Sent_At__c;
-                    booking.NTE_Final_Pack_Recipient__c = dispatch.Recipient__c;
-                }
-                bookings.put(booking.Id, booking);
             }
         }
         if (!leads.isEmpty()) Database.update(leads.values(), true, accessLevel);
-        if (!bookings.isEmpty()) Database.update(bookings.values(), true, accessLevel);
     }
 
     private static Map<Id, RecipientDTO> recipientMap(List<RecipientDTO> recipients) {
@@ -694,7 +678,7 @@ public with sharing class NTEEmailDispatchService {
     }
     private static String normalizeKind(String kind) {
         String value = String.isBlank(kind) ? '' : kind.trim().toUpperCase();
-        if (!KINDS.contains(value)) throw handled('Choose an application invitation, update reminder or final information email.');
+        if (!KINDS.contains(value)) throw handled('Choose an application invitation or update reminder.');
         return value;
     }
     private static List<Id> validateIds(List<Id> recordIds, String kind) {
@@ -759,7 +743,6 @@ public with sharing class NTEEmailDispatchService {
         if (kind == 'BOOKING_CONFIRMED' || routing == null) return null;
         Boolean partner = sourceType != null && sourceType.startsWith('Partner / Sponsor');
         if (kind == 'INVITATION') return partner ? routing.Partner_Application_URL__c : routing.Exhibitor_Application_URL__c;
-        if (kind == 'FINAL_PACK') return partner ? routing.Partner_Final_Pack_URL__c : routing.Exhibitor_Final_Pack_URL__c;
         if (kind == 'HEAVY_DUE') return routing.Heavy_Vehicle_Form_URL__c;
         if (kind == 'LOGO_DUE') return routing.Logo_Update_Form_URL__c;
         return partner ? routing.Partner_Staff_Form_URL__c : routing.Exhibitor_Staff_Form_URL__c;
@@ -776,14 +759,12 @@ public with sharing class NTEEmailDispatchService {
     }
     private static String titleFor(String kind) {
         if (kind == 'INVITATION') return 'Application invitations';
-        if (kind == 'FINAL_PACK') return 'Final event information';
         if (kind == 'STAFF_DUE') return 'Staff update reminders';
         if (kind == 'HEAVY_DUE') return 'Logistics reminders';
         return 'Logo reminders';
     }
     private static String subjectFor(String kind) {
         if (kind == 'INVITATION') return 'Your invitation to apply for NTE';
-        if (kind == 'FINAL_PACK') return 'Your NTE event information';
         if (kind == 'STAFF_DUE') return 'NTE staff details reminder';
         if (kind == 'HEAVY_DUE') return 'NTE logistics details reminder';
         return 'NTE logo reminder';
@@ -791,7 +772,6 @@ public with sharing class NTEEmailDispatchService {
     private static String bodyFor(String kind) {
         String message;
         if (kind == 'INVITATION') message = 'Thank you for your interest in NTE. We would like to invite {Organisation} to complete an application using the link below.';
-        else if (kind == 'FINAL_PACK') message = 'Thank you for completing the arrangements for {Organisation}. Please use the link below for your arrival, setup and event information.';
         else if (kind == 'STAFF_DUE') message = 'Please provide the outstanding staff details for {Organisation}.';
         else if (kind == 'HEAVY_DUE') message = 'Please complete the outstanding logistics details for {Organisation}.';
         else message = 'Please upload the logo for {Organisation}.';
@@ -803,7 +783,7 @@ public with sharing class NTEEmailDispatchService {
             'Organisation' => String.isBlank(recipient.company) ? 'your organisation' : recipient.company,
             'BookingReference' => String.isBlank(recipient.reference) ? '' : recipient.reference,
             'EventCode' => String.isBlank(recipient.eventCode) ? '' : recipient.eventCode,
-            'UpdateLink' => recipient.link, 'ApplicationLink' => recipient.link, 'FinalPackLink' => recipient.link
+            'UpdateLink' => recipient.link, 'ApplicationLink' => recipient.link
         };
         Matcher tokens = Pattern.compile('\\{([A-Za-z][A-Za-z0-9_]*)\\}').matcher(template);
         List<String> parts = new List<String>();
@@ -830,8 +810,8 @@ public with sharing class NTEEmailDispatchService {
         return null;
     }
     private static String htmlFor(String kind, String subject, String body, RecipientDTO recipient) {
-        String text = body.replace('{UpdateLink}', '').replace('{ApplicationLink}', '').replace('{FinalPackLink}', '').trim();
-        String label = kind == 'INVITATION' ? 'Complete your application' : kind == 'FINAL_PACK' ? 'View event information'
+        String text = body.replace('{UpdateLink}', '').replace('{ApplicationLink}', '').trim();
+        String label = kind == 'INVITATION' ? 'Complete your application'
             : kind == 'STAFF_DUE' ? 'Update staff details' : kind == 'HEAVY_DUE' ? 'Update logistics details' : 'Upload your logo';
         Boolean partner = recipient.sourceType != null && recipient.sourceType.startsWith('Partner / Sponsor');
         Boolean complimentary = !partner && recipient.booking != null && recipient.booking.NTE_Pricing_Status__c == 'Calculated'
@@ -857,7 +837,7 @@ public with sharing class NTEEmailDispatchService {
             + '<img class="logo" src="https://stevostar1234.github.io/nte27-web-to-lead-demo/assets/nte-logo-white.png" width="160" alt="The National Transition Event" style="display:block;width:160px;max-width:100%;height:auto;"></a></td></tr>'
             + '<tr><td class="mobile-pad" style="padding:36px 48px 40px;background-color:#0b3553;color:#ffffff;">'
             + '<div style="margin:0 0 16px;font-size:12px;line-height:16px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:' + kickerColour + ';">'
-            + escape(recipient.eventCode) + ' &bull; ' + (partner ? 'Partners &amp; sponsors' : 'Exhibitors') + '</div>'
+            + 'NTE27 &bull; ' + (partner ? 'Partners &amp; sponsors' : 'Exhibitors') + '</div>'
             + '<h1 class="hero-title" style="margin:0;font-size:38px;line-height:44px;font-weight:700;color:#ffffff;">' + renderedSubject + '</h1></td></tr>'
             + '<tr><td class="mobile-pad" style="padding:38px 48px 24px;font-size:17px;line-height:28px;color:#263746;">'
             + escape(normaliseLines(personalise(text, recipient))).replace('\n', '<br>') + '</td></tr>'

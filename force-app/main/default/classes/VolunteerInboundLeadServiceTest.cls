@@ -52,6 +52,81 @@ private class VolunteerInboundLeadServiceTest {
     }
 
     @IsTest
+    static void savesRevisedVolunteerDetailsAndRendersAvailability() {
+        VolunteerInboundLeadService.bypassEmailDelivery = true;
+        Lead lead = volunteerLead('availability');
+        lead.NOK_Address__c = '14 Meadow Lane\nBristol';
+        lead.NOK_Postcode__c = 'BS1 4AA';
+        lead.Volunteer_Opportunities__c = 'Marshalling;Pop up shop';
+        lead.Volunteer_Skills__c = 'Transport and Logistics;Marshalling';
+        lead.Volunteer_Hours__c = '4-8';
+        lead.Volunteer_Availability__c = 'Weekdays;Weekends';
+        lead.Volunteer_Form_Version__c = 'volunteer-application-v3';
+        lead.Volunteer_Code_Consent__c = true;
+        lead.Volunteer_Code_Version__c = 'September 2026';
+        Database.insert(lead, AccessLevel.SYSTEM_MODE);
+        Lead saved = [SELECT NOK_Address__c, NOK_Postcode__c, Volunteer_Opportunities__c,
+            Volunteer_Skills__c, Volunteer_Hours__c, Volunteer_Availability__c,
+            Volunteer_Code_Consent__c, Volunteer_Code_Version__c FROM Lead WHERE Id = :lead.Id];
+        System.assertEquals(lead.NOK_Address__c, saved.NOK_Address__c);
+        System.assertEquals(lead.NOK_Postcode__c, saved.NOK_Postcode__c);
+        System.assertEquals(lead.Volunteer_Opportunities__c, saved.Volunteer_Opportunities__c);
+        System.assertEquals(lead.Volunteer_Skills__c, saved.Volunteer_Skills__c);
+        System.assertEquals(lead.Volunteer_Hours__c, saved.Volunteer_Hours__c);
+        System.assertEquals(lead.Volunteer_Availability__c, saved.Volunteer_Availability__c);
+        System.assertEquals(true, saved.Volunteer_Code_Consent__c);
+        System.assertEquals('September 2026', saved.Volunteer_Code_Version__c);
+        EmailTemplate template = [SELECT Id FROM EmailTemplate WHERE DeveloperName = 'Volunteer_Application_Internal' LIMIT 1];
+        Test.startTest();
+        Messaging.SingleEmailMessage rendered = Messaging.renderStoredEmailTemplate(template.Id, lead.Id, null);
+        System.assertEquals(0, Limits.getEmailInvocations(), 'Rendering must not send email.');
+        System.assertEquals(0, Limits.getDmlStatements(), 'Rendering must not change records.');
+        Test.stopTest();
+        for (String body : new List<String>{rendered.getHtmlBody(), rendered.getPlainTextBody()}) {
+            System.assert(!String.isBlank(body));
+            for (String value : new List<String>{'Hours willing to give per month', '4-8', 'Preference', 'Weekdays', 'Weekends', 'Marshalling', 'Pop up shop', 'Transport and Logistics'}) {
+                System.assert(body.contains(value), 'Missing volunteer detail: ' + value);
+            }
+            System.assert(!body.contains('{!'), 'All merge fields must resolve.');
+        }
+    }
+
+    @IsTest
+    static void rejectsNewApplicationsWithoutCurrentCodeAcknowledgement() {
+        VolunteerInboundLeadService.bypassEmailDelivery = true;
+        List<Lead> attempts = new List<Lead>();
+        for (Integer index = 0; index < 3; index++) {
+            Lead lead = volunteerLead('code-' + index);
+            lead.Volunteer_Form_Version__c = 'volunteer-application-v3';
+            lead.Volunteer_Code_Consent__c = index != 0;
+            lead.Volunteer_Code_Version__c = index == 0 ? 'September 2026' : index == 1 ? null : 'August 2026';
+            attempts.add(lead);
+        }
+        Test.startTest();
+        List<Database.SaveResult> results = Database.insert(attempts, false, AccessLevel.SYSTEM_MODE);
+        Test.stopTest();
+        for (Database.SaveResult result : results) {
+            System.assertEquals(false, result.isSuccess());
+            System.assertEquals(StatusCode.FIELD_CUSTOM_VALIDATION_EXCEPTION, result.getErrors()[0].getStatusCode());
+            System.assert(result.getErrors()[0].getMessage().contains('September 2026 Code of Conduct'));
+        }
+    }
+
+    @IsTest
+    static void preservesLegacyApplicationsWithoutRetroactiveAcknowledgement() {
+        VolunteerInboundLeadService.bypassEmailDelivery = true;
+        Lead lead = volunteerLead('legacy-code');
+        lead.Volunteer_Form_Version__c = 'volunteer-application-v2';
+        Database.insert(lead, AccessLevel.SYSTEM_MODE);
+        Test.startTest();
+        Database.update(new Lead(Id = lead.Id, Description = 'Availability updated by the team'), AccessLevel.SYSTEM_MODE);
+        Test.stopTest();
+        Lead saved = [SELECT Volunteer_Code_Consent__c, Volunteer_Code_Version__c FROM Lead WHERE Id = :lead.Id];
+        System.assertEquals(false, saved.Volunteer_Code_Consent__c);
+        System.assertEquals(null, saved.Volunteer_Code_Version__c);
+    }
+
+    @IsTest
     static void recordsBlankApplicantEmailThenRetriesOnlyThatMessage() {
         Lead lead = pendingLead('blank');
         Database.update(new Lead(Id = lead.Id, Email = null), AccessLevel.SYSTEM_MODE);

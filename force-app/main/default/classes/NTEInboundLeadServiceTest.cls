@@ -141,7 +141,7 @@ private class NTEInboundLeadServiceTest {
         System.assertEquals(1, Limits.getEmailInvocations(), 'Repeated create or retry calls must not resend accepted messages.');
         Test.stopTest();
         Lead audited = auditFor(lead.Id);
-        System.assertEquals(ACCEPTED, audited.NTE_Applicant_Email_Status__c);
+        System.assertEquals('Not required', audited.NTE_Applicant_Email_Status__c);
         System.assertEquals(ACCEPTED, audited.NTE_Internal_Email_Status__c);
         System.assertEquals(null, audited.NTE_Email_Error__c);
     }
@@ -164,7 +164,7 @@ private class NTEInboundLeadServiceTest {
         for (Integer index = 0; index < leads.size(); index++) prefixByLead.put(leads[index].Id, prefixes[index]);
         Map<Id, EmailTemplate> templates = new Map<Id, EmailTemplate>([SELECT Id, DeveloperName FROM EmailTemplate]);
         String ownerEmail = [SELECT Email FROM User WHERE Id = :UserInfo.getUserId()].Email;
-        System.assertEquals(10, sender.messages.size());
+        System.assertEquals(8, sender.messages.size());
         System.assertEquals(1, sender.calls);
         for (Messaging.SingleEmailMessage message : sender.messages) {
             Boolean internalMessage = message.getToAddresses() != null && !message.getToAddresses().isEmpty();
@@ -183,11 +183,11 @@ private class NTEInboundLeadServiceTest {
         for (Integer index = 0; index < 60; index++) leads.add(intakeLead('batch-' + index, forms[Math.mod(index, forms.size())]));
         Test.startTest();
         Database.insert(leads, AccessLevel.SYSTEM_MODE);
-        System.assertEquals(1, Limits.getEmailInvocations(), '120 messages must use one platform invocation.');
+        System.assertEquals(1, Limits.getEmailInvocations(), '96 required messages must use one platform invocation.');
         Test.stopTest();
         Set<Id> leadIds = new Map<Id, Lead>(leads).keySet();
         System.assertEquals(60, [SELECT COUNT() FROM Lead WHERE Id IN :leadIds
-            AND NTE_Applicant_Email_Status__c = :ACCEPTED AND NTE_Internal_Email_Status__c = :ACCEPTED]);
+            AND NTE_Applicant_Email_Status__c IN ('Accepted by Salesforce', 'Not required') AND NTE_Internal_Email_Status__c = :ACCEPTED]);
     }
 
     @IsTest
@@ -210,6 +210,36 @@ private class NTEInboundLeadServiceTest {
         Test.stopTest();
         System.assertEquals(ACCEPTED, auditFor(lead.Id).NTE_Internal_Email_Status__c);
         System.assertEquals(4, sender.messages.size(), 'Only the failed internal message is retried.');
+    }
+
+    @IsTest
+    static void retiredApplicationReceiptsStaySuppressedDuringInternalRetry() {
+        Lead exhibitor = pendingLead('retired-exhibitor', 'Exhibitor Application');
+        Lead partner = pendingLead('retired-partner', 'Partner / Sponsor Application');
+        update new List<Lead>{
+            new Lead(Id = exhibitor.Id, NTE_Applicant_Email_Status__c = 'Failed', NTE_Internal_Email_Status__c = 'Failed'),
+            new Lead(Id = partner.Id, NTE_Applicant_Email_Status__c = ACCEPTED, NTE_Internal_Email_Status__c = 'Failed')
+        };
+        StubSender sender = new StubSender();
+        sender.rejectInternal = true;
+        NTEInboundLeadService.emailSender = sender;
+        List<NTEInboundLeadService.Request> requests = requestsFor(new List<Lead>{exhibitor, partner});
+        Test.startTest();
+        NTEInboundLeadService.routeAndAcknowledge(requests);
+        System.assertEquals('Not required', auditFor(exhibitor.Id).NTE_Applicant_Email_Status__c);
+        System.assertEquals(ACCEPTED, auditFor(partner.Id).NTE_Applicant_Email_Status__c, 'Retain the historical accepted receipt.');
+        System.assertEquals('Failed', auditFor(exhibitor.Id).NTE_Internal_Email_Status__c);
+        sender.rejectInternal = false;
+        NTEInboundLeadService.routeAndAcknowledge(requests);
+        NTEInboundLeadService.routeAndAcknowledge(requests);
+        Test.stopTest();
+        System.assertEquals(4, sender.messages.size(), 'Only two internal notices and their failed retries are dispatched.');
+        for (Messaging.SingleEmailMessage message : sender.messages) {
+            System.assert(message.getToAddresses() != null && !message.getToAddresses().isEmpty(), 'No applicant receipt may be revived.');
+        }
+        System.assertEquals(ACCEPTED, auditFor(exhibitor.Id).NTE_Internal_Email_Status__c);
+        System.assertEquals(ACCEPTED, auditFor(partner.Id).NTE_Internal_Email_Status__c);
+        System.assertEquals('Not required', auditFor(exhibitor.Id).NTE_Applicant_Email_Status__c);
     }
 
     @IsTest

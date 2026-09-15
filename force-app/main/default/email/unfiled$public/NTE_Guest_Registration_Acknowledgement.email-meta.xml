@@ -6,7 +6,7 @@
     <name>NTE guest registration acknowledgement</name>
     <style>none</style>
     <subject>NTE guest registration received</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Guest registration received
+    <textOnly>NTE27 · Guest registration received
 
 Thank you for registering.
 
@@ -14,7 +14,7 @@ We have received your guest details for the National Transition Event.
 
 {!IF(ISBLANK(Lead.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Lead.FirstName}{!IF(ISBLANK(Lead.FirstName),&quot;&quot;,&quot;,&quot;)}
 
-Thank you for registering for {!Lead.NTE_Event_Code__c} at Silverstone. We will use the information below to prepare for your visit and will send further event information closer to the date.
+Thank you for registering for NTE27 at Silverstone. We will use the information below to prepare for your visit and will send further event information closer to the date.
 
 Accessibility arrangements
 
@@ -43,7 +43,7 @@ Kind regards,
 The National Transition Event Team
 Mission Community
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

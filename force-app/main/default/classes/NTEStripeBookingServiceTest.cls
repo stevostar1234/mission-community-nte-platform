@@ -12,12 +12,15 @@ private class NTEStripeBookingServiceTest {
             update new Opportunity(Id = partner.booking.Id, NTE_Quote_Required_for_PO__c = 'Yes');
             NTEStripeBookingService.prepareProvisionalBatch('EXHIBITOR', true, true);
             NTEStripeBookingService.prepareProvisionalBatch('PARTNER', true, true);
+            Fixture live = fixture('LIVECONFIG', false);
+            NTEStripeBookingService.configurationOverride.Live_Mode__c = true;
+            NTEStripeBookingService.prepareProvisionalBatch('LIVECONFIG', true, true);
         }
     }
     private static void configure() {
-        NTEStripeBookingService.configurationOverride = new NTE_Stripe_Config__mdt(Enabled__c = true,
+        NTEStripeBookingService.configurationOverride = new NTE_Stripe_Config__mdt(Enabled__c = true, Live_Mode__c = false,
             Expected_Account_Id__c = 'acct_NTETest', Expected_Org_Id__c = UserInfo.getOrganizationId(),
-            Reference_Prefix__c = 'NTE-STRIPE-', Allowed_Email__c = EMAIL, Tax_Rate__c = 20);
+            Tax_Rate__c = 20);
         NTEStripeBookingService.suppressEnqueue = true;
         NTEInboundLeadService.bypassEmailDelivery = true;
         NTEExhibitorApprovalEmailService.bypassEmailDelivery = true;
@@ -29,7 +32,7 @@ private class NTEStripeBookingServiceTest {
         f.application = new Lead(FirstName = 'Stripe', LastName = suffix, Company = 'NTE Synthetic Stripe ' + suffix,
             Email = EMAIL, Web_Form_Type__c = form, NTE_Event_Code__c = 'NTE2099', Booking_Reference__c = 'NTE-STRIPE-' + suffix,
             Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2, Stand_Power__c = 'No',
-            Exhibitor_Space_Selections__c = partner ? null : 'Single Garage - Track Side - £800 + VAT',
+            Exhibitor_Space_Selections__c = partner ? null : 'Single Garage - Track Side - £799 + VAT',
             Exhibitor_Organisation_Category__c = partner ? null : 'CIC or Not for Profit',
             Sponsor_Package__c = partner ? 'Champion Partner' : null);
         insert f.application;
@@ -42,8 +45,8 @@ private class NTEStripeBookingServiceTest {
             NTE_Exhibitor_Space_Selections__c = f.application.Exhibitor_Space_Selections__c,
             NTE_Exhibitor_Organisation_Category__c = f.application.Exhibitor_Organisation_Category__c,
             NTE_Sponsor_Package__c = f.application.Sponsor_Package__c,
-            NTE_Sponsor_Package_Total__c = partner ? 2000 : 0, NTE_Exhibitor_Space_Price__c = partner ? 0 : 800,
-            NTE_Listed_Price_Total__c = partner ? 2000 : 800, Amount = partner ? 2000 : 800,
+            NTE_Sponsor_Package_Total__c = partner ? 2000 : 0, NTE_Exhibitor_Space_Price__c = partner ? 0 : 799,
+            NTE_Listed_Price_Total__c = partner ? 2000 : 799, Amount = partner ? 2400 : 958.80,
             NTE_Total_Staff_Count__c = 2, NTE_Initial_Staff_Count__c = 2, NTE_Included_Staff_Count__c = 2,
             NTE_Heavy_Vehicle_Required__c = 'Yes', NTE_Pricing_Status__c = 'Calculated',
             NTE_Approval_Email_Status__c = 'Pending', NTE_Approval_Email_Batch__c = suffix,
@@ -52,8 +55,8 @@ private class NTEStripeBookingServiceTest {
         return f;
     }
     private static NTE_Payment_Request__c requestFor(Id bookingId) {
-        return [SELECT Id, Status__c, Charge_Key__c, Reference__c, Amount_Minor__c, Net_Minor__c, Tax_Rate__c,
-            Price_Id__c, Link_Id__c, Payment_URL__c, Error__c, Delivered_At__c, Verified_At__c, First_Attempt_At__c
+        return [SELECT Id, Status__c, Live_Mode__c, Charge_Key__c, Reference__c, Amount_Minor__c, Net_Minor__c, Tax_Rate__c,
+            Price_Id__c, Link_Id__c, Payment_URL__c, Description__c, Error__c, Delivered_At__c, Verified_At__c, First_Attempt_At__c
             FROM NTE_Payment_Request__c WHERE Opportunity__c = :bookingId];
     }
     private static Fixture savedFixture(String batch) {
@@ -80,24 +83,30 @@ private class NTEStripeBookingServiceTest {
             if (request.getMethod() == 'POST') {
                 writes++; keys.add(request.getHeader('Idempotency-Key'));
                 System.assertEquals(payment.Charge_Key__c + (path.contains('/prices') ? ':price' : ':link'), request.getHeader('Idempotency-Key'));
+                String descriptionField = path.contains('/prices') ? 'product_data[name]' : 'payment_intent_data[description]';
+                System.assert(request.getBody().contains(EncodingUtil.urlEncode(descriptionField, 'UTF-8') + '='
+                    + EncodingUtil.urlEncode(payment.Description__c, 'UTF-8')), 'Stripe receives the saved wording on both initial requests and retries.');
             }
-            if (path.endsWith('/account')) body = new Map<String, Object>{'id' => 'acct_NTETest'};
-            else if (path.endsWith('/balance')) body = new Map<String, Object>{'livemode' => false};
+            System.assert(path.startsWith('callout:NTE_Stripe_' + (payment.Live_Mode__c == true ? 'Live' : 'Test') + '/v1/'));
+            if (scenario == 'linkTimeout' && request.getMethod() == 'POST' && path.contains('/payment_links')) throw new CalloutException('Synthetic timeout');
+            if (path.endsWith('/account')) body = new Map<String, Object>{'id' => 'acct_NTETest', 'charges_enabled' => true};
+            else if (path.endsWith('/balance')) body = new Map<String, Object>{'livemode' => payment.Live_Mode__c == true};
             else if (path.contains('/prices')) body = price();
             else if (path.contains('/line_items')) body = new Map<String, Object>{'has_more' => false, 'data' => new List<Object>{
                 new Map<String, Object>{'quantity' => 1, 'amount_total' => payment.Amount_Minor__c, 'amount_subtotal' => payment.Amount_Minor__c,
                     'currency' => 'gbp', 'price' => price(), 'adjustable_quantity' => new Map<String, Object>{'enabled' => false}}}};
-            else body = new Map<String, Object>{'id' => 'plink_Test', 'active' => scenario != 'inactive', 'livemode' => false,
-                'url' => 'https://buy.stripe.com/test_Test', 'currency' => 'gbp', 'allow_promotion_codes' => false,
+            else body = new Map<String, Object>{'id' => 'plink_Test', 'active' => scenario != 'inactive', 'livemode' => payment.Live_Mode__c == true,
+                'url' => payment.Live_Mode__c == true ? 'https://buy.stripe.com/LiveExample123' : 'https://buy.stripe.com/test_Test', 'currency' => 'gbp', 'allow_promotion_codes' => false,
                 'payment_method_types' => new List<String>{'card'}, 'invoice_creation' => new Map<String, Object>{'enabled' => false},
                 'automatic_tax' => new Map<String, Object>{'enabled' => false},
                 'restrictions' => new Map<String, Object>{'completed_sessions' => new Map<String, Object>{'limit' => 1}},
-                'metadata' => new Map<String, Object>{'nte_operation' => payment.Charge_Key__c, 'nte_booking' => payment.Reference__c, 'nte_charge_kind' => 'Booking'}};
+                'metadata' => new Map<String, Object>{'nte_operation' => payment.Charge_Key__c, 'nte_booking' => payment.Reference__c, 'nte_charge_kind' => 'Booking', 'nte_net_minor' => String.valueOf(payment.Net_Minor__c.longValue()), 'nte_vat_minor' => String.valueOf((payment.Amount_Minor__c - payment.Net_Minor__c).longValue()), 'nte_vat_rate' => String.valueOf(payment.Tax_Rate__c.setScale(2))},
+                'custom_text' => new Map<String,Object>{'submit' => new Map<String,Object>{'message' => 'Subtotal £' + String.valueOf((payment.Net_Minor__c / 100).setScale(2)) + ' + £' + String.valueOf(((payment.Amount_Minor__c-payment.Net_Minor__c) / 100).setScale(2)) + ' VAT (20%). Total £' + String.valueOf((payment.Amount_Minor__c / 100).setScale(2)) + ' including VAT.'}}};
             HttpResponse response = new HttpResponse(); response.setStatusCode(scenario == 'outage' ? 503 : 200);
             response.setBody(JSON.serialize(body)); return response;
         }
         private Map<String, Object> price() {
-            return new Map<String, Object>{'id' => 'price_Test', 'active' => true, 'livemode' => false, 'currency' => 'gbp',
+            return new Map<String, Object>{'id' => 'price_Test', 'active' => true, 'livemode' => payment.Live_Mode__c == true, 'currency' => 'gbp',
                 'unit_amount' => payment.Amount_Minor__c, 'type' => 'one_time', 'tax_behavior' => 'inclusive',
                 'metadata' => new Map<String, Object>{'nte_operation' => payment.Charge_Key__c}};
         }
@@ -106,8 +115,9 @@ private class NTEStripeBookingServiceTest {
         Fixture f = savedFixture('EXHIBITOR');
         Test.startTest();
         NTE_Payment_Request__c payment = requestFor(f.booking.Id);
-        System.assertEquals('Queued', payment.Status__c); System.assertEquals(96000, payment.Amount_Minor__c);
-        System.assertEquals(80000, payment.Net_Minor__c); System.assertEquals(0, Limits.getEmailInvocations());
+        System.assertEquals('Queued', payment.Status__c); System.assertEquals(95880, payment.Amount_Minor__c);
+        System.assertEquals('NTE booking · ' + f.booking.Booking_Reference__c, payment.Description__c);
+        System.assertEquals(79900, payment.Net_Minor__c); System.assertEquals(0, Limits.getEmailInvocations());
         Mock mock = new Mock(payment, 'normal'); Test.setMock(HttpCalloutMock.class, mock);
         NTEStripeBookingService.processPayment(payment.Id, true);
         System.assertEquals('Ready', requestFor(f.booking.Id).Status__c);
@@ -116,11 +126,11 @@ private class NTEStripeBookingServiceTest {
         Test.stopTest();
         Opportunity booking = state(f.booking.Id);
         System.assertEquals('Sent', booking.NTE_Approval_Email_Status__c);
-        System.assertEquals(true, booking.NTE_Invoice_Provided__c); System.assertEquals(false, booking.NTE_Payment_Received__c);
+        System.assertEquals(false, booking.NTE_Invoice_Provided__c); System.assertEquals(false, booking.NTE_Payment_Received__c);
         System.assertEquals(false, booking.NTE_Quote_Provided__c); System.assertNotEquals(null, requestFor(f.booking.Id).Delivered_At__c);
         String html = NTEExhibitorApprovalEmailService.htmlByOpportunityId.get(f.booking.Id);
         String plain = NTEExhibitorApprovalEmailService.plainTextFromHtml(html);
-        System.assert(plain.contains('£960.00') && plain.contains('£160.00') && plain.contains('£800.00'));
+        System.assert(plain.contains('£958.80') && plain.contains('£159.80') && plain.contains('£799.00'));
         System.assert(plain.contains('https://buy.stripe.com/test_Test') && plain.contains('exhibitor-staff-update.html'));
         assertPaymentPresentation(html, false);
         System.assert(!plain.contains('££') && !plain.contains('{NTE_'));
@@ -138,11 +148,15 @@ private class NTEStripeBookingServiceTest {
         assertPaymentPresentation(html, true);
         System.assert(!html.contains('along with a quotation or invoice'), 'The combined Stripe email must not promise another quote.');
         System.assert(!html.contains('exhibitor-staff-update.html')); System.assertEquals(false, state(f.booking.Id).NTE_Payment_Received__c);
-        System.assertEquals(true, state(f.booking.Id).NTE_Quote_Provided__c, 'The agreed combined itemised email supplies the requested quote.');
+        System.assertEquals(false, state(f.booking.Id).NTE_Quote_Provided__c, 'Sending a payment link never checks off a procurement requirement.');
     }
     private static void assertPaymentPresentation(String html, Boolean partner) {
         System.assert(html.contains('Pay Now') && html.contains('assets/stripe-icon.png'));
-        System.assert(html.contains('Your space will be confirmed by the NTE Team.'));
+        System.assert(html.contains(partner ? 'Your partner / sponsor package will be confirmed once payment has been received.' : 'Your space will be confirmed by the NTE Team.'));
+        if (partner) {
+            System.assert(html.contains('reserve your partner / sponsor package at NTE27.'));
+            System.assert(html.substring(html.indexOf('Allocation and charges'), html.indexOf('Staff details and event preparation')).contains('Champion Partner'));
+        }
         System.assert(html.contains('Total payable') && !html.contains('Total paid'));
         Integer charges = html.indexOf('Allocation and charges');
         Integer payment = html.indexOf('data-nte-payment-button');
@@ -161,11 +175,13 @@ private class NTEStripeBookingServiceTest {
     }
     @IsTest static void retryUsesCommittedRequestAndTheOriginalIdempotencyKeys() {
         Fixture f = savedFixture('EXHIBITOR'); NTE_Payment_Request__c original = requestFor(f.booking.Id);
-        update new NTE_Payment_Request__c(Id = original.Id, Status__c = 'Needs review');
+        original.Description__c = 'NTE2027 booking · ' + original.Reference__c;
+        update new NTE_Payment_Request__c(Id = original.Id, Status__c = 'Needs review', Description__c = original.Description__c);
         Test.startTest(); NTEStripeBookingService.prepareProvisionalBatch('EXHIBITOR', true, true);
         Test.setMock(HttpCalloutMock.class, new Mock(original, 'normal')); System.enqueueJob(new RetryWork(original.Id)); Test.stopTest();
         System.assertEquals(original.Id, requestFor(f.booking.Id).Id); System.assertEquals('Ready', requestFor(f.booking.Id).Status__c);
         System.assertEquals(original.Charge_Key__c, requestFor(f.booking.Id).Charge_Key__c);
+        System.assertEquals(original.Description__c, requestFor(f.booking.Id).Description__c, 'A branding change must not rewrite an earlier idempotent request.');
     }
     @IsTest static void failedEmailReusesVerifiedLinkWithoutAnotherCharge() {
         Fixture f = savedFixture('EXHIBITOR'); Test.startTest();
@@ -182,10 +198,10 @@ private class NTEStripeBookingServiceTest {
     @IsTest static void changedAmountOrRecipientCannotUseAnOldRequest() {
         Fixture f = fixture('CHANGED', false); Test.startTest(); NTEStripeBookingService.prepareProvisionalBatch('CHANGED', true, true);
         NTE_Payment_Request__c payment = requestFor(f.booking.Id);
-        update new Opportunity(Id = f.booking.Id, Amount = 900, NTE_Listed_Price_Total__c = 900, NTE_Exhibitor_Space_Price__c = 900);
+        update new Opportunity(Id = f.booking.Id, Amount = 1080, NTE_Listed_Price_Total__c = 900, NTE_Exhibitor_Space_Price__c = 900);
         Mock mock = new Mock(payment, 'normal'); Test.setMock(HttpCalloutMock.class, mock); NTEStripeBookingService.processPayment(payment.Id, true);
         Test.stopTest(); System.assertEquals(0, mock.calls); System.assertEquals('Needs review', requestFor(f.booking.Id).Status__c);
-        System.assertEquals(96000, requestFor(f.booking.Id).Amount_Minor__c); System.assertEquals(false, state(f.booking.Id).NTE_Invoice_Provided__c);
+        System.assertEquals(95880, requestFor(f.booking.Id).Amount_Minor__c); System.assertEquals(false, state(f.booking.Id).NTE_Invoice_Provided__c);
     }
     @IsTest static void ambiguousCreationOlderThanIdempotencyWindowRequiresReview() {
         Fixture f = fixture('OLD', false); Test.startTest(); NTEStripeBookingService.prepareProvisionalBatch('OLD', true, true);
@@ -205,10 +221,59 @@ private class NTEStripeBookingServiceTest {
         Fixture f = fixture('SCOPE', false); Test.startTest();
         NTEStripeBookingService.configurationOverride.Enabled__c = false;
         System.assertEquals(false, NTEStripeBookingService.prepareProvisionalBatch('SCOPE', true, true));
+        System.assert(state(f.booking.Id).NTE_Approval_Email_Error__c.contains('disabled'));
+        System.assertEquals('Failed',state(f.booking.Id).NTE_Approval_Email_Status__c);
         NTEStripeBookingService.configurationOverride.Enabled__c = true;
+        update new Opportunity(Id=f.booking.Id,NTE_Approval_Email_Status__c='Pending');
         System.assertEquals(false, NTEStripeBookingService.prepareProvisionalBatch('SCOPE', true, false));
         Test.stopTest(); System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Opportunity__c = :f.booking.Id]);
         System.assert(state(f.booking.Id).NTE_Approval_Email_Error__c.contains('single converted application'));
+    }
+    @IsTest static void ordinaryFormReferencesPrepareBothApplicationTypes() {
+        Fixture exhibitor = fixture('FORMEX', false); Fixture partner = fixture('FORMPS', true);
+        update new List<Opportunity>{
+            new Opportunity(Id = exhibitor.booking.Id, Booking_Reference__c = 'NTE-1789123456789-ABCDEFGH'),
+            new Opportunity(Id = partner.booking.Id, Booking_Reference__c = 'NTE-1789123456790-JKLMNPQR')
+        };
+        Test.startTest();
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('FORMEX', true, true));
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('FORMPS', true, true));
+        Test.stopTest();
+        NTE_Payment_Request__c exhibitorRequest = requestFor(exhibitor.booking.Id);
+        NTE_Payment_Request__c partnerRequest = requestFor(partner.booking.Id);
+        System.assertEquals('NTE-1789123456789-ABCDEFGH', exhibitorRequest.Reference__c);
+        System.assertEquals('NTE-1789123456790-JKLMNPQR', partnerRequest.Reference__c);
+        System.assertEquals(95880, exhibitorRequest.Amount_Minor__c);
+        System.assertEquals(240000, partnerRequest.Amount_Minor__c);
+        System.assertEquals('Queued', exhibitorRequest.Status__c);
+        System.assertEquals('Queued', partnerRequest.Status__c);
+        System.assertEquals(false, state(exhibitor.booking.Id).NTE_Payment_Received__c);
+        System.assertEquals(false, state(partner.booking.Id).NTE_Payment_Received__c);
+    }
+    @IsTest static void ordinaryFormScopeAcceptsOtherRecipients() {
+        Fixture f = fixture('FORMRECIPIENT', false);
+        update new Opportunity(Id = f.booking.Id, Booking_Reference__c = 'NTE-1789123456791-STUVWXYZ');
+        update new Contact(Id = f.contact.Id, Email = 'other-recipient@example.invalid');
+        Test.startTest();
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('FORMRECIPIENT', true, true));
+        Test.stopTest();
+        NTE_Payment_Request__c payment = [SELECT Status__c, Recipient__c FROM NTE_Payment_Request__c WHERE Opportunity__c = :f.booking.Id];
+        System.assertEquals('Queued', payment.Status__c);
+        System.assertEquals('other-recipient@example.invalid', payment.Recipient__c);
+        System.assertEquals('Pending', state(f.booking.Id).NTE_Approval_Email_Status__c);
+    }
+    @IsTest static void ordinaryFormScopePreservesExistingRequestIdentity() {
+        Fixture f = savedFixture('EXHIBITOR'); NTE_Payment_Request__c original = requestFor(f.booking.Id);
+        Test.startTest();
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('EXHIBITOR', true, true));
+        Test.stopTest();
+        NTE_Payment_Request__c current = requestFor(f.booking.Id);
+        System.assertEquals(original.Id, current.Id);
+        System.assertEquals(original.Charge_Key__c, current.Charge_Key__c);
+        System.assertEquals(original.Description__c, current.Description__c);
+        System.assertEquals(original.Amount_Minor__c, current.Amount_Minor__c);
+        System.assertEquals('Queued', current.Status__c);
+        System.assertEquals(null, current.Error__c);
     }
     @IsTest static void paidCancelledAndWrongOrgHoldTheRequest() {
         Fixture paid = fixture('PAID', false); Fixture cancelled = fixture('CANCEL', false); Fixture wrongOrg = fixture('ORG', true);
@@ -219,7 +284,7 @@ private class NTEStripeBookingServiceTest {
         NTEStripeBookingService.configurationOverride.Expected_Org_Id__c = '00D000000000001';
         System.assertEquals(false, NTEStripeBookingService.prepareProvisionalBatch('ORG', true, true));
         Test.stopTest(); System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Batch_Key__c IN ('PAID', 'CANCEL', 'ORG')]);
-        System.assert(state(wrongOrg.booking.Id).NTE_Approval_Email_Error__c.contains('Salesforce sandbox'));
+        System.assert(state(wrongOrg.booking.Id).NTE_Approval_Email_Error__c.contains('Salesforce organisation'));
     }
     @IsTest static void bulkPreparationDoesNotQueryPerBooking() {
         Fixture seed = fixture('BULK', false); List<Opportunity> additions = new List<Opportunity>();
@@ -242,7 +307,7 @@ private class NTEStripeBookingServiceTest {
         Lead nextYear = new Lead(FirstName = 'Returning', LastName = 'Exhibitor', Company = 'Returning Organisation',
             Email = EMAIL, Web_Form_Type__c = 'Exhibitor Application', NTE_Event_Code__c = 'NTE2028',
             Booking_Reference__c = 'NTE-STRIPE-NEXT-YEAR', Payment_Method__c = 'Stripe', Invoice_Required__c = 'Yes',
-            Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £800 + VAT',
+            Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £799 + VAT',
             Exhibitor_Organisation_Category__c = 'CIC or Not for Profit', Planned_Exhibitor_Count__c = '2',
             Total_Staff_Count__c = 2, Stand_Power__c = 'No');
         insert nextYear;
@@ -252,6 +317,7 @@ private class NTEStripeBookingServiceTest {
         conversion.setOpportunityName('Returning Organisation NTE2028');
         Test.startTest(); Database.LeadConvertResult converted = Database.convertLead(conversion);
         System.assert(converted.isSuccess()); System.assertNotEquals(old.booking.Id, converted.getOpportunityId());
+        NTEExhibitorApprovalEmailService.retryApprovalEmail(converted.getOpportunityId());
         Opportunity fresh = [SELECT Id, AccountId, NTE_Event_Code__c, NTE_Approval_Email_Batch__c FROM Opportunity WHERE Id = :converted.getOpportunityId()];
         System.assertEquals(old.booking.AccountId, fresh.AccountId); System.assertEquals(old.contact.Id, converted.getContactId());
         System.assert(NTEStripeBookingService.prepareProvisionalBatch(fresh.NTE_Approval_Email_Batch__c, true, false));
@@ -262,5 +328,64 @@ private class NTEStripeBookingServiceTest {
         System.assertEquals('plink_PreviousYear', requestFor(old.booking.Id).Link_Id__c);
         System.assertEquals(true, state(old.booking.Id).NTE_Payment_Received__c);
         System.assertEquals(false, state(fresh.Id).NTE_Payment_Received__c);
+    }
+
+    @IsTest static void liveModeRunsThroughTheProvisionalEmail() {
+        Fixture f = savedFixture('LIVECONFIG');
+        NTEStripeBookingService.configurationOverride.Live_Mode__c = true;
+        Test.startTest();
+        NTE_Payment_Request__c payment = requestFor(f.booking.Id); System.assertEquals(true, payment.Live_Mode__c);
+        Test.setMock(HttpCalloutMock.class, new Mock(payment, 'normal'));
+        NTEStripeBookingService.processPayment(payment.Id, true);
+        NTEExhibitorApprovalEmailService.finishStripeBooking(payment.Id, 'LIVECONFIG', true, true);
+        Test.stopTest();
+        System.assertEquals('Sent', state(f.booking.Id).NTE_Approval_Email_Status__c, state(f.booking.Id).NTE_Approval_Email_Error__c + ' / ' + requestFor(f.booking.Id).Error__c);
+        System.assertEquals(false, state(f.booking.Id).NTE_Payment_Received__c);
+        System.assert(NTEExhibitorApprovalEmailService.htmlByOpportunityId.get(f.booking.Id).contains('https://buy.stripe.com/LiveExample123'));
+    }
+    @IsTest static void switchingEnvironmentCannotReuseAnEarlierTestRequest() {
+        Fixture f = savedFixture('EXHIBITOR'); NTE_Payment_Request__c payment = requestFor(f.booking.Id);
+        NTEStripeBookingService.configurationOverride.Live_Mode__c = true;
+        Mock mock = new Mock(payment, 'normal'); Test.setMock(HttpCalloutMock.class, mock);
+        Test.startTest(); NTEStripeBookingService.processPayment(payment.Id, true); Test.stopTest();
+        System.assertEquals(0, mock.calls); System.assertEquals('Needs review', requestFor(f.booking.Id).Status__c);
+        System.assertEquals(false, requestFor(f.booking.Id).Live_Mode__c);
+        System.assertEquals(null, requestFor(f.booking.Id).Delivered_At__c);
+    }
+    @IsTest static void switchingEnvironmentAfterVerificationHoldsTheEmail() {
+        Fixture f = savedFixture('EXHIBITOR'); NTE_Payment_Request__c payment = requestFor(f.booking.Id);
+        Test.startTest(); Test.setMock(HttpCalloutMock.class, new Mock(payment, 'normal'));
+        NTEStripeBookingService.processPayment(payment.Id, true);
+        NTEStripeBookingService.configurationOverride.Live_Mode__c = true;
+        NTEExhibitorApprovalEmailService.finishStripeBooking(payment.Id, 'EXHIBITOR', true, true); Test.stopTest();
+        System.assertEquals('Failed', state(f.booking.Id).NTE_Approval_Email_Status__c);
+        System.assertEquals(null, requestFor(f.booking.Id).Delivered_At__c);
+    }
+    @IsTest static void linkTimeoutPreservesPriceAndRecoversTheSameRequest() {
+        Fixture f = savedFixture('EXHIBITOR'); NTE_Payment_Request__c payment = requestFor(f.booking.Id);
+        Test.startTest(); Test.setMock(HttpCalloutMock.class, new Mock(payment, 'linkTimeout'));
+        NTEStripeBookingService.processPayment(payment.Id, true);
+        NTE_Payment_Request__c failed = requestFor(f.booking.Id);
+        System.assertEquals('price_Test', failed.Price_Id__c); System.assertEquals(null, failed.Link_Id__c);
+        System.assertEquals('Needs review', failed.Status__c); System.assertEquals(null, failed.Delivered_At__c);
+        update new Opportunity(Id = f.booking.Id, NTE_Approval_Email_Status__c = 'Pending');
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('EXHIBITOR', true, true));
+        Test.setMock(HttpCalloutMock.class, new Mock(payment, 'normal'));
+        System.enqueueJob(new RetryWork(payment.Id)); Test.stopTest();
+        NTE_Payment_Request__c recovered = requestFor(f.booking.Id);
+        System.assertEquals(payment.Id, recovered.Id); System.assertEquals(payment.Charge_Key__c, recovered.Charge_Key__c);
+        System.assertEquals('price_Test', recovered.Price_Id__c); System.assertEquals('plink_Test', recovered.Link_Id__c);
+        System.assertEquals('Ready', recovered.Status__c);
+    }
+    @IsTest static void pastCloseDateAndClosedWonDoNotExpireABooking() {
+        Fixture open = savedFixture('EXHIBITOR'); Fixture won = savedFixture('PARTNER');
+        update new List<Opportunity>{new Opportunity(Id = open.booking.Id, CloseDate = Date.today().addMonths(-3)),
+            new Opportunity(Id = won.booking.Id, CloseDate = Date.today().addMonths(-3), StageName = 'Closed Won')};
+        Test.startTest();
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('EXHIBITOR', true, true));
+        System.assert(NTEStripeBookingService.prepareProvisionalBatch('PARTNER', true, true)); Test.stopTest();
+        System.assertEquals('Queued', requestFor(open.booking.Id).Status__c); System.assertEquals('Queued', requestFor(won.booking.Id).Status__c);
+        System.assertEquals(false, [SELECT IsClosed FROM Opportunity WHERE Id = :open.booking.Id].IsClosed);
+        System.assertEquals(true, [SELECT IsWon FROM Opportunity WHERE Id = :won.booking.Id].IsWon);
     }
 }

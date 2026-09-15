@@ -35,7 +35,7 @@ private class NTEEmailDispatchServiceTest {
                     NTE_Exhibitor_Space_Price__c = 0, NTE_Stand_Power__c = 'No',
                     NTE_Total_Staff_Count__c = 2, NTE_Initial_Staff_Count__c = 2,
                     NTE_Invoice_Required__c = name == 'PARTNER' ? 'Yes' : 'No',
-                    NTE_Listed_Price_Total__c = name == 'PARTNER' ? 2000 : 0, Amount = name == 'PARTNER' ? 2000 : 0,
+                    NTE_Listed_Price_Total__c = name == 'PARTNER' ? 2000 : 0, Amount = name == 'PARTNER' ? 2400 : 0,
                     NTE_Pricing_Status__c = 'Calculated', NTE_Quote_Required_for_PO__c = 'No',
                     NTE_Heavy_Vehicle_Required__c = name == 'COMPLETE' ? 'No' : 'Not known yet',
                     NTE_Staff_Update_Completed_At__c = name == 'COMPLETE' ? System.now() : null,
@@ -72,15 +72,12 @@ private class NTEEmailDispatchServiceTest {
         NTEEmailDispatchService.skipEnqueue = true;
         NTEEmailDispatchService.bypassEmailDelivery = true;
         NTEEmailDispatchService.routingOverride = new NTE_Routing_Config__mdt(
-            Application_Event_Code__c = EVENT_CODE,
             Exhibitor_Application_URL__c = 'https://forms.example.invalid/exhibitor-application',
             Partner_Application_URL__c = 'https://forms.example.invalid/partner-application',
             Exhibitor_Staff_Form_URL__c = 'https://forms.example.invalid/exhibitor-staff',
             Partner_Staff_Form_URL__c = 'https://forms.example.invalid/partner-staff',
             Heavy_Vehicle_Form_URL__c = 'https://forms.example.invalid/logistics',
-            Logo_Update_Form_URL__c = 'https://forms.example.invalid/logo',
-            Exhibitor_Final_Pack_URL__c = 'https://forms.example.invalid/exhibitor-final',
-            Partner_Final_Pack_URL__c = 'https://forms.example.invalid/partner-final'
+            Logo_Update_Form_URL__c = 'https://forms.example.invalid/logo'
         );
     }
 
@@ -112,20 +109,21 @@ private class NTEEmailDispatchServiceTest {
         Id exhibitor = leadId('FUTURE-EVENT'); Id partner = leadId('PARTNER');
         Set<Id> selectedIds = new Set<Id>{exhibitor, partner};
         update new Lead(Id = partner, NTE_Event_Code__c = 'NTE2030');
-        System.assertEquals('NTE2027', NTEEmailDispatchService.routingOverride.Application_Event_Code__c);
         NTEEmailDispatchService.DraftDTO draft = NTEEmailDispatchService.buildDraft('INVITATION', new List<Id>{exhibitor, partner});
         System.assertEquals(2, draft.recipientCount);
         System.assertEquals('https://forms.example.invalid/exhibitor-application', draft.recipients[0].link);
         System.assertEquals('https://forms.example.invalid/partner-application', draft.recipients[1].link);
         NTEEmailDispatchService.DraftRequest previewRequest = requestFor(draft, selectedIds);
-        System.assert(NTEEmailDispatchService.previewMessage(previewRequest, exhibitor).contains('NTE2030'));
-        System.assert(NTEEmailDispatchService.previewMessage(previewRequest, partner).contains('NTE2030'));
+        System.assert(NTEEmailDispatchService.previewMessage(previewRequest, exhibitor).contains('NTE27 &bull; Exhibitors'));
+        System.assert(NTEEmailDispatchService.previewMessage(previewRequest, partner).contains('NTE27 &bull; Partners &amp; sponsors'));
+        System.assert(!NTEEmailDispatchService.previewMessage(previewRequest, exhibitor).contains('NTE2030'));
+        previewRequest.messageBody += '\nExplicit event: {EventCode}';
+        System.assert(NTEEmailDispatchService.previewMessage(previewRequest, exhibitor).contains('Explicit event: NTE2030'));
 
         Test.startTest();
         System.assertEquals(2, NTEEmailDispatchService.queueMessages(requestFor(draft, selectedIds)).queuedCount);
         List<Id> dispatchIds = dispatchIdsFor(exhibitor);
         dispatchIds.addAll(dispatchIdsFor(partner));
-        NTEEmailDispatchService.routingOverride.Application_Event_Code__c = null;
         NTEEmailDispatchService.processQueued(dispatchIds, true);
         Test.stopTest();
         for (NTE_Email_Dispatch__c dispatch : [SELECT Lead__c, Event_Code__c, Link__c, Status__c
@@ -280,46 +278,25 @@ private class NTEEmailDispatchServiceTest {
     }
 
     @IsTest
-    static void unpricedZeroBookingDoesNotBecomeEligibleForAFinalPack() {
-        configure();
-        Id selected = bookingId('COMPLETE');
-        update new Opportunity(Id = selected, NTE_Pricing_Status__c = 'Review required',
-            NTE_Payment_Received__c = true, NTE_Invoice_Provided__c = true);
-        NTEEmailDispatchService.DraftDTO review = NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected});
-        System.assertEquals(false, review.canSend);
-        System.assertEquals(false, review.recipients[0].eligible);
-        update new Opportunity(Id = selected, NTE_Pricing_Status__c = null,
-            NTE_Exhibitor_Space_Selections__c = null, NTE_Exhibitor_Organisation_Category__c = null);
-        NTEEmailDispatchService.DraftDTO unknown = NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected});
-        System.assertEquals(false, unknown.canSend, 'An unpriced zero total cannot rely on legacy paid flags.');
-        System.assertEquals(0, dispatchIdsFor(selected).size());
+    static void retiredFinalPackTypeCannotPrepareAnyBooking() {
+        configure(); Id selected=bookingId('COMPLETE');
+        Boolean rejected=false;
+        try { NTEEmailDispatchService.buildDraft('FINAL_PACK',new List<Id>{selected}); } catch (AuraHandledException expected) { rejected=true; }
+        System.assert(rejected); System.assertEquals(0,dispatchIdsFor(selected).size());
     }
 
     @IsTest
-    static void finalPackNeedsConfiguredEventAndCompletionAndKeepsSentHistory() {
-        configure();
-        Id selected = bookingId('COMPLETE');
-        NTEEmailDispatchService.routingOverride.Exhibitor_Final_Pack_URL__c = null;
-        System.assertEquals(false, NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected}).canSend);
-        NTEEmailDispatchService.routingOverride.Exhibitor_Final_Pack_URL__c = 'https://forms.example.invalid/exhibitor-final';
-        NTEEmailDispatchService.routingOverride.Application_Event_Code__c = 'NTE2028';
-        System.assertEquals(false, NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected}).canSend);
-        NTEEmailDispatchService.routingOverride.Application_Event_Code__c = EVENT_CODE;
-        NTEEmailDispatchService.DraftDTO draft = NTEEmailDispatchService.buildDraft('FINAL_PACK',
-            new List<Id>{selected, bookingId('EXHIBITOR')});
-        System.assertEquals(1, draft.recipientCount);
-        NTEEmailDispatchService.queueMessages(requestFor(draft, new Set<Id>{selected}));
-        NTEEmailDispatchService.processQueued(dispatchIdsFor(selected), true);
-        Opportunity sent = [SELECT NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c, NTE_Final_Pack_Recipient__c
-            FROM Opportunity WHERE Id = :selected];
-        System.assertEquals('Sent', sent.NTE_Final_Pack_Status__c);
-        System.assertNotEquals(null, sent.NTE_Final_Pack_Sent_At__c);
-        update new Opportunity(Id = selected, NTE_Logo_Update_Provided__c = false);
-        System.assertEquals(false, NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected}).canSend);
-        Opportunity reopened = [SELECT NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id = :selected];
-        System.assertEquals('Sent', reopened.NTE_Final_Pack_Status__c);
-        System.assertEquals(sent.NTE_Final_Pack_Sent_At__c, reopened.NTE_Final_Pack_Sent_At__c);
-        System.assertEquals(0, NTEEmailDispatchService.retryFailed(dispatchIdsFor(selected)).queuedCount);
+    static void joiningInstructionsMarkIsManualAndIdempotent() {
+        configure(); Id selected=bookingId('COMPLETE');
+        Integer emailCount=Limits.getEmailInvocations();
+        NTEFinanceService.setJoiningInstructions(selected,true);
+        Datetime first=[SELECT NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id=:selected].NTE_Final_Pack_Sent_At__c;
+        System.assertNotEquals(null,first);
+        NTEFinanceService.setJoiningInstructions(selected,true);
+        System.assertEquals(first,[SELECT NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id=:selected].NTE_Final_Pack_Sent_At__c);
+        System.assertEquals(emailCount,Limits.getEmailInvocations()); System.assertEquals(0,dispatchIdsFor(selected).size());
+        update new Opportunity(Id=selected,NTE_Logo_Update_Provided__c=false);
+        System.assertEquals('Sent',[SELECT NTE_Final_Pack_Status__c FROM Opportunity WHERE Id=:selected].NTE_Final_Pack_Status__c);
     }
 
     @IsTest
@@ -655,20 +632,12 @@ private class NTEEmailDispatchServiceTest {
     }
 
     @IsTest
-    static void changedFinalPackEventOrLinkCannotSendOldDraft() {
-        configure();
-        Id selected = bookingId('COMPLETE');
-        NTEEmailDispatchService.DraftDTO draft = NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected});
-        NTEEmailDispatchService.queueMessages(requestFor(draft, new Set<Id>{selected}));
-        NTEEmailDispatchService.routingOverride.Application_Event_Code__c = 'NTE2028';
-        NTEEmailDispatchService.processQueued(dispatchIdsFor(selected), true);
-        System.assertEquals('Skipped', dispatchFor(selected).Status__c);
-        System.assertEquals(null, dispatchFor(selected).Sent_At__c);
-        NTEEmailDispatchService.routingOverride.Application_Event_Code__c = EVENT_CODE;
-        NTEEmailDispatchService.DraftDTO refreshed = NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{selected});
-        NTEEmailDispatchService.routingOverride.Exhibitor_Final_Pack_URL__c = 'https://forms.example.invalid/updated-pack';
-        System.assertEquals(0, NTEEmailDispatchService.queueMessages(requestFor(refreshed, new Set<Id>{selected})).queuedCount);
-        System.assertEquals(null, [SELECT NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id = :selected].NTE_Final_Pack_Sent_At__c);
+    static void manualJoiningMarkCanBeCorrectedWithoutSending() {
+        configure(); Id selected=bookingId('COMPLETE');
+        NTEFinanceService.setJoiningInstructions(selected,true); NTEFinanceService.setJoiningInstructions(selected,false);
+        Opportunity saved=[SELECT NTE_Final_Pack_Status__c,NTE_Final_Pack_Sent_At__c,NTE_Joining_Instructions_By__c FROM Opportunity WHERE Id=:selected];
+        System.assertEquals(null,saved.NTE_Final_Pack_Status__c); System.assertEquals(null,saved.NTE_Final_Pack_Sent_At__c);
+        System.assertEquals(null,saved.NTE_Joining_Instructions_By__c); System.assertEquals(0,dispatchIdsFor(selected).size());
     }
 
     @IsTest
@@ -803,27 +772,15 @@ private class NTEEmailDispatchServiceTest {
     }
 
     @IsTest
-    static void lateCompleterGetsOnlyItsOwnFinalPackAndTopUpPreservesEarlierSentHistory() {
-        configure();
-        Id early = bookingId('COMPLETE'); Id late = bookingId('EXHIBITOR');
-        NTEEmailDispatchService.DraftDTO first = NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{early, late});
-        System.assertEquals(1, first.recipientCount);
-        System.assertEquals(1, NTEEmailDispatchService.queueMessages(requestFor(first, new Set<Id>{early, late})).queuedCount);
-        NTEEmailDispatchService.processQueued(dispatchIdsFor(early), true);
-        Datetime earlySentAt = dispatchFor(early).Sent_At__c;
-        update new Opportunity(Id = late, NTE_Staff_Update_Completed_At__c = System.now(),
-            NTE_Heavy_Vehicle_Required__c = 'No', NTE_Logo_Update_Provided__c = true);
-        NTEEmailDispatchService.DraftDTO second = NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{early, late});
-        System.assertEquals(1, second.recipientCount);
-        System.assertEquals(1, NTEEmailDispatchService.queueMessages(requestFor(second, new Set<Id>{early, late})).queuedCount);
-        NTEEmailDispatchService.processQueued(dispatchIdsFor(late), true);
-        update new Opportunity(Id = early, NTE_Top_Up_Invoice_Required__c = true,
-            NTE_Top_Up_Staff_Count__c = 1, NTE_Top_Up_Staff_Total__c = 50, NTE_Top_Up_Invoice_Provided__c = false);
-        System.assertEquals(false, NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{early}).canSend);
-        System.assertEquals(earlySentAt, dispatchFor(early).Sent_At__c);
-        System.assertEquals('Sent', [SELECT NTE_Final_Pack_Status__c FROM Opportunity WHERE Id = :early].NTE_Final_Pack_Status__c);
-        System.assertEquals(1, dispatchIdsFor(early).size());
-        System.assertEquals(1, dispatchIdsFor(late).size());
+    static void manualJoiningHistoryStaysOnItsExactBookingAfterTopUp() {
+        configure(); Id early=bookingId('COMPLETE'); Id late=bookingId('EXHIBITOR');
+        NTEFinanceService.setJoiningInstructions(early,true);
+        Datetime first=[SELECT NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id=:early].NTE_Final_Pack_Sent_At__c;
+        System.assertEquals(null,[SELECT NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id=:late].NTE_Final_Pack_Sent_At__c);
+        NTEFinanceService.setJoiningInstructions(late,true);
+        update new Opportunity(Id=early,NTE_Top_Up_Staff_Total__c=50,NTE_Top_Up_Invoice_Required__c=true);
+        System.assertEquals(first,[SELECT NTE_Final_Pack_Sent_At__c FROM Opportunity WHERE Id=:early].NTE_Final_Pack_Sent_At__c);
+        System.assertEquals(0,[SELECT COUNT() FROM NTE_Email_Dispatch__c]);
     }
 
     @IsTest
@@ -838,7 +795,6 @@ private class NTEEmailDispatchServiceTest {
             System.assert(draft.recipients[0].issue.contains('booking reference is invalid'));
             System.assertEquals(0, NTEEmailDispatchService.queueMessages(requestFor(draft, new Set<Id>{reminder})).queuedCount);
         }
-        System.assertEquals(false, NTEEmailDispatchService.buildDraft('FINAL_PACK', new List<Id>{pack}).canSend);
         System.assertEquals(0, [SELECT COUNT() FROM NTE_Email_Dispatch__c]);
     }
 

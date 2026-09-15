@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>NTE_Top_Up_Invoice_Required__c</fullName>
     <defaultValue>false</defaultValue>
-    <label>NTE Top-up Invoice Required</label>
+    <label>NTE Top-up Payment Required</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <type>Checkbox</type>

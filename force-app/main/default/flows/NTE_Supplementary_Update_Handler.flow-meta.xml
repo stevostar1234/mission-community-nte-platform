@@ -12,6 +12,7 @@
             <name>leadId</name>
             <value><elementReference>$Record.Id</elementReference></value>
         </inputParameters>
+        <inputParameters><name>isNewSubmission</name><value><booleanValue>true</booleanValue></value></inputParameters>
         <nameSegment>NTEUpdateSubmissionService</nameSegment>
     </actionCalls>
     <apiVersion>67.0</apiVersion>

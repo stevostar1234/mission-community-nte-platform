@@ -23,6 +23,7 @@ private class NTEUpdateSubmissionServiceTest {
     private static NTEUpdateSubmissionService.Request requestFor(Id leadId) {
         NTEUpdateSubmissionService.Request requestValue = new NTEUpdateSubmissionService.Request();
         requestValue.leadId = leadId;
+        requestValue.isNewSubmission = true;
         return requestValue;
     }
 
@@ -665,7 +666,7 @@ private class NTEUpdateSubmissionServiceTest {
     }
 
     @IsTest
-    static void invalidPayloadIsRetainedWithoutMarkingBookingComplete() {
+    static void blankStaffNamesAreRetainedWithoutMarkingBookingComplete() {
         Account accountRecord = new Account(Name = 'NTE Invalid Update Account');
         insert accountRecord;
         Opportunity opportunity = newNteOpportunity(accountRecord.Id, 'NTE Invalid Update Booking', 'NTE-TEST-INVALID-PAYLOAD');
@@ -677,7 +678,7 @@ private class NTEUpdateSubmissionServiceTest {
         lead.Web_Form_Type__c = 'Exhibitor Staff Update';
         lead.Staff_Update_Audience__c = 'Exhibitor';
         lead.Total_Staff_Count__c = 1;
-        lead.Staff_Base_Names__c = 'Only One Name';
+        lead.Staff_Base_Names__c = ' \n\t ';
         lead.Top_Up_Staff_Required__c = 'No';
         lead.Declaration_Name__c = 'Only One Name';
         lead.Declaration_Date__c = Date.today();
@@ -690,7 +691,7 @@ private class NTEUpdateSubmissionServiceTest {
 
         Lead retained = [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id = :lead.Id];
         System.assertEquals('Failed', retained.NTE_Update_Status__c);
-        System.assert(retained.NTE_Update_Error__c.contains('match the staff total'));
+        System.assert(retained.NTE_Update_Error__c.contains('Enter the staff names'));
         System.assertEquals(null, [SELECT NTE_Staff_Update_Completed_At__c FROM Opportunity WHERE Id = :opportunity.Id].NTE_Staff_Update_Completed_At__c);
     }
 
@@ -1076,7 +1077,7 @@ private class NTEUpdateSubmissionServiceTest {
             if (index != 1) {
                 submission.Top_Up_Staff_Required__c = 'Yes';
                 submission.Top_Up_Staff_Count__c = index == 3 ? 3 : 2;
-                submission.Top_Up_Staff_Names__c = index == 0 ? 'Incomplete Name List'
+                submission.Top_Up_Staff_Names__c = index == 0 ? ' \n\t '
                     : (index == 3 ? 'First\nSecond\nThird'
                         : (index == 4 ? 'Corrected One\nCorrected Two' : 'Top-up One\nTop-up Two'));
             }
@@ -1193,7 +1194,7 @@ private class NTEUpdateSubmissionServiceTest {
     }
 
     @IsTest
-    static void invalidLegacyStaffAllocationsCannotBeRoundedIntoValidRosters() {
+    static void namesUpdatesPreserveLegacyAllocationValues() {
         Account company = new Account(Name = 'Rowan Works');
         insert company;
         List<String> invalidCounts = new List<String>{null, '', 'Unknown', '0', '-1', '2.5', '100', '999999999999999999999999999999'};
@@ -1205,8 +1206,11 @@ private class NTEUpdateSubmissionServiceTest {
             bookings.add(booking);
         }
         insert bookings;
+        Map<Id, Opportunity> originals = new Map<Id, Opportunity>([SELECT Id, NTE_Planned_Exhibitor_Count__c,
+            NTE_Initial_Staff_Count__c, NTE_Total_Staff_Count__c FROM Opportunity WHERE Id IN :bookings]);
         List<Lead> submissions = new List<Lead>();
         for (Opportunity booking : bookings) {
+            addPrimaryContact(booking);
             Lead submission = newLead(booking.Booking_Reference__c);
             populateRequiredExhibitorStaffFields(submission);
             submissions.add(submission);
@@ -1218,15 +1222,20 @@ private class NTEUpdateSubmissionServiceTest {
         NTEUpdateSubmissionService.processLeadIds(submissionIds, true);
         Test.stopTest();
 
-        for (Lead rejected : [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id IN :submissionIds]) {
-            System.assertEquals('Failed', rejected.NTE_Update_Status__c);
-            System.assert(rejected.NTE_Update_Error__c.contains('match the staff total'));
+        for (Lead accepted : [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id IN :submissionIds ALL ROWS]) {
+            System.assertEquals('Matched and Applied', accepted.NTE_Update_Status__c);
+            System.assertEquals(null, accepted.NTE_Update_Error__c);
         }
         Set<Id> bookingIds = new Map<Id, Opportunity>(bookings).keySet();
-        for (Opportunity unchanged : [SELECT NTE_Staff_Update_Completed_At__c, NTE_Stand_Colleagues__c
+        for (Opportunity unchanged : [SELECT Id, NTE_Staff_Update_Completed_At__c, NTE_Stand_Colleagues__c,
+            NTE_Planned_Exhibitor_Count__c, NTE_Initial_Staff_Count__c, NTE_Total_Staff_Count__c
             FROM Opportunity WHERE Id IN :bookingIds]) {
-            System.assertEquals(null, unchanged.NTE_Staff_Update_Completed_At__c);
-            System.assertEquals('Existing roster', unchanged.NTE_Stand_Colleagues__c);
+            System.assertNotEquals(null, unchanged.NTE_Staff_Update_Completed_At__c);
+            System.assertEquals('Alex Example\nSam Example', unchanged.NTE_Stand_Colleagues__c);
+            Opportunity original = originals.get(unchanged.Id);
+            System.assertEquals(original.NTE_Planned_Exhibitor_Count__c, unchanged.NTE_Planned_Exhibitor_Count__c);
+            System.assertEquals(original.NTE_Initial_Staff_Count__c, unchanged.NTE_Initial_Staff_Count__c);
+            System.assertEquals(original.NTE_Total_Staff_Count__c, unchanged.NTE_Total_Staff_Count__c);
         }
     }
 
@@ -1275,10 +1284,14 @@ private class NTEUpdateSubmissionServiceTest {
     }
 
     @IsTest
-    static void unsignedLogoConfirmationsRetainEveryBookingField() {
+    static void logoConfirmationsDoNotRequireSignatureOrDate() {
         Account company = new Account(Name = 'Westfield Components');
         insert company;
         Opportunity booking = newNteOpportunity(company.Id, 'Westfield Components', 'NTE-STRESS-SUPP-LOGO-SIGN');
+        booking.NTE_Event_Contact_Name__c = 'Existing event contact';
+        booking.NTE_Payment_Received__c = true;
+        booking.NTE_Invoice_Provided__c = true;
+        booking.Amount = 777;
         insert booking;
         List<Lead> submissions = new List<Lead>();
         for (Integer index = 0; index < 3; index++) {
@@ -1296,14 +1309,46 @@ private class NTEUpdateSubmissionServiceTest {
         Test.stopTest();
 
         for (Lead retained : [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id IN :submissionIds]) {
-            System.assertEquals('Failed', retained.NTE_Update_Status__c);
-            System.assert(retained.NTE_Update_Error__c.contains('signature and declaration date'));
+            System.assertEquals('Matched and Applied', retained.NTE_Update_Status__c);
+            System.assertEquals(null, retained.NTE_Update_Error__c);
         }
-        Opportunity unchanged = [SELECT NTE_Logo_Update_Provided__c, NTE_Logo_Update_Provided_At__c,
-            NTE_Last_Update_Processed_At__c FROM Opportunity WHERE Id = :booking.Id];
-        System.assertEquals(false, unchanged.NTE_Logo_Update_Provided__c);
-        System.assertEquals(null, unchanged.NTE_Logo_Update_Provided_At__c);
-        System.assertEquals(null, unchanged.NTE_Last_Update_Processed_At__c);
+        Opportunity updated = [SELECT NTE_Logo_Update_Provided__c, NTE_Logo_Update_Provided_At__c,
+            NTE_Last_Update_Processed_At__c, NTE_Event_Contact_Name__c, NTE_Payment_Received__c,
+            NTE_Invoice_Provided__c, Amount FROM Opportunity WHERE Id = :booking.Id];
+        System.assertEquals(true, updated.NTE_Logo_Update_Provided__c);
+        System.assertNotEquals(null, updated.NTE_Logo_Update_Provided_At__c);
+        System.assertNotEquals(null, updated.NTE_Last_Update_Processed_At__c);
+        System.assertEquals('Existing event contact', updated.NTE_Event_Contact_Name__c);
+        System.assertEquals(true, updated.NTE_Payment_Received__c);
+        System.assertEquals(true, updated.NTE_Invoice_Provided__c);
+        System.assertEquals(777, updated.Amount);
+        System.assertEquals(0, Limits.getEmailInvocations(), 'Logo updates have no separate acknowledgement.');
+    }
+
+    @IsTest
+    static void otherPreparationFormsStillRequireTheirDeclarations() {
+        Account company = new Account(Name = 'Declaration Preservation');
+        insert company;
+        Opportunity booking = newNteOpportunity(company.Id, 'Declaration Preservation', 'NTE-DECLARATION-PRESERVE');
+        insert booking;
+        List<Lead> submissions = new List<Lead>();
+        for (String formType : new List<String>{'Exhibitor Staff Update', 'Partner / Sponsor Staff Update', 'Heavy Vehicle Details'}) {
+            Lead submission = newLead(booking.Booking_Reference__c);
+            submission.Web_Form_Type__c = formType;
+            submission.Declaration_Name__c = null;
+            submission.Declaration_Date__c = null;
+            submissions.add(submission);
+        }
+        update submissions;
+        Set<Id> ids = new Map<Id, Lead>(submissions).keySet();
+        Test.startTest();
+        NTEUpdateSubmissionService.processLeadIds(ids, true);
+        Test.stopTest();
+        for (Lead submission : [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id IN :ids]) {
+            System.assertEquals('Failed', submission.NTE_Update_Status__c);
+            System.assert(submission.NTE_Update_Error__c.contains('signature and declaration date'));
+        }
+        System.assertEquals(null, [SELECT NTE_Last_Update_Processed_At__c FROM Opportunity WHERE Id = :booking.Id].NTE_Last_Update_Processed_At__c);
     }
 
     @IsTest
@@ -1432,7 +1477,7 @@ private class NTEUpdateSubmissionServiceTest {
         booking.NTE_Payment_Recorded_By__c = 'Helen Archer';
         booking.NTE_Final_Pack_Status__c = 'Sent';
         booking.NTE_Final_Pack_Sent_At__c = System.now().addDays(-2);
-        booking.NTE_Final_Pack_Recipient__c = 'helen.archer@example.invalid';
+        booking.NTE_Joining_Instructions_By__c = 'Helen Archer';
         insert booking;
         Contact primary = addPrimaryContact(booking);
         Lead staff = newLead(booking.Booking_Reference__c);
@@ -1454,7 +1499,7 @@ private class NTEUpdateSubmissionServiceTest {
             NTE_Payment_Received_At__c, NTE_Payment_Recorded_By__c, NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Total__c,
             NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Invoice_Provided__c, NTE_Top_Up_Payment_Received__c,
             NTE_Staff_Update_Completed_At__c, NTE_Heavy_Vehicle_Update_Completed_At__c, NTE_Logo_Update_Provided__c,
-            NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c, NTE_Final_Pack_Recipient__c
+            NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c, NTE_Joining_Instructions_By__c
             FROM Opportunity WHERE Id = :booking.Id];
         System.assertEquals('Closed Lost', saved.StageName);
         System.assertEquals(800, saved.Amount);
@@ -1472,7 +1517,7 @@ private class NTEUpdateSubmissionServiceTest {
         System.assertEquals(true, saved.NTE_Logo_Update_Provided__c);
         System.assertEquals('Sent', saved.NTE_Final_Pack_Status__c);
         System.assertEquals(booking.NTE_Final_Pack_Sent_At__c, saved.NTE_Final_Pack_Sent_At__c);
-        System.assertEquals(booking.NTE_Final_Pack_Recipient__c, saved.NTE_Final_Pack_Recipient__c);
+        System.assertEquals(booking.NTE_Joining_Instructions_By__c, saved.NTE_Joining_Instructions_By__c);
         System.assertEquals(primary.Email, NTEUpdateSubmissionService.acknowledgementRecipientByLeadId.get(staff.Id));
         System.assertEquals(primary.Email, NTEUpdateSubmissionService.acknowledgementRecipientByLeadId.get(heavy.Id));
         System.assertEquals('Matched and Applied', [SELECT NTE_Update_Status__c FROM Lead WHERE Id = :logo.Id].NTE_Update_Status__c);
@@ -1485,6 +1530,7 @@ private class NTEUpdateSubmissionServiceTest {
         insert company;
         Opportunity booking = newNteOpportunity(company.Id, 'Hartwell Fabrication', 'NTE-STRESS-SUPP-NO-TOPUP');
         booking.NTE_Initial_Staff_Count__c = 2;
+        booking.NTE_Total_Staff_Count__c = 3;
         booking.NTE_Top_Up_Staff_Required__c = 'Yes';
         booking.NTE_Top_Up_Staff_Count__c = 1;
         booking.NTE_Top_Up_Staff_Names__c = 'Isla Stewart';
@@ -1625,7 +1671,7 @@ private class NTEUpdateSubmissionServiceTest {
     }
 
     @IsTest
-    static void partnerRejectsMissingZeroNegativeAndMismatchedRosters() {
+    static void partnerRejectsInvalidQuantityOrBlankNames() {
         Account company = new Account(Name = 'Hillcrest Partners');
         insert company;
         Opportunity booking = newNteOpportunity(company.Id, 'Hillcrest Partners', 'NTE-STRESS-SUPP-PARTNER-COUNT');
@@ -1634,11 +1680,11 @@ private class NTEUpdateSubmissionServiceTest {
         booking.NTE_Stand_Colleagues__c = 'Alice Hunter\nLiam Roberts\nRose Phillips';
         booking.Amount = 5000;
         insert booking;
-        List<Integer> invalidCounts = new List<Integer>{null, 0, -1, 2, 1};
+        List<Integer> invalidCounts = new List<Integer>{null, 0, -1, 1};
         List<Lead> submissions = new List<Lead>();
         for (Integer index = 0; index < invalidCounts.size(); index++) {
             Lead submission = newLead(booking.Booking_Reference__c);
-            populateRequiredPartnerStaffFields(submission, invalidCounts[index], index == 4 ? ' \n\t\n ' : 'Alice Hunter');
+            populateRequiredPartnerStaffFields(submission, invalidCounts[index], index == 3 ? ' \n\t\n ' : 'Alice Hunter');
             submissions.add(submission);
         }
         update submissions;
@@ -1650,7 +1696,8 @@ private class NTEUpdateSubmissionServiceTest {
 
         for (Lead rejected : [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id IN :submissionIds]) {
             System.assertEquals('Failed', rejected.NTE_Update_Status__c);
-            System.assert(rejected.NTE_Update_Error__c.contains('final attendee total'));
+            System.assert(rejected.NTE_Update_Error__c.contains('final attendee total')
+                || rejected.NTE_Update_Error__c.contains('Enter the staff names'));
         }
         Opportunity unchanged = [SELECT NTE_Total_Staff_Count__c, NTE_Stand_Colleagues__c,
             NTE_Staff_Update_Completed_At__c, Amount FROM Opportunity WHERE Id = :booking.Id];

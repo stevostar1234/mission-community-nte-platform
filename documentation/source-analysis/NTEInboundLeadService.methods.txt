@@ -1,0 +1,215 @@
+L29: public List<Messaging.SendEmailResult> send(List<Messaging.SingleEmailMessage> messages)
+{
+            return Messaging.sendEmail(messages, false);
+        }
+
+L40: EmailDispatch(Id leadId, Boolean applicant, Messaging.SingleEmailMessage message)
+{
+            this.leadId = leadId;
+            this.applicant = applicant;
+            this.message = message;
+        }
+
+L47: public static void routeAndAcknowledge(List<Request> requests)
+{
+        if (requests == null) return;
+        Set<Id> leadIds = new Set<Id>();
+        Set<Id> newLeadIds = new Set<Id>();
+        for (Request request : requests) {
+            if (request == null || request.leadId == null) continue;
+            leadIds.add(request.leadId);
+            if (request.isNewSubmission == true && !initializedLeadIds.contains(request.leadId)) newLeadIds.add(request.leadId);
+        }
+        if (leadIds.isEmpty()) return;
+
+        Set<String> supportedForms = TEMPLATES_BY_FORM.keySet();
+        List<Lead> leads = [SELECT Id, Email, OwnerId, Web_Form_Type__c,
+            NTE_Applicant_Email_Status__c, NTE_Internal_Email_Status__c
+            FROM Lead WHERE Id IN :leadIds AND Web_Form_Type__c IN :supportedForms AND IsConverted = false FOR UPDATE];
+        if (leads.isEmpty()) return;
+
+        // Only the create Flow supplies this flag. A retry must preserve real staff
+        // decisions and accepted messages, while public input cannot supply them.
+        List<Lead> initialAudits = new List<Lead>();
+        Set<Id> pendingLeadIds = new Set<Id>();
+        for (Lead lead : leads) {
+            Boolean applicantRequired = String.isNotBlank(TEMPLATES_BY_FORM.get(lead.Web_Form_Type__c)[0]);
+            if (newLeadIds.contains(lead.Id)) {
+                initialAudits.add(new Lead(Id = lead.Id,
+                    NTE_Interest_Progressed__c = false, NTE_Interest_Not_Progressed__c = false,
+                    NTE_Application_Rejected__c = false, NTE_Invitation_Status__c = null,
+                    NTE_Invitation_Sent_At__c = null, NTE_Invitation_Recipient__c = null,
+                    NTE_Applicant_Email_Status__c = applicantRequired ? 'Not Attempted' : NOT_REQUIRED, NTE_Internal_Email_Status__c = 'Not Attempted',
+                    NTE_Email_Error__c = null));
+                lead.NTE_Applicant_Email_Status__c = applicantRequired ? 'Not Attempted' : NOT_REQUIRED;
+                lead.NTE_Internal_Email_Status__c = 'Not Attempted';
+            }
+            if (lead.NTE_Internal_Email_Status__c != ACCEPTED
+                || (applicantRequired && lead.NTE_Applicant_Email_Status__c != ACCEPTED)
+                || (!applicantRequired && lead.NTE_Applicant_Email_Status__c != ACCEPTED && lead.NTE_Applicant_Email_Status__c != NOT_REQUIRED)) pendingLeadIds.add(lead.Id);
+        }
+        if (!initialAudits.isEmpty()) {
+            Database.update(initialAudits, true, AccessLevel.SYSTEM_MODE);
+            for (Lead initialAudit : initialAudits) initializedLeadIds.add(initialAudit.Id);
+        }
+        if (pendingLeadIds.isEmpty()) return;
+        NTEPricingService.recalculateLeads(pendingLeadIds);
+
+        NTE_Routing_Config__mdt routingConfig = NTE_Routing_Config__mdt.getInstance('Default');
+        String ownerUsername = ownerUsernameOverride != null ? ownerUsernameOverride
+            : routingConfig == null ? null : routingConfig.Owner_Username__c;
+        List<User> owners = String.isBlank(ownerUsername) ? new List<User>()
+            : [SELECT Id, Email FROM User WHERE Username = :ownerUsername AND IsActive = true LIMIT 1];
+        User eventOwner = owners.isEmpty() ? null : owners[0];
+        Boolean unavailableConfiguredOwner = String.isNotBlank(ownerUsername) && eventOwner == null;
+
+        Set<Id> currentOwnerIds = new Set<Id>();
+        for (Lead lead : leads) {
+            if (lead.OwnerId != null && lead.OwnerId.getSObjectType() == User.SObjectType) currentOwnerIds.add(lead.OwnerId);
+        }
+        Map<Id, User> currentOwnersById = currentOwnerIds.isEmpty() ? new Map<Id, User>()
+            : new Map<Id, User>([SELECT Id, Email FROM User WHERE Id IN :currentOwnerIds AND IsActive = true]);
+        List<Lead> ownershipUpdates = new List<Lead>();
+        for (Lead lead : leads) {
+            if (pendingLeadIds.contains(lead.Id) && eventOwner != null && lead.OwnerId != eventOwner.Id) {
+                ownershipUpdates.add(new Lead(Id = lead.Id, OwnerId = eventOwner.Id));
+            }
+        }
+        if (!ownershipUpdates.isEmpty()) Database.update(ownershipUpdates, true, AccessLevel.SYSTEM_MODE);
+
+        Set<String> names = new Set<String>();
+        for (List<String> pair : TEMPLATES_BY_FORM.values()) {
+            for (String templateName : pair) if (String.isNotBlank(templateName)) names.add(templateName);
+        }
+        Map<String, Id> templateIds = new Map<String, Id>();
+        for (EmailTemplate templateRecord : [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName IN :names]) {
+            templateIds.put(templateRecord.DeveloperName, templateRecord.Id);
+        }
+
+        Map<Id, Lead> audits = new Map<Id, Lead>();
+        Map<Id, List<String>> errors = new Map<Id, List<String>>();
+        List<EmailDispatch> dispatches = new List<EmailDispatch>();
+        for (Lead lead : leads) {
+            if (!pendingLeadIds.contains(lead.Id)) continue;
+            List<String> pair = TEMPLATES_BY_FORM.get(lead.Web_Form_Type__c);
+            Lead audit = new Lead(Id = lead.Id,
+                NTE_Applicant_Email_Status__c = lead.NTE_Applicant_Email_Status__c == ACCEPTED ? ACCEPTED : String.isBlank(pair[0]) ? NOT_REQUIRED : 'Not Attempted',
+                NTE_Internal_Email_Status__c = lead.NTE_Internal_Email_Status__c == ACCEPTED ? ACCEPTED : 'Not Attempted');
+            audits.put(lead.Id, audit);
+
+            if (String.isNotBlank(pair[0]) && lead.NTE_Applicant_Email_Status__c != ACCEPTED) {
+                if (!isUsableEmail(lead.Email)) {
+                    fail(audit, true, errors, String.isBlank(lead.Email)
+                        ? 'Applicant email was not sent because the Lead email address is blank.'
+                        : 'Applicant email was not sent because the Lead email address is invalid.');
+                } else if (!templateIds.containsKey(pair[0])) {
+                    fail(audit, true, errors, 'Applicant email template was not found.');
+                } else if (!bypassEmailDelivery) {
+                    Messaging.SingleEmailMessage applicant = new Messaging.SingleEmailMessage();
+                    applicant.setTargetObjectId(lead.Id);
+                    applicant.setTemplateId(templateIds.get(pair[0]));
+                    applicant.setSaveAsActivity(false);
+                    dispatches.add(new EmailDispatch(lead.Id, true, applicant));
+                }
+            }
+
+            if (lead.NTE_Internal_Email_Status__c != ACCEPTED) {
+                User notificationOwner = eventOwner == null ? currentOwnersById.get(lead.OwnerId) : eventOwner;
+                if (unavailableConfiguredOwner) {
+                    fail(audit, false, errors, 'Internal notification was not sent because the configured NTE owner is unavailable.');
+                } else if (notificationOwner == null || !isUsableEmail(notificationOwner.Email)) {
+                    fail(audit, false, errors, 'Internal notification was not sent because the NTE record owner does not have an available email address.');
+                } else if (!templateIds.containsKey(pair[1])) {
+                    fail(audit, false, errors, 'Internal email template was not found.');
+                } else if (!bypassEmailDelivery) {
+                    Messaging.SingleEmailMessage internalMessage = new Messaging.SingleEmailMessage();
+                    internalMessage.setTargetObjectId(lead.Id);
+                    internalMessage.setTreatTargetObjectAsRecipient(false);
+                    internalMessage.setToAddresses(new List<String>{notificationOwner.Email});
+                    internalMessage.setTemplateId(templateIds.get(pair[1]));
+                    internalMessage.setSaveAsActivity(false);
+                    dispatches.add(new EmailDispatch(lead.Id, false, internalMessage));
+                }
+            }
+        }
+        dispatchAndRecord(dispatches, audits, errors);
+    }
+
+L175: private static void dispatchAndRecord(List<EmailDispatch> dispatches, Map<Id, Lead> audits, Map<Id, List<String>> errors)
+{
+        if (audits.isEmpty()) return;
+        Savepoint emailSavepoint = Database.setSavepoint();
+        try {
+            sendDispatches(dispatches, audits, errors);
+            writeAudits(audits, errors);
+        } catch (Exception exceptionValue) {
+            // An accepted send must never commit without its duplicate-prevention
+            // audit. Roll back this group's emails, then retain retryable failures.
+            Database.rollback(emailSavepoint);
+            for (EmailDispatch dispatch : dispatches) {
+                fail(audits.get(dispatch.leadId), dispatch.applicant, errors,
+                    'Email was not sent because its result could not be saved. ' + exceptionValue.getMessage());
+            }
+            writeAudits(audits, errors);
+        } finally {
+            Database.releaseSavepoint(emailSavepoint);
+        }
+    }
+
+L195: private static void sendDispatches(List<EmailDispatch> dispatches, Map<Id, Lead> audits, Map<Id, List<String>> errors)
+{
+        if (dispatches.isEmpty()) return;
+        if (Limits.getEmailInvocations() >= Limits.getLimitEmailInvocations()) {
+            for (EmailDispatch dispatch : dispatches) fail(audits.get(dispatch.leadId), dispatch.applicant, errors,
+                'Email was not sent because this transaction has no email requests remaining. Retry the failed message.');
+            return;
+        }
+        List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
+        for (EmailDispatch dispatch : dispatches) messages.add(dispatch.message);
+        try {
+            List<Messaging.SendEmailResult> results = emailSender.send(messages);
+            for (Integer index = 0; index < dispatches.size(); index++) {
+                EmailDispatch dispatch = dispatches[index];
+                Messaging.SendEmailResult result = results != null && index < results.size() ? results[index] : null;
+                if (result != null && result.isSuccess()) {
+                    setDispatchStatus(audits.get(dispatch.leadId), dispatch.applicant, ACCEPTED);
+                } else {
+                    fail(audits.get(dispatch.leadId), dispatch.applicant, errors,
+                        result == null || result.getErrors().isEmpty() ? 'Salesforce did not accept the email.' : result.getErrors()[0].getMessage());
+                }
+            }
+        } catch (Exception exceptionValue) {
+            for (EmailDispatch dispatch : dispatches) fail(audits.get(dispatch.leadId), dispatch.applicant, errors, exceptionValue.getMessage());
+        }
+    }
+
+L221: private static void writeAudits(Map<Id, Lead> audits, Map<Id, List<String>> errors)
+{
+        for (Id leadId : audits.keySet()) {
+            List<String> messages = errors.get(leadId);
+            audits.get(leadId).NTE_Email_Error__c = messages == null ? null : String.join(messages, '\n').left(32000);
+        }
+        if (Test.isRunningTest() && failNextAuditSave) {
+            failNextAuditSave = false;
+            throw new IntakeEmailException('The email result could not be saved.');
+        }
+        Database.update(audits.values(), true, AccessLevel.SYSTEM_MODE);
+    }
+
+L233: private static Boolean isUsableEmail(String email)
+{
+        return String.isNotBlank(email) && Pattern.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$', email);
+    }
+
+L237: private static void setDispatchStatus(Lead audit, Boolean applicant, String status)
+{
+        if (applicant) audit.NTE_Applicant_Email_Status__c = status;
+        else audit.NTE_Internal_Email_Status__c = status;
+    }
+
+L242: private static void fail(Lead audit, Boolean applicant, Map<Id, List<String>> errors, String message)
+{
+        setDispatchStatus(audit, applicant, 'Failed');
+        if (!errors.containsKey(audit.Id)) errors.put(audit.Id, new List<String>());
+        errors.get(audit.Id).add(String.isBlank(message) ? 'Unknown email error.' : message);
+    }

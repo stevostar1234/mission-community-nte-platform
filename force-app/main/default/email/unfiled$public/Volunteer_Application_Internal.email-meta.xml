@@ -21,6 +21,8 @@ Service details {!Lead.Volunteer_Service_Details__c} {!Lead.Volunteer_Service_Da
 Opportunities {!Lead.Volunteer_Opportunities__c}
 Skills and experience {!Lead.Volunteer_Skills__c}
 Travel regions {!Lead.Volunteer_Travel_Regions__c}
+Hours willing to give per month {!Lead.Volunteer_Hours__c}
+Preference {!Lead.Volunteer_Availability__c}
 Willing to complete a DBS check {!Lead.Volunteer_DBS_Willing__c}
 
 The full application, including emergency-contact and consent details, is available in the Volunteer Applications Lead list view in Salesforce.

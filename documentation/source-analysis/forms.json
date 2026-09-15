@@ -1,0 +1,6181 @@
+[
+  {
+    "path": "exhibitor-application.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "exhibitor",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your NTE27 exhibitor application. The NTE team will review it and contact you with the outcome."
+    },
+    "fields": [
+      {
+        "api": "Logo_Upload_URL__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "Logo_Upload_URL__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Exhibitor Application",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "exhibitor-application-v10",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Booking_Reference__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "Booking_Reference__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Name__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-combine-fields": "contact-first-name,contact-last-name",
+          "data-sf-field": "Event_Contact_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Email__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "email",
+          "data-sf-field": "Event_Contact_Email__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Title__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "job-title",
+          "data-sf-field": "Event_Contact_Title__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Sponsor_Package_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Exhibitor_Space_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Power_Socket_Unit_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Power_Socket_Unit_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Power_Socket_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Power_Socket_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Unit_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Additional_Staff_Unit_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Additional_Staff_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Included_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Included_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Total_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "planned-count",
+          "data-sf-field": "Total_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Required__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "No",
+          "data-sf-field": "Additional_Staff_Required__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Additional_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Listed_Price_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Listed_Price_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Pricing_Status__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Calculated",
+          "data-sf-field": "Pricing_Status__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Pricing_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "NTE27-2026-09-10",
+          "data-sf-field": "Pricing_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoice_Required__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "id": "invoice-required",
+          "type": "hidden",
+          "value": "No",
+          "data-sf-field": "Invoice_Required__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name as it should appear in marketing",
+        "element": "input",
+        "attributes": {
+          "id": "company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Organisation_Category__c",
+        "label": "Organisation category",
+        "element": "select",
+        "attributes": {
+          "id": "organisation-category",
+          "required": "",
+          "data-sf-field": "Exhibitor_Organisation_Category__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select a category"
+          },
+          {
+            "value": "Employer - Automotive Sector",
+            "label": "Employer - Automotive Sector"
+          },
+          {
+            "value": "Employer - Manufacturing Sector",
+            "label": "Employer - Manufacturing Sector"
+          },
+          {
+            "value": "Employer - Renewable & Clean Energy Sector",
+            "label": "Employer - Renewable & Clean Energy Sector"
+          },
+          {
+            "value": "Employer - Defence",
+            "label": "Employer - Defence & Security"
+          },
+          {
+            "value": "Employer - Built Environment",
+            "label": "Employer - Built Environment"
+          },
+          {
+            "value": "Employer - Facilities Management",
+            "label": "Employer - Facilities Management"
+          },
+          {
+            "value": "Employer - Financial and Professional Services",
+            "label": "Employer - Financial and Professional Services"
+          },
+          {
+            "value": "Employer - Digital & Technologies",
+            "label": "Employer - Digital & Technologies"
+          },
+          {
+            "value": "Employer - Training Provider from any industry",
+            "label": "Employer - Training Provider from any industry"
+          },
+          {
+            "value": "Employer - Landbased industry",
+            "label": "Employer - Landbased industry"
+          },
+          {
+            "value": "Employer - Blue Light & NHS",
+            "label": "Employer - Blue Light & NHS"
+          },
+          {
+            "value": "Employer - Other Sectors not denoted above",
+            "label": "Employer - Other Sectors not denoted above"
+          },
+          {
+            "value": "Government or Government Agency",
+            "label": "Government or Government Agency"
+          },
+          {
+            "value": "Local Government or LG related",
+            "label": "Local Government or LG related"
+          },
+          {
+            "value": "Regular or Reserve Services, or Cadets",
+            "label": "Regular or Reserve Services, or Cadets"
+          },
+          {
+            "value": "Trade Association",
+            "label": "Trade Association"
+          },
+          {
+            "value": "Charity - member of Cobseo",
+            "label": "Charity - member of Cobseo"
+          },
+          {
+            "value": "Charity - not a member of Cobseo",
+            "label": "Charity - not a member of Cobseo"
+          },
+          {
+            "value": "CIC or Not for Profit",
+            "label": "CIC or Not for Profit"
+          }
+        ]
+      },
+      {
+        "api": "Website",
+        "label": "Organisation website",
+        "element": "input",
+        "attributes": {
+          "id": "website",
+          "type": "url",
+          "placeholder": "https://",
+          "autocomplete": "url",
+          "data-sf-field": "Website"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Salutation",
+        "label": "Title / prefix",
+        "element": "select",
+        "attributes": {
+          "id": "salutation",
+          "autocomplete": "honorific-prefix",
+          "data-sf-field": "Salutation"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Mr.",
+            "label": "Mr."
+          },
+          {
+            "value": "Ms.",
+            "label": "Ms."
+          },
+          {
+            "value": "Mrs.",
+            "label": "Mrs."
+          },
+          {
+            "value": "Dr.",
+            "label": "Dr."
+          },
+          {
+            "value": "Prof.",
+            "label": "Prof."
+          },
+          {
+            "value": "Mx.",
+            "label": "Mx."
+          }
+        ]
+      },
+      {
+        "api": "FirstName",
+        "label": "First name",
+        "element": "input",
+        "attributes": {
+          "id": "contact-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Surname",
+        "element": "input",
+        "attributes": {
+          "id": "contact-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Title",
+        "label": "Job title",
+        "element": "input",
+        "attributes": {
+          "id": "job-title",
+          "required": "",
+          "autocomplete": "organization-title",
+          "data-sf-field": "Title"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Email address",
+        "element": "input",
+        "attributes": {
+          "id": "email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email",
+          "data-copy-field": "Event_Contact_Email__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Mobile__c",
+        "label": "Mobile phone",
+        "element": "input",
+        "attributes": {
+          "id": "mobile",
+          "type": "tel",
+          "required": "",
+          "autocomplete": "tel",
+          "data-sf-field": "Event_Contact_Mobile__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Landline or work phone",
+        "element": "input",
+        "attributes": {
+          "id": "phone",
+          "type": "tel",
+          "required": "",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Prefix__c",
+        "label": "Prefix",
+        "element": "input",
+        "attributes": {
+          "id": "second-prefix",
+          "data-sf-field": "Secondary_Contact_Prefix__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "second-contact-toggle",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Name__c",
+        "label": "Full name",
+        "element": "input",
+        "attributes": {
+          "id": "second-name",
+          "data-sf-field": "Secondary_Contact_Name__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "second-contact-toggle",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Title__c",
+        "label": "Job title",
+        "element": "input",
+        "attributes": {
+          "id": "second-title",
+          "data-sf-field": "Secondary_Contact_Title__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "second-contact-toggle",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Email__c",
+        "label": "Email",
+        "element": "input",
+        "attributes": {
+          "id": "second-email",
+          "type": "email",
+          "data-sf-field": "Secondary_Contact_Email__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "second-contact-toggle",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Mobile__c",
+        "label": "Mobile phone",
+        "element": "input",
+        "attributes": {
+          "id": "second-mobile",
+          "type": "tel",
+          "data-sf-field": "Secondary_Contact_Mobile__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "second-contact-toggle",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Phone__c",
+        "label": "Work phone",
+        "element": "input",
+        "attributes": {
+          "id": "second-phone",
+          "type": "tel",
+          "data-sf-field": "Secondary_Contact_Phone__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "second-contact-toggle",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Previous_NTE_Events__c",
+        "label": "NTE24",
+        "element": "input",
+        "attributes": {
+          "id": "nte2024",
+          "type": "checkbox",
+          "value": "NTE2024",
+          "data-sf-field": "Previous_NTE_Events__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Previous_NTE_Events__c",
+        "label": "NTE25",
+        "element": "input",
+        "attributes": {
+          "id": "nte2025",
+          "type": "checkbox",
+          "value": "NTE2025",
+          "data-sf-field": "Previous_NTE_Events__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Previous_NTE_Events__c",
+        "label": "NTE26",
+        "element": "input",
+        "attributes": {
+          "id": "nte2026",
+          "type": "checkbox",
+          "value": "NTE2026",
+          "data-sf-field": "Previous_NTE_Events__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Planned_Exhibitor_Count__c",
+        "label": "How many people do you currently plan to bring, including yourself?",
+        "element": "input",
+        "attributes": {
+          "id": "planned-count",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "inputmode": "numeric",
+          "required": "",
+          "data-sf-field": "Planned_Exhibitor_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "required": "",
+          "value": "Garage Space - reduced size with power - £599 + VAT",
+          "data-price": "599",
+          "data-power-included": "true",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Single Garage - Paddock Side with power - £799 + VAT",
+          "data-price": "799",
+          "data-power-included": "true",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Double Garage - Paddock Side with power - £1,299 + VAT",
+          "data-price": "1299",
+          "data-power-included": "true",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Single Garage - Track Side - £799 + VAT",
+          "data-price": "799",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Double Garage - Track Side - £1,299 + VAT",
+          "data-price": "1299",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Clean Energy Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Clean Energy Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Built Environment Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Built Environment Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Manufacturing Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Manufacturing Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Defence & Security Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Defence & Security Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Digital and Technologies Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Digital and Technologies Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "FM Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "FM Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Professional & Financial Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Professional & Financial Zone - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Training & Education Zone - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Any other business - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Any other business - Double - £849 + VAT",
+          "data-price": "849",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Local Government Authority - Single - £249.50 + VAT",
+          "data-price": "249.5",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Blue Light - Single - £249.50 + VAT",
+          "data-price": "249.5",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Trade Association - Single - £499 + VAT",
+          "data-price": "499",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "COBSEO Charity - Single - Free",
+          "data-price": "0",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Selections__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-space",
+          "value": "Non COBSEO Charity - Single - Free",
+          "data-price": "0",
+          "data-sf-field": "Exhibitor_Space_Selections__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Stand_Power__c",
+        "label": "Yes",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "power-required",
+          "id": "power-required-yes",
+          "value": "Yes",
+          "required": "",
+          "data-sf-field": "Stand_Power__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Stand_Power__c",
+        "label": "No",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "power-required",
+          "value": "No",
+          "data-sf-field": "Stand_Power__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Power_Socket_Count__c",
+        "label": "Number of sockets",
+        "element": "input",
+        "attributes": {
+          "id": "power-count",
+          "type": "number",
+          "min": "1",
+          "max": "20",
+          "data-required-when-visible": "",
+          "data-sf-field": "Power_Socket_Count__c"
+        },
+        "conditions": [
+          {
+            "class": "field conditional",
+            "data-conditional-for": "power-required-yes",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Hall_Schedule__c",
+        "label": "For garage exhibits and large stands in the halls, setting up between 14:00-18:00 hrs on Sunday is required. Please indicate you are able to do this.",
+        "element": "select",
+        "attributes": {
+          "id": "sunday-setup",
+          "data-sf-field": "Exhibitor_Hall_Schedule__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Stand_Equipment__c",
+        "label": "Equipment beyond display stands and laptops",
+        "element": "textarea",
+        "attributes": {
+          "id": "equipment",
+          "required": "",
+          "placeholder": "State None if nothing further",
+          "data-sf-field": "Stand_Equipment__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Vehicle_Required__c",
+        "label": "Will you bring cars, tractors or heavy items that need to be dropped off on a flatbed or trailer?",
+        "element": "select",
+        "attributes": {
+          "id": "heavy-vehicle",
+          "required": "",
+          "data-sf-field": "Heavy_Vehicle_Required__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          },
+          {
+            "value": "Not known yet",
+            "label": "Not known yet"
+          }
+        ]
+      },
+      {
+        "api": "Has_Special_Requirements__c",
+        "label": "Do you have any accessibility requirements?",
+        "element": "select",
+        "attributes": {
+          "id": "accessibility",
+          "required": "",
+          "data-sf-field": "Has_Special_Requirements__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Stand_Special_Requirements__c",
+        "label": "Please tell us what you need",
+        "element": "textarea",
+        "attributes": {
+          "id": "accessibility-details",
+          "data-required-when-visible": "",
+          "data-sf-field": "Stand_Special_Requirements__c"
+        },
+        "conditions": [
+          {
+            "class": "field conditional",
+            "data-conditional-for": "accessibility",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Quote_Required_for_PO__c",
+        "label": "Do you require a quotation before an invoice can be raised?",
+        "element": "select",
+        "attributes": {
+          "id": "quote-for-po",
+          "required": "",
+          "data-sf-field": "Quote_Required_for_PO__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Payment_Method__c",
+        "label": "Do you require an invoice to be raised, or will you make payment by Stripe?",
+        "element": "select",
+        "attributes": {
+          "id": "payment-method",
+          "data-sf-field": "Payment_Method__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Bank transfer",
+            "label": "Yes — invoice and payment by bank transfer"
+          },
+          {
+            "value": "Stripe",
+            "label": "No — payment will be via Stripe"
+          }
+        ]
+      },
+      {
+        "api": "Purchase_Order__c",
+        "label": "Do you require a purchase order or reference before an invoice can be issued?",
+        "element": "select",
+        "attributes": {
+          "id": "purchase-order",
+          "data-required-when-visible": "",
+          "data-sf-field": "Purchase_Order__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Purchase_Order_Number__c",
+        "label": "Purchase order or reference details",
+        "element": "input",
+        "attributes": {
+          "id": "purchase-order-number",
+          "data-required-when-visible": "",
+          "data-sf-field": "Purchase_Order_Number__c"
+        },
+        "conditions": [
+          {
+            "class": "field full conditional",
+            "data-conditional-for": "purchase-order",
+            "data-conditional-value": "Yes"
+          },
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Supplier_Agreement_Required__c",
+        "label": "Will a supplier agreement be required?",
+        "element": "select",
+        "attributes": {
+          "id": "supplier-agreement",
+          "data-required-when-visible": "",
+          "data-sf-field": "Supplier_Agreement_Required__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          },
+          {
+            "value": "Don't know",
+            "label": "Don't know"
+          }
+        ]
+      },
+      {
+        "api": "Invoiced_Company__c",
+        "label": "Legal organisation name for quotation and invoicing",
+        "element": "input",
+        "attributes": {
+          "id": "invoice-company",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoiced_Company__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Trading_Name__c",
+        "label": "Trading name, if different",
+        "element": "input",
+        "attributes": {
+          "id": "trading-name",
+          "data-sf-field": "Trading_Name__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Invoice_Address__c",
+        "label": "Billing address, including postcode",
+        "element": "textarea",
+        "attributes": {
+          "id": "invoice-address",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoice_Address__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Invoiced_Person__c",
+        "label": "Finance contact name",
+        "element": "input",
+        "attributes": {
+          "id": "invoice-person",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoiced_Person__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Invoiced_Email__c",
+        "label": "Finance contact email address",
+        "element": "input",
+        "attributes": {
+          "id": "invoice-email",
+          "type": "email",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoiced_Email__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Invoice_Contact_Phone__c",
+        "label": "Finance contact telephone number",
+        "element": "input",
+        "attributes": {
+          "id": "invoice-phone",
+          "type": "tel",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoice_Contact_Phone__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Invoice_Additional_Information__c",
+        "label": "Additional quotation or invoice information",
+        "element": "textarea",
+        "attributes": {
+          "id": "invoice-additional-information",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoice_Additional_Information__c"
+        },
+        "conditions": [
+          {
+            "class": "field full conditional",
+            "data-conditional-for": "invoice-additional-required",
+            "data-conditional-value": "Yes"
+          },
+          {
+            "class": "conditional",
+            "data-conditional-for": "invoice-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Industry_Body_Details__c",
+        "label": "Industry body or trade association membership",
+        "element": "input",
+        "attributes": {
+          "id": "industry-body",
+          "required": "",
+          "placeholder": "Enter details or No",
+          "data-sf-field": "Industry_Body_Details__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Discovery_Source__c",
+        "label": "How did you hear about NTE27?",
+        "element": "select",
+        "attributes": {
+          "id": "discovery",
+          "required": "",
+          "data-sf-field": "Event_Discovery_Source__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Previous exhibitor",
+            "label": "Previous exhibitor"
+          },
+          {
+            "value": "E-mail invitation",
+            "label": "E-mail invitation"
+          },
+          {
+            "value": "Word of mouth from previous exhibitor",
+            "label": "Word of mouth from previous exhibitor"
+          },
+          {
+            "value": "Word of mouth from previous attendees",
+            "label": "Word of mouth from previous attendees"
+          },
+          {
+            "value": "Website",
+            "label": "Website"
+          },
+          {
+            "value": "LinkedIn",
+            "label": "LinkedIn"
+          },
+          {
+            "value": "Facebook",
+            "label": "Facebook"
+          },
+          {
+            "value": "Instagram",
+            "label": "Instagram"
+          }
+        ]
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "declaration-name",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "declaration-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Terms_and_Conditions__c",
+        "label": "I have read and agree to the NTE27 Privacy Policy .",
+        "element": "input",
+        "attributes": {
+          "id": "terms",
+          "type": "checkbox",
+          "required": "",
+          "data-sf-field": "Terms_and_Conditions__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "id": "second-contact-toggle",
+          "type": "checkbox"
+        },
+        "label": "Add a second contact person",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "invoice-additional-required",
+          "data-required-when-visible": ""
+        },
+        "label": "Is there any additional information that must appear on the quotation or invoice?",
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit exhibitor application",
+        "options": []
+      }
+    ],
+    "headings": [
+      "Join us at NTE27",
+      "1 Organisation",
+      "2 Main contact",
+      "3 Previous NTE events",
+      "4 Exhibition space",
+      "Select one space",
+      "5 Power and booking total",
+      "6 Operations and accessibility",
+      "7 Quotation and invoicing",
+      "8 Final details and declaration",
+      "Application and confirmation emails"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "exhibitor-interest.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your NTE27 exhibitor expression of interest. The NTE team will review it and contact you about the next step."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Exhibitor Expression of Interest",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "exhibitor-interest-v3",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Organisation_Type__c",
+        "label": "Organisation type",
+        "element": "select",
+        "attributes": {
+          "id": "exhibitor-interest-type",
+          "required": "",
+          "data-sf-field": "Organisation_Type__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Charity - COBSEO member",
+            "label": "Charity - COBSEO member"
+          },
+          {
+            "value": "Charity - Non COBSEO member",
+            "label": "Charity - Non COBSEO member"
+          },
+          {
+            "value": "Government Department or Agency",
+            "label": "Government Department or Agency"
+          },
+          {
+            "value": "Industry Body / Trade Association",
+            "label": "Industry Body / Trade Association"
+          },
+          {
+            "value": "Employer - Automotive",
+            "label": "Employer - Automotive"
+          },
+          {
+            "value": "Employer - Clean Energy",
+            "label": "Employer - Clean Energy"
+          },
+          {
+            "value": "Employer - Blue Light Services / NHS",
+            "label": "Employer - Blue Light Services / NHS"
+          },
+          {
+            "value": "Employer - Built Environment",
+            "label": "Employer - Built Environment"
+          },
+          {
+            "value": "Employer - Manufacturing",
+            "label": "Employer - Manufacturing"
+          },
+          {
+            "value": "Employer - Defence and Security",
+            "label": "Employer - Defence and Security"
+          },
+          {
+            "value": "Employer - Financial and Professional Services",
+            "label": "Employer - Financial and Professional Services"
+          },
+          {
+            "value": "Employer - Digital and Technologies",
+            "label": "Employer - Digital and Technologies"
+          },
+          {
+            "value": "Employer - Training and Education",
+            "label": "Employer - Training and Education"
+          },
+          {
+            "value": "Employer - Land-based",
+            "label": "Employer - Land-based"
+          },
+          {
+            "value": "Employer - Other sector",
+            "label": "Employer - Other sector"
+          }
+        ]
+      },
+      {
+        "api": "Website",
+        "label": "Website",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-website",
+          "type": "url",
+          "placeholder": "https://",
+          "autocomplete": "url",
+          "data-sf-field": "Website"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "First name",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Surname",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Title",
+        "label": "Job title",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-title",
+          "required": "",
+          "autocomplete": "organization-title",
+          "data-sf-field": "Title"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Email address",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Telephone number",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-phone",
+          "type": "tel",
+          "required": "",
+          "autocomplete": "tel",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Interest_Detail__c",
+        "label": "Yes",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-sponsorship-interest",
+          "value": "Yes",
+          "required": "",
+          "data-sf-field": "Exhibitor_Interest_Detail__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Interest_Detail__c",
+        "label": "No",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-sponsorship-interest",
+          "value": "No",
+          "data-sf-field": "Exhibitor_Interest_Detail__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Interest_Detail__c",
+        "label": "Maybe",
+        "element": "input",
+        "attributes": {
+          "type": "radio",
+          "name": "exhibitor-sponsorship-interest",
+          "value": "Maybe",
+          "data-sf-field": "Exhibitor_Interest_Detail__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Community_Contribution__c",
+        "label": "We work with a number of organisations that host value-adding activities such as workshops and skills advice at NTE. Is this something you could offer the event?",
+        "element": "textarea",
+        "attributes": {
+          "id": "exhibitor-value-adding-activities",
+          "placeholder": "Enter your answer",
+          "aria-describedby": "exhibitor-value-adding-activities-help",
+          "data-sf-field": "Exhibitor_Community_Contribution__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Preferred_Contact_Method__c",
+        "label": "Preferred contact method",
+        "element": "select",
+        "attributes": {
+          "id": "exhibitor-contact-method",
+          "required": "",
+          "data-sf-field": "Preferred_Contact_Method__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Email",
+            "label": "Email"
+          },
+          {
+            "value": "Telephone",
+            "label": "Telephone"
+          },
+          {
+            "value": "Video call",
+            "label": "Video call"
+          },
+          {
+            "value": "No preference",
+            "label": "No preference"
+          }
+        ]
+      },
+      {
+        "api": "Preferred_Contact_Time__c",
+        "label": "Best time to contact you",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-contact-time",
+          "placeholder": "For example, weekday mornings",
+          "data-sf-field": "Preferred_Contact_Time__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Discovery_Source__c",
+        "label": "How did you hear about NTE27?",
+        "element": "select",
+        "attributes": {
+          "id": "exhibitor-interest-discovery",
+          "required": "",
+          "data-sf-field": "Event_Discovery_Source__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Previous NTE event",
+            "label": "Previous NTE event"
+          },
+          {
+            "value": "NTE webinar or brochure",
+            "label": "NTE webinar or brochure"
+          },
+          {
+            "value": "Email invitation",
+            "label": "Email invitation"
+          },
+          {
+            "value": "Recommendation or word of mouth",
+            "label": "Recommendation or word of mouth"
+          },
+          {
+            "value": "National Transition Event website",
+            "label": "National Transition Event website"
+          },
+          {
+            "value": "Mission Community website",
+            "label": "Mission Community website"
+          },
+          {
+            "value": "LinkedIn",
+            "label": "LinkedIn"
+          },
+          {
+            "value": "Other social media",
+            "label": "Other social media"
+          },
+          {
+            "value": "Other",
+            "label": "Other"
+          }
+        ]
+      },
+      {
+        "api": "Contact_Consent__c",
+        "label": "I agree that Mission Community may contact me about exhibiting at NTE27.",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-consent",
+          "type": "checkbox",
+          "value": "Yes",
+          "required": "",
+          "data-sf-field": "Contact_Consent__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-interest-signature-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit expression of interest",
+        "options": []
+      }
+    ],
+    "headings": [
+      "About this form",
+      "1 Organisation and contact",
+      "2 Sponsorship and activities",
+      "Are you interested in Sponsorship Opportunities?",
+      "3 Follow-up",
+      "Messages sent after submission"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "exhibitor-staff-update.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "exhibitor-staff-update",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your exhibitor staff details."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Exhibitor Staff Update",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "exhibitor-staff-update-v1",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Staff_Update_Audience__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Exhibitor",
+          "data-sf-field": "Staff_Update_Audience__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Total_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "id": "exhibitor-base-count",
+          "data-sf-field": "Total_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Planned_Exhibitor_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "exhibitor-base-count",
+          "data-sf-field": "Planned_Exhibitor_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Staff_Base_Names__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "exhibitor-staff-names",
+          "data-sf-field": "Staff_Base_Names__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Top_Up_Staff_Unit_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "50",
+          "data-sf-field": "Top_Up_Staff_Unit_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Top_Up_Staff_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Top_Up_Staff_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "Your first name",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Your surname",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Your email address",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Target_Booking_Reference__c",
+        "label": "Booking reference",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-reference",
+          "required": "",
+          "autocomplete": "off",
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Top_Up_Staff_Required__c",
+        "label": "Do you want to purchase any additional staff places?",
+        "element": "select",
+        "attributes": {
+          "id": "top-up-required",
+          "required": "",
+          "data-sf-field": "Top_Up_Staff_Required__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Top_Up_Staff_Count__c",
+        "label": "Total number of top-up staff places required",
+        "element": "input",
+        "attributes": {
+          "id": "top-up-count",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "inputmode": "numeric",
+          "data-required-when-visible": "",
+          "data-sf-field": "Top_Up_Staff_Count__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "top-up-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Top_Up_Staff_Names__c",
+        "label": "Names for the top-up places",
+        "element": "textarea",
+        "attributes": {
+          "id": "top-up-names",
+          "data-required-when-visible": "",
+          "placeholder": "Enter one name per line.",
+          "data-sf-field": "Top_Up_Staff_Names__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "top-up-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "exhibitor-staff-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "id": "exhibitor-staff-names",
+          "required": "",
+          "placeholder": "Enter one name per line."
+        },
+        "label": "Names of staff already covered by your booking",
+        "options": []
+      },
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit staff details",
+        "options": []
+      }
+    ],
+    "headings": [
+      "Before you begin",
+      "1 Find your booking",
+      "2 Names covered by your booking",
+      "3 Additional top-up places",
+      "Staff details acknowledgement"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "guest-registration.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "guest",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your NTE27 guest registration. The event team will send further information closer to the event."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Guest Registration",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "guest-registration-v3",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Accompanying_Guest_Name__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-combine-fields": "guest-companion-first-name,guest-companion-last-name",
+          "data-sf-field": "Accompanying_Guest_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "First name",
+        "element": "input",
+        "attributes": {
+          "id": "guest-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Surname",
+        "element": "input",
+        "attributes": {
+          "id": "guest-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Email address",
+        "element": "input",
+        "attributes": {
+          "id": "guest-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Phone number",
+        "element": "input",
+        "attributes": {
+          "id": "guest-phone",
+          "type": "tel",
+          "required": "",
+          "autocomplete": "tel",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation",
+        "element": "input",
+        "attributes": {
+          "id": "guest-organisation",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Title",
+        "label": "Job title",
+        "element": "input",
+        "attributes": {
+          "id": "guest-title",
+          "autocomplete": "organization-title",
+          "data-sf-field": "Title"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Guest_Accompanying__c",
+        "label": "Will anyone be accompanying you?",
+        "element": "select",
+        "attributes": {
+          "id": "guest-accompanying",
+          "required": "",
+          "data-sf-field": "Guest_Accompanying__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Accompanying_Guest_Email__c",
+        "label": "Email address",
+        "element": "input",
+        "attributes": {
+          "id": "guest-companion-email",
+          "type": "email",
+          "data-required-when-visible": "",
+          "autocomplete": "email",
+          "data-sf-field": "Accompanying_Guest_Email__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "guest-accompanying",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Guest_Accessibility_Required__c",
+        "label": "Do you or anyone in your party have accessibility needs so we can make appropriate arrangements?",
+        "element": "select",
+        "attributes": {
+          "id": "guest-accessibility",
+          "required": "",
+          "data-sf-field": "Guest_Accessibility_Required__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Guest_Accessibility_Details__c",
+        "label": "Please tell us what arrangements would help",
+        "element": "textarea",
+        "attributes": {
+          "id": "guest-accessibility-details",
+          "data-required-when-visible": "",
+          "data-sf-field": "Guest_Accessibility_Details__c",
+          "placeholder": "Please provide any relevant details."
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "guest-accessibility",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Guest_Information_Declaration__c",
+        "label": "I confirm that these details are accurate and, where I have provided another person's details, I have their permission to do so.",
+        "element": "input",
+        "attributes": {
+          "id": "guest-declaration",
+          "type": "checkbox",
+          "value": "Yes",
+          "required": "",
+          "data-sf-field": "Guest_Information_Declaration__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "guest-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "guest-signature-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "id": "guest-companion-first-name",
+          "maxlength": "40",
+          "data-required-when-visible": "",
+          "autocomplete": "given-name"
+        },
+        "label": "First name",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "guest-companion-last-name",
+          "maxlength": "80",
+          "data-required-when-visible": "",
+          "autocomplete": "family-name"
+        },
+        "label": "Surname",
+        "options": []
+      },
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit guest registration",
+        "options": []
+      }
+    ],
+    "headings": [
+      "1 Your details",
+      "2 Anyone accompanying you",
+      "3 Accessibility",
+      "Registration emails"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "heavy-vehicle-details.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your heavy vehicle, equipment and haulier details. The NTE team will reconcile them with your booking and contact you if anything further is needed."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Heavy Vehicle Details",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "heavy-vehicle-details-v5",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Name__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-combine-fields": "vehicle-first-name,vehicle-last-name",
+          "data-sf-field": "Event_Contact_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Email__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "vehicle-email",
+          "data-sf-field": "Event_Contact_Email__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Mobile__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "vehicle-phone",
+          "data-sf-field": "Event_Contact_Mobile__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Name of exhibiting organisation",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-company",
+          "required": "",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "Main contact first name",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-first-name",
+          "required": "",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Main contact surname",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-last-name",
+          "required": "",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Main contact email",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-email",
+          "type": "email",
+          "required": "",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Main contact direct phone",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-phone",
+          "type": "tel",
+          "required": "",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Target_Booking_Reference__c",
+        "label": "Booking reference",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-reference",
+          "required": "",
+          "autocomplete": "off",
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Name__c",
+        "label": "Second contact",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-second-contact",
+          "required": "",
+          "data-sf-field": "Secondary_Contact_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Email__c",
+        "label": "Second contact email",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-second-email",
+          "type": "email",
+          "required": "",
+          "data-sf-field": "Secondary_Contact_Email__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Secondary_Contact_Phone__c",
+        "label": "Second contact phone",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-second-phone",
+          "type": "tel",
+          "required": "",
+          "data-sf-field": "Secondary_Contact_Phone__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Delivery_Window__c",
+        "label": "Planned delivery window",
+        "element": "select",
+        "attributes": {
+          "id": "delivery-window",
+          "required": "",
+          "data-sf-field": "Delivery_Window__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Sunday 28 February between 14:00 - 18:00",
+            "label": "Sunday 28 February between 14:00 - 18:00"
+          },
+          {
+            "value": "Monday 1 March between 06:30 - 07:15",
+            "label": "Monday 1 March between 06:30 - 07:15"
+          }
+        ]
+      },
+      {
+        "api": "Heavy_Item_1_Description__c",
+        "label": "Manufacturer and model, or a clear description of the item being exhibited",
+        "element": "input",
+        "attributes": {
+          "id": "item1-description",
+          "required": "",
+          "data-sf-field": "Heavy_Item_1_Description__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_1_Registration__c",
+        "label": "Registration, if known and applicable",
+        "element": "input",
+        "attributes": {
+          "id": "item1-registration",
+          "data-sf-field": "Heavy_Item_1_Registration__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_1_Dimensions__c",
+        "label": "Dimensions (L × W × H)",
+        "element": "input",
+        "attributes": {
+          "id": "item1-dimensions",
+          "required": "",
+          "data-sf-field": "Heavy_Item_1_Dimensions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_1_Gross_Weight__c",
+        "label": "Gross weight",
+        "element": "input",
+        "attributes": {
+          "id": "item1-weight",
+          "required": "",
+          "data-sf-field": "Heavy_Item_1_Gross_Weight__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_2_Description__c",
+        "label": "Manufacturer and model, or a clear description of the item being exhibited",
+        "element": "input",
+        "attributes": {
+          "id": "item2-description",
+          "data-sf-field": "Heavy_Item_2_Description__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_2_Registration__c",
+        "label": "Registration, if known and applicable",
+        "element": "input",
+        "attributes": {
+          "id": "item2-registration",
+          "data-sf-field": "Heavy_Item_2_Registration__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_2_Dimensions__c",
+        "label": "Dimensions (L × W × H)",
+        "element": "input",
+        "attributes": {
+          "id": "item2-dimensions",
+          "data-sf-field": "Heavy_Item_2_Dimensions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_2_Gross_Weight__c",
+        "label": "Gross weight",
+        "element": "input",
+        "attributes": {
+          "id": "item2-weight",
+          "data-sf-field": "Heavy_Item_2_Gross_Weight__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_3_Description__c",
+        "label": "Manufacturer and model, or a clear description of the item being exhibited",
+        "element": "input",
+        "attributes": {
+          "id": "item3-description",
+          "data-sf-field": "Heavy_Item_3_Description__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_3_Registration__c",
+        "label": "Registration, if known and applicable",
+        "element": "input",
+        "attributes": {
+          "id": "item3-registration",
+          "data-sf-field": "Heavy_Item_3_Registration__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_3_Dimensions__c",
+        "label": "Dimensions (L × W × H)",
+        "element": "input",
+        "attributes": {
+          "id": "item3-dimensions",
+          "data-sf-field": "Heavy_Item_3_Dimensions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Item_3_Gross_Weight__c",
+        "label": "Gross weight",
+        "element": "input",
+        "attributes": {
+          "id": "item3-weight",
+          "data-sf-field": "Heavy_Item_3_Gross_Weight__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Haulier_Name__c",
+        "label": "Name of haulier delivering / collecting",
+        "element": "input",
+        "attributes": {
+          "id": "haulier-name",
+          "required": "",
+          "placeholder": "Enter N/A if not applicable",
+          "data-sf-field": "Haulier_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Haulier_Staff__c",
+        "label": "Names of haulier staff, if known",
+        "element": "textarea",
+        "attributes": {
+          "id": "haulier-staff",
+          "placeholder": "Enter names if known",
+          "data-sf-field": "Haulier_Staff__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Haulier_Vehicle_Type__c",
+        "label": "Type of haulier vehicle",
+        "element": "input",
+        "attributes": {
+          "id": "haulier-type",
+          "required": "",
+          "placeholder": "Enter N/A if not applicable",
+          "data-sf-field": "Haulier_Vehicle_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Haulier_Vehicle_Gross_Weight__c",
+        "label": "Gross weight without exhibition item",
+        "element": "input",
+        "attributes": {
+          "id": "haulier-weight",
+          "required": "",
+          "placeholder": "Enter N/A if not applicable",
+          "data-sf-field": "Haulier_Vehicle_Gross_Weight__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Haulier_Vehicle_Dimensions__c",
+        "label": "Haulier vehicle dimensions (L × W × H)",
+        "element": "input",
+        "attributes": {
+          "id": "haulier-dimensions",
+          "required": "",
+          "placeholder": "Enter N/A if not applicable",
+          "data-sf-field": "Haulier_Vehicle_Dimensions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Haulier_Vehicle_Registration__c",
+        "label": "Haulier vehicle registration, if known",
+        "element": "input",
+        "attributes": {
+          "id": "haulier-registration",
+          "data-sf-field": "Haulier_Vehicle_Registration__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "vehicle-signature-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit logistics details",
+        "options": []
+      }
+    ],
+    "headings": [
+      "Delivery and collection",
+      "1 Organisation and contacts",
+      "2 Vehicles and equipment",
+      "Item 1",
+      "Item 2",
+      "Item 3",
+      "3 Haulier",
+      "Logistics acknowledgement"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "logo-upload.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "logo-update",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. Your NTE27 logo update has been submitted."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Logo Update",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "logo-update-v2",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name",
+        "element": "input",
+        "attributes": {
+          "id": "logo-company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "Your first name",
+        "element": "input",
+        "attributes": {
+          "id": "logo-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Your surname",
+        "element": "input",
+        "attributes": {
+          "id": "logo-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Your email address",
+        "element": "input",
+        "attributes": {
+          "id": "logo-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Target_Booking_Reference__c",
+        "label": "Booking reference",
+        "element": "input",
+        "attributes": {
+          "id": "logo-booking-reference",
+          "required": "",
+          "autocomplete": "off",
+          "maxlength": "80",
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Confirm logo upload",
+        "options": []
+      }
+    ],
+    "headings": [
+      "1 Upload your file",
+      "2 Confirm your upload"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "partner-sponsor-application.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your NTE27 partnership / sponsorship application. The NTE team will review it and contact you with the outcome."
+    },
+    "fields": [
+      {
+        "api": "Logo_Upload_URL__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "Logo_Upload_URL__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Partner / Sponsor Application",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "partner-sponsor-application-v12",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Booking_Reference__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "Booking_Reference__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsored_Name__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-combine-fields": "partner-first-name,partner-last-name",
+          "data-sf-field": "Sponsored_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Name__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-switch-copy": "partner-day-contact-same",
+          "data-copy-when-yes": "partner-first-name,partner-last-name",
+          "data-copy-when-no": "partner-day-first-name,partner-day-last-name",
+          "data-copy-mode": "combine",
+          "data-sf-field": "Event_Contact_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Title__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-switch-copy": "partner-day-contact-same",
+          "data-copy-when-yes": "partner-title",
+          "data-copy-when-no": "partner-day-title",
+          "data-sf-field": "Event_Contact_Title__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Email__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-switch-copy": "partner-day-contact-same",
+          "data-copy-when-yes": "partner-email",
+          "data-copy-when-no": "partner-day-email",
+          "data-sf-field": "Event_Contact_Email__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Contact_Mobile__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-switch-copy": "partner-day-contact-same",
+          "data-copy-when-yes": "partner-phone",
+          "data-copy-when-no": "partner-day-mobile",
+          "data-sf-field": "Event_Contact_Mobile__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Sponsor_Package_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Space_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Exhibitor_Space_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Power_Socket_Unit_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Power_Socket_Unit_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Power_Socket_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Power_Socket_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Unit_Price__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Additional_Staff_Unit_Price__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Additional_Staff_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Included_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Included_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Total_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "partner-planned-count",
+          "data-sf-field": "Total_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Required__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "No",
+          "data-sf-field": "Additional_Staff_Required__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Additional_Staff_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Additional_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Listed_Price_Total__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "0",
+          "data-sf-field": "Listed_Price_Total__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Pricing_Status__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Calculated",
+          "data-sf-field": "Pricing_Status__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Pricing_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "NTE27-2026-09-10",
+          "data-sf-field": "Pricing_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoice_Required__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Yes",
+          "data-sf-field": "Invoice_Required__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name as it should appear in marketing",
+        "element": "input",
+        "attributes": {
+          "id": "partner-company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "First name",
+        "element": "input",
+        "attributes": {
+          "id": "partner-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Surname",
+        "element": "input",
+        "attributes": {
+          "id": "partner-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Title",
+        "label": "Job title",
+        "element": "input",
+        "attributes": {
+          "id": "partner-title",
+          "required": "",
+          "autocomplete": "organization-title",
+          "data-sf-field": "Title"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Contact email",
+        "element": "input",
+        "attributes": {
+          "id": "partner-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Contact telephone",
+        "element": "input",
+        "attributes": {
+          "id": "partner-phone",
+          "type": "tel",
+          "required": "",
+          "autocomplete": "tel",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Headline Partner",
+          "data-package-price": "30000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Gold Partner",
+          "data-package-price": "15000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Premier Partner",
+          "data-package-price": "7000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Champion Partner",
+          "data-package-price": "2000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Zone Sponsor",
+          "data-package-price": "5000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Community Stage Sponsor",
+          "data-package-price": "6000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Podcast Corner Sponsor",
+          "data-package-price": "6000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Event Guide Sponsor",
+          "data-package-price": "5000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Delegate Tote Bag Sponsor",
+          "data-package-price": "5000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Helmet Bay Sponsor",
+          "data-package-price": "3000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Auditorium Sponsor",
+          "data-package-price": "5000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Live Stream Sponsor",
+          "data-package-price": "6000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Wristband Sponsor",
+          "data-package-price": "3000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Sponsor_Package__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Escapade Sponsor",
+          "data-package-price": "9000",
+          "data-sf-field": "Sponsor_Package__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Exhibitor_Hall_Schedule__c",
+        "label": "For garage exhibits and large stands in the halls, setting up between 14:00-18:00 hrs on Sunday is required. Please indicate you are able to do this.",
+        "element": "select",
+        "attributes": {
+          "id": "partner-sunday",
+          "required": "",
+          "data-sf-field": "Exhibitor_Hall_Schedule__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Stand_Power__c",
+        "label": "Will you require power on your stand?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-power",
+          "required": "",
+          "data-sf-field": "Stand_Power__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Stand_Equipment__c",
+        "label": "Equipment beyond display stands and laptops",
+        "element": "textarea",
+        "attributes": {
+          "id": "partner-equipment",
+          "required": "",
+          "placeholder": "State None if nothing further",
+          "data-sf-field": "Stand_Equipment__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Heavy_Vehicle_Required__c",
+        "label": "Will you bring cars, tractors or heavy items that need to be dropped off on a flatbed or trailer?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-heavy-vehicle",
+          "required": "",
+          "data-sf-field": "Heavy_Vehicle_Required__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          },
+          {
+            "value": "Not known yet",
+            "label": "Not known yet"
+          }
+        ]
+      },
+      {
+        "api": "Has_Special_Requirements__c",
+        "label": "Do you have any accessibility requirements?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-accessibility",
+          "required": "",
+          "data-sf-field": "Has_Special_Requirements__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Stand_Special_Requirements__c",
+        "label": "Accessibility details",
+        "element": "textarea",
+        "attributes": {
+          "id": "partner-accessibility-details",
+          "data-required-when-visible": "",
+          "data-sf-field": "Stand_Special_Requirements__c"
+        },
+        "conditions": [
+          {
+            "class": "field conditional",
+            "data-conditional-for": "partner-accessibility",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Planned_Exhibitor_Count__c",
+        "label": "How many people do you currently plan to bring, including yourself?",
+        "element": "input",
+        "attributes": {
+          "id": "partner-planned-count",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "inputmode": "numeric",
+          "required": "",
+          "data-sf-field": "Planned_Exhibitor_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Stand_Extra_Notes__c",
+        "label": "Anything else to share about your space?",
+        "element": "textarea",
+        "attributes": {
+          "id": "partner-extra-notes",
+          "required": "",
+          "placeholder": "State None if there is nothing further",
+          "data-sf-field": "Stand_Extra_Notes__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Quote_Required_for_PO__c",
+        "label": "Do you require a quotation before an invoice can be raised?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-quote",
+          "required": "",
+          "data-sf-field": "Quote_Required_for_PO__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Payment_Method__c",
+        "label": "Do you require an invoice to be raised, or will you make payment by Stripe?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-payment-method",
+          "required": "",
+          "data-sf-field": "Payment_Method__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Bank transfer",
+            "label": "Yes — invoice and payment by bank transfer"
+          },
+          {
+            "value": "Stripe",
+            "label": "No — payment will be via Stripe"
+          }
+        ]
+      },
+      {
+        "api": "Purchase_Order__c",
+        "label": "Do you require a purchase order or reference before an invoice can be issued?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-po",
+          "required": "",
+          "data-sf-field": "Purchase_Order__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Purchase_Order_Number__c",
+        "label": "Purchase order or reference details",
+        "element": "input",
+        "attributes": {
+          "id": "partner-po-number",
+          "data-required-when-visible": "",
+          "data-sf-field": "Purchase_Order_Number__c"
+        },
+        "conditions": [
+          {
+            "class": "field full conditional",
+            "data-conditional-for": "partner-po",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Supplier_Agreement_Required__c",
+        "label": "Will a supplier agreement be required?",
+        "element": "select",
+        "attributes": {
+          "id": "partner-supplier-agreement",
+          "required": "",
+          "data-sf-field": "Supplier_Agreement_Required__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          },
+          {
+            "value": "Don't know",
+            "label": "Don't know"
+          }
+        ]
+      },
+      {
+        "api": "Invoiced_Company__c",
+        "label": "Legal organisation name for quotation and invoicing",
+        "element": "input",
+        "attributes": {
+          "id": "partner-invoice-company",
+          "required": "",
+          "data-sf-field": "Invoiced_Company__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Trading_Name__c",
+        "label": "Trading name, if different",
+        "element": "input",
+        "attributes": {
+          "id": "partner-trading-name",
+          "data-sf-field": "Trading_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoice_Address__c",
+        "label": "Billing address, including postcode",
+        "element": "textarea",
+        "attributes": {
+          "id": "partner-invoice-address",
+          "required": "",
+          "data-sf-field": "Invoice_Address__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoiced_Person__c",
+        "label": "Finance contact name",
+        "element": "input",
+        "attributes": {
+          "id": "partner-invoice-person",
+          "required": "",
+          "data-sf-field": "Invoiced_Person__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoiced_Email__c",
+        "label": "Finance contact email address",
+        "element": "input",
+        "attributes": {
+          "id": "partner-invoice-email",
+          "type": "email",
+          "required": "",
+          "data-sf-field": "Invoiced_Email__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoice_Contact_Phone__c",
+        "label": "Finance contact telephone number",
+        "element": "input",
+        "attributes": {
+          "id": "partner-invoice-phone",
+          "type": "tel",
+          "required": "",
+          "data-sf-field": "Invoice_Contact_Phone__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Invoice_Additional_Information__c",
+        "label": "Additional quotation or invoice information",
+        "element": "textarea",
+        "attributes": {
+          "id": "partner-invoice-additional-information",
+          "data-required-when-visible": "",
+          "data-sf-field": "Invoice_Additional_Information__c"
+        },
+        "conditions": [
+          {
+            "class": "field full conditional",
+            "data-conditional-for": "partner-invoice-additional-required",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "partner-declaration-name",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "partner-declaration-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Terms_and_Conditions__c",
+        "label": "I have read and agree to the NTE27 Privacy Policy .",
+        "element": "input",
+        "attributes": {
+          "id": "partner-terms",
+          "type": "checkbox",
+          "required": "",
+          "data-sf-field": "Terms_and_Conditions__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "id": "partner-day-contact-same",
+          "required": ""
+        },
+        "label": "Will the applicant be the main contact on the day of NTE27?",
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "attributes": {
+          "id": "partner-day-first-name",
+          "maxlength": "40",
+          "data-required-when-visible": "",
+          "autocomplete": "given-name"
+        },
+        "label": "First name",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "partner-day-last-name",
+          "maxlength": "80",
+          "data-required-when-visible": "",
+          "autocomplete": "family-name"
+        },
+        "label": "Surname",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "partner-day-title",
+          "maxlength": "128",
+          "data-required-when-visible": ""
+        },
+        "label": "Job title",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "partner-day-email",
+          "type": "email",
+          "maxlength": "80",
+          "data-required-when-visible": ""
+        },
+        "label": "Email address",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "partner-day-mobile",
+          "type": "tel",
+          "maxlength": "40",
+          "data-required-when-visible": ""
+        },
+        "label": "Mobile phone number",
+        "options": []
+      },
+      {
+        "attributes": {
+          "id": "partner-invoice-additional-required",
+          "required": ""
+        },
+        "label": "Is there any additional information that must appear on the quotation or invoice?",
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit partner / sponsor application",
+        "options": []
+      }
+    ],
+    "headings": [
+      "About NTE27",
+      "1 Organisation and applicant",
+      "Contact on the day of NTE27",
+      "2 Packages",
+      "3 Exhibition space",
+      "4 Quotation and invoicing",
+      "5 Declaration",
+      "Partnership and sponsorship emails"
+    ],
+    "requiredGroups": [
+      {
+        "class": "options-list",
+        "role": "group",
+        "aria-labelledby": "partner-packages-heading",
+        "data-required-checkbox-group": "",
+        "data-required-message": "Please select at least one package."
+      }
+    ]
+  },
+  {
+    "path": "partner-sponsor-interest.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "partner-eoi",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your expression of interest. A member of the Mission Community team will contact you to explore the most suitable NTE27 opportunities."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Partner / Sponsor Expression of Interest",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "partner-sponsor-eoi-v3",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Organisation_Type__c",
+        "label": "Organisation type",
+        "element": "select",
+        "attributes": {
+          "id": "eoi-organisation-type",
+          "required": "",
+          "data-sf-field": "Organisation_Type__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Charity - COBSEO member",
+            "label": "Charity - COBSEO member"
+          },
+          {
+            "value": "Charity - Non COBSEO member",
+            "label": "Charity - Non COBSEO member"
+          },
+          {
+            "value": "Government Department or Agency",
+            "label": "Government Department or Agency"
+          },
+          {
+            "value": "Industry Body / Trade Association",
+            "label": "Industry Body / Trade Association"
+          },
+          {
+            "value": "Employer - Automotive",
+            "label": "Employer - Automotive"
+          },
+          {
+            "value": "Employer - Clean Energy",
+            "label": "Employer - Clean Energy"
+          },
+          {
+            "value": "Employer - Blue Light Services / NHS",
+            "label": "Employer - Blue Light Services / NHS"
+          },
+          {
+            "value": "Employer - Built Environment",
+            "label": "Employer - Built Environment"
+          },
+          {
+            "value": "Employer - Manufacturing",
+            "label": "Employer - Manufacturing"
+          },
+          {
+            "value": "Employer - Defence and Security",
+            "label": "Employer - Defence and Security"
+          },
+          {
+            "value": "Employer - Financial and Professional Services",
+            "label": "Employer - Financial and Professional Services"
+          },
+          {
+            "value": "Employer - Digital and Technologies",
+            "label": "Employer - Digital and Technologies"
+          },
+          {
+            "value": "Employer - Training and Education",
+            "label": "Employer - Training and Education"
+          },
+          {
+            "value": "Employer - Land-based",
+            "label": "Employer - Land-based"
+          },
+          {
+            "value": "Employer - Other sector",
+            "label": "Employer - Other sector"
+          }
+        ]
+      },
+      {
+        "api": "Website",
+        "label": "Website",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-website",
+          "type": "url",
+          "autocomplete": "url",
+          "placeholder": "https://",
+          "data-sf-field": "Website"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "First name",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Surname",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Title",
+        "label": "Job title",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-title",
+          "required": "",
+          "autocomplete": "organization-title",
+          "data-sf-field": "Title"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Email address",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Telephone number",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-phone",
+          "type": "tel",
+          "required": "",
+          "autocomplete": "tel",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partner_Interest_Type__c",
+        "label": "Are you interested in partnering, sponsoring, or discussing both?",
+        "element": "select",
+        "attributes": {
+          "id": "eoi-interest-type",
+          "required": "",
+          "data-sf-field": "Partner_Interest_Type__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Partnership",
+            "label": "Partnership"
+          },
+          {
+            "value": "Sponsorship",
+            "label": "Sponsorship"
+          },
+          {
+            "value": "Both - open to discussion",
+            "label": "Both - open to discussion"
+          },
+          {
+            "value": "Not sure - I would like advice",
+            "label": "Not sure - I would like advice"
+          }
+        ]
+      },
+      {
+        "api": "Partner_Interest_Areas__c",
+        "label": "Strategic event partnership Support the wider NTE27 programme and Armed Forces community.",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Strategic event partnership",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partner_Interest_Areas__c",
+        "label": "Event zone sponsorship Align your organisation with a sector or themed zone.",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Event zone sponsorship",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partner_Interest_Areas__c",
+        "label": "Stage, content or thought leadership Contribute expertise, insight or stories to the event programme.",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Stage, content or thought leadership",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partner_Interest_Areas__c",
+        "label": "Branding and delegate experience Explore event-guide, tote-bag, wristband and other visibility opportunities.",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Branding and delegate experience",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partner_Interest_Areas__c",
+        "label": "Troops' Track Day Discuss opportunities connected with the Silverstone track experience.",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Troops' Track Day",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partner_Interest_Areas__c",
+        "label": "Other or not sure Tell us what you have in mind below and we will help shape the conversation.",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Other or not sure",
+          "data-sf-field": "Partner_Interest_Areas__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Partnership_Interest_Detail__c",
+        "label": "Additional comments regarding desired sponsorship or partnership",
+        "element": "textarea",
+        "attributes": {
+          "id": "eoi-interest-detail",
+          "required": "",
+          "data-sf-field": "Partnership_Interest_Detail__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Preferred_Contact_Method__c",
+        "label": "Preferred contact method",
+        "element": "select",
+        "attributes": {
+          "id": "eoi-contact-method",
+          "required": "",
+          "data-sf-field": "Preferred_Contact_Method__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Email",
+            "label": "Email"
+          },
+          {
+            "value": "Telephone",
+            "label": "Telephone"
+          },
+          {
+            "value": "Video call",
+            "label": "Video call"
+          },
+          {
+            "value": "No preference",
+            "label": "No preference"
+          }
+        ]
+      },
+      {
+        "api": "Preferred_Contact_Time__c",
+        "label": "Best time to contact you",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-contact-time",
+          "data-sf-field": "Preferred_Contact_Time__c",
+          "placeholder": "For example, weekday afternoons"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Event_Discovery_Source__c",
+        "label": "How did you hear about NTE27?",
+        "element": "select",
+        "attributes": {
+          "id": "eoi-discovery",
+          "required": "",
+          "data-sf-field": "Event_Discovery_Source__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Previous NTE event",
+            "label": "Previous NTE event"
+          },
+          {
+            "value": "NTE webinar or brochure",
+            "label": "NTE webinar or brochure"
+          },
+          {
+            "value": "Email invitation",
+            "label": "Email invitation"
+          },
+          {
+            "value": "Recommendation or word of mouth",
+            "label": "Recommendation or word of mouth"
+          },
+          {
+            "value": "National Transition Event website",
+            "label": "National Transition Event website"
+          },
+          {
+            "value": "Mission Community website",
+            "label": "Mission Community website"
+          },
+          {
+            "value": "LinkedIn",
+            "label": "LinkedIn"
+          },
+          {
+            "value": "Other social media",
+            "label": "Other social media"
+          },
+          {
+            "value": "Other",
+            "label": "Other"
+          }
+        ]
+      },
+      {
+        "api": "Contact_Consent__c",
+        "label": "I agree that Mission Community may contact me about NTE27 partnership and sponsorship opportunities.",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-consent",
+          "type": "checkbox",
+          "value": "Yes",
+          "required": "",
+          "data-sf-field": "Contact_Consent__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "eoi-signature-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit expression of interest",
+        "options": []
+      }
+    ],
+    "headings": [
+      "1 Your organisation",
+      "2 Your interest in NTE27",
+      "3 How should we contact you?",
+      "Messages sent after submission"
+    ],
+    "requiredGroups": [
+      {
+        "class": "choice-grid",
+        "role": "group",
+        "aria-labelledby": "eoi-opportunities-label",
+        "data-required-checkbox-group": "",
+        "data-required-message": "Please select at least one area of interest."
+      }
+    ]
+  },
+  {
+    "path": "partner-sponsor-staff-update.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "partner-staff-update",
+      "data-lead-source": "Customer Event",
+      "data-use-default-rule": "0",
+      "data-confirmation-preview": "Thank you. We have received your partner / sponsor staff details."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Partner / Sponsor Staff Update",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "partner-sponsor-staff-update-v1",
+          "data-sf-field": "Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Staff_Update_Audience__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Partner / sponsor",
+          "data-sf-field": "Staff_Update_Audience__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NTE_Event_Code__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-sf-field": "NTE_Event_Code__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Planned_Exhibitor_Count__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "partner-staff-total",
+          "data-sf-field": "Planned_Exhibitor_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Staff_Base_Names__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-copy-value-from": "partner-staff-names",
+          "data-sf-field": "Staff_Base_Names__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "Organisation name",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-company",
+          "required": "",
+          "autocomplete": "organization",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "Your first name",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Your surname",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Your email address",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Target_Booking_Reference__c",
+        "label": "Booking reference",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-reference",
+          "required": "",
+          "autocomplete": "off",
+          "pattern": "NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]",
+          "data-sf-field": "Target_Booking_Reference__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Total_Staff_Count__c",
+        "label": "Final number attending, including you",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-total",
+          "type": "number",
+          "min": "1",
+          "max": "99",
+          "step": "1",
+          "inputmode": "numeric",
+          "required": "",
+          "data-sf-field": "Total_Staff_Count__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "partner-staff-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "id": "partner-staff-names",
+          "required": "",
+          "placeholder": "Enter one name per line."
+        },
+        "label": "Full names of everyone attending",
+        "options": []
+      },
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit staff details",
+        "options": []
+      }
+    ],
+    "headings": [
+      "Before you begin",
+      "1 Find your booking",
+      "2 Final staff details",
+      "Staff details acknowledgement"
+    ],
+    "requiredGroups": []
+  },
+  {
+    "path": "volunteer-application.html",
+    "attributes": {
+      "class": "main-column",
+      "data-web-to-lead": "",
+      "data-form-kind": "volunteer",
+      "data-require-code-of-conduct": "",
+      "data-lead-source": "Volunteer Application",
+      "data-use-default-rule": "0",
+      "data-return-path": "volunteer-thank-you.html",
+      "data-confirmation-preview": "Thank you. We have received your volunteer application and a member of the Mission Motorsport team will be in touch."
+    },
+    "fields": [
+      {
+        "api": "Web_Form_Type__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Volunteer Application",
+          "data-sf-field": "Web_Form_Type__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Form_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "volunteer-application-v3",
+          "data-sf-field": "Volunteer_Form_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Company",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "Individual Volunteer",
+          "data-sf-field": "Company"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Interested_in_Volunteering__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "value": "1",
+          "data-sf-field": "Interested_in_Volunteering__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Consent_PII__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-checkbox-copy-from": "volunteer-consent",
+          "data-sf-field": "Consent_PII__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Consent_Contact__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-checkbox-copy-from": "volunteer-consent",
+          "data-sf-field": "Consent_Contact__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Consent_Promotion__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "data-checkbox-copy-from": "volunteer-consent",
+          "data-sf-field": "Consent_Promotion__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "FirstName",
+        "label": "Forename(s)",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-first-name",
+          "required": "",
+          "autocomplete": "given-name",
+          "data-sf-field": "FirstName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "LastName",
+        "label": "Surname",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-last-name",
+          "required": "",
+          "autocomplete": "family-name",
+          "data-sf-field": "LastName"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Date_of_Birth__c",
+        "label": "Date of birth",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-dob",
+          "type": "date",
+          "required": "",
+          "autocomplete": "bday",
+          "data-sf-field": "Date_of_Birth__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "MobilePhone",
+        "label": "Mobile number",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-mobile",
+          "type": "tel",
+          "required": "",
+          "autocomplete": "tel",
+          "inputmode": "tel",
+          "data-sf-field": "MobilePhone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Phone",
+        "label": "Home telephone",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-home-phone",
+          "type": "tel",
+          "autocomplete": "tel",
+          "inputmode": "tel",
+          "data-sf-field": "Phone"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Email",
+        "label": "Email address",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-email",
+          "type": "email",
+          "required": "",
+          "autocomplete": "email",
+          "data-sf-field": "Email"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Street",
+        "label": "Address",
+        "element": "textarea",
+        "attributes": {
+          "id": "volunteer-address",
+          "required": "",
+          "autocomplete": "street-address",
+          "data-sf-field": "Street"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "PostalCode",
+        "label": "Postcode",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-postcode",
+          "required": "",
+          "autocomplete": "postal-code",
+          "data-sf-field": "PostalCode"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NOK_Name__c",
+        "label": "Full name",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-emergency-name",
+          "required": "",
+          "autocomplete": "off",
+          "data-sf-field": "NOK_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NOK_Relationship__c",
+        "label": "Relationship to you",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-emergency-relationship",
+          "required": "",
+          "autocomplete": "off",
+          "data-sf-field": "NOK_Relationship__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NOK_Phone__c",
+        "label": "Telephone number",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-emergency-phone",
+          "type": "tel",
+          "required": "",
+          "inputmode": "tel",
+          "autocomplete": "off",
+          "data-sf-field": "NOK_Phone__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "NOK_Address__c",
+        "label": "Emergency contact’s address",
+        "element": "textarea",
+        "attributes": {
+          "id": "volunteer-emergency-address",
+          "required": "",
+          "data-required-when-visible": "",
+          "autocomplete": "section-emergency street-address",
+          "data-sf-field": "NOK_Address__c"
+        },
+        "conditions": [
+          {
+            "class": "field full",
+            "id": "volunteer-emergency-address-field",
+            "data-conditional-for": "volunteer-emergency-same-address",
+            "data-conditional-value": "No"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "NOK_Postcode__c",
+        "label": "Postcode",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-emergency-postcode",
+          "required": "",
+          "data-required-when-visible": "",
+          "autocomplete": "section-emergency postal-code",
+          "data-sf-field": "NOK_Postcode__c"
+        },
+        "conditions": [
+          {
+            "class": "field",
+            "id": "volunteer-emergency-postcode-field",
+            "data-conditional-for": "volunteer-emergency-same-address",
+            "data-conditional-value": "No"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "NOK_Address__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "disabled": "disabled",
+          "data-copy-value-from": "volunteer-address",
+          "data-sf-field": "NOK_Address__c"
+        },
+        "conditions": [
+          {
+            "data-conditional-for": "volunteer-emergency-same-address",
+            "data-conditional-value": "Yes",
+            "hidden": ""
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "NOK_Postcode__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "disabled": "disabled",
+          "data-copy-value-from": "volunteer-postcode",
+          "data-sf-field": "NOK_Postcode__c"
+        },
+        "conditions": [
+          {
+            "data-conditional-for": "volunteer-emergency-same-address",
+            "data-conditional-value": "Yes",
+            "hidden": ""
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Armed_Forces_Service__c",
+        "label": "Have you served, or are you currently serving, in HM Armed Forces?",
+        "element": "select",
+        "attributes": {
+          "id": "volunteer-forces-service",
+          "required": "",
+          "data-sf-field": "Volunteer_Armed_Forces_Service__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Volunteer_Service_Details__c",
+        "label": "Service, unit, station or ship",
+        "element": "textarea",
+        "attributes": {
+          "id": "volunteer-service-details",
+          "data-sf-field": "Volunteer_Service_Details__c"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "volunteer-forces-service",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Service_Dates__c",
+        "label": "Dates in Service",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-service-dates",
+          "data-sf-field": "Volunteer_Service_Dates__c",
+          "placeholder": "For example, 2008 to 2016"
+        },
+        "conditions": [
+          {
+            "class": "conditional",
+            "data-conditional-for": "volunteer-forces-service",
+            "data-conditional-value": "Yes"
+          }
+        ],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Fundraising",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Fundraising",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Transport and Logistics Car, van with trailer, minibus",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Transport and Logistics",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Motorsport event support",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Motorsport Event Support",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Marshalling",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Marshalling",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Community outreach / awareness",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Community Outreach / Awareness",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Professional skills HR, legal, finance, IT or project management",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Professional Skills",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Mentoring and coaching",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Mentoring & Coaching",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Team area co-ordinator",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Team Area Co-Ordinator",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Vehicle maintenance / repairs in Wantage",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Vehicle Maintenance / Repairs (Wantage)",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Pop up shop",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Pop up shop",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Storekeeping in Wantage",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Storekeeping (Wantage)",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Opportunities__c",
+        "label": "Maintenance / DIY in Wantage",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Maintenance / DIY (Wantage)",
+          "data-sf-field": "Volunteer_Opportunities__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Fundraising",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Fundraising",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Transport and Logistics Car, van with trailer, minibus",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Transport and Logistics",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Motorsport event support",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Motorsport Event Support",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Marshalling",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Marshalling",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Community outreach / awareness",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Community Outreach / Awareness",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Professional skills HR, legal, finance, IT or project management",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Professional Skills",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Mentoring and coaching",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Mentoring & Coaching",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Team area co-ordinator",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Team Area Co-Ordinator",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Vehicle maintenance / repairs in Wantage",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Vehicle Maintenance / Repairs (Wantage)",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Pop up shop",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Pop up shop",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Storekeeping in Wantage",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Storekeeping (Wantage)",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Skills__c",
+        "label": "Maintenance / DIY in Wantage",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Maintenance / DIY (Wantage)",
+          "data-sf-field": "Volunteer_Skills__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "East Midlands",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "East Midlands",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "Greater London",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Greater London",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "North East England",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "North East England",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "North West England",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "North West England",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "Scotland",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Scotland",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "South West England",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "South West England",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "South East England",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "South East England",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "Wales",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Wales",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "West Midlands",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "West Midlands",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Travel_Regions__c",
+        "label": "Yorkshire & the Humber",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Yorkshire & the Humber",
+          "data-sf-field": "Volunteer_Travel_Regions__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_DBS_Willing__c",
+        "label": "Would you be willing to complete a DBS check if the role requires one?",
+        "element": "select",
+        "attributes": {
+          "id": "volunteer-dbs",
+          "required": "",
+          "data-sf-field": "Volunteer_DBS_Willing__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Volunteer_Hours__c",
+        "label": "0–4",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "0-4",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Hours__c",
+        "label": "4–8",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "4-8",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Hours__c",
+        "label": "8–16",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "8-16",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Hours__c",
+        "label": "16+",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "16+",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Hours__c",
+        "label": "Don’t know",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Don't know",
+          "data-sf-field": "Volunteer_Hours__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Availability__c",
+        "label": "Weekdays",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Weekdays",
+          "data-sf-field": "Volunteer_Availability__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Availability__c",
+        "label": "Weekends",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Weekends",
+          "data-sf-field": "Volunteer_Availability__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Availability__c",
+        "label": "Any",
+        "element": "input",
+        "attributes": {
+          "type": "checkbox",
+          "value": "Any",
+          "data-sf-field": "Volunteer_Availability__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Code_Consent__c",
+        "label": "I have read and understood the Code of Conduct and agree to follow it.",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-conduct-acknowledgement",
+          "type": "checkbox",
+          "required": "",
+          "disabled": "disabled",
+          "autocomplete": "off",
+          "value": "1",
+          "data-conduct-acknowledgement": "",
+          "data-sf-field": "Volunteer_Code_Consent__c",
+          "aria-describedby": "volunteer-conduct-status"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Code_Version__c",
+        "label": "",
+        "element": "input",
+        "attributes": {
+          "type": "hidden",
+          "disabled": "disabled",
+          "data-conduct-version": "",
+          "data-sf-field": "Volunteer_Code_Version__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Volunteer_Consent__c",
+        "label": "Do you consent to Mission Motorsport using your personal information, contacting you about suitable opportunities, using approved images or stories for promotion, and using relevant medical information where needed?",
+        "element": "select",
+        "attributes": {
+          "id": "volunteer-consent",
+          "required": "",
+          "data-sf-field": "Volunteer_Consent__c"
+        },
+        "conditions": [],
+        "options": [
+          {
+            "value": "",
+            "label": "Select"
+          },
+          {
+            "value": "Yes",
+            "label": "Yes"
+          },
+          {
+            "value": "No",
+            "label": "No"
+          }
+        ]
+      },
+      {
+        "api": "Declaration_Name__c",
+        "label": "Digital signature (full name)",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-signature",
+          "required": "",
+          "autocomplete": "name",
+          "data-sf-field": "Declaration_Name__c"
+        },
+        "conditions": [],
+        "options": []
+      },
+      {
+        "api": "Declaration_Date__c",
+        "label": "Date",
+        "element": "input",
+        "attributes": {
+          "id": "volunteer-signature-date",
+          "type": "date",
+          "required": "",
+          "data-sf-field": "Declaration_Date__c"
+        },
+        "conditions": [],
+        "options": []
+      }
+    ],
+    "logicalControls": [
+      {
+        "attributes": {
+          "id": "volunteer-emergency-same-address",
+          "type": "checkbox",
+          "aria-controls": "volunteer-emergency-address-field volunteer-emergency-postcode-field"
+        },
+        "label": "",
+        "options": []
+      },
+      {
+        "attributes": {
+          "class": "button",
+          "type": "submit"
+        },
+        "label": "Submit volunteer application",
+        "options": []
+      }
+    ],
+    "headings": [
+      "1 Your details",
+      "2 Emergency contact",
+      "3 Armed Forces service",
+      "4 How you would like to help",
+      "Which volunteering opportunities interest you?",
+      "Which skills or experience could you offer?",
+      "Where are you willing to travel?",
+      "5 Availability",
+      "Hours willing to give per month",
+      "Preference",
+      "6 Privacy and declaration",
+      "Volunteer Code of Conduct",
+      "Volunteer application emails"
+    ],
+    "requiredGroups": [
+      {
+        "class": "choice-fieldset",
+        "data-required-checkbox-group": "",
+        "data-required-message": "Please select at least one volunteering opportunity."
+      },
+      {
+        "class": "choice-fieldset",
+        "data-required-checkbox-group": "",
+        "data-required-message": "Please select at least one skill or area of experience."
+      },
+      {
+        "class": "choice-fieldset",
+        "data-required-checkbox-group": "",
+        "data-required-message": "Please select at least one region."
+      },
+      {
+        "class": "choice-fieldset",
+        "data-required-checkbox-group": "",
+        "data-single-choice-group": "",
+        "data-required-message": "Please select the hours you are willing to give per month."
+      },
+      {
+        "class": "choice-fieldset",
+        "data-required-checkbox-group": "",
+        "data-exclusive-choice": "Any",
+        "data-required-message": "Please select your availability preference."
+      }
+    ]
+  }
+]

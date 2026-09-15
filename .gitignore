@@ -14,3 +14,8 @@ tmp/
 *.pem
 __pycache__/
 *.pyc
+.codex/
+.agents/
+.venv/
+*.eml
+*.mbox

@@ -1,0 +1,2488 @@
+{
+  "verifiedAt": "2026-09-11T16:00:40.120840+00:00",
+  "proposal": 19,
+  "environment": "MMUAT sandbox",
+  "orgId": "00DAd00000A95VlMAJ",
+  "descriptionForNewRequests": "NTE booking \u00b7 [booking reference]",
+  "actualRelease": {
+    "id": "0AfAd00000Stkq7KAB",
+    "status": "Succeeded",
+    "success": true,
+    "done": true,
+    "checkOnly": false,
+    "completedDate": "2026-09-11T15:52:21.000Z",
+    "numberComponentsDeployed": 2,
+    "numberComponentsTotal": 2,
+    "numberComponentErrors": 0,
+    "numberTestsCompleted": 15,
+    "numberTestsTotal": 15,
+    "numberTestErrors": 0
+  },
+  "fullValidation": {
+    "id": "0AfAd00000Str6nKAB",
+    "status": "Succeeded",
+    "success": true,
+    "done": true,
+    "checkOnly": true,
+    "completedDate": "2026-09-11T15:59:52.000Z",
+    "numberComponentsDeployed": 470,
+    "numberComponentsTotal": 470,
+    "numberComponentErrors": 0,
+    "numberTestsCompleted": 307,
+    "numberTestsTotal": 307,
+    "numberTestErrors": 0
+  },
+  "matchingMembers": 470,
+  "matchingSourceAndManifestHashes": 534,
+  "aggregateSHA256": "c93805b270696d1cf9534cf55a7d4e16b60a927e9749c9213f6c797d44a2adbd",
+  "aggregateFormat": "SHA256 of UTF-8 compact JSON sourceHashes sorted by path",
+  "sourceHashes": {
+    "force-app/main/default/applications/NTE_Management.app-meta.xml": "ed1e04d3c55f441c8ebad04babab1f192ef48e375816753a76e73bc53cd8b32e",
+    "force-app/main/default/aura/NTE_OneRegionHomeTemplate/NTE_OneRegionHomeTemplate.cmp": "c53b2d6c0c7e5ab2be5c55777f517e587395b27f113479e832e97db171ae52fa",
+    "force-app/main/default/aura/NTE_OneRegionHomeTemplate/NTE_OneRegionHomeTemplate.cmp-meta.xml": "6caf1f400d694e333564fa2bcb767b60344bd1918571ae7008c812a23ac6dff3",
+    "force-app/main/default/aura/NTE_OneRegionHomeTemplate/NTE_OneRegionHomeTemplate.css": "2d3496f96cb364a0e5d1339a5cfce8b2b9681ab6ae6e59cd61825a429e600183",
+    "force-app/main/default/aura/NTE_OneRegionHomeTemplate/NTE_OneRegionHomeTemplate.design": "e12578556b9586cd7d02c75828a35405cbdd7bad83f62ff909fd3661a4ef5b13",
+    "force-app/main/default/classes/NTEBookingContactService.cls": "70e3e3a22d488f55a81ef27ef7918edeb1350f0424664f9339ee8ea793a5291e",
+    "force-app/main/default/classes/NTEBookingContactService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEBookingPaymentEmailTest.cls": "86db5ed5764ec5329be0a461f8c6585d412b64500023e2c7fa772ca8b7c368da",
+    "force-app/main/default/classes/NTEBookingPaymentEmailTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEConversionFlowTest.cls": "7c2dd7f71d205046191ce93590ac4a8a320f3571c21a1dfbffd8e5fa4ac1d802",
+    "force-app/main/default/classes/NTEConversionFlowTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEEmailDispatchService.cls": "00b79faf437f01e6a5fdde3c37fff46070fdfed79c16acb418a3aa434a13f1f7",
+    "force-app/main/default/classes/NTEEmailDispatchService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEEmailDispatchServiceTest.cls": "ec45ee04c582d20b01409e8bebb148405b9529273008ed088ab0f2f840bf7ba9",
+    "force-app/main/default/classes/NTEEmailDispatchServiceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEExhibitorApprovalEmailService.cls": "9ab0f938698a65399557df082a886a927aa2ed5fa01e52234e4e9f651fd06b88",
+    "force-app/main/default/classes/NTEExhibitorApprovalEmailService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEExhibitorApprovalEmailServiceTest.cls": "007076a762e64b24eee36c6757b5493fd66a944a1e14a1ea4a308200e2972b3c",
+    "force-app/main/default/classes/NTEExhibitorApprovalEmailServiceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEInboundLeadService.cls": "e408493d9975b6eaad9225449d53773b59aa46b0b350156cd4a5b15fdb9f0ba1",
+    "force-app/main/default/classes/NTEInboundLeadService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEInboundLeadServiceTest.cls": "8dfe29149fbea36d861f70481adf8b82d0a97ee677cd496123536a97620e37cd",
+    "force-app/main/default/classes/NTEInboundLeadServiceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEMasterPanelFinanceTest.cls": "1fe4bdfdb7b8c2310414991c7135502c8df122f34f6e8e05285584635d5b4cf1",
+    "force-app/main/default/classes/NTEMasterPanelFinanceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEMasterPanelReadinessTest.cls": "6a9950707bb7ca9bceaf357f1c41d1f81f2ffa4b4b81827aafc7f4d811823cc2",
+    "force-app/main/default/classes/NTEMasterPanelReadinessTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEMetadataReportStressTest.cls": "234a9e01efa53117256240641f26f0ce54d1ad9c5c89ea9eef8daf3df9b1953b",
+    "force-app/main/default/classes/NTEMetadataReportStressTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEPanelStressTest.cls": "2ef286896971152e528c1a4e6d20b69204bd67d72d5a34e9f7d2fd20f02ce3b7",
+    "force-app/main/default/classes/NTEPanelStressTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEPricingService.cls": "0ee23e0de084899c117cadd9c23ab03c88397d00ae3e57ee1eef814e0f9e810a",
+    "force-app/main/default/classes/NTEPricingService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEPricingServiceTest.cls": "fc2652c7ca9fd68c8da1d77a0579fd75b79190d2248dbe689970f63ac3083c57",
+    "force-app/main/default/classes/NTEPricingServiceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEPricingStressTest.cls": "59659e5458c5119cc8baa115a57a53829e1860ce2c1c0ba922eebb6ee829e070",
+    "force-app/main/default/classes/NTEPricingStressTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTERelatedOpportunityController.cls": "4e056c69d247e73433d5c30c157e27f9006efda82c50ed408f9dcf6b12c31227",
+    "force-app/main/default/classes/NTERelatedOpportunityController.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTERelatedOpportunityControllerTest.cls": "62ad0746069f06503b02693303978fc85d7c3393e55553d0c7992efc3ad7b11f",
+    "force-app/main/default/classes/NTERelatedOpportunityControllerTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEStripeBookingService.cls": "d12254b7e5be52e29ffcc78801c120e89acf4f525f1eccabbb3f51d3cad0a6f9",
+    "force-app/main/default/classes/NTEStripeBookingService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEStripeBookingServiceTest.cls": "c7ff1737ddc36524c92c0fa2a1cf3e11148fcd7a9915a1ab0c098998b4683c2f",
+    "force-app/main/default/classes/NTEStripeBookingServiceTest.cls-meta.xml": "17e31f2473b0c9f7048b434edab7d12261a9b8a0b9ede833cb9c3141eeeccb7b",
+    "force-app/main/default/classes/NTEStripeClient.cls": "c17e2c543cdca04213426f306d44fc6460e7db852812d60cc9d2409e3ac4ede4",
+    "force-app/main/default/classes/NTEStripeClient.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEStripeClientTest.cls": "23df3d800393a945a6cdb513fbba576f14254cc240ead9dd17097aba60d709f1",
+    "force-app/main/default/classes/NTEStripeClientTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEUpdateSubmissionJob.cls": "0a9af11abbc9da65179a6fc4cb154dbf6f93644f42e412a169788e4b06033e5d",
+    "force-app/main/default/classes/NTEUpdateSubmissionJob.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEUpdateSubmissionService.cls": "75c9573166cf64857a5ab1a372d78a4f855d6a7b484b6a2c334fc81a49b0f395",
+    "force-app/main/default/classes/NTEUpdateSubmissionService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTEUpdateSubmissionServiceTest.cls": "c0ea14fac75b5f823cff6dad212bf429f0c680a477fbde9bddff9ee0d0a2e1c8",
+    "force-app/main/default/classes/NTEUpdateSubmissionServiceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTE_MasterPanelController.cls": "188fef0467425f5ce5355a2b584da34e5a3b0ed189bf09248775948f41fc468d",
+    "force-app/main/default/classes/NTE_MasterPanelController.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/NTE_MasterPanelControllerTest.cls": "c8988a1bb00cf4c433352dc24a3db16df8f4a1dc0e7f577cf74e86165032e4aa",
+    "force-app/main/default/classes/NTE_MasterPanelControllerTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/VolunteerInboundLeadService.cls": "b328243dbc2ca4bb17883d7717b2ef37d6d10f1e5225cef84688774e3eefd97f",
+    "force-app/main/default/classes/VolunteerInboundLeadService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/classes/VolunteerInboundLeadServiceTest.cls": "38e14af6d0641218f673350fc6d2012d55af02eff484cc4ef9ed5827b9261bb4",
+    "force-app/main/default/classes/VolunteerInboundLeadServiceTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+    "force-app/main/default/contentassets/NTE_Management_Logo.asset": "d116f8ceb9b31bb7306ed0a7966c3e5ac0cc3569cb53e516f993f960c026fee7",
+    "force-app/main/default/contentassets/NTE_Management_Logo.asset-meta.xml": "84189f99439487726e71364669584290d15d3fa675d6203e6668f58bc6935d4d",
+    "force-app/main/default/customMetadata/NTE_Routing_Config.Default.md-meta.xml": "fd437adacd558975b0ed5f22d25729f5e2057fd82716ffc55dae410cbb779d02",
+    "force-app/main/default/customMetadata/NTE_Stripe_Config.Default.md-meta.xml": "74c45558ccb6ffa0ac46e679a6958175ebb9bb33e257bfde1e87b4141868ce20",
+    "force-app/main/default/duplicateRules/Lead.NTE_Web_to_Lead_Duplicate_Report.duplicateRule-meta.xml": "7e3202f9182eeeed4008b93ace9d09ad4a31528e0b201ff4a3234079db11ce48",
+    "force-app/main/default/duplicateRules/Lead.Standard_Rule_for_Leads_with_Duplicate_Contacts.duplicateRule-meta.xml": "7b8c5097d19f744c0d5d3c09be8ba9247bdf7949f918f1d9fc402e27e47070d6",
+    "force-app/main/default/email/unfiled$public/NTE_Complimentary_Exhibitor_Approved.email": "da8ff4296c56829f31341761f450e27cbe352fb33fc0b146980dbefbacd54d54",
+    "force-app/main/default/email/unfiled$public/NTE_Complimentary_Exhibitor_Approved.email-meta.xml": "2496db5d6a8ce283cc71cf4f2d911a9eae0ca83c21beee76055aaafd4088d36b",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Application_Internal.email": "065798ff38698ad5bf8218ab049f45ba74493c0aeb4afd6397c3f61abaeeb9fd",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Application_Internal.email-meta.xml": "c67e51e56e64dad88880f720c6633699201b24da55e606994a716182deca4c9d",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Approved.email": "ef4999891f622bea54de5583a0291f9d82a0e4034e9a6917445ed3c898167d2e",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Approved.email-meta.xml": "f38f0cb86e736dab566403e540f104400f4f22946c0aba9ce1f4ad937e61d214",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_EOI_Acknowledgement.email": "9cbaee13219e620eb055b2672b323b1dde20b5b4e17e1acd38542eea08a24561",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_EOI_Acknowledgement.email-meta.xml": "21b99aa938ed8806f32a627ae2ccae349a4ff0a46305227031bb4eb103c73dd6",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_EOI_Internal.email": "1730feebb956f0dc19ac523779e5ca1de792100dd2d231004a2735241c14cb4e",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_EOI_Internal.email-meta.xml": "ca644f24425a1bd9e623449d826292cda55e5ab932e86c44d34b613a62d5b70f",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Payment_Confirmed.email": "a7f812b1aad56cc75bc8c900be6ab12674e1dfca9a255f4eab9deee950bbea56",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Payment_Confirmed.email-meta.xml": "cb8605f635136a2776043ba013fe20b9f3ca3e39b615d4992cda6331dafad6af",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Staff_Update_Acknowledgement.email": "509b81dd82f53441e9a298bf50946bbc5413f4c62047c1fee610007c1506c847",
+    "force-app/main/default/email/unfiled$public/NTE_Exhibitor_Staff_Update_Acknowledgement.email-meta.xml": "f452ecbb41ce3b8e2fbe8ee02bd1cc9cc5b4853d16c1efeca0f4d3e222ad83de",
+    "force-app/main/default/email/unfiled$public/NTE_Guest_Registration_Acknowledgement.email": "ed4371b3aca7c1f87c1c5b444f3b544cd8cc166555990437407353962b7f9a26",
+    "force-app/main/default/email/unfiled$public/NTE_Guest_Registration_Acknowledgement.email-meta.xml": "f972591250a2e7b3e0522ef4db85204367934e65a32c989d328d036042d21fad",
+    "force-app/main/default/email/unfiled$public/NTE_Guest_Registration_Internal.email": "8accab3b8ac4c26408df77b2ffcc1e70fb70f431dd8bcdf4c6bcd38c6af89369",
+    "force-app/main/default/email/unfiled$public/NTE_Guest_Registration_Internal.email-meta.xml": "ba749c68497d6b96c42d7867db2f8f8cbe419ed0ebf65222303331752089501d",
+    "force-app/main/default/email/unfiled$public/NTE_Heavy_Vehicle_Acknowledgement.email": "a730f83b8628afc3b3b7fb384c1c32694c30035fb01c9cfb94c017d719a9b7cf",
+    "force-app/main/default/email/unfiled$public/NTE_Heavy_Vehicle_Acknowledgement.email-meta.xml": "a6fcaebec394f08329106ff3458dce4313aae4f62a9476f25fb7a3758146fbbc",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_Application_Internal.email": "d323aee27deafc925c74c04b433df7db2bdc566b177e94c4ac7c16a178fde2c5",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_Application_Internal.email-meta.xml": "e20e1681cd69eed4ebd596b92cfeac836c71b746eb754203f5e8b245160081ec",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_Approved.email": "8c69299cb57258a38fbe2b2f7560c132a1f889d5bae7fa6ce7a5c3f5aaed0fab",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_Approved.email-meta.xml": "e8ac28c1379001e8a7f121285cb8aed8d83846dc0107801b58204c337c73f71b",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_EOI_Acknowledgement.email": "367c4e9bbce4addccc600149dd611f19139a0f295431ec7ea37f4f91bc1ca712",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_EOI_Acknowledgement.email-meta.xml": "bab6dae492f57a740cfa796f6fdcf8cb5d01905898d31289df5d0c0c18895863",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_EOI_Internal.email": "3ba348c16f8e07e04ba6d6670f81d5a917387e1b39d908802619d8d50177767a",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_EOI_Internal.email-meta.xml": "cbbd033932c8e675bf559d053cea7d0bf15d40704e9a8f2732f17f35874db8a9",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_Payment_Confirmed.email": "e5a0838148f2f0ae30f7fd5e0682603c4c6e5cefac28b7efad97c5f2e54d0d22",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Sponsor_Payment_Confirmed.email-meta.xml": "be22775197c1023670758886d8e4fd403c9d135bcb7aa01263ab9b559845ab19",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Staff_Update_Acknowledgement.email": "1d5000771074b3d91604121c42f5145dd7a39b24f85acc8e948b0c48616d7e5e",
+    "force-app/main/default/email/unfiled$public/NTE_Partner_Staff_Update_Acknowledgement.email-meta.xml": "66f234cf66efc385c4570b90ffa1459c4f6da183598990f4da6e31c1d181d290",
+    "force-app/main/default/email/unfiled$public/NTE_Staff_Update_Acknowledgement.email": "750b74722b3bba62557110fe2d3b9a5e273024bdeca80004a88669d57ad30e92",
+    "force-app/main/default/email/unfiled$public/NTE_Staff_Update_Acknowledgement.email-meta.xml": "9e6876f7538030517233f2fad2e2b6584719fbeb5f539038ebcb2dde31563ed2",
+    "force-app/main/default/email/unfiled$public/Volunteer_Application_Acknowledgement.email": "8f42fe45807282ed3ca117b16510b75bf27bd014dc03bd29f26ea6c1eef3c695",
+    "force-app/main/default/email/unfiled$public/Volunteer_Application_Acknowledgement.email-meta.xml": "8d0b0ea24e41b2536241300b60d4586ecd5d1b10d746c18dff1d73babfc72a61",
+    "force-app/main/default/email/unfiled$public/Volunteer_Application_Internal.email": "47051a03d2c09af1bf5a561e50c7b958e7c7f33452307f6a5a9650c86e64cca4",
+    "force-app/main/default/email/unfiled$public/Volunteer_Application_Internal.email-meta.xml": "171c1724b268ff6dd89d5f99ac747ffa0be9295468f331203844ee0130d51a2c",
+    "force-app/main/default/externalCredentials/NTE_Stripe_Test.externalCredential-meta.xml": "75d54d883bc99966ef7234a00fa394a7b4d026b1818210f1386cbfb6496214a6",
+    "force-app/main/default/flexipages/NTE_Management_Account_Record_Page.flexipage-meta.xml": "cb2492f0f4f5ae0df5a2360f075b0e903fce2bb6db45481efcb77248a76474ab",
+    "force-app/main/default/flexipages/NTE_Management_Contact_Record_Page.flexipage-meta.xml": "614a188cb435b0d9924925342555a1d22836e0ea1a01a07a133133e6fa22e05c",
+    "force-app/main/default/flexipages/NTE_Management_Home.flexipage-meta.xml": "5d2635d0128c59f707a58161dc5509186ea3164f8052f8677636a2cd0d6a3ecd",
+    "force-app/main/default/flexipages/NTE_Management_Lead_Record_Page.flexipage-meta.xml": "d4a12042d24c5dcdd777ab3041475f7034eea535f1f87565c630b767f7fa3145",
+    "force-app/main/default/flexipages/NTE_Management_Opportunity_Record_Page.flexipage-meta.xml": "ad72346cba2f005bc852a948cad30c7c0c9bd9981c69b4fe94f8cb3cd68aa5d5",
+    "force-app/main/default/flows/NTE_Copy_Converted_Lead_to_Opportunity.flow-meta.xml": "6b5307c4ff63937b61ef1e9f56492a41965c4e2dc0d55b827441befed5b9d350",
+    "force-app/main/default/flows/NTE_Inbound_Lead_Routing.flow-meta.xml": "254107004fc92d07a1a7df23e27fa7889e91343c7ecbf3322e0699b6b5bc1436",
+    "force-app/main/default/flows/NTE_Supplementary_Update_Handler.flow-meta.xml": "baad323ab043c543ac9feb0bd32dc80147b0ba66c481a6d28a622ca051248465",
+    "force-app/main/default/flows/Volunteer_Inbound_Lead_Notification.flow-meta.xml": "c30921fa48165b7219b758d1473ea707b7ba5be252845070424d8af943ddc24a",
+    "force-app/main/default/layouts/NTE_Email_Dispatch__c-NTE Email Dispatch.layout-meta.xml": "71a28ffa42652d82072601382cd7a8ea96a2c52db8fcaa479d7cdb19c9e4b6e8",
+    "force-app/main/default/layouts/NTE_Payment_Request__c-NTE Payment Request.layout-meta.xml": "f2af4ba226679d4f7df6806ca3cc7e9749c8a5518b3cd94ec82cec162033f813",
+    "force-app/main/default/lwc/nteManagementHome/nteManagementHome.css": "90dec7e02e2ab7dd5e6d62b492f02f0f950105e46619d4a84e6adb4a26537c74",
+    "force-app/main/default/lwc/nteManagementHome/nteManagementHome.html": "5ae39255bd31e17b73c9db3c1a0eb3db51cb3f057e0250a09ac34ef9febc2627",
+    "force-app/main/default/lwc/nteManagementHome/nteManagementHome.js": "444f24546c42d3384bbad87e601d6eedb53749d19333255653edc8a584879152",
+    "force-app/main/default/lwc/nteManagementHome/nteManagementHome.js-meta.xml": "32033522ab88302a1c0edcc7e929544dfb024e92996af6913cec515ea974b1a4",
+    "force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.css": "5f70454195ec2a05f79eeafab8665e3904039b4020cd1b04fb8cabbf0aada25a",
+    "force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.html": "c0f95d2749a8fe33241b5f8a6bdf9330292850f87160e6708fdb42f1bf39cd2e",
+    "force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.js": "47389a94b33a2322088c1d9089edd9308d50ba5b986843ba37efdb74f0ed7bbc",
+    "force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.js-meta.xml": "670001b693a361895462deeb7b1a4384385c1ac7adba7242dc78580e14d1a7b7",
+    "force-app/main/default/lwc/nteRelatedOpportunities/nteRelatedOpportunities.css": "7093e4be237d4652cbd9deeb116c7b948941df0f13edbaccbe6de0ec8a2ec0bc",
+    "force-app/main/default/lwc/nteRelatedOpportunities/nteRelatedOpportunities.html": "07ea8490e4c504b1bce9b892c51854b4bd5188a1f5ab2354541f999e88bf93d1",
+    "force-app/main/default/lwc/nteRelatedOpportunities/nteRelatedOpportunities.js": "1c0091178527f85802cfd37f7024ff4303cbeb00b00b108aa5d47982435b3bb7",
+    "force-app/main/default/lwc/nteRelatedOpportunities/nteRelatedOpportunities.js-meta.xml": "b869736d2c12e02bb6b5e4e7919de383236d42f855a882888a6995e3bdefae17",
+    "force-app/main/default/lwc/nteRetryEmail/nteRetryEmail.html": "ccf73ea5b22790598e249b2e652d2d2afdae35387852c30630007ae4d12143d3",
+    "force-app/main/default/lwc/nteRetryEmail/nteRetryEmail.js": "554de516cc8f3268819e619481789de7be3778263b665c31f17946ba150ff94d",
+    "force-app/main/default/lwc/nteRetryEmail/nteRetryEmail.js-meta.xml": "ebc784cdd9e96769852c876700b86d7238429885db3c037b762d35cbbe6389c4",
+    "force-app/main/default/namedCredentials/NTE_Stripe_Test.namedCredential-meta.xml": "08eb5a9b5ce6fe0dd96db9ff8d8768d81374501317b8207ae30030891280bd6d",
+    "force-app/main/default/objects/Account/fields/NTE_Booking_Reference__c.field-meta.xml": "654edbc1df4961a472489a6f35733393930ea37fa5df1f65693dbb0b2177ea33",
+    "force-app/main/default/objects/Account/fields/NTE_Event_Code__c.field-meta.xml": "795be5c0d23a0d80cbb32f3accea69226fe1cf7a57855d9489e786737104f042",
+    "force-app/main/default/objects/Account/fields/NTE_Last_Application_Date__c.field-meta.xml": "85774916eeffc2949b34ef9c73b7e7e4d6f18544a82bc418de711464f46311c7",
+    "force-app/main/default/objects/Account/fields/NTE_Participant__c.field-meta.xml": "34d01ccdff722e62f04fb1def924f151715a8b1140fc139f7a23ffd5ee84bf31",
+    "force-app/main/default/objects/Account/fields/NTE_Source_Form_Type__c.field-meta.xml": "7f078f8358bc622ccf75ef1b9ff6efcc999c388baea09b401fed1df7313508ef",
+    "force-app/main/default/objects/Account/listViews/NTE_Organisations.listView-meta.xml": "fae7a0a34e551020cc72e0f5e40a068a429751ce0a2a4db7d3454c3f19d187a9",
+    "force-app/main/default/objects/Contact/fields/NTE_Booking_Reference__c.field-meta.xml": "654edbc1df4961a472489a6f35733393930ea37fa5df1f65693dbb0b2177ea33",
+    "force-app/main/default/objects/Contact/fields/NTE_Contact_Role__c.field-meta.xml": "a0a9cf7ef4f2e6b8e3933e661770b5fe03c29c85f6a2f678683561ff5ab15515",
+    "force-app/main/default/objects/Contact/fields/NTE_Event_Code__c.field-meta.xml": "795be5c0d23a0d80cbb32f3accea69226fe1cf7a57855d9489e786737104f042",
+    "force-app/main/default/objects/Contact/fields/NTE_Last_Application_Date__c.field-meta.xml": "85774916eeffc2949b34ef9c73b7e7e4d6f18544a82bc418de711464f46311c7",
+    "force-app/main/default/objects/Contact/fields/NTE_Participant__c.field-meta.xml": "285243b23f60c8bf53d3da50b1d2cae557766bb2e9629ff71862b56b324d816c",
+    "force-app/main/default/objects/Contact/fields/NTE_Source_Form_Type__c.field-meta.xml": "7f078f8358bc622ccf75ef1b9ff6efcc999c388baea09b401fed1df7313508ef",
+    "force-app/main/default/objects/Contact/listViews/NTE_Contacts.listView-meta.xml": "81729a51f9e1b45a9514be1d4d9318ee313a7980b7856a7544b8b648811e3fa5",
+    "force-app/main/default/objects/Lead/fields/Accompanying_Guest_Email__c.field-meta.xml": "f3aaf3cad9a19c1240f61a4c266363de576fd6dd769675491c4e6174c7b57565",
+    "force-app/main/default/objects/Lead/fields/Accompanying_Guest_Name__c.field-meta.xml": "8715b9df030b6e317dea8dfb53f2eaf1c58a188fafa0df8ece2b60af8f98121c",
+    "force-app/main/default/objects/Lead/fields/Additional_Staff_Count__c.field-meta.xml": "91b57beb9a610806caabe0264bd87f036e575e5f738d1910772b24d195bae8ff",
+    "force-app/main/default/objects/Lead/fields/Additional_Staff_Required__c.field-meta.xml": "79996d1d21c3520d8a62231d4d96ca9c28cb913d042c37ff3ae9e7dba6267c47",
+    "force-app/main/default/objects/Lead/fields/Additional_Staff_Total__c.field-meta.xml": "065a26cd82fe77c8b8869631c3f32e6b0fc98695593811b00e70e8b9d1581de4",
+    "force-app/main/default/objects/Lead/fields/Additional_Staff_Unit_Price__c.field-meta.xml": "6a78f22704f6281cc13c9a7e6423cfb539965be7b447f49a7eb766dc003a0b30",
+    "force-app/main/default/objects/Lead/fields/Alternative_Organisation_Name__c.field-meta.xml": "4ec2d63a40e1e88f7646340ff9286e64c8620cff2b8c2bdd9c8b5cbd86888eb4",
+    "force-app/main/default/objects/Lead/fields/Booking_Reference__c.field-meta.xml": "2b03b31596af512cef853465c158f1044a90e4601ff6cdf962094b0cbfa07ed9",
+    "force-app/main/default/objects/Lead/fields/Consent_Contact__c.field-meta.xml": "ea0bd621ed828f83b32f141cb2deb7fd485a20b201e86da5ea235776f78fedbb",
+    "force-app/main/default/objects/Lead/fields/Consent_PII__c.field-meta.xml": "8d0a9ce19fdda01ea0c4d1b91d5ce3bf762fa51142bed747d175269f6b7c5f49",
+    "force-app/main/default/objects/Lead/fields/Consent_Promotion__c.field-meta.xml": "e19c724b792f6808b8dbe6ed869eac68110feabdfa898d1c5118a6b93b1158d3",
+    "force-app/main/default/objects/Lead/fields/Contact_Consent__c.field-meta.xml": "26311df18e9b4b8d9629a5628f3d9beaf2c5bb2497fcf5289dd5c394783de85a",
+    "force-app/main/default/objects/Lead/fields/Date_of_Birth__c.field-meta.xml": "5e84a77e155aae6c01085bf5b7744f54adf4dbcf2d74f703d3068c640ec5da36",
+    "force-app/main/default/objects/Lead/fields/Declaration_Date__c.field-meta.xml": "c5243378eeffeb415b2eab19258a9c90af2f96d8fda73f72a7c10533cf23f5f7",
+    "force-app/main/default/objects/Lead/fields/Declaration_Name__c.field-meta.xml": "972a066dd40ba4c942105ab4fe1e769e6432991a84986cd1c512fa14cf465682",
+    "force-app/main/default/objects/Lead/fields/Delivery_Window__c.field-meta.xml": "f9fb38d942a0d309ff786fa53e947acf437d65a763fccfe20d19c873d579c091",
+    "force-app/main/default/objects/Lead/fields/Event_Contact_Email__c.field-meta.xml": "376cce76efac13902e428f8bec3bc71c3dc59736643cb71efa55b9cec6045fbe",
+    "force-app/main/default/objects/Lead/fields/Event_Contact_Mobile__c.field-meta.xml": "634e6734d0062cd6d1afcad16f49c35a0d406a0a9a63dd71eb1d3f40fb7d87e7",
+    "force-app/main/default/objects/Lead/fields/Event_Contact_Name__c.field-meta.xml": "b600ea41603048bd8473873785edc4ad61c5a413dff1087c0a53a114e62f8b34",
+    "force-app/main/default/objects/Lead/fields/Event_Contact_Title__c.field-meta.xml": "5b9cd3ea3bbdfce06a60be9bd25faa66d10c011d3d53e0bbf3b2b56f1ddad12a",
+    "force-app/main/default/objects/Lead/fields/Event_Discovery_Source__c.field-meta.xml": "8f10edb85ea480463c35487d4d55eac63888202aa2b0db8b349be3b0c8c7f6b3",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Community_Contribution__c.field-meta.xml": "7e317f184cf83c519bb3cd72c7ebb1d60a6f37066285cfb704dafa74d194831a",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Hall_Schedule__c.field-meta.xml": "fe4fcc8389cc407a87cb87ab703e17bf322c33a40a68f26e01d995ecac0dffc2",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Interest_Areas__c.field-meta.xml": "2501ba2a0f6f71391c3dae46afade087215c39dcd02026a6af86d1244fb73e2b",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Interest_Detail__c.field-meta.xml": "15448c813968e2da271e3a6f4c2ed9ccb8e9b7932e3b71157ddc09fa05d20e86",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Organisation_Category__c.field-meta.xml": "81c89d72eab484f1c7f4aae39d55d91e657084ebc9d197c6c9790d4260e5ad71",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Space_Position__c.field-meta.xml": "e02de2adb2f470fa236fe993fb4b998e3a64b5277b9172a9fd73996e48f4add6",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Space_Price__c.field-meta.xml": "a5bbcb0f23e8d1a9e75b287c0a9249fe9ef9000c25e52bcc8d973c345d465264",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Space_Selections__c.field-meta.xml": "9daacf41ff017218cc3224cd99c4150370ca22d9795504f3c07e9c0e968ebbe3",
+    "force-app/main/default/objects/Lead/fields/Exhibitor_Space_Size__c.field-meta.xml": "09f73554d10281f304c2f7bb87ab8f3267394edef82505ec793fc7c45f763be8",
+    "force-app/main/default/objects/Lead/fields/Form_Version__c.field-meta.xml": "7ceba83c23b3aefe7b0a2024ce4de62a96e1c3e02bd5353d03027ba232d558bf",
+    "force-app/main/default/objects/Lead/fields/Guest_Accessibility_Details__c.field-meta.xml": "f10feae8f4321c7d1a6998597fa58be5dea6141030d0501784b3ca9b2dccd40a",
+    "force-app/main/default/objects/Lead/fields/Guest_Accessibility_Required__c.field-meta.xml": "d0692c7cb78cd634ebf3af7350069883e0b677847e0b43ed333a1adefb5325f9",
+    "force-app/main/default/objects/Lead/fields/Guest_Accompanying__c.field-meta.xml": "84f10b562da8e193f38e183b57520cee7aa519d2ff1aa99dc82ae6af3a38c9b2",
+    "force-app/main/default/objects/Lead/fields/Guest_Information_Declaration__c.field-meta.xml": "1e60531b828c4f8780d3169d712975b1671eed3a2f1e774d071207bd2fa3ec55",
+    "force-app/main/default/objects/Lead/fields/Has_Special_Requirements__c.field-meta.xml": "d88c4ccc0a29eaca4e214a20264033ddbd1e0b0c149c1688c8348942d5c25936",
+    "force-app/main/default/objects/Lead/fields/Haulier_Name__c.field-meta.xml": "681759498dd561289caca91994c41e6c37f60f4b50f15f196a867c57e5fe807a",
+    "force-app/main/default/objects/Lead/fields/Haulier_Staff__c.field-meta.xml": "bc6f975bfbbef0afe77386eecdbf1fb30c1b94dffcea31d81cab2357b0b65898",
+    "force-app/main/default/objects/Lead/fields/Haulier_Vehicle_Dimensions__c.field-meta.xml": "1be610949145914f78c60b6cc28080b3ce43e3f53cc2c50c82a5df9ea7ffa27b",
+    "force-app/main/default/objects/Lead/fields/Haulier_Vehicle_Gross_Weight__c.field-meta.xml": "55cfaa1d670e8b127b91b2ce665a8524fa0df8e7a80af40637642cbfdc4b1293",
+    "force-app/main/default/objects/Lead/fields/Haulier_Vehicle_Registration__c.field-meta.xml": "f3dbf525904dc35e3bef57696eee9d4e8d35158278441ef6853f7a1701f90315",
+    "force-app/main/default/objects/Lead/fields/Haulier_Vehicle_Type__c.field-meta.xml": "11caa4291c1f38918a7339646cee8e15d7b13393a01661da97daee92178129dd",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_1_Description__c.field-meta.xml": "0cb2dee2bec340fda8b0e429f9681d8cc0f1eaba620e1931a38942ebb377cb8a",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_1_Dimensions__c.field-meta.xml": "9a7aa4fd02d26cb9ad6672f469197a85e19af83b9951274c6e75807624d532eb",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_1_Gross_Weight__c.field-meta.xml": "b7db37b7cc72207d044a5407291c452ccd2caade79e686885c2970a0a3d7aacf",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_1_Registration__c.field-meta.xml": "b63e7e1ac734c4f5ea05b4fecffe6aabbfe497ab38ab6081d3597c6cbe6178a6",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_2_Description__c.field-meta.xml": "2da7fe8c33d4ea6e9ab926459ff4a802b66ba8c6bfc9d223a2b8739ad176dee2",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_2_Dimensions__c.field-meta.xml": "ae59ae07ad7f1a5ef82cc4df80ce5e2d07eef5ad39cbc5ec692d01707321e07f",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_2_Gross_Weight__c.field-meta.xml": "b7004b41ef55acec91db7ec161cf7007748cb83fdd1d410203dbf0c4a7dff637",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_2_Registration__c.field-meta.xml": "33462a65d0a5bc76b605073e06e527411c3656670a5d6e5dd112abc9c2787335",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_3_Description__c.field-meta.xml": "009234d070cc9cbc2bec4a0c7915b55fbf339e320b0ac992b854c1755320354b",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_3_Dimensions__c.field-meta.xml": "a0af83bc297f485a4d9b7568f099f12684fa6eb5049deaae90fac39542a007c1",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_3_Gross_Weight__c.field-meta.xml": "f72224f7e19e9432cbfb3b3b0db50917ac83402908eeb230d5d60f36de6f4c27",
+    "force-app/main/default/objects/Lead/fields/Heavy_Item_3_Registration__c.field-meta.xml": "cc379c3a1bca31ad15b019f2e8de8a0a2206a0c21279e7907e49c0c5e6c1884e",
+    "force-app/main/default/objects/Lead/fields/Heavy_Vehicle_Required__c.field-meta.xml": "4076feb6c404563b376b03fa14d5e7e0b1a9ebc7fa3d67657a5edef64adb0107",
+    "force-app/main/default/objects/Lead/fields/Included_Staff_Count__c.field-meta.xml": "36472109742f422dd4670204e3e1ef52d9e3df88a729ceac80f673b3fd0a2387",
+    "force-app/main/default/objects/Lead/fields/Industry_Body_Details__c.field-meta.xml": "2f97af7dd32ed2e8750a61a1c2c9e147ab9b923a641152ac55d000568d499fa2",
+    "force-app/main/default/objects/Lead/fields/Interested_in_Volunteering__c.field-meta.xml": "a6baa1f66cad3d62a8060cad377f5361f88f47d5d539985392165ad37b46dad5",
+    "force-app/main/default/objects/Lead/fields/Invoice_Additional_Information__c.field-meta.xml": "3f520cd2072bb3dcfb7500834611f3937e6293e885611a02734a9063073ca1bd",
+    "force-app/main/default/objects/Lead/fields/Invoice_Address__c.field-meta.xml": "540d44fe8a32717337c0cbbbd15506991b9c49d262109d43c30c8e63a117b9e2",
+    "force-app/main/default/objects/Lead/fields/Invoice_Contact_Phone__c.field-meta.xml": "5a403949acd59ca75453737b93024e574c8f4c6ef3d7fcc20329ce45fb56f754",
+    "force-app/main/default/objects/Lead/fields/Invoice_Required__c.field-meta.xml": "a51fa35dbc2d30191ae0d3b6c42765052c66d3a42b44b80042b0ce1ecd3bfb2a",
+    "force-app/main/default/objects/Lead/fields/Invoiced_Company__c.field-meta.xml": "b53531a9b5992debfbb0a3a90961f6a8916d710112ac409e8682a9e8312d0a2f",
+    "force-app/main/default/objects/Lead/fields/Invoiced_Email__c.field-meta.xml": "aa1763c9428acf38c7ef9bb6f8ec2a6d7a6f1b8134ba71a33ec6c1a9bf4c0073",
+    "force-app/main/default/objects/Lead/fields/Invoiced_Person__c.field-meta.xml": "8bd9322bd187e22b8f9eb39cf52517a4a59794cbd55ba4c74046d7e2e4b45151",
+    "force-app/main/default/objects/Lead/fields/Listed_Price_Total__c.field-meta.xml": "6aaa651ebd4e0f9397ca50ce941ed0f0cb26b10b3c352cff4634f85d62c5d164",
+    "force-app/main/default/objects/Lead/fields/Logo_Upload_URL__c.field-meta.xml": "56a23d26a99b34de4d1bcea6da406d017825a36482d1d4f2b4ffa81012333670",
+    "force-app/main/default/objects/Lead/fields/NOK_Address__c.field-meta.xml": "116952eea5bd5319eafe4ab16abb154a9a2d14d674c0b8417227a13479ea4e98",
+    "force-app/main/default/objects/Lead/fields/NOK_Name__c.field-meta.xml": "ae1b82dc73f026e278082c9491d866e387ce8690d9dbe87c8f83aa66962c32d6",
+    "force-app/main/default/objects/Lead/fields/NOK_Phone__c.field-meta.xml": "eaa3fadd814f5307d1d084f53259d1b2671e938bda10347c86a948cab1ac6f05",
+    "force-app/main/default/objects/Lead/fields/NOK_Postcode__c.field-meta.xml": "27bc70be7d1d8728cbeb3679b685985eabd6eb44ef74a798b16b1f2db159bb5d",
+    "force-app/main/default/objects/Lead/fields/NOK_Relationship__c.field-meta.xml": "9d4e28bc54f7dc02f3a6648798648ab8f022baee8a69df1615cbf36cbc6982bc",
+    "force-app/main/default/objects/Lead/fields/NTE_Applicant_Email_Status__c.field-meta.xml": "7339f5dcd15056ea25ea7dbe8f60ca7ce2d899463d682ecb5960078cc150c0e3",
+    "force-app/main/default/objects/Lead/fields/NTE_Application_Rejected__c.field-meta.xml": "06c9dbba7821778a601744dff414250f2b7eab49e83ae0ffa1dc2d52e6a16368",
+    "force-app/main/default/objects/Lead/fields/NTE_Email_Error__c.field-meta.xml": "949aabd9b04e3ae57947958b3c98c035d73acd48bc58974df160111a8d4eb2dc",
+    "force-app/main/default/objects/Lead/fields/NTE_Event_Code__c.field-meta.xml": "67af52b388c681de530a857329e6002d631600b2d8f95820c8f53f6f357c01af",
+    "force-app/main/default/objects/Lead/fields/NTE_Interest_Not_Progressed__c.field-meta.xml": "0a13b1abef04d6558ee16e7b481b1c0d41b660dbdcb9cf83c57c81220ad4e4ae",
+    "force-app/main/default/objects/Lead/fields/NTE_Interest_Progressed__c.field-meta.xml": "cb5ab030ca09aecf5ed52898bd5a7878d141e2b54341078258579973ffff5c85",
+    "force-app/main/default/objects/Lead/fields/NTE_Internal_Email_Status__c.field-meta.xml": "2ffe9e6155b212401a8cc54c75560a204911e983798af2156646ee1fb1ed1e77",
+    "force-app/main/default/objects/Lead/fields/NTE_Invitation_Recipient__c.field-meta.xml": "43c23cfada36accba279979167fe8a41f3d23961e8dad5138a2b728654c7e1b6",
+    "force-app/main/default/objects/Lead/fields/NTE_Invitation_Sent_At__c.field-meta.xml": "f99ac50397f3132da35ab682ead94e5ab42dd2127b9ecff20b6f1263842329e0",
+    "force-app/main/default/objects/Lead/fields/NTE_Invitation_Status__c.field-meta.xml": "f28571c5b3982ab6dbfd6f78f4320ed0cc53861e4eed46c4853b5e36321dc7e7",
+    "force-app/main/default/objects/Lead/fields/NTE_Update_Booking_Id__c.field-meta.xml": "00afad9d2a82d24c4cb2872d926e9b25e5d14ce043c9564900763a302987839d",
+    "force-app/main/default/objects/Lead/fields/NTE_Update_Error__c.field-meta.xml": "0c8f609a4a0b00c06e7ae85d6d96a9eef00efeabd7453c0ba406317c04c7dfca",
+    "force-app/main/default/objects/Lead/fields/NTE_Update_Status__c.field-meta.xml": "65f3248e532e5c16ceb26ff1a386cb73414557ce85fd59b331fad999aa5649b7",
+    "force-app/main/default/objects/Lead/fields/Organisation_Type__c.field-meta.xml": "1e444b6006c6a550d9d213a7ac47b098015fe18f9203b6d82051fbc0e212cccf",
+    "force-app/main/default/objects/Lead/fields/Partner_Interest_Areas__c.field-meta.xml": "a71111ea2baad3c4ea6c45668742e72bec7dcaceb8988b21a4076a6bcbbec00b",
+    "force-app/main/default/objects/Lead/fields/Partner_Interest_Type__c.field-meta.xml": "c9f8506e8a50fef1d086b80f7449c208cddd93a6c236ecdc73c4959e430336c0",
+    "force-app/main/default/objects/Lead/fields/Partnership_Interest_Detail__c.field-meta.xml": "c8d6c399bc46a7b67d13c71ec1f5b4fcc4b3ffe167f699a5768a8821a52b9438",
+    "force-app/main/default/objects/Lead/fields/Payment_Method__c.field-meta.xml": "bdb14b694a89dafeb6f2e2856df73cb5a1bd97de98e555240e832360cab9e88d",
+    "force-app/main/default/objects/Lead/fields/Planned_Exhibitor_Count__c.field-meta.xml": "6b1795a2bf02f678b28a76766cc9dae42ff05e15d3324070a22cc32b151548ab",
+    "force-app/main/default/objects/Lead/fields/Power_Socket_Count__c.field-meta.xml": "27e84ff977e87699d99b4b4df76bb5c1da9833c014d538a69eca79194ccb9fea",
+    "force-app/main/default/objects/Lead/fields/Power_Socket_Total__c.field-meta.xml": "400a281da646513ac380ae6b584890006e6160bcdb439584548e9942fed31ad0",
+    "force-app/main/default/objects/Lead/fields/Power_Socket_Unit_Price__c.field-meta.xml": "f0c9b06580dd1d1a132fb576378eece73f4f07b11389e351f39015c76658bfa0",
+    "force-app/main/default/objects/Lead/fields/Preferred_Contact_Method__c.field-meta.xml": "f220e1481923e0b05ed5239790ff45cb075993888d627042cb127213fcf4ceec",
+    "force-app/main/default/objects/Lead/fields/Preferred_Contact_Time__c.field-meta.xml": "41258feb3221df9412a466fa5d7a4ebe17e0700ffcacb5eaf75e17f90b8b567c",
+    "force-app/main/default/objects/Lead/fields/Previous_NTE_Events__c.field-meta.xml": "b26d2a86910c9292b71e530260602511e45606a918c1dbbf3821e852f5afba8a",
+    "force-app/main/default/objects/Lead/fields/Pricing_Status__c.field-meta.xml": "f57e150e037168319bb45f5d03f280076985badf87565d4880265471d5b9355c",
+    "force-app/main/default/objects/Lead/fields/Pricing_Version__c.field-meta.xml": "4515464b28bec17617c15026f99d33e15b1962ee1b0fca887db797b60ee3f4f5",
+    "force-app/main/default/objects/Lead/fields/Purchase_Order_Number__c.field-meta.xml": "f93100c0cb45c633b04b89b496e8741f443b1ce8bc30b2db5806300e36d5a4a9",
+    "force-app/main/default/objects/Lead/fields/Purchase_Order__c.field-meta.xml": "36c0d97088ec7bc5c1167a452a01e0cf22a5bc0b173f608a4e92ecc21d4fae35",
+    "force-app/main/default/objects/Lead/fields/Quote_Required_for_PO__c.field-meta.xml": "d3eea67177fb5d1e3468f6e65d641364ce45239d50ac6709c5ab5423a63e418e",
+    "force-app/main/default/objects/Lead/fields/Secondary_Contact_Email__c.field-meta.xml": "07959a20c5faee315f1d10a5ab41206272e26b3e2b4616fb0dc1e915e8cf7b4b",
+    "force-app/main/default/objects/Lead/fields/Secondary_Contact_Mobile__c.field-meta.xml": "43d2068eb96cf3cd5a2f360556ac93a048692f1982eba17e11117f4f6433807e",
+    "force-app/main/default/objects/Lead/fields/Secondary_Contact_Name__c.field-meta.xml": "d8f9a8013f835dfe38acfbcb991adf1c3899b1cc2c4268c350a2225712064f6b",
+    "force-app/main/default/objects/Lead/fields/Secondary_Contact_Phone__c.field-meta.xml": "560c780b8bfa1c1aab88f53cf037e91bef28fb76ab2c9f9029e0978cda0e710d",
+    "force-app/main/default/objects/Lead/fields/Secondary_Contact_Prefix__c.field-meta.xml": "304202227943523e25046404f980df6688bd219fb849521899e01dba49d0f75b",
+    "force-app/main/default/objects/Lead/fields/Secondary_Contact_Title__c.field-meta.xml": "eec9b65770422c915046a9d11b3d47c577d86d158062df447c137faa0507bfdf",
+    "force-app/main/default/objects/Lead/fields/Sponsor_Package_Total__c.field-meta.xml": "6f6181f1e790008286f4eadd36884984947d212d9212f6f052c216cd9a6d3b8e",
+    "force-app/main/default/objects/Lead/fields/Sponsor_Package__c.field-meta.xml": "8c07ec1778b9cb8a45d94b10e919e83ae01acbf52e682b4c4c7b81660f606bf1",
+    "force-app/main/default/objects/Lead/fields/Sponsored_Name__c.field-meta.xml": "611bb04571f8af77fc9d0747e385f70d4f1a47492950e10d757be94525bd228d",
+    "force-app/main/default/objects/Lead/fields/Staff_Base_Names__c.field-meta.xml": "bb8d12775f90f96b70b72767e93d2aad6f497fe5034ede345dcb4d0b8996f9ff",
+    "force-app/main/default/objects/Lead/fields/Staff_Update_Audience__c.field-meta.xml": "25bbe3ac971f8c8b763fe161d6b5a49b4bd70d5cba18ac24607ccd55c804ccf5",
+    "force-app/main/default/objects/Lead/fields/Stand_Colleagues__c.field-meta.xml": "245ed5cdd4cf38244dd492cf744b4ef3b75429e101bf4477f7ad1777e233e06e",
+    "force-app/main/default/objects/Lead/fields/Stand_Equipment__c.field-meta.xml": "f34fc03a80a2ae2f59feaf8c8bc07cee8134bbcdaf3ed293dabf536c26d28f6d",
+    "force-app/main/default/objects/Lead/fields/Stand_Extra_Notes__c.field-meta.xml": "7b210c06595b659199085838fbd643f112477bb22593923064940abef2c4dd6f",
+    "force-app/main/default/objects/Lead/fields/Stand_Power__c.field-meta.xml": "457df76b3d2a019f3c4d4e6e5518d23fbba16c112518aa8b864a9debf6d51250",
+    "force-app/main/default/objects/Lead/fields/Stand_Special_Requirements__c.field-meta.xml": "19bed933f069a706cf810d5c05a07b012d0f2580a906d4c1a340b1de1b63494f",
+    "force-app/main/default/objects/Lead/fields/Supplier_Agreement_Required__c.field-meta.xml": "3e025932f144769f4cd08da2b9e6ec6814253171d65c6eefe39100df3614735c",
+    "force-app/main/default/objects/Lead/fields/Target_Booking_Reference__c.field-meta.xml": "c50b7b69b6da1a9c3dec829cdec48f94d35efe1eed622508f5f3e9e6d3fc6ded",
+    "force-app/main/default/objects/Lead/fields/Terms_and_Conditions__c.field-meta.xml": "653c8c8492c02f3a9e63bd7d295751b0257dc58f5abf930acd875e221740df64",
+    "force-app/main/default/objects/Lead/fields/Top_Up_Staff_Count__c.field-meta.xml": "5e48eef1960e58826f0d4e95f02041613521172697cbc07b395cbb9b03d8107b",
+    "force-app/main/default/objects/Lead/fields/Top_Up_Staff_Names__c.field-meta.xml": "653fb6043bc4ca389e860f1bb495156c7210c5d1989f7e418ac5eeaa6e706df5",
+    "force-app/main/default/objects/Lead/fields/Top_Up_Staff_Required__c.field-meta.xml": "4d1423bb5ac42985b48c1d1c073678830f0b331915f16b5a2343e7043b8a33b1",
+    "force-app/main/default/objects/Lead/fields/Top_Up_Staff_Total__c.field-meta.xml": "ba918ff968df735bbb19e84e7dc465448437509cfb8d888791deb185da1c6951",
+    "force-app/main/default/objects/Lead/fields/Top_Up_Staff_Unit_Price__c.field-meta.xml": "f7c4480c9c4b0312292a3c50ce8b166003c4be17b96a98777624a295800e02be",
+    "force-app/main/default/objects/Lead/fields/Total_Staff_Count__c.field-meta.xml": "b2ae967c797fe2fd0f88b653b8e0f4564f8d2817c0981fa3560943aeb791b89c",
+    "force-app/main/default/objects/Lead/fields/Trading_Name__c.field-meta.xml": "beab627a4ac3197f0a6bad559a00566a40e8e9849fc1284616fad435493ec1b6",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Applicant_Email_Status__c.field-meta.xml": "3b81141550583c4aba7e8dd669abaa1c28b5a3f9daad01c606057d3a2b47fb8a",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Armed_Forces_Service__c.field-meta.xml": "8f856e1f153518c20ca62b784ad388a51aac6aecf0c25c75cca97cc238efbb89",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Availability__c.field-meta.xml": "da49870e6428956ba35506950efc56d1495f01ceb2b69d3b73599845cc22746e",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Code_Consent__c.field-meta.xml": "e7a006c92d394c5b226587588d38a8d643f92dc5b68d2d7740c2c1fefddbd1f6",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Code_Version__c.field-meta.xml": "1d7e91a78d72f24aedc229797f4c6c917365428882b99d0b34c25df0af173367",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Consent__c.field-meta.xml": "b7daa467bbdf03ba436d1b4c2fbb3c4cbd53934ef69a88fae0aca43de606f4c0",
+    "force-app/main/default/objects/Lead/fields/Volunteer_DBS_Willing__c.field-meta.xml": "c66daa5c578d16c328ad4b6ec90c302c1b1a01e640261cfe4049ba0b3682aa3d",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Email_Error__c.field-meta.xml": "da0d44bd8baf34244f0d516c0aeb0199f5ba53460ee773a5a84ea71c8f465154",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Form_Version__c.field-meta.xml": "2bf3b1a20642e0259c48f8e997638db9afb0df4bad8740998b40adaa23e93054",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Hours__c.field-meta.xml": "b798a7383040290e3427e4c365c90e7d5f440d5196f959ee17069189a03bfc94",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Internal_Email_Status__c.field-meta.xml": "1bd35cae2436f141681164e9048a6e6ce4d7387897f0caf59fdaae241fb0d288",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Opportunities__c.field-meta.xml": "8e97f60153bc7dc6f4b2a18232b3f8d916c53b2dec1494aad10fb38bfc604746",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Service_Dates__c.field-meta.xml": "d061e7d5c6ddb0e1f4c9fe8d5cb99294d43964912b46073d442790abf22b4983",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Service_Details__c.field-meta.xml": "71955758577e61ad3d04e7a05d371181136e0595d252720628fdf074fa4597b0",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Skills__c.field-meta.xml": "c8cb65d41379b19a6c712ef2d036fcc8075e0037ac286877651bc38f2d1cd3a7",
+    "force-app/main/default/objects/Lead/fields/Volunteer_Travel_Regions__c.field-meta.xml": "4f6df0c066f9a8dba919b76cb716ff254d12e45d035af76c77409e6d0f47f52a",
+    "force-app/main/default/objects/Lead/fields/Web_Form_Type__c.field-meta.xml": "d070763ff641ef18488d3daa2cdf0b4f0eee052f5aef475131e2bff3657c17bd",
+    "force-app/main/default/objects/Lead/listViews/NTE_All_Web_Submissions.listView-meta.xml": "24ebdd28b0cd5f9b1698947bcf99077a76957724f59c8ff0f0fe866bfe0754c4",
+    "force-app/main/default/objects/Lead/listViews/NTE_Applications.listView-meta.xml": "25847481ec6c249473230afd2abe693a736d75115091b51c48bc2ad25e877e9c",
+    "force-app/main/default/objects/Lead/listViews/NTE_Exhibitor_Applications.listView-meta.xml": "d152b51bdf283c9f27643ea251b0d121e958e455fd9d30146e4b46963a2801eb",
+    "force-app/main/default/objects/Lead/listViews/NTE_Expressions_of_Interest.listView-meta.xml": "488997f798438a83e3847e27520efb9728247a0afba5497812258c93734fb020",
+    "force-app/main/default/objects/Lead/listViews/NTE_Guest_Registrations.listView-meta.xml": "8a31c2352c19748a57542b48f7bb1b46de0c93500c2e44bee911183836f25775",
+    "force-app/main/default/objects/Lead/listViews/NTE_Partner_Sponsor_Applications.listView-meta.xml": "79de7ceb8c73fe5bd262a296b6acc0a604b0492d99fb384e2be90d9a7d8e3e39",
+    "force-app/main/default/objects/Lead/listViews/NTE_Unmatched_Updates.listView-meta.xml": "3a3d4739fdf62d88f8fd48459f4edfb4ca39fd669a17c7c9c44b1b62a87a755a",
+    "force-app/main/default/objects/Lead/listViews/NTE_Update_Emails_Failed.listView-meta.xml": "b0032ca37d87c16c921c4f283ec9f6127096390b7fc273674f3a88223e9e9f93",
+    "force-app/main/default/objects/Lead/listViews/Volunteer_Applications.listView-meta.xml": "5bd4c49d3d2abacc61d80c67023a934af5dec010c5d3ce2a84810fff5b567c6a",
+    "force-app/main/default/objects/Lead/validationRules/NTE_Intake_Event_Code.validationRule-meta.xml": "6e5e9b88ae0d6381a906581e49f3a7577ebaa50f1bddbfb2f8b7304cefa48f15",
+    "force-app/main/default/objects/Lead/validationRules/NTE_Interest_Decision_Exclusive.validationRule-meta.xml": "9da0136be22713370c63be264a2d288d3216c6bc0a7133c0058cbc702c204fe6",
+    "force-app/main/default/objects/Lead/validationRules/Volunteer_Code_Required.validationRule-meta.xml": "ee0f1eff3e774a9ab70f4225170d30676b90110767fb566a57bb5615b17a8bc8",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/NTE_Email_Dispatch__c.object-meta.xml": "d95640f5d6909f1cb819aa80daca6d12a66c3dc013b0d810f0374c1708f468d4",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Contact__c.field-meta.xml": "95b7257cb2cc3b76d5ee3ebddc5fb2363967fef17e536a1909adab63a7b141cf",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Dispatch_Key__c.field-meta.xml": "84e59d38f8921b6b0bef24d60f4204eb637f65f2254ba0d445e0deb0fa676ac2",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Error__c.field-meta.xml": "d1936ba847e475fd54632a75e6033809f8db3bb261db1d762ed928a7e4967c66",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Event_Code__c.field-meta.xml": "db6bbba01589c868721cad1cf8f54da6ed8a3132cbdb9c4273f828cb68a67c3c",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Fingerprint__c.field-meta.xml": "af0501d7924ee78f8abcbb6183c52d7e3a19facf7216162a6a7fbe4ec668ad51",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Kind__c.field-meta.xml": "9c3ac710e4aa77ac064c1122d699d856bc35af87c84b3a673591f079e518a54f",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Lead__c.field-meta.xml": "95c7e7cb226cfd1d3d1dab069f52fce2ba2bf85e5a24e21aa67e4225ecdfa449",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Link__c.field-meta.xml": "0cd91d065ca63a84f5541606edc5e50ff3e160f09dda79138c76e1b113b6f9aa",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Message__c.field-meta.xml": "0aff9639596c1e8a7a59e16c27d54377535e854e414290e7bedf39e066e38383",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Opportunity__c.field-meta.xml": "bec357f53251544f56113698c3bef373dd7f6231358a486d3c979a34f178375d",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Recipient__c.field-meta.xml": "cff125097a03c3afd5bdd6e9efe4fda81309ee45f8968002ab8e4b2d1692b93a",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Run_Id__c.field-meta.xml": "264eb6285227d0dc049f53607bae2e4f8a6cac0be6d488f54aa3d132fe182f16",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Sent_At__c.field-meta.xml": "ceb11bd92aab81bc6e8d4ee6ebcba2bd3fe1709b7715855821f8b993aa31fdc6",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Status__c.field-meta.xml": "fa6af544c4a8ce09065fb733fda5469cab07ecce96d288ed72950d4ff47d488f",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/fields/Subject__c.field-meta.xml": "931becd6e20b6beef212cf915904faa61b43b04bd68e373f79d2f93881586660",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/listViews/NTE_Email_Failures.listView-meta.xml": "6ca4546881463a8e29ea2e274d805971c9d3954f81876bacb791e86fa88cc625",
+    "force-app/main/default/objects/NTE_Email_Dispatch__c/listViews/NTE_Recent_Emails.listView-meta.xml": "c75547e2f9918c430019f4c859d35734cfffbc8bfeced4f2a9986140de497f1c",
+    "force-app/main/default/objects/NTE_Payment_Request__c/NTE_Payment_Request__c.object-meta.xml": "b84b3eba1cecd60bb8699b09103b04b89b684776e89ef9fdd86b99a049fdc04b",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Amount_Minor__c.field-meta.xml": "b2daed1bb45792dc00f470066ad90a4796fb7f8e17f2ece686adb2334454882b",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Batch_Key__c.field-meta.xml": "7d2d7b925310a86b1ea9df67e18ac48005329e35dbf3a7c6f43c9416490f7e00",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Charge_Key__c.field-meta.xml": "058b4e4aa148e834864b32db60a290db8ed9fac4f29a903b4029fbf8ecdd213b",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Currency__c.field-meta.xml": "114430a7282b1722779585981acf3a08b1c308fa7a1eb8799e3ead63cf3645e5",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Delivered_At__c.field-meta.xml": "0422bd64b49f6edf961bab7cd59837fcae02e509091639f8b7e064639b796484",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Description__c.field-meta.xml": "64490a7c66d417234e15429f2fb802e7889d4560d7629c3441d165e2df8bf4af",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Error__c.field-meta.xml": "d22e84b585dfcbf19f9403f7d0df648530393edb8cceff1503429e44d4d0339c",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/First_Attempt_At__c.field-meta.xml": "2c6dc424efca0690bb499f7e0a15738caa9f44e867b372ed80a1de920622e467",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Kind__c.field-meta.xml": "40054d3c3e8eae5b0d4e24a458595fa97cbba8326e9334f7bd5011b493140fad",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Link_Id__c.field-meta.xml": "916c61a447c3a0f1b94eb423710a68edc899e758c64542916c863c4de23438e5",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Net_Minor__c.field-meta.xml": "2c6e75cdac4f40dbe3f80566554092c7235ba4d2d6940923f9bfb5264288e9d5",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Opportunity__c.field-meta.xml": "09966355284d9647e63227b684b0c7b667a65a4c53b30e2529eeddbc4fd51aca",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Payment_URL__c.field-meta.xml": "7f578af14407db76ed74bb6c6f9e3f4c757dbc0c7eac2e2deda95524a712e986",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Price_Id__c.field-meta.xml": "4d0a777549ab674f48b1027ab9fe4e31a82cdfbbee911c6ebd68f62b7eb19fd9",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Recipient__c.field-meta.xml": "7d9cb9361442adecfcfc56d11e6fb47049a3254745dea81639d5691d4a98d0e3",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Reference__c.field-meta.xml": "cf10a43131cda6c6aca9ac3089f5209118b720457c99df989af7bbaa2248e5ee",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Source_Fingerprint__c.field-meta.xml": "cb23dffc086f563337a702c597544cad6b94a0601601506aa2f127a50e8b1656",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Source_Lead_Id__c.field-meta.xml": "f2df34f016bdb7a0e4bd755380167cb27884f135f2dcc5ec5712d23d78fc01f6",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Status__c.field-meta.xml": "65519310425f3bf01a72a1c3fdde3429e91e82fd6c4a67f6a382334798e19ff6",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Stripe_Account__c.field-meta.xml": "a6eda631014294c6d37677d47dd356375325ed3b78e4c303d1f0f17640ebe88e",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Tax_Rate__c.field-meta.xml": "8f3ce048c99564d97fa9101be961d1dc4fefcc44239d8e28604257308bc56499",
+    "force-app/main/default/objects/NTE_Payment_Request__c/fields/Verified_At__c.field-meta.xml": "9b2908f1bb1f8c95c21840de58624b930e59055c4c45de628076aea23ec342f6",
+    "force-app/main/default/objects/NTE_Payment_Request__c/listViews/NTE_Payment_Requests.listView-meta.xml": "88bd0c4925839112ae77e9f9b5781b3f620605bb7bf0becb2abb2b842dc1aae4",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/NTE_Routing_Config__mdt.object-meta.xml": "87e5d72bdd827ed9467aa3f6e979d1de1b479c95407a0ef25e75b6158de64960",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Application_Event_Code__c.field-meta.xml": "a21360e4ec10becc1dcf75171bc17b869a290efc74339e3dd367b3089f852458",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Exhibitor_Application_URL__c.field-meta.xml": "2f82c684eaf87809f2df9dbd35e6ce5212f932b03f0092acc84e419fc6399211",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Exhibitor_Final_Pack_URL__c.field-meta.xml": "9b15e04c0f056a8f255f676fb8f4c573214c7823cf7a7afc9db097d730a7cc0c",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Exhibitor_Staff_Form_URL__c.field-meta.xml": "c3c6116d9bbabe04fddd73b1719ec2f5a6618ef81423c921761eedb5d902a2d7",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Heavy_Vehicle_Form_URL__c.field-meta.xml": "1bdac0b49a57a3a1a005590a0a0960798481c1961c16ff4add12a2e0e6c50cc4",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Logo_Update_Form_URL__c.field-meta.xml": "8c6df9349e66873b8082e4cee05c0fb8bd0a40d88dc6b55d013489fbfd6da8b5",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Owner_Username__c.field-meta.xml": "2cc3be9e318387e044047c4fff417576f4097e8644adfdeaabdd9e530ffb2637",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Partner_Application_URL__c.field-meta.xml": "19e6425f40572a55e24e3b77be8965d5d7f830af9266e954690692e2d194294a",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Partner_Final_Pack_URL__c.field-meta.xml": "76ef6d3b84a33a580eb89ef61492390a0c404636e0c1ec5cdf1973ba7b8ef06d",
+    "force-app/main/default/objects/NTE_Routing_Config__mdt/fields/Partner_Staff_Form_URL__c.field-meta.xml": "aeeafe61580e54ef7ce5db0929771b6b363f29978ed00bb296b4a957e203f75c",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/NTE_Stripe_Config__mdt.object-meta.xml": "b33bf132521265857ca9eb642721b55eb6b6be5f666abb3fcb681cd24cc132ac",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Allowed_Email__c.field-meta.xml": "702b2af39134a81c09076c2b3ac39640abb8d2584fc6935638b6a8011fea1b12",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Enabled__c.field-meta.xml": "15cdd5faa0961429dfb9e30b8e23ac61918b60b7296d7d0e10642258ee8ec05c",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Expected_Account_Id__c.field-meta.xml": "17918233a2cac68af315643b0a32ea48f9a7ce63845f56f102d43b3eca4c3897",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Expected_Org_Id__c.field-meta.xml": "08eee7cbc07f7effd352d93b4af059ae0650cb711213c608e910a089218d34bc",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Reference_Prefix__c.field-meta.xml": "5f75c1a86bfdc94ecd38d87f96efca565e19bc91f25ad670cc33e772199c342f",
+    "force-app/main/default/objects/NTE_Stripe_Config__mdt/fields/Tax_Rate__c.field-meta.xml": "46a04d44d353d503034273ea98324306c4d113b9d5524396a28eff3ef6052584",
+    "force-app/main/default/objects/Opportunity/businessProcesses/NTE_Sales_Process.businessProcess-meta.xml": "f002fcf3f563ee7efc498fbd75ed1e29aefda9a22c933d0d37be65cca3b84652",
+    "force-app/main/default/objects/Opportunity/fields/Booking_Reference__c.field-meta.xml": "2b03b31596af512cef853465c158f1044a90e4601ff6cdf962094b0cbfa07ed9",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Additional_Staff_Count__c.field-meta.xml": "4a633181385bac16463bfc8708c79cd305194b0a44661f226b0b5df38b8fe2b7",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Additional_Staff_Required__c.field-meta.xml": "c50afab58bf12ba9d4a95fd1ac2e4282012138c6aa96b3b8c1a5d9ea6ec75453",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Additional_Staff_Total__c.field-meta.xml": "51eba85c49dfcfe3d25754939662998efef14746fa166e53ed96f32f105e1746",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Additional_Staff_Unit_Price__c.field-meta.xml": "d5efa37c2d0b8caf0359702c260933a3e70653a25176728699febde759b92cfd",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Alternative_Organisation_Name__c.field-meta.xml": "51b52c98555e2ac4b6b8380316ad71e9a09e52a62f3d748a844cc10252e309f5",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Batch__c.field-meta.xml": "e02f2e35b058b2a6c7b58cff322688720a28a327c16c621a17316b50e97286a7",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Error__c.field-meta.xml": "403e70c307bea24dea606706b5010d23947e356cf6dc831a9b4799b1a33fef2c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Lead_Id__c.field-meta.xml": "bdcef098b1c9ed7d1b73cc65e0e079fae0ca27640ffc4e6d4a225ebad552482f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Recipient__c.field-meta.xml": "e25744d3e3a1cc5837ccd685c07baf79837c0c0b329ace5fa6e453b30daa0788",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Requested_At__c.field-meta.xml": "035a61700a660603149a018068ade4c3c4ca7e8cc00185b3b75335c293c6ec06",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Requested_By__c.field-meta.xml": "241a24631d73a3162e122fa9704f65261adb977356130a6b38a353aee7c5666a",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Sent_At__c.field-meta.xml": "eb4936b0c8e3b7d54625985f7fe46e455f2cf1e4816814931ddcd7aef0383dfe",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Approval_Email_Status__c.field-meta.xml": "43f7d961df991d9e86e71be381323ea6594bbcd0382ad5ec8761a83e9dd7942d",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Attendance_Status__c.field-meta.xml": "088c90d5440eaa20f15ed0ef4fc005721f7a98a0190c2d52b3f7279afb87e976",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Confirmed_Value__c.field-meta.xml": "2b99ed3fc9ca40fbaadc648d5c8f735183cd33215f1b3d467bd924daca3cc819",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Declaration_Date__c.field-meta.xml": "0deb6a051a9ad9cd8cc050fc3ccc5c1b80aa67b9fcdbac72db07ce3a42a771cb",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Declaration_Name__c.field-meta.xml": "56d7a42b7f1511f0185dbf0318349e5e17fc6a92c271be347a2bcf6f86d0078b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Delivery_Window__c.field-meta.xml": "2444ecd8231af56fdb8632bee2b930af43a9efbad90f251d7f07c8df3f550666",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Event_Code__c.field-meta.xml": "24d7bfbc313551559c71dfaab5717b9c4606c82adeb4efa6c817f748d196198c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Event_Contact_Email__c.field-meta.xml": "1cd3a944d19408b5a0eceec9786809fd6279ddc0e1bfbc618cd174d73bc663b3",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Event_Contact_Mobile__c.field-meta.xml": "67217b7b1f99539d79aa3318abcb52996276a0119994667c6decdff960731d8f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Event_Contact_Name__c.field-meta.xml": "d1a78d6f9820aed24d51946e0cc6e3eb52059e18305410fc5be7afda88a0f957",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Event_Contact_Title__c.field-meta.xml": "ea8570532ebb7a7aae1f227061c3da38c31f31291288560a5b11887a65a2a941",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Event_Discovery_Source__c.field-meta.xml": "a59a2aa50eb1845b3dbfa1b65e26f5d7f5358186efef2edefe59cc72246b79eb",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Exhibitor_Hall_Schedule__c.field-meta.xml": "ccf505049ad7303798bc9a376ad4e7ecd5db4208c6e27787b71d0abbfc714cbb",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Exhibitor_Organisation_Category__c.field-meta.xml": "c4141d876ecd15fa80c5f2eeaf83f24a473111898d73d1cbbe8f0afebfcb8cbd",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Exhibitor_Space_Position__c.field-meta.xml": "866985fe808f1d85e8cf649d80887bd177fb43c5c8d5cca140da26ae38037ab9",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Exhibitor_Space_Price__c.field-meta.xml": "8253d01c0dcdcb1a90518ab654feeef6038280601187829d7020b5d51f1e3fd9",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Exhibitor_Space_Selections__c.field-meta.xml": "d9e75aeaf6b830f41f5455f42f50ccb06082aa6affb755d1abdea73846456fc5",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Exhibitor_Space_Size__c.field-meta.xml": "9eb871e5cdf62d16887aa76dc0df287f7796e8ddd1e875f198ec229d3a43c48a",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Final_Pack_Recipient__c.field-meta.xml": "6c0bdd3d99854b028bc44a16740fcdb4dd503dfdf69fb040923f36796350f765",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Final_Pack_Sent_At__c.field-meta.xml": "0e1364afb32efdc40540f7a6ee4dc70eb4c58eb5fe2c1063663fc00c3a3fa09b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Final_Pack_Status__c.field-meta.xml": "89522e3234990ee567a59980d6f3132d1094862320fab76e0fa96023a02d528f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Finance_Invoice_Due__c.field-meta.xml": "f4870845cfc65cb1a294c7da10a7a741d8e66fbbe156e03c0abde5e617b6f6a4",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Finance_Payment_Confirmed__c.field-meta.xml": "c776017fd7cf063219175e617f225f6ceaa0e8379155d44b09125babbd4ddd66",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Finance_Payment_Due__c.field-meta.xml": "875f3d1ed55b94bc958cae7f65ce4f8bee3c4823bc38e66d27ab1eee0035794a",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Form_Version__c.field-meta.xml": "a7a1e2c263f5b505569b93a7b060fdec821e285d8930ae531cb7289bf1c088da",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Has_Special_Requirements__c.field-meta.xml": "5ab9cb76eb0ba4727053dab9c1879b4296fd4e18314fdd2ce920d59a724f7ad9",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Haulier_Name__c.field-meta.xml": "4263d2281aa6c6c903536ab4bea9dca7ac30980ca29e048eaf5d46cc87b2c5e4",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Haulier_Staff__c.field-meta.xml": "c9b3bbacc8b7e1d977195f5d39df64a161e9f193a28b575d540a1b42e2d6ed8c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Haulier_Vehicle_Dimensions__c.field-meta.xml": "b62ba49af571f7e5369ddb0ac5e8433a5f67173f4d7420a447a965f75f856604",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Haulier_Vehicle_Gross_Weight__c.field-meta.xml": "a358f4dae792a84a3f5a4307318a037882ba2a0c3eca81408efc57dc47d485a6",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Haulier_Vehicle_Registration__c.field-meta.xml": "2e114602eb5c1c66aeba595400c7b02faaf2021e3421a139e60bfe933e1c5416",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Haulier_Vehicle_Type__c.field-meta.xml": "cd1ec5a424566662ec4f209e0170ab48ff877b1c883b55f45ddf0814bbff3ad0",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_1_Description__c.field-meta.xml": "37db42d1c9e7b33e2f665fa6003313048897dca65a4ab569f7bb4c96ba300c63",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_1_Dimensions__c.field-meta.xml": "af47e23757fa39a8548aa00d2d9f7f986c2a24d12117b6d76ec8d0f5c149579c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_1_Gross_Weight__c.field-meta.xml": "7a7b90bf3b772156f49ed01985d80816e1e0ecd4a523db35e50f5faf9b495714",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_1_Registration__c.field-meta.xml": "86cf187faff96ebd075daed713f95ef06719b3e995bfa4d52ea873b9ada3b5e9",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_2_Description__c.field-meta.xml": "d0edeb979a97810d907041c906c71035ca9d7720b8688945cbf7dea08af14a9b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_2_Dimensions__c.field-meta.xml": "8540026860668768b907e034ee320475c3551f745057ff3274ab4ac40940d5e4",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_2_Gross_Weight__c.field-meta.xml": "bd398f63d4fe9ae7f9b69e72ad4d9a1f6b38b2e84f8133bbe6ead573ac49f58d",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_2_Registration__c.field-meta.xml": "e452711038a31ce9ad5d839ac4f1a3b2ee9003c825607e9c889731ff96e0a0e6",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_3_Description__c.field-meta.xml": "e573ddde6cc398f7cbf197818f11c6affb52be2a210d479a6af30922bf0b128b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_3_Dimensions__c.field-meta.xml": "07d9b0fd8f1a458ec3a77d4424dd5de2b78f2713df095659467f874482ece65c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_3_Gross_Weight__c.field-meta.xml": "28c1e003437564f36925e2ff482dd83d8c65880f5ec498d41d931ed11fc6f71a",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Item_3_Registration__c.field-meta.xml": "5186521a15310bd6fed8622f748c48c2f0e2a10e1ab9000c0e3c1a7d201e0b9e",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Vehicle_Required__c.field-meta.xml": "e4b580594d3339cf03c79b774a5b78d45547adba108e7b7ef28ea329b2781f53",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Heavy_Vehicle_Update_Completed_At__c.field-meta.xml": "16371d94c7f697b79a2590f122d48eed214b6516ffea8f192905010bf5166620",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Included_Staff_Count__c.field-meta.xml": "62e2f43452251fd42a868ae9be4001ca6c4013e0d137df3048d6608a88f04f30",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Industry_Body_Details__c.field-meta.xml": "12d188d851c413be1610c7b5abb5de593eb27d27f3b750268e280364e2ea6989",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Initial_Staff_Count__c.field-meta.xml": "e11d36e5771858627b399cbe4894355c1f2d3cd4d219df642af393195ba57135",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Additional_Information__c.field-meta.xml": "1dfaf83fda0be4510a4b8937c3350aeaf031c63f2f19c2acb98f6fa59146592d",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Address__c.field-meta.xml": "478248f71aa0c8170a30f304b69bd22c0be040c4be90ae90ed0c0f79cbc36476",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Contact_Phone__c.field-meta.xml": "dda8083eff104d86a82be54d3b90676614c8a75cfe17eb4c9035e1dd68607a07",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Provided_At__c.field-meta.xml": "ecb1e0bf25029f869dd750c37029bcd71deccc74e610796ba7d1f3e50d2fcfaf",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Provided_By__c.field-meta.xml": "3b43db55613470521bde0ebce48b828211c046c91065cdeb5e8552d0065c43f3",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Provided__c.field-meta.xml": "0461ef50a389d819dab09bd9e7085b345c30a3ddd6e0d56566ff5523cadc6d46",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoice_Required__c.field-meta.xml": "aacc5867f277ec15903cc4352b48eee421649d26464b22c3ec815f32d496f6d8",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoiced_Company__c.field-meta.xml": "df72109eccc544b6bfecd93af918d62555593621ead25f24ed671c8bc9d66f7e",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoiced_Email__c.field-meta.xml": "eff84e5ba3ed3dd1358e251576eb541eb4f600e8ffb60ea6346ae8dcd3ee3d6c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Invoiced_Person__c.field-meta.xml": "a4de24ae416e72433f0dea4c59eaaf01788dab3f4bfd13142e49a48cfbaaf459",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Last_Update_Declaration_Date__c.field-meta.xml": "ef510f734cff66db3f4dd5d75c707fecfb147b186ecddd7ce7103f7a3e6cdd56",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Last_Update_Declaration_Name__c.field-meta.xml": "a5cce3d5647232b378814d394c26bd8b23225f75f0a08da6595dc6c78bc4f98d",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Last_Update_Error__c.field-meta.xml": "bf3b006851e98d8a99649a47c0f19b42ac9c6e779eaa4a293ee0dd784a494935",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Last_Update_Form_Version__c.field-meta.xml": "29838089885e0d4e84a45a57652d25030b7b148c3e983894e82d8a087319ecfc",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Last_Update_Processed_At__c.field-meta.xml": "dd884096e6c6fb8e290efbd7d9d63acf06686caad8bc825179950bbbee307392",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Last_Update_Type__c.field-meta.xml": "106bcacd5e288ce8201eae19fe81019a221c15c5871c9c327e5dd6aa8664008e",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Listed_Price_Total__c.field-meta.xml": "f7ae9afa4d1f9b5afe70d43e52f4fb0432394a4b612c03b86dbdc47704a0af0a",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Logo_Update_Provided_At__c.field-meta.xml": "959b5c40de5bcc032cfe3423167a2877a236f4f3807c70ad5608deb960c2e40b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Logo_Update_Provided__c.field-meta.xml": "45e5ff51c23c34d45f77a6da0b0b2c2c09bd2e827b3ac8c45840bada4b5577a4",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Payment_Method__c.field-meta.xml": "38eaeab04e4270dd437ca42bea2a9a15259116590a1d174dccf711caa5145465",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Payment_Received_At__c.field-meta.xml": "32aa1ad1cb5e6f02818729f7836417e755bce94c29ffba8e043354ef7d507ef7",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Payment_Received__c.field-meta.xml": "52b9da91c29eaed266b6f1c4cbf9f0665ada8dd183e29cf02bdfbf37722e47b1",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Payment_Recorded_By__c.field-meta.xml": "919c59c71221c9666e3b20f951b77d9c777632cc07d6961da2f45ec390f1015f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Planned_Exhibitor_Count__c.field-meta.xml": "2d78514ea4eccab38a3c7ba64baa15439076405ec42c99943c0a5ce2490fa3fc",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Power_Socket_Count__c.field-meta.xml": "a1ff260173f7b0839a0dc0d8474f9db2a00106ba5d026f225a28c1b567a0ba2b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Power_Socket_Total__c.field-meta.xml": "c97132b7417a2aa49a580a040c4d6f1bad5f215bad2e7bf3c38c66072c5ab955",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Power_Socket_Unit_Price__c.field-meta.xml": "1bae658922fa755040d73239125317a423b1b814875f0ee25abd7f0347d5087f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Previous_Events__c.field-meta.xml": "d6097b071aba40f3a33a55587efa22ca73b89b1039633887b4547b9ece416423",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Pricing_Ready__c.field-meta.xml": "62df14f3e2df711dd3def33fd7b82c10795a08910cd085cc32e6cff53d7054a3",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Pricing_Status__c.field-meta.xml": "90b79ca4685564b3f1668e56aeaa388e8b7b2a53b547796124a657f603a02195",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Pricing_Version__c.field-meta.xml": "61f5c7428461567875261136a78b9bd2ca371af231f0350ec3ea4249887e4516",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Purchase_Order_Number__c.field-meta.xml": "226ef57310f074980c7cdadd907950b681cee1bb4b6e7ad1235c4090e164b36f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Purchase_Order__c.field-meta.xml": "702d38026844bec3859afac0c1ddf868c168b5de4df61572ef17a90b239730f8",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Quote_Provided_At__c.field-meta.xml": "72203c5ccee55bb6539e44d30479a9831212ba058f41a46225218c3acfd3fe78",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Quote_Provided_By__c.field-meta.xml": "de74c42344e346203d77f2eb4f35f18b634704163fb5f27dbc32b714ce7d5c5c",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Quote_Provided__c.field-meta.xml": "bf39905d0c0414ac29b104c2408eb6059f396c0e9fe85bb24e0f46e42b8a8ff8",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Quote_Required_for_PO__c.field-meta.xml": "f5f7f47f64aac1b85279b895e0da197fa6ad67120bde8d330f4d1e4a2bcd985e",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Secondary_Contact_Email__c.field-meta.xml": "04aae972669893215d70e247da960540caf0fc198dd0a450a1186162dbfce257",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Secondary_Contact_Mobile__c.field-meta.xml": "df6b4c68f14141fda0ee550829f448eeda2ff3ef43cc2768443cf0456e606761",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Secondary_Contact_Name__c.field-meta.xml": "9ec2e33b3daea2e7a966651c634c1de5c127d0b5fedefc4118a592373d2f4fcd",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Secondary_Contact_Phone__c.field-meta.xml": "f9b613ff43e5c1c90a6e5ccba1a2686b2d2ed16013ddfb86629a322946db4c0f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Secondary_Contact_Prefix__c.field-meta.xml": "7f8da3f00cb01d6d03fa2507827c95bda8291e530d9cdbd57bdf88f11634f42e",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Secondary_Contact_Title__c.field-meta.xml": "037e481aab070c4ef85e8a2bad96aa0f5df391bd5109ccb867c7ec792076c5ec",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Source_Form_Type__c.field-meta.xml": "08cd8a8b2ebc6a36b4a7c768eea73a108dda9d6d06546201025d28a521091570",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Sponsor_Package_Total__c.field-meta.xml": "4f59eddb18bbc2986fc8d4485ba04c832c52c027e369128ed0e1398094bee5e9",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Sponsor_Package__c.field-meta.xml": "db66fcb01ce51033ced9a61163049d02ab03d27086884a27a319784c5a0a12ee",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Sponsored_Name__c.field-meta.xml": "ffb5ba7ca748006399e2a2f243360a71018df9f576d3510b1e8d45311c30c993",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Staff_Update_Completed_At__c.field-meta.xml": "0c2b377f906c9e76f028c34af002a09f8f28e30d0a44f2f97ddc09da7464a30d",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Stand_Colleagues__c.field-meta.xml": "c32fd81b1ba23a78d597bde14a96ee3c58205ad15abea11aa4a11800609fed6f",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Stand_Equipment__c.field-meta.xml": "f133186c51b4910793940a5d4cb6717ba9e140694dd06f73e974501c88326367",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Stand_Extra_Notes__c.field-meta.xml": "c0e4de8f6905122b241560c045acc38d6401c2a15be3692930e56b960b69bfe4",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Stand_Power__c.field-meta.xml": "a1d482777901decc948853e5b6c56cc290d3c96d54b0d1473d35131d1fd46d11",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Stand_Special_Requirements__c.field-meta.xml": "97a3ae05304cbcb5df906781c54578e1263a49306f3c69ceb13b9a397e7c4e88",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Supplier_Agreement_Required__c.field-meta.xml": "79f316754f9776253d0843dcf3123cf0525a039032da1b45c3a3b11f360efa19",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Terms_Accepted__c.field-meta.xml": "29daba68f4b8bdb8cead5f1c7122269294a1df699c742bbad8ac50b14873941a",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Invoice_At__c.field-meta.xml": "6bae435e845ce186ff6392621e510262d155b3abd51980ac1889bc08e2f06399",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Invoice_By__c.field-meta.xml": "14632a498b0831f80f293783d1d733dddf40ea8af190d4d222f92eff71342621",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Invoice_Provided__c.field-meta.xml": "e2cd09a04326ee01c2be5452c9480c8d00ce711e79105de694c0457643022031",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Invoice_Required__c.field-meta.xml": "90de3b4caf76f7fdf0b501f03c74f3315b7eeb4a599dbc8c79162d8b35e25f90",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Payment_At__c.field-meta.xml": "3b0b7fd8247c1e1632f2b9df55e5ea82233cf39968ee3c79bc1af4a0d041df56",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Payment_By__c.field-meta.xml": "704d72ad618968a7edf8f425b9bed56fec7f5e137701e22f0040a76869264b03",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Payment_Received__c.field-meta.xml": "facd3ba76076a4d1cda89f9252e4289271ee4a6996b0d4ab6ae888f777b0876d",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Staff_Count__c.field-meta.xml": "c0f0f825e68047adb2a871c89f9d00dad24edd61eae91cbb8e5c2ced22558c18",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Staff_Names__c.field-meta.xml": "7d90af264579541735cd328898b9cd0d469290124db10f3e79abbe57bf3147e4",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Staff_Required__c.field-meta.xml": "7069cabb52faa81634a40de23db9ec53ad41d92132aaa88cc11bb0da42cf9c4b",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Staff_Total__c.field-meta.xml": "7a5943805eab3af02f4dec743059601c1b19fccde51b9222f30ba15cb99a22c8",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Top_Up_Staff_Unit_Price__c.field-meta.xml": "bebb11b0d39c6b64e98cfcc7eb3fa272ca4563406e827cfa729f5c2b23e67754",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Total_Staff_Count__c.field-meta.xml": "9eb574f3b038e3e1d262844631b854a12a11757e218af66cab0591ae9cfe7cf3",
+    "force-app/main/default/objects/Opportunity/fields/NTE_Trading_Name__c.field-meta.xml": "99e855e90c3216207308a22fc22e971e6f69cb570bbd266a9da602f42aae9e0d",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Event_Participation.listView-meta.xml": "155f6c1812e400897c3f9018e3200999983c0f76175698088b22249ce294f115",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Heavy_Vehicle_Updates_Due.listView-meta.xml": "8e8820f5522ed23229bfbf50661f1c72ca0102d6decabecd58f844fd70792aaf",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Invoices_Required.listView-meta.xml": "b0d2ec1b2e3e5ee8be7a7d3bdcba98bcd89aef2c0d80a1d2082d0c1cf9e02273",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Logo_Updates_Due.listView-meta.xml": "33332dd32e93cca13cd61d69965e496d9bd52a1c0038c329e5190a1e44ca2c44",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Payment_Confirmed.listView-meta.xml": "9d4c33144a88bf01ceabf501f51eb57ad907303f712f9027a49fb31716034eb9",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Payments_Due.listView-meta.xml": "cad6911eb36ec036330817284cb782c479d009047d8b53f6ba3192e9952f337c",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Quotes_Required.listView-meta.xml": "0df5c440b220353e10c711bbb3ad4b7ea76d01f7864581987048f1ec097a3b4b",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Staff_Updates_Due.listView-meta.xml": "be557136afcb4c30ad9df87fe9678daae953517200ef9d5db8c4e63be9630cf9",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Top_Up_Invoices_Required.listView-meta.xml": "1c0aea474344830dd58a4db6b59d2fab744f29fdb78560e7af5deaa5530112b2",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Top_Up_Paid.listView-meta.xml": "6f4351604dde297e25c55de00473bca2285c11a7a8c1dcfea250eec85d3730bd",
+    "force-app/main/default/objects/Opportunity/listViews/NTE_Top_Up_Payments_Due.listView-meta.xml": "111f48b652c6715a4a05bdfe3bf1c26b614d517ca317fc2193878a448f424a2e",
+    "force-app/main/default/objects/Opportunity/recordTypes/NTE_Event_Opportunity.recordType-meta.xml": "efd99e68d30fb8f93e105127bd346f74cb73ecf145252b4fb6541ca149562866",
+    "force-app/main/default/permissionsetgroups/NTE_Management_Access.permissionsetgroup-meta.xml": "0bd13f43c6e5fdc45e8604e6382470efd71c57ae25fed7893e62fd5dea37e8d8",
+    "force-app/main/default/permissionsets/NTE_Forms_Administration.permissionset-meta.xml": "6cc154009c67d4eedcbf7e5c3e188b7756dfbc8881ee4c5c57c00a6b168add36",
+    "force-app/main/default/permissionsets/NTE_Management_User.permissionset-meta.xml": "d741715fb8677188388c33d640720d945e64e605715df861913518064cec835f",
+    "force-app/main/default/permissionsets/NTE_Stripe_Test_Operator.permissionset-meta.xml": "338e822c1492613fd515edcfd8449f9804e05a5488efd301e4768f748eebfe16",
+    "force-app/main/default/permissionsets/Volunteer_Applications_User.permissionset-meta.xml": "359f1765c803aabcfbce989ad3fe547a215f34c4024fb191ac65091ab4c30cb8",
+    "force-app/main/default/quickActions/Lead.Retry_Update_Email.quickAction-meta.xml": "c3da4ffb43a61f85435ddec5fd61846c7ea58df45a1e2dc880c613d1c097a112",
+    "force-app/main/default/quickActions/NTE_Email_Dispatch__c.Retry_Email.quickAction-meta.xml": "f141a89058d5dd6c011dc46f135ad24eb34cf46f6ad916b44baf15cee524c5b5",
+    "force-app/main/default/quickActions/Opportunity.Retry_Booking_Email.quickAction-meta.xml": "63fdc09c309107a0787efbd3556578b226feca59fd2f51546b982468c6849f20",
+    "force-app/main/default/reports/NTE_Operations/NTE_01_Guest_Check_In_and_Accessibility.report-meta.xml": "fce6ee8f116e4fc531d119fee7e67a7e26514bd820560f391c853439f2e6d86f",
+    "force-app/main/default/reports/NTE_Operations/NTE_02_Partner_Sponsor_Event_Operations.report-meta.xml": "2a7d11e1b9cd4feda835c167f21e6ae54121eb0eb38ec13e396a4b63c0041477",
+    "force-app/main/default/reports/NTE_Operations/NTE_03_Exhibitor_Event_Operations.report-meta.xml": "b54062763a0764dc52f792a82ce1689fa20e2b24a1b0370c7d5d340ff44451fa",
+    "force-app/main/default/reports/NTE_Operations/NTE_04_Staff_and_Accreditation_Roster.report-meta.xml": "faac885e4c7b3eb06767bd358e09fc852bba8b923e1ef14f881e38dfb60c1b17",
+    "force-app/main/default/reports/NTE_Operations/NTE_05_Heavy_Vehicles_and_Logistics.report-meta.xml": "c1d271ed014284e30a893ca4e920164eb2987d9367de99d9499a66ffc08b6281",
+    "force-app/main/default/reports/NTE_Operations/NTE_06_Finance_and_Invoicing.report-meta.xml": "3f3b34b24bb98a49a879a0073ab0c542f987020f218be8d7545a305ef3ca3649",
+    "force-app/main/default/reports/NTE_Operations/NTE_07_Application_and_EOI_Pipeline.report-meta.xml": "eedfe44a472a8abe1e451e498d63f407fe55fd15f1134127088ff2b9abc08eaf",
+    "force-app/main/default/reports/NTE_Operations/NTE_08_Event_Delivery_Readiness.report-meta.xml": "a0a2e6f82232a0eb7e1001e829395a0d3f3a3f1fb981aab8be2b94d2d4ff9479",
+    "force-app/main/default/reports/NTE_Operations/NTE_09_Weekly_Finance_Report.report-meta.xml": "a45a9ab1a5d8a9767dd32bad8c4291b32d493620c97a313955a1be9ff4666686",
+    "force-app/main/default/reports/NTE_Operations.reportFolder-meta.xml": "650d8c5023866bcf21825eb90221a77d162c62de6081d262813039c912232ace",
+    "force-app/main/default/sharingRules/Opportunity.sharingRules-meta.xml": "c3170210bb9db128e5a91ac26959dd8620f49131110d3fd0b55aa75d38924f4d",
+    "force-app/main/default/standardValueSets/LeadSource.standardValueSet-meta.xml": "5a1c60ebb2fe3fe062670bf0eaf74b17f2565009114dea8097f5d65c9cfafb8e",
+    "force-app/main/default/standardValueSets/OpportunityStage.standardValueSet-meta.xml": "83d467340fa41cf986ce83d352124fc69cea996d1d66ad4d45c4b8df110f7efd",
+    "force-app/main/default/staticresources/NTE_Management_Logo.resource": "d116f8ceb9b31bb7306ed0a7966c3e5ac0cc3569cb53e516f993f960c026fee7",
+    "force-app/main/default/staticresources/NTE_Management_Logo.resource-meta.xml": "525a9c438b73791738981d67405b6feb09bbad842cd418d42d447ffed8a76a65",
+    "force-app/main/default/tabs/NTE_Master_Panel.tab-meta.xml": "069685e4c4cbfb391c2651808c3520b94e8d022666d88d3973ad8bbbc28751e2",
+    "manifest/production-package.xml": "95a38fb9069d4fe2009be6ebaadaa66a59bed1b83a2947357f469258305244e5"
+  },
+  "members": [
+    [
+      "ApexClass",
+      "NTEBookingContactService"
+    ],
+    [
+      "ApexClass",
+      "NTEBookingPaymentEmailTest"
+    ],
+    [
+      "ApexClass",
+      "NTEConversionFlowTest"
+    ],
+    [
+      "ApexClass",
+      "NTEEmailDispatchService"
+    ],
+    [
+      "ApexClass",
+      "NTEEmailDispatchServiceTest"
+    ],
+    [
+      "ApexClass",
+      "NTEExhibitorApprovalEmailService"
+    ],
+    [
+      "ApexClass",
+      "NTEExhibitorApprovalEmailServiceTest"
+    ],
+    [
+      "ApexClass",
+      "NTEInboundLeadService"
+    ],
+    [
+      "ApexClass",
+      "NTEInboundLeadServiceTest"
+    ],
+    [
+      "ApexClass",
+      "NTEMasterPanelFinanceTest"
+    ],
+    [
+      "ApexClass",
+      "NTEMasterPanelReadinessTest"
+    ],
+    [
+      "ApexClass",
+      "NTEMetadataReportStressTest"
+    ],
+    [
+      "ApexClass",
+      "NTEPanelStressTest"
+    ],
+    [
+      "ApexClass",
+      "NTEPricingService"
+    ],
+    [
+      "ApexClass",
+      "NTEPricingServiceTest"
+    ],
+    [
+      "ApexClass",
+      "NTEPricingStressTest"
+    ],
+    [
+      "ApexClass",
+      "NTERelatedOpportunityController"
+    ],
+    [
+      "ApexClass",
+      "NTERelatedOpportunityControllerTest"
+    ],
+    [
+      "ApexClass",
+      "NTEStripeBookingService"
+    ],
+    [
+      "ApexClass",
+      "NTEStripeBookingServiceTest"
+    ],
+    [
+      "ApexClass",
+      "NTEStripeClient"
+    ],
+    [
+      "ApexClass",
+      "NTEStripeClientTest"
+    ],
+    [
+      "ApexClass",
+      "NTEUpdateSubmissionJob"
+    ],
+    [
+      "ApexClass",
+      "NTEUpdateSubmissionService"
+    ],
+    [
+      "ApexClass",
+      "NTEUpdateSubmissionServiceTest"
+    ],
+    [
+      "ApexClass",
+      "NTE_MasterPanelController"
+    ],
+    [
+      "ApexClass",
+      "NTE_MasterPanelControllerTest"
+    ],
+    [
+      "ApexClass",
+      "VolunteerInboundLeadService"
+    ],
+    [
+      "ApexClass",
+      "VolunteerInboundLeadServiceTest"
+    ],
+    [
+      "AuraDefinitionBundle",
+      "NTE_OneRegionHomeTemplate"
+    ],
+    [
+      "BusinessProcess",
+      "Opportunity.NTE_Sales_Process"
+    ],
+    [
+      "ContentAsset",
+      "NTE_Management_Logo"
+    ],
+    [
+      "CustomApplication",
+      "NTE_Management"
+    ],
+    [
+      "CustomField",
+      "Account.NTE_Booking_Reference__c"
+    ],
+    [
+      "CustomField",
+      "Account.NTE_Event_Code__c"
+    ],
+    [
+      "CustomField",
+      "Account.NTE_Last_Application_Date__c"
+    ],
+    [
+      "CustomField",
+      "Account.NTE_Participant__c"
+    ],
+    [
+      "CustomField",
+      "Account.NTE_Source_Form_Type__c"
+    ],
+    [
+      "CustomField",
+      "Contact.NTE_Booking_Reference__c"
+    ],
+    [
+      "CustomField",
+      "Contact.NTE_Contact_Role__c"
+    ],
+    [
+      "CustomField",
+      "Contact.NTE_Event_Code__c"
+    ],
+    [
+      "CustomField",
+      "Contact.NTE_Last_Application_Date__c"
+    ],
+    [
+      "CustomField",
+      "Contact.NTE_Participant__c"
+    ],
+    [
+      "CustomField",
+      "Contact.NTE_Source_Form_Type__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Accompanying_Guest_Email__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Accompanying_Guest_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Additional_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Additional_Staff_Required__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Additional_Staff_Total__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Additional_Staff_Unit_Price__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Alternative_Organisation_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Booking_Reference__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Consent_Contact__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Consent_PII__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Consent_Promotion__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Contact_Consent__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Date_of_Birth__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Declaration_Date__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Declaration_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Delivery_Window__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Event_Contact_Email__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Event_Contact_Mobile__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Event_Contact_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Event_Contact_Title__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Event_Discovery_Source__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Community_Contribution__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Hall_Schedule__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Interest_Areas__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Interest_Detail__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Organisation_Category__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Space_Position__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Space_Price__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Space_Selections__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Exhibitor_Space_Size__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Form_Version__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Guest_Accessibility_Details__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Guest_Accessibility_Required__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Guest_Accompanying__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Guest_Information_Declaration__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Has_Special_Requirements__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Haulier_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Haulier_Staff__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Haulier_Vehicle_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Haulier_Vehicle_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Haulier_Vehicle_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Haulier_Vehicle_Type__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_1_Description__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_1_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_1_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_1_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_2_Description__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_2_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_2_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_2_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_3_Description__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_3_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_3_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Item_3_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Heavy_Vehicle_Required__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Included_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Industry_Body_Details__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Interested_in_Volunteering__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoice_Additional_Information__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoice_Address__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoice_Contact_Phone__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoice_Required__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoiced_Company__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoiced_Email__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Invoiced_Person__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Listed_Price_Total__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Logo_Upload_URL__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NOK_Address__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NOK_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NOK_Phone__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NOK_Postcode__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NOK_Relationship__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Applicant_Email_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Application_Rejected__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Email_Error__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Event_Code__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Interest_Not_Progressed__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Interest_Progressed__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Internal_Email_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Invitation_Recipient__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Invitation_Sent_At__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Invitation_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Update_Booking_Id__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Update_Error__c"
+    ],
+    [
+      "CustomField",
+      "Lead.NTE_Update_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Organisation_Type__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Partner_Interest_Areas__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Partner_Interest_Type__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Partnership_Interest_Detail__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Payment_Method__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Planned_Exhibitor_Count__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Power_Socket_Count__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Power_Socket_Total__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Power_Socket_Unit_Price__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Preferred_Contact_Method__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Preferred_Contact_Time__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Previous_NTE_Events__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Pricing_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Pricing_Version__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Purchase_Order_Number__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Purchase_Order__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Quote_Required_for_PO__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Secondary_Contact_Email__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Secondary_Contact_Mobile__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Secondary_Contact_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Secondary_Contact_Phone__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Secondary_Contact_Prefix__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Secondary_Contact_Title__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Sponsor_Package_Total__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Sponsor_Package__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Sponsored_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Staff_Base_Names__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Staff_Update_Audience__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Stand_Colleagues__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Stand_Equipment__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Stand_Extra_Notes__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Stand_Power__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Stand_Special_Requirements__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Supplier_Agreement_Required__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Target_Booking_Reference__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Terms_and_Conditions__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Top_Up_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Top_Up_Staff_Names__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Top_Up_Staff_Required__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Top_Up_Staff_Total__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Top_Up_Staff_Unit_Price__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Total_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Trading_Name__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Applicant_Email_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Armed_Forces_Service__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Availability__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Code_Consent__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Code_Version__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Consent__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_DBS_Willing__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Email_Error__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Form_Version__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Hours__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Internal_Email_Status__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Opportunities__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Service_Dates__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Service_Details__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Skills__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Volunteer_Travel_Regions__c"
+    ],
+    [
+      "CustomField",
+      "Lead.Web_Form_Type__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Contact__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Dispatch_Key__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Error__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Event_Code__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Fingerprint__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Kind__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Lead__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Link__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Message__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Opportunity__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Recipient__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Run_Id__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Sent_At__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Status__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Email_Dispatch__c.Subject__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Amount_Minor__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Batch_Key__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Charge_Key__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Currency__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Delivered_At__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Description__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Error__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.First_Attempt_At__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Kind__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Link_Id__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Net_Minor__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Opportunity__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Payment_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Price_Id__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Recipient__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Reference__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Source_Fingerprint__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Source_Lead_Id__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Status__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Stripe_Account__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Tax_Rate__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Payment_Request__c.Verified_At__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Application_Event_Code__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Exhibitor_Application_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Exhibitor_Final_Pack_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Exhibitor_Staff_Form_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Heavy_Vehicle_Form_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Logo_Update_Form_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Owner_Username__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Partner_Application_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Partner_Final_Pack_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Routing_Config__mdt.Partner_Staff_Form_URL__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Stripe_Config__mdt.Allowed_Email__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Stripe_Config__mdt.Enabled__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Stripe_Config__mdt.Expected_Account_Id__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Stripe_Config__mdt.Expected_Org_Id__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Stripe_Config__mdt.Reference_Prefix__c"
+    ],
+    [
+      "CustomField",
+      "NTE_Stripe_Config__mdt.Tax_Rate__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.Booking_Reference__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Additional_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Additional_Staff_Required__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Additional_Staff_Total__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Additional_Staff_Unit_Price__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Alternative_Organisation_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Batch__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Error__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Lead_Id__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Recipient__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Requested_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Requested_By__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Sent_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Approval_Email_Status__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Attendance_Status__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Confirmed_Value__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Declaration_Date__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Declaration_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Delivery_Window__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Event_Code__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Event_Contact_Email__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Event_Contact_Mobile__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Event_Contact_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Event_Contact_Title__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Event_Discovery_Source__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Exhibitor_Hall_Schedule__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Exhibitor_Organisation_Category__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Exhibitor_Space_Position__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Exhibitor_Space_Price__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Exhibitor_Space_Selections__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Exhibitor_Space_Size__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Final_Pack_Recipient__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Final_Pack_Sent_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Final_Pack_Status__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Finance_Invoice_Due__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Finance_Payment_Confirmed__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Finance_Payment_Due__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Form_Version__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Has_Special_Requirements__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Haulier_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Haulier_Staff__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Haulier_Vehicle_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Haulier_Vehicle_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Haulier_Vehicle_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Haulier_Vehicle_Type__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_1_Description__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_1_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_1_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_1_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_2_Description__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_2_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_2_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_2_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_3_Description__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_3_Dimensions__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_3_Gross_Weight__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Item_3_Registration__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Vehicle_Required__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Heavy_Vehicle_Update_Completed_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Included_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Industry_Body_Details__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Initial_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Additional_Information__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Address__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Contact_Phone__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Provided_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Provided_By__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Provided__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoice_Required__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoiced_Company__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoiced_Email__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Invoiced_Person__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Last_Update_Declaration_Date__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Last_Update_Declaration_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Last_Update_Error__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Last_Update_Form_Version__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Last_Update_Processed_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Last_Update_Type__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Listed_Price_Total__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Logo_Update_Provided_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Logo_Update_Provided__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Payment_Method__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Payment_Received_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Payment_Received__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Payment_Recorded_By__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Planned_Exhibitor_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Power_Socket_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Power_Socket_Total__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Power_Socket_Unit_Price__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Previous_Events__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Pricing_Ready__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Pricing_Status__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Pricing_Version__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Purchase_Order_Number__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Purchase_Order__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Quote_Provided_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Quote_Provided_By__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Quote_Provided__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Quote_Required_for_PO__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Secondary_Contact_Email__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Secondary_Contact_Mobile__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Secondary_Contact_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Secondary_Contact_Phone__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Secondary_Contact_Prefix__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Secondary_Contact_Title__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Source_Form_Type__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Sponsor_Package_Total__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Sponsor_Package__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Sponsored_Name__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Staff_Update_Completed_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Stand_Colleagues__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Stand_Equipment__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Stand_Extra_Notes__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Stand_Power__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Stand_Special_Requirements__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Supplier_Agreement_Required__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Terms_Accepted__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Invoice_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Invoice_By__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Invoice_Provided__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Invoice_Required__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Payment_At__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Payment_By__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Payment_Received__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Staff_Names__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Staff_Required__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Staff_Total__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Top_Up_Staff_Unit_Price__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Total_Staff_Count__c"
+    ],
+    [
+      "CustomField",
+      "Opportunity.NTE_Trading_Name__c"
+    ],
+    [
+      "CustomMetadata",
+      "NTE_Routing_Config.Default"
+    ],
+    [
+      "CustomMetadata",
+      "NTE_Stripe_Config.Default"
+    ],
+    [
+      "CustomObject",
+      "NTE_Email_Dispatch__c"
+    ],
+    [
+      "CustomObject",
+      "NTE_Payment_Request__c"
+    ],
+    [
+      "CustomObject",
+      "NTE_Routing_Config__mdt"
+    ],
+    [
+      "CustomObject",
+      "NTE_Stripe_Config__mdt"
+    ],
+    [
+      "CustomTab",
+      "NTE_Master_Panel"
+    ],
+    [
+      "DuplicateRule",
+      "Lead.NTE_Web_to_Lead_Duplicate_Report"
+    ],
+    [
+      "DuplicateRule",
+      "Lead.Standard_Rule_for_Leads_with_Duplicate_Contacts"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Complimentary_Exhibitor_Approved"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Exhibitor_Application_Internal"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Exhibitor_Approved"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Exhibitor_EOI_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Exhibitor_EOI_Internal"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Exhibitor_Payment_Confirmed"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Exhibitor_Staff_Update_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Guest_Registration_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Guest_Registration_Internal"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Heavy_Vehicle_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Partner_Sponsor_Application_Internal"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Partner_Sponsor_Approved"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Partner_Sponsor_EOI_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Partner_Sponsor_EOI_Internal"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Partner_Sponsor_Payment_Confirmed"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Partner_Staff_Update_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/NTE_Staff_Update_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/Volunteer_Application_Acknowledgement"
+    ],
+    [
+      "EmailTemplate",
+      "unfiled$public/Volunteer_Application_Internal"
+    ],
+    [
+      "ExternalCredential",
+      "NTE_Stripe_Test"
+    ],
+    [
+      "FlexiPage",
+      "NTE_Management_Account_Record_Page"
+    ],
+    [
+      "FlexiPage",
+      "NTE_Management_Contact_Record_Page"
+    ],
+    [
+      "FlexiPage",
+      "NTE_Management_Home"
+    ],
+    [
+      "FlexiPage",
+      "NTE_Management_Lead_Record_Page"
+    ],
+    [
+      "FlexiPage",
+      "NTE_Management_Opportunity_Record_Page"
+    ],
+    [
+      "Flow",
+      "NTE_Copy_Converted_Lead_to_Opportunity"
+    ],
+    [
+      "Flow",
+      "NTE_Inbound_Lead_Routing"
+    ],
+    [
+      "Flow",
+      "NTE_Supplementary_Update_Handler"
+    ],
+    [
+      "Flow",
+      "Volunteer_Inbound_Lead_Notification"
+    ],
+    [
+      "Layout",
+      "NTE_Email_Dispatch__c-NTE Email Dispatch"
+    ],
+    [
+      "Layout",
+      "NTE_Payment_Request__c-NTE Payment Request"
+    ],
+    [
+      "LightningComponentBundle",
+      "nteManagementHome"
+    ],
+    [
+      "LightningComponentBundle",
+      "nteMasterPanel"
+    ],
+    [
+      "LightningComponentBundle",
+      "nteRelatedOpportunities"
+    ],
+    [
+      "LightningComponentBundle",
+      "nteRetryEmail"
+    ],
+    [
+      "ListView",
+      "Account.NTE_Organisations"
+    ],
+    [
+      "ListView",
+      "Contact.NTE_Contacts"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_All_Web_Submissions"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Applications"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Exhibitor_Applications"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Expressions_of_Interest"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Guest_Registrations"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Partner_Sponsor_Applications"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Unmatched_Updates"
+    ],
+    [
+      "ListView",
+      "Lead.NTE_Update_Emails_Failed"
+    ],
+    [
+      "ListView",
+      "Lead.Volunteer_Applications"
+    ],
+    [
+      "ListView",
+      "NTE_Email_Dispatch__c.NTE_Email_Failures"
+    ],
+    [
+      "ListView",
+      "NTE_Email_Dispatch__c.NTE_Recent_Emails"
+    ],
+    [
+      "ListView",
+      "NTE_Payment_Request__c.NTE_Payment_Requests"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Event_Participation"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Heavy_Vehicle_Updates_Due"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Invoices_Required"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Logo_Updates_Due"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Payment_Confirmed"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Payments_Due"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Quotes_Required"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Staff_Updates_Due"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Top_Up_Invoices_Required"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Top_Up_Paid"
+    ],
+    [
+      "ListView",
+      "Opportunity.NTE_Top_Up_Payments_Due"
+    ],
+    [
+      "NamedCredential",
+      "NTE_Stripe_Test"
+    ],
+    [
+      "PermissionSet",
+      "NTE_Forms_Administration"
+    ],
+    [
+      "PermissionSet",
+      "NTE_Management_User"
+    ],
+    [
+      "PermissionSet",
+      "NTE_Stripe_Test_Operator"
+    ],
+    [
+      "PermissionSet",
+      "Volunteer_Applications_User"
+    ],
+    [
+      "PermissionSetGroup",
+      "NTE_Management_Access"
+    ],
+    [
+      "QuickAction",
+      "Lead.Retry_Update_Email"
+    ],
+    [
+      "QuickAction",
+      "NTE_Email_Dispatch__c.Retry_Email"
+    ],
+    [
+      "QuickAction",
+      "Opportunity.Retry_Booking_Email"
+    ],
+    [
+      "RecordType",
+      "Opportunity.NTE_Event_Opportunity"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_01_Guest_Check_In_and_Accessibility"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_02_Partner_Sponsor_Event_Operations"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_03_Exhibitor_Event_Operations"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_04_Staff_and_Accreditation_Roster"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_05_Heavy_Vehicles_and_Logistics"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_06_Finance_and_Invoicing"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_07_Application_and_EOI_Pipeline"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_08_Event_Delivery_Readiness"
+    ],
+    [
+      "Report",
+      "NTE_Operations/NTE_09_Weekly_Finance_Report"
+    ],
+    [
+      "ReportFolder",
+      "NTE_Operations"
+    ],
+    [
+      "SharingCriteriaRule",
+      "Opportunity.NTE_Opportunities_Internal_Edit"
+    ],
+    [
+      "SharingRules",
+      "Opportunity"
+    ],
+    [
+      "StandardValueSet",
+      "LeadSource"
+    ],
+    [
+      "StandardValueSet",
+      "OpportunityStage"
+    ],
+    [
+      "StaticResource",
+      "NTE_Management_Logo"
+    ],
+    [
+      "ValidationRule",
+      "Lead.NTE_Intake_Event_Code"
+    ],
+    [
+      "ValidationRule",
+      "Lead.NTE_Interest_Decision_Exclusive"
+    ],
+    [
+      "ValidationRule",
+      "Lead.Volunteer_Code_Required"
+    ]
+  ],
+  "changedPaths": [
+    "force-app/main/default/classes/NTEStripeBookingService.cls",
+    "force-app/main/default/classes/NTEStripeBookingServiceTest.cls"
+  ],
+  "capturedSourceAndPublicFiles": 643,
+  "capturedFilesUnchanged": 641,
+  "nativeClassParity": true,
+  "existingStripeRequestsPreserved": 9,
+  "preservation": "All fields returned by FIELDS(ALL) for all nine existing payment requests match their before-release readback; no payment requests were created.",
+  "configurationPreserved": true,
+  "sameComponentIdentitiesAsPriorQualification": true,
+  "localValidation": {
+    "command": "npm run validate",
+    "result": "Passed; build retained only the two approved application-source changes"
+  },
+  "website": {
+    "filesChanged": 0,
+    "publicationNeeded": false,
+    "reason": "All captured public pages, forms, assets and email previews remain unchanged"
+  },
+  "newLiveSubmissions": 0,
+  "newStripePaymentSimulations": 0,
+  "operationalEmailsSent": 0,
+  "productionDeployed": false,
+  "liveStripeConfigured": false,
+  "scopeLimits": [
+    "Existing saved descriptions retain their original creation/retry payload.",
+    "No new Stripe request or checkout was created for this cosmetic change; the existing affected tests verify request wording and outbound payloads.",
+    "Client sandbox qualification, agreed settings, explicit live-mode code/configuration, live access and authorised activation remain pending."
+  ],
+  "evidenceDirectory": "tmp/nte-stripe-neutral-20260911"
+}

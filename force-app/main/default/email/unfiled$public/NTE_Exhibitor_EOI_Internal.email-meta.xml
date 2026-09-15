@@ -6,11 +6,11 @@
     <name>Internal NTE exhibitor expression of interest notification</name>
     <style>none</style>
     <subject>New NTE exhibitor expression of interest</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Internal notification
+    <textOnly>NTE27 · Internal notification
 
 New exhibitor interest.
 
-{!Lead.Company} would like to exhibit at {!Lead.NTE_Event_Code__c}.
+{!Lead.Company} would like to exhibit at NTE27.
 
 Hello NTE team,
 
@@ -27,7 +27,7 @@ Value-adding activities {!Lead.Exhibitor_Community_Contribution__c}
 Preferred contact {!Lead.Preferred_Contact_Method__c}
 Best time to contact {!Lead.Preferred_Contact_Time__c}
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

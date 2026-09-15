@@ -195,13 +195,14 @@ private class NTEMasterPanelReadinessTest {
         Test.startTest();
         NTE_MasterPanelController.DashboardResponse sent =
             NTE_MasterPanelController.getDashboard('NTE2099', 'ALL', null, 'FINAL_PACK_SENT', 25, 0);
-        List<Id> selected = NTE_MasterPanelController.getCommunicationRecordIds('NTE2099', 'ALL', null, 'COMPLETED');
+        Boolean rejected = false;
+        try { NTE_MasterPanelController.getCommunicationRecordIds('NTE2099', 'ALL', null, 'COMPLETED'); } catch (AuraHandledException expected) { rejected=true; }
+        System.assert(rejected);
         Test.stopTest();
         System.assertEquals(1, sent.totalRows);
         System.assertEquals('Pack already sent', sent.rows[0].name);
         System.assertEquals('Sent', sent.rows[0].finalPackStatus);
         System.assertNotEquals(null, sent.rows[0].finalPackSentAt);
-        System.assertEquals(new Set<Id>{due.rows[0].recordId}, new Set<Id>(selected));
         System.assertEquals(1, counts(due).get('FINAL_PACK_DUE'));
         System.assertEquals(1, counts(due).get('FINAL_PACK_SENT'));
         for (NTE_MasterPanelController.WorkQueue queue : due.workQueues) {
@@ -220,14 +221,10 @@ private class NTEMasterPanelReadinessTest {
             NTE_Top_Up_Invoice_Required__c = true, NTE_Top_Up_Invoice_Provided__c = false,
             NTE_Top_Up_Payment_Received__c = false);
         System.assertEquals(false, NTE_MasterPanelController.isComplete(readiness('Pack already sent')));
-        System.assertEquals(false, NTE_MasterPanelController.getCommunicationRecordIds(
-            'NTE2099', 'ALL', null, 'COMPLETED').contains(sent.Id));
         update new Opportunity(Id = sent.Id, NTE_Top_Up_Invoice_Provided__c = true, NTE_Top_Up_Payment_Received__c = true);
         Test.startTest();
         NTE_MasterPanelController.DashboardResponse sentAgain =
             NTE_MasterPanelController.getDashboard('NTE2099', 'ALL', null, 'FINAL_PACK_SENT', 25, 0);
-        System.assertEquals(false, NTE_MasterPanelController.getCommunicationRecordIds(
-            'NTE2099', 'ALL', null, 'FINAL_PACK_DUE').contains(sent.Id));
         Test.stopTest();
         System.assertEquals(1, sentAgain.totalRows);
         System.assertEquals(sent.Id, sentAgain.rows[0].recordId);
@@ -330,7 +327,7 @@ private class NTEMasterPanelReadinessTest {
             RecordTypeId = recordTypeId, Name = name, AccountId = accountId, StageName = stageName,
             CloseDate = Date.today().addDays(30), NTE_Event_Code__c = eventCode,
             NTE_Source_Form_Type__c = 'Exhibitor Application', Booking_Reference__c = 'NTE-READINESS-' + eventCode + '-' + name,
-            NTE_Invoice_Required__c = 'No', NTE_Listed_Price_Total__c = 0, Amount = 0,
+            NTE_Free_Space_Confirmed__c = true, NTE_Approval_Email_Sent_At__c = System.now(), NTE_Invoice_Required__c = 'No', NTE_Listed_Price_Total__c = 0, Amount = 0,
             NTE_Pricing_Status__c = 'Calculated', NTE_Quote_Required_for_PO__c = 'No',
             NTE_Heavy_Vehicle_Required__c = 'No', NTE_Staff_Update_Completed_At__c = System.now(),
             NTE_Logo_Update_Provided__c = logoProvided,
@@ -344,7 +341,7 @@ private class NTEMasterPanelReadinessTest {
             Web_Form_Type__c = formType, NTE_Event_Code__c = eventCode);
     }
     private static Opportunity readiness(String name) {
-        return [SELECT Id, NTE_Pricing_Status__c, NTE_Quote_Required_for_PO__c, NTE_Quote_Provided__c,
+        return [SELECT Id, NTE_Approval_Email_Sent_At__c, NTE_Free_Space_Confirmed__c, NTE_Pricing_Status__c, NTE_Quote_Required_for_PO__c, NTE_Quote_Provided__c,
             NTE_Invoice_Required__c, NTE_Listed_Price_Total__c, NTE_Invoice_Provided__c, NTE_Payment_Received__c,
             NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Invoice_Provided__c,
             NTE_Top_Up_Payment_Received__c, NTE_Heavy_Vehicle_Required__c,

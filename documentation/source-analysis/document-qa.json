@@ -1,0 +1,15 @@
+{
+  "docx": "/Users/stevo/Downloads/mission community updated datamodel/output/doc/NTE_Salesforce_Operations_and_Reconstruction_Manual.docx",
+  "pdf": "/Users/stevo/Downloads/mission community updated datamodel/tmp/project-documentation/render-release3/NTE_Salesforce_Operations_and_Reconstruction_Manual.pdf",
+  "pages": 211,
+  "originalScreenshotsEmbedded": 19,
+  "editableNumberedLabels": 175,
+  "diagrams": 4,
+  "fieldNamesPresent": 342,
+  "implementationMethodEntriesPresent": 301,
+  "lwcMethodGetterHandlerEntries": 148,
+  "lwcApexImportsPresent": 12,
+  "internalLinksValid": true,
+  "originalSourceFilesChanged": [],
+  "visualReview": "See visual-review.json for page-by-page review completion"
+}

@@ -1,0 +1,46 @@
+{
+  "qualifiedAt": "2026-09-10T10:34:52.901945+00:00",
+  "actualDeployment": {
+    "id": "0AfAd00000SrqQCKAZ",
+    "status": "Succeeded",
+    "components": 7,
+    "tests": 18,
+    "completedDate": "2026-09-10T10:26:08.000Z"
+  },
+  "fullValidation": {
+    "id": "0AfAd00000Ss3X3KAJ",
+    "status": "Succeeded",
+    "components": 469,
+    "tests": 304,
+    "completedDate": "2026-09-10T10:33:19.000Z",
+    "matchingMembers": 469,
+    "matchingSourceAndManifestHashes": 533,
+    "aggregateSha256": "39f123aacee3f888ba0dc8443ca5a6814e9c28d1bb46dd33daab94a5427db96a"
+  },
+  "formChecks": {
+    "passed": 139,
+    "failed": 0,
+    "combinations": 34986
+  },
+  "publication": {
+    "commit": "39f5d35215b5c9f7d563f2c49b10c16e7e0f229e",
+    "baseCommit": "3f3af51111acea1fdf29b9fce70805d9bb8f8521",
+    "changedFiles": 6,
+    "hostedFilesVerified": 10,
+    "checkedAt": "2026-09-10T10:30:19.568877+00:00",
+    "pagesRunUrl": "https://github.com/stevostar1234/nte27-web-to-lead-demo/actions/runs/34466239405",
+    "url": "https://stevostar1234.github.io/nte27-web-to-lead-demo/volunteer-application.html"
+  },
+  "document": {
+    "version": "September 2026",
+    "originalSha256": "ac4d85765e6726e86b1385fee18f4875cd66163210b15123e266bf3b18a2c939",
+    "preservedParagraphs": 101
+  },
+  "scope": {
+    "liveSubmissions": 0,
+    "liveEmailSends": 0,
+    "productionRelease": false,
+    "codeOfConduct": "Open-and-scroll reader with separate required acknowledgement, saved version and scoped native validation",
+    "branding": "Excluded by owner; existing logo and style retained"
+  }
+}

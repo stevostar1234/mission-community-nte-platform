@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>NTE partner / sponsor waived booking confirmation</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>NTE partner / sponsor waived booking confirmation</name>
+    <style>none</style>
+    <subject>Your NTE partnership / sponsorship is confirmed</subject>
+    <textOnly>{NTE_EVENT_SHORT_LABEL} · Partner / sponsor confirmation
+
+Your partnership / sponsorship is confirmed.
+
+{NTE_ORGANISATION} has been allocated a partner / sponsor package at {NTE_EVENT_SHORT_LABEL}.
+
+{!IF(ISBLANK(Contact.FirstName),&quot;Hello,&quot;,&quot;Hi &quot;)}{!Contact.FirstName}{!IF(ISBLANK(Contact.FirstName),&quot;&quot;,&quot;,&quot;)}
+
+We are delighted to confirm your partner / sponsor package at {NTE_EVENT_SHORT_LABEL}.
+
+Your confirmed allocation
+
+{NTE_PAYMENT_NOTE}
+
+Your agreement
+
+{NTE_AGREEMENT_NOTE}
+
+Staff details and event preparation
+
+When your final attendee list is ready, submit the names using the Provide staff details link below.
+
+Please submit your latest artwork using the Upload your logo link below. We request latest artwork from every participating organisation, as branding may have changed.
+
+{NTE_VEHICLE_NOTE}For garage exhibits and large stands in the halls, setting up between 14:00-18:00 hrs on Sunday is required.
+
+{NTE_PREPARATION_LINKS}
+
+Allocation and charges
+
+{NTE_FINANCE_SUMMARY}
+
+Organisation and contact
+Organisation {NTE_ORGANISATION}
+Booking reference {!Opportunity.Booking_Reference__c}
+Primary contact {!Contact.FirstName} {!Contact.LastName}
+Email {!Contact.Email}
+Telephone {!Contact.Phone}
+{!IF(AND(ISBLANK(Opportunity.NTE_Event_Contact_Name__c),ISBLANK(Opportunity.NTE_Event_Contact_Email__c)),&quot;&quot;,&quot;Event contact &quot;)}{!Opportunity.NTE_Event_Contact_Name__c}{!IF(OR(ISBLANK(Opportunity.NTE_Event_Contact_Email__c),ISBLANK(Opportunity.NTE_Event_Contact_Name__c)),&quot;&quot;,&quot; · &quot;)}{!Opportunity.NTE_Event_Contact_Email__c}
+
+
+Package and arrangements
+Package(s) {!Opportunity.NTE_Sponsor_Package__c}
+Power {!Opportunity.NTE_Stand_Power__c}
+Equipment {!Opportunity.NTE_Stand_Equipment__c}
+Heavy vehicle follow-up {!Opportunity.NTE_Heavy_Vehicle_Required__c}
+Planned staff {!Opportunity.NTE_Total_Staff_Count__c}
+
+If anything above needs correcting, reply to this email or contact nte@missioncommunity.org (mailto:nte@missioncommunity.org).
+
+Kind regards,
+The National Transition Event Team
+Mission Community
+
+{NTE_EVENT_SHORT_LABEL} • The Wing, Silverstone
+
+nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

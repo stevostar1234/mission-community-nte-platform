@@ -1,0 +1,135 @@
+[
+  {
+    "number": 1,
+    "key": "01",
+    "source": "documentation/screenshots/01-master-panel.png",
+    "title": "Master Panel orientation",
+    "labels": 16
+  },
+  {
+    "number": 2,
+    "key": "19",
+    "source": "documentation/screenshots/19-interest-actions.png",
+    "title": "Interest row decision controls",
+    "labels": 4
+  },
+  {
+    "number": 3,
+    "key": "18",
+    "source": "documentation/screenshots/18-rejection-confirmation.png",
+    "title": "Review decision confirmation",
+    "labels": 4
+  },
+  {
+    "number": 4,
+    "key": "02",
+    "source": "documentation/screenshots/02-invitation-composer.png",
+    "title": "Application invitation composer",
+    "labels": 11
+  },
+  {
+    "number": 5,
+    "key": "04",
+    "source": "documentation/screenshots/04-applications.png",
+    "title": "Application review queue",
+    "labels": 7
+  },
+  {
+    "number": 6,
+    "key": "05",
+    "source": "documentation/screenshots/05-native-conversion.png",
+    "title": "Native Salesforce conversion",
+    "labels": 11
+  },
+  {
+    "number": 7,
+    "key": "06",
+    "source": "documentation/screenshots/06-finance.png",
+    "title": "Finance overview",
+    "labels": 11
+  },
+  {
+    "number": 8,
+    "key": "07",
+    "source": "documentation/screenshots/07-quotes-required.png",
+    "title": "Quotes required",
+    "labels": 3
+  },
+  {
+    "number": 9,
+    "key": "08",
+    "source": "documentation/screenshots/08-invoices-required.png",
+    "title": "Invoices required",
+    "labels": 3
+  },
+  {
+    "number": 10,
+    "key": "09",
+    "source": "documentation/screenshots/09-updates.png",
+    "title": "Outstanding preparation",
+    "labels": 9
+  },
+  {
+    "number": 11,
+    "key": "10",
+    "source": "documentation/screenshots/10-staff-updates.png",
+    "title": "Staff update queue",
+    "labels": 7
+  },
+  {
+    "number": 12,
+    "key": "11",
+    "source": "documentation/screenshots/11-reminder-composer.png",
+    "title": "Staff reminder composer",
+    "labels": 11
+  },
+  {
+    "number": 13,
+    "key": "12",
+    "source": "documentation/screenshots/12-completed-final-packs.png",
+    "title": "Completed bookings and final packs",
+    "labels": 7
+  },
+  {
+    "number": 14,
+    "key": "13",
+    "source": "documentation/screenshots/13-final-pack-composer.png",
+    "title": "Final pack eligibility",
+    "labels": 11
+  },
+  {
+    "number": 15,
+    "key": "03",
+    "source": "documentation/screenshots/03-panel-breakdown.png",
+    "title": "Event breakdown and record navigation",
+    "labels": 12
+  },
+  {
+    "number": 16,
+    "key": "14",
+    "source": "documentation/screenshots/14-home-dashboard.png",
+    "title": "Home commercial portfolio",
+    "labels": 12
+  },
+  {
+    "number": 17,
+    "key": "15",
+    "source": "documentation/screenshots/15-booking-record.png",
+    "title": "Booking details and standard activity tools",
+    "labels": 19
+  },
+  {
+    "number": 18,
+    "key": "16",
+    "source": "documentation/screenshots/16-nte-relationships.png",
+    "title": "Booking relationships",
+    "labels": 12
+  },
+  {
+    "number": 19,
+    "key": "17",
+    "source": "documentation/screenshots/17-booking-retry-action.png",
+    "title": "Booking email retry action",
+    "labels": 5
+  }
+]

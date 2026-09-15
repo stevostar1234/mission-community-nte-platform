@@ -6,7 +6,7 @@
     <name>NTE vehicle and logistics acknowledgement</name>
     <style>none</style>
     <subject>NTE vehicle and logistics details received</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Logistics details received
+    <textOnly>NTE27 · Logistics details received
 
 Your logistics details are with us.
 
@@ -50,7 +50,7 @@ Kind regards,
 The National Transition Event Team
 Mission Community
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

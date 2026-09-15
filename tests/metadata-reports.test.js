@@ -68,7 +68,7 @@ for (const [api, report] of Object.entries(reports)) {
 for (const api of ["NTE_06_Finance_and_Invoicing", "NTE_09_Weekly_Finance_Report"]) {
   const report = reports[api];
   const free = {...base, "Opportunity.NTE_Invoice_Required__c": "No", "Opportunity.NTE_Listed_Price_Total__c": 0};
-  assert(!reportIncludes(report, free), `${api}: no finance task for fully complimentary booking`);
+  assert(reportIncludes(report, free), `${api}: complimentary bookings remain visible for their explicit confirmation`);
   assert(reportIncludes(report, {...free, "Opportunity.NTE_Top_Up_Staff_Total__c": 50}), `${api}: include top-up-only charges`);
   assert(reportIncludes(report, {...free, "Opportunity.NTE_Quote_Required_for_PO__c": "Yes"}), `${api}: include quote-only work`);
   assert(reportIncludes(report, {...free, "Opportunity.NTE_Pricing_Ready__c": false}), `${api}: include missing/invalid pricing`);
@@ -87,8 +87,8 @@ assert.strictEqual(reports.NTE_09_Weekly_Finance_Report.timeInterval, "INTERVAL_
 const currencyFields = object => fs.readdirSync(path.join(root, "force-app/main/default/objects", object, "fields"))
   .filter(file => fs.readFileSync(path.join(root, "force-app/main/default/objects", object, "fields", file), "utf8").includes("<type>Currency</type>"))
   .map(file => ({api: file.replace(".field-meta.xml", ""), type: "Currency"}));
-const previewContext = {fs, path, root, currencyPreview, previewEmailPresentation, leadFields: currencyFields("Lead"), opportunityFields: currencyFields("Opportunity")};
-definitions("const emailPreviewValues = {", "for (const [api, [sourceFile, subject, description]] of Object.entries(templates))", `
+const previewContext = {vatRate: require("../config/nte-pricing.json").vatRate, fs, path, root, currencyPreview, previewEmailPresentation, leadFields: currencyFields("Lead"), opportunityFields: currencyFields("Opportunity")};
+definitions("const emailPreviewValues = {", "for (const type of ['exhibitor', 'partner-sponsor'])", `
   emailPreviewValues.Company = 'Meridian {NTE_FINANCE_SUMMARY} {!Contact.Email}';
   this.preview = emailPreviewHtml('exhibitor-approved-confirmation.html');
 `, previewContext);
@@ -99,7 +99,7 @@ assert(previewContext.preview.includes("NTE-2027-EX-0001"), "Preview booking ref
 if (process.argv.includes("--generated")) {
   const md = path.join(root, "force-app/main/default");
   const manifest = fs.readFileSync(path.join(root, "manifest/production-package.xml"), "utf8");
-  for (const api of ["NTE_Pricing_Ready__c", "NTE_Finance_Invoice_Due__c", "NTE_Finance_Payment_Due__c", "NTE_Finance_Payment_Confirmed__c"]) {
+  for (const api of ["NTE_Pricing_Ready__c", "NTE_Finance_Requirements_Due__c", "NTE_Finance_Payment_Due__c", "NTE_Finance_Payment_Confirmed__c"]) {
     assert(fs.existsSync(path.join(md, "objects/Opportunity/fields", `${api}.field-meta.xml`)), `${api}: generated field exists`);
     assert(manifest.includes(`<members>Opportunity.${api}</members>`), `${api}: package includes formula`);
     for (const permission of ["NTE_Forms_Administration", "NTE_Management_User"]) {
@@ -107,10 +107,10 @@ if (process.argv.includes("--generated")) {
       assert(xml.includes(`<editable>false</editable>\n        <field>Opportunity.${api}</field>`), `${permission}: formula is readable and not editable`);
     }
   }
-  for (const [api, predicate] of [["NTE_Invoices_Required", "NTE_Finance_Invoice_Due__c"], ["NTE_Payments_Due", "NTE_Finance_Payment_Due__c"], ["NTE_Payment_Confirmed", "NTE_Finance_Payment_Confirmed__c"]]) {
+  for (const [api, predicate] of [["NTE_Requirements", "NTE_Finance_Requirements_Due__c"], ["NTE_Payments_Due", "NTE_Finance_Payment_Due__c"], ["NTE_Payment_Confirmed", "NTE_Finance_Payment_Confirmed__c"]]) {
     const xml = fs.readFileSync(path.join(md, "objects/Opportunity/listViews", `${api}.listView-meta.xml`), "utf8");
     assert(xml.includes(`<field>${predicate}</field>`), `${api}: final generator output keeps combined charge filter`);
-    assert(xml.includes("NTE_Top_Up_Staff_Total__c"), `${api}: both charges are visible`);
+    assert(xml.includes("NTE_Top_Up_Total_Inc_VAT__c"), `${api}: both charges are visible`);
     assert((xml.match(/<filters>/g) || []).length <= 10, `${api}: respects native list-view filter limit`);
   }
   for (const permission of ["NTE_Forms_Administration", "NTE_Management_User"]) {
@@ -120,15 +120,16 @@ if (process.argv.includes("--generated")) {
     assert(xml.includes("<application>NTE_Management</application>"), `${permission}: app access is self-contained`);
   }
   const conversion = fs.readFileSync(path.join(md, "flows/NTE_Copy_Converted_Lead_to_Opportunity.flow-meta.xml"), "utf8");
-  assert(/<start>[\s\S]*?<targetReference>Price_Application_For_Conversion<\/targetReference>/.test(conversion), "Conversion reprices before copying stored Lead values");
+  assert(/<start>[\s\S]*?<targetReference>Conversion_Just_Completed<\/targetReference>/.test(conversion), "Conversion checks the actual transition before copying application data");
+  assert(conversion.includes("<leftValueReference>$Record__Prior.IsConverted</leftValueReference><operator>EqualTo</operator><rightValue><booleanValue>false</booleanValue></rightValue>"), "Later converted-Lead edits cannot overwrite the reviewed booking");
+  assert(/<name>New_Conversion<\/name>[\s\S]*?<targetReference>Price_Application_For_Conversion<\/targetReference>/.test(conversion), "A new conversion still reprices before copying stored Lead values");
   assert(conversion.includes("<assignToReference>Priced_Application</assignToReference><name>pricedLead</name>"), "Conversion captures the invocable's priced snapshot");
   for (const target of ["Amount", "NTE_Listed_Price_Total__c", "NTE_Initial_Staff_Count__c", "NTE_Invoice_Required__c"]) {
     assert(new RegExp(`<field>${target}</field>\\s*<value><elementReference>Priced_Application\\.`).test(conversion), `${target}: maps calculated conversion values`);
   }
   assert(conversion.includes("<elementReference>$Record.Event_Contact_Email__c</elementReference>"), "Repricing does not replace contact inputs");
-  for (const api of ["NTE_Inbound_Lead_Routing", "Volunteer_Inbound_Lead_Notification"]) {
+  for (const api of ["NTE_Inbound_Lead_Routing", "Volunteer_Inbound_Lead_Notification", "NTE_Supplementary_Update_Handler"]) {
     assert(fs.readFileSync(path.join(md, "flows", `${api}.flow-meta.xml`), "utf8").includes("<name>isNewSubmission</name>"), `${api}: identifies first intake for audit normalization`);
   }
-  assert(!fs.readFileSync(path.join(md, "flows/NTE_Supplementary_Update_Handler.flow-meta.xml"), "utf8").includes("<name>isNewSubmission</name>"), "Supplementary service keeps its own creation normalization boundary");
 }
 console.log("Metadata/report semantics and literal email-token preview checks passed.");

@@ -6,6 +6,7 @@
         <layoutItems><behavior>Readonly</behavior><field>Charge_Key__c</field></layoutItems>
         <layoutItems><behavior>Readonly</behavior><field>Kind__c</field></layoutItems>
         <layoutItems><behavior>Readonly</behavior><field>Status__c</field></layoutItems>
+        <layoutItems><behavior>Readonly</behavior><field>Live_Mode__c</field></layoutItems>
         <layoutItems><behavior>Readonly</behavior><field>Amount_Minor__c</field></layoutItems>
         <layoutItems><behavior>Readonly</behavior><field>Net_Minor__c</field></layoutItems>
         <layoutItems><behavior>Readonly</behavior><field>Tax_Rate__c</field></layoutItems>

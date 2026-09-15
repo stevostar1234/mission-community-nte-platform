@@ -2,28 +2,30 @@
 
 Please confirm the details below for the exhibitor and partner/sponsor payment process.
 
-The agreed process uses **Stripe Payment Links**, with no Stripe invoices. The application becomes a provisional booking when Mission Community converts it. The booking email includes the amount due, payment link and preparation links. Staff check the successful Stripe payment and then record payment in NTE Management to confirm the space.
+The agreed process uses **Stripe Payment Links**, with no Stripe invoices. After review, each application becomes a new booking; the organisation and contact may be reused. Conversion sends no email and confirms no space. Staff release the booking message from **Requirements**, then check and record the payment from **Payment required** to confirm the space. A free space is confirmed separately without a payment.
+
+Once the applicable payments and staff, vehicle and logo preparation are complete, the team sends the joining instructions and records them as sent. Requirement checkboxes do not delay completion.
+
+**Invoice Requested** is a separate Yes/No choice after Payment Method. Either payment method can be used with either invoice answer. Quotation, invoice and other requirement checkboxes are recorded independently; sending never ticks them. The exhibitor finance section is hidden when the total is £0 and returns when a paid space, socket or additional staff creates a charge. Partner finance remains visible. This refinement is agreed; final release confirmation is pending.
 
 | Question | Client response |
 | --- | --- |
-| **1. Merchant account.** Which legal entity and Stripe account will receive these payments? Who can invite us to its sandbox and configure the production account? | |
-| **2. Prices and VAT.** The current NTE catalogue lists prices excluding VAT. What VAT treatment applies to exhibition space, sponsorship, power and staff places? Are any customers or packages treated differently? Please provide worked examples of the final amount to collect. | |
+| **1. Merchant account.** Which legal entity and Stripe account will receive these payments? Please arrange access to the intended live account and NTE sandbox together. Developer plus Sandbox Administrator covers integration work; Administrator is appropriate if we also need to manage team invitations and bank/payout settings during setup. | |
+| **2. Prices and VAT — confirmed 13 September.** Add 20% VAT to all payable NTE prices after discounts, including staff top-ups. Show net package/item prices and aggregate VAT/gross totals. | Confirmed by the client through the project owner. |
 | **3. Currency.** Should the booking price be GBP? Is Stripe offering customers a local-currency equivalent acceptable, or must checkout display and collect GBP only? | |
-| **4. Payment methods.** Are cards and supported card wallets sufficient? Are any additional methods required? Should the existing separate bank-transfer option remain? | |
+| **4. Payment methods.** Stripe and bank transfer remain available. Are cards and supported card wallets sufficient for Stripe, or are additional methods required? | |
 | **5. Amount and timing.** Is the whole amount payable in one payment? Are deposits, instalments, discounts or negotiated prices needed? | |
-| **6. Financial documents.** Who supplies any quotation, proforma or VAT invoice outside Stripe? What company details, VAT number, purchase-order information and numbering are required? Can sending the combined payment email satisfy the “Quote provided” and existing invoice/link-provided milestones? | |
-| **7. Purchase orders.** If an applicant requires a quotation or purchase order, can we send their payment link immediately on conversion, or must a staff member release it later? | |
-| **8. Payment deadline.** How long is the provisional space held? Who follows up on unpaid bookings, and when should a link be closed? | |
-| **9. Confirmation.** Which staff members verify successful payments and mark them received? Who covers absences? Should they record the Stripe payment reference and verification notes? | |
-| **10. Notifications.** Should Stripe email a payment receipt to the payer? Which staff need payment-success, failure, refund or dispute notifications? Should these come from Stripe, Salesforce or both? | |
+| **6. Financial documents.** Which quotation, proforma or VAT invoice details are required outside Stripe: company details, VAT number, purchase-order information and numbering? | Invoice Requested is independent of payment method. Sending a payment message does not mark quotation or invoice work complete. Document details remain to be confirmed. |
+| **7. Payment-request release — confirmed 13 September.** Staff release the applicable Stripe or bank-transfer booking message from Requirements. Conversion sends nothing, and unchecked requirements do not prevent release. | Confirmed through the project owner. |
+| **8. Payment deadline.** How long is the provisional space held, and when should an unpaid link be closed? Are automatic reminders required? | |
+| **9. Fraud and authentication.** We recommend standard Stripe fraud protection, highest-risk blocking and automatic 3D Secure. Is extra authentication above a particular payment amount required? Are any existing fraud rules mandatory for NTE? | |
+| **10. Notifications.** Should payers receive Stripe payment and refund receipts? Should Kate receive NTE payment successes only, or also NTE refunds/disputes? Please specify the email address for each selected notification category. Existing notifications for other business payments should continue unchanged. | |
 | **11. Recipients.** Booking emails currently go to the booking’s Primary Contact only. Is a separate copy to a finance contact required? A payer’s Stripe receipt can go to a different address from the booking email. | |
-| **12. Staff top-up.** Should the one permitted additional staff purchase receive its own payment link immediately, including when the original booking is still unpaid? Should it have the same payment deadline and tax treatment? | |
-| **13. Changes and cancellations.** Who approves revised amounts, cancellation and refunds? What should happen to an existing link after a price change or cancellation, and to money received after cancellation? | |
-| **14. Already-paid bookings.** If the provisional email failed but payment has since been confirmed, should its retry be suppressed or replaced with a message that contains no payment request? | |
-| **15. Conversion.** Should every application create a new booking while allowing reuse of the organisation and contact? What should happen if staff try to convert into an existing booking? | |
-| **16. Checkout identity.** Please provide the merchant display name, logo, support email/phone, website, statement descriptor, terms and privacy URLs. Who will approve how these appear? | |
-| **17. Finance reconciliation.** Who checks collected amounts, Stripe fees, payouts, refunds and disputes? What exports or references do they need? | |
-| **18. Acceptance and launch.** Who signs off the sandbox journeys and account configuration? Who approves production activation and owns support after launch? | |
+| **12. Staff top-up.** The one permitted additional staff purchase has its own manually released Stripe link and separate payment record, with 20% VAT. Should it have the same payment deadline as the booking? | Separate manual request confirmed. A later top-up returns the booking to Requirements while preserving the original payment. Deadline remains to be confirmed. |
+| **13. Changes and cancellations.** For agreed changes, is a manually requested bank transfer and confirmation acceptable? We recommend closing the superseded unpaid link. For cancellations, should staff refund the agreed amount in Stripe and mark the booking Closed Lost? Are there cancellation charges or partial-refund rules to apply? | |
+| **14. Already-paid bookings.** A paid booking must not receive another payment request. If its earlier provisional email failed, does the team need a separate message containing preparation information only? | |
+| **15. Conversion — confirmed 13 September.** Every application must create a new booking; the organisation and contact may be reused. Converting without a booking or into an existing booking is refused. | Confirmed through the project owner. |
+| **16. Checkout identity.** Please provide the merchant display name, logo, support email/phone, website, statement descriptor, terms and privacy URLs. Should NTE have distinct payment wording within the existing merchant account? | |
+| **17. Finance reconciliation.** Are the Stripe Dashboard and standard exports sufficient? Are additional booking references, payment-reference fields or verification notes required in the NTE records? | |
 
 Please invite the developer through Stripe rather than sending passwords or secret keys in this document. Production bank details and identity verification should be completed by the account owner inside Stripe.
-

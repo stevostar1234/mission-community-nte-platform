@@ -6,7 +6,7 @@
     <name>NTE exhibitor expression of interest acknowledgement</name>
     <style>none</style>
     <subject>NTE exhibitor interest received</subject>
-    <textOnly>{!Lead.NTE_Event_Code__c} · Expression of interest received
+    <textOnly>NTE27 · Expression of interest received
 
 Thank you for your interest in exhibiting.
 
@@ -31,7 +31,7 @@ Kind regards,
 The National Transition Event Team
 Mission Community
 
-{!Lead.NTE_Event_Code__c} • The Wing, Silverstone
+NTE27 • The Wing, Silverstone
 
 nationaltransitionevent.com (https://www.nationaltransitionevent.com/) | missioncommunity.org (https://www.missioncommunity.org/)</textOnly>
     <type>custom</type>

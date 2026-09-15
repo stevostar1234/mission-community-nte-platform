@@ -2,12 +2,27 @@ public with sharing class NTEUpdateSubmissionService {
     @TestVisible private static Boolean bypassEmailDelivery = false;
     @TestVisible private static String acknowledgementFailureOverride;
     @TestVisible private static Map<Id, String> acknowledgementRecipientByLeadId = new Map<Id, String>();
+    @TestVisible private static Boolean failNextAcknowledgementAuditSave = false;
+    @TestVisible private static EmailSender emailSender = new SalesforceEmailSender();
+    private static Set<Id> initializedLeadIds = new Set<Id>();
     private static final Integer EMAIL_BATCH_SIZE = 10;
     private static final Integer MAX_EMAILS_PER_TRANSACTION = 100;
+
+    @TestVisible private interface EmailSender {
+        List<Messaging.SendEmailResult> send(List<Messaging.SingleEmailMessage> messages);
+    }
+    private class SalesforceEmailSender implements EmailSender {
+        public List<Messaging.SendEmailResult> send(List<Messaging.SingleEmailMessage> messages) {
+            return Messaging.sendEmail(messages, false);
+        }
+    }
+    private class AcknowledgementAuditException extends Exception {}
 
     public class Request {
         @InvocableVariable(required=true label='Lead ID')
         public Id leadId;
+        @InvocableVariable(label='New submission')
+        public Boolean isNewSubmission;
     }
 
     @TestVisible
@@ -40,21 +55,39 @@ public with sharing class NTEUpdateSubmissionService {
     public static void applyUpdates(List<Request> requests) {
         if (requests == null) return;
         Set<Id> leadIds = new Set<Id>();
+        Set<Id> newLeadIds = new Set<Id>();
         for (Request request : requests) {
-            if (request != null && request.leadId != null) leadIds.add(request.leadId);
+            if (request == null || request.leadId == null) continue;
+            if (request.isNewSubmission == true) {
+                if (initializedLeadIds.contains(request.leadId)) continue;
+                newLeadIds.add(request.leadId);
+            }
+            leadIds.add(request.leadId);
         }
         if (leadIds.isEmpty()) return;
 
-        // This is the create-only Flow entry. Public form fields must never claim
-        // an applied update or supply the identity used by acknowledgement retries.
-        // Retry entry points retain the server-written audit without replaying data.
+        // Only the create Flow claims new-submission semantics. Public form fields
+        // cannot supply its trusted input or the identity used by acknowledgement retries.
         try {
+            Set<Id> retryIds = new Set<Id>(leadIds);
+            retryIds.removeAll(newLeadIds);
+            leadIds = new Set<Id>(newLeadIds);
+            if (!retryIds.isEmpty()) {
+                for (Lead submission : (List<Lead>)Database.queryWithBinds(
+                    'SELECT Id FROM Lead WHERE Id IN :retryIds '
+                    + 'AND NTE_Update_Status__c = \'Matched and Applied\' '
+                    + 'AND NTE_Applicant_Email_Status__c = \'Failed\' FOR UPDATE',
+                    new Map<String, Object>{'retryIds' => retryIds}, AccessLevel.SYSTEM_MODE
+                )) leadIds.add(submission.Id);
+            }
+            if (leadIds.isEmpty()) return;
             List<Lead> pendingSubmissions = new List<Lead>();
-            for (Id leadId : leadIds) pendingSubmissions.add(new Lead(
+            for (Id leadId : newLeadIds) pendingSubmissions.add(new Lead(
                 Id = leadId, NTE_Update_Status__c = 'Pending', NTE_Update_Error__c = null,
                 NTE_Update_Booking_Id__c = null, NTE_Applicant_Email_Status__c = null, NTE_Email_Error__c = null
             ));
-            Database.update(pendingSubmissions, true, AccessLevel.SYSTEM_MODE);
+            if (!pendingSubmissions.isEmpty()) Database.update(pendingSubmissions, true, AccessLevel.SYSTEM_MODE);
+            initializedLeadIds.addAll(newLeadIds);
             // The temporary Lead must commit before it can be emailed and deleted.
             List<String> serializedLeadIds = new List<String>();
             for (Id leadId : leadIds) serializedLeadIds.add(String.valueOf(leadId));
@@ -144,7 +177,7 @@ public with sharing class NTEUpdateSubmissionService {
                 'SELECT Id, Booking_Reference__c, NTE_Event_Code__c, NTE_Source_Form_Type__c, NTE_Planned_Exhibitor_Count__c, '
                 + 'NTE_Initial_Staff_Count__c, NTE_Total_Staff_Count__c, NTE_Stand_Colleagues__c, '
                 + 'NTE_Top_Up_Staff_Required__c, NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Names__c, '
-                + 'NTE_Top_Up_Staff_Unit_Price__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Invoice_Provided__c, '
+                + 'NTE_Top_Up_Staff_Unit_Price__c, NTE_Top_Up_VAT_Rate__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Invoice_Provided__c, '
                 + 'NTE_Top_Up_Invoice_At__c, NTE_Top_Up_Invoice_By__c, NTE_Top_Up_Payment_Received__c, '
                 + 'NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c, '
                 + 'NTE_Sponsor_Package_Total__c, NTE_Exhibitor_Space_Price__c, '
@@ -262,6 +295,7 @@ public with sharing class NTEUpdateSubmissionService {
                 appliedAudit.Top_Up_Staff_Names__c = existing.NTE_Top_Up_Staff_Names__c;
                 appliedAudit.Top_Up_Staff_Unit_Price__c = existing.NTE_Top_Up_Staff_Unit_Price__c;
                 appliedAudit.Top_Up_Staff_Total__c = existing.NTE_Top_Up_Staff_Total__c;
+                appliedAudit.VAT_Rate__c = NTEVat.rate(existing.NTE_Top_Up_VAT_Rate__c);
             }
             appliedAuditsByLeadId.put(lead.Id, appliedAudit);
         }
@@ -286,11 +320,8 @@ public with sharing class NTEUpdateSubmissionService {
         }
 
         // A missing contact or email failure must not undo accepted booking data.
-        Map<Id, String> emailErrors = sendAcknowledgements(acknowledgementLeads, templateByLeadId,
+        Map<Id, String> emailErrors = dispatchAndRecordAcknowledgements(acknowledgementLeads, templateByLeadId,
             bookingIdByLeadId, skipEmailDelivery, AccessLevel.SYSTEM_MODE);
-        List<Lead> emailAudits = new List<Lead>();
-        for (Lead lead : acknowledgementLeads) emailAudits.add(acknowledgementAudit(lead.Id, emailErrors.get(lead.Id)));
-        if (!emailAudits.isEmpty()) Database.update(emailAudits, true, AccessLevel.SYSTEM_MODE);
         List<Lead> acceptedTemporaryLeads = new List<Lead>();
         for (Lead lead : temporaryLeadsToDelete) {
             if (!emailErrors.containsKey(lead.Id)) acceptedTemporaryLeads.add(lead);
@@ -324,24 +355,31 @@ public with sharing class NTEUpdateSubmissionService {
     }
 
     private static void applyExhibitorStaffFields(Opportunity target, Lead source, Opportunity existing) {
-        Decimal initialCount = initialStaffCount(existing);
         Decimal previousTopUpCount = existing.NTE_Top_Up_Staff_Count__c == null ? 0 : existing.NTE_Top_Up_Staff_Count__c;
         Boolean requestsTopUp = source.Top_Up_Staff_Required__c == 'Yes';
         Decimal requestedTopUpCount = requestsTopUp ? source.Top_Up_Staff_Count__c : previousTopUpCount;
         String requestedTopUpNames = requestsTopUp ? source.Top_Up_Staff_Names__c : existing.NTE_Top_Up_Staff_Names__c;
 
         target.NTE_Staff_Update_Completed_At__c = System.now();
-        target.NTE_Total_Staff_Count__c = initialCount + requestedTopUpCount;
         target.NTE_Top_Up_Staff_Required__c = requestedTopUpCount > 0 ? 'Yes' : 'No';
         target.NTE_Top_Up_Staff_Count__c = requestedTopUpCount;
         target.NTE_Top_Up_Staff_Names__c = requestedTopUpNames;
         target.NTE_Stand_Colleagues__c = combineNames(source.Staff_Base_Names__c, requestedTopUpNames);
 
         if (previousTopUpCount == 0) {
+            target.NTE_Top_Up_VAT_Rate__c = NTEVat.RATE;
             target.NTE_Top_Up_Staff_Unit_Price__c = requestedTopUpCount > 0 ? NTEPricingService.ADDITIONAL_STAFF_PRICE : 0;
             target.NTE_Top_Up_Staff_Total__c = requestedTopUpCount * NTEPricingService.ADDITIONAL_STAFF_PRICE;
         }
         if (previousTopUpCount == 0 && requestedTopUpCount > 0) {
+            // A names-only update must not rewrite the booked quantity. A new
+            // purchase adds its explicit quantity only when the old total is known.
+            Decimal existingCount = existing.NTE_Total_Staff_Count__c == null
+                ? initialStaffCount(existing) : existing.NTE_Total_Staff_Count__c;
+            if (existingCount != null && existingCount >= 0 && existingCount == existingCount.setScale(0)
+                && existingCount + requestedTopUpCount <= 999) {
+                target.NTE_Total_Staff_Count__c = existingCount + requestedTopUpCount;
+            }
             target.NTE_Top_Up_Invoice_Required__c = true;
             target.NTE_Top_Up_Invoice_Provided__c = false;
             target.NTE_Top_Up_Invoice_At__c = null;
@@ -365,11 +403,11 @@ public with sharing class NTEUpdateSubmissionService {
     }
 
     private static Decimal decimalFromText(String value) {
-        if (String.isBlank(value)) return 0;
+        if (String.isBlank(value)) return null;
         try {
             return Decimal.valueOf(value.trim());
         } catch (Exception ignored) {
-            return 0;
+            return null;
         }
     }
 
@@ -377,18 +415,22 @@ public with sharing class NTEUpdateSubmissionService {
         if (!new Set<String>{'Partner / Sponsor Staff Update', 'Exhibitor Staff Update', 'Heavy Vehicle Details', 'Logo Update'}.contains(source.Web_Form_Type__c)) {
             return 'Unsupported supplementary form type. No Opportunity was changed.';
         }
+        // Logo confirmation uses the booking reference and submitter details;
+        // the owner retired its separate declaration on 10 September 2026.
+        if (source.Web_Form_Type__c == 'Logo Update') return null;
         if (String.isBlank(source.Declaration_Name__c) || source.Declaration_Date__c == null) {
             return 'A digital signature and declaration date are required. No Opportunity was changed.';
         }
-        if (source.Web_Form_Type__c == 'Logo Update') return null;
         if (source.Web_Form_Type__c == 'Partner / Sponsor Staff Update') {
             if (existing.NTE_Source_Form_Type__c != 'Partner / Sponsor Application') {
                 return 'This staff form does not match the booking type. No Opportunity was changed.';
             }
             Decimal totalCount = source.Total_Staff_Count__c;
-            Integer namesCount = nonBlankLineCount(source.Staff_Base_Names__c);
-            if (totalCount == null || totalCount < 1 || totalCount > 99 || namesCount != totalCount) {
-                return 'The final attendee total must be between 1 and 99 and match the number of names supplied. No Opportunity was changed.';
+            if (totalCount == null || totalCount < 1 || totalCount > 99 || totalCount != totalCount.setScale(0)) {
+                return 'The final attendee total must be a whole number between 1 and 99. No Opportunity was changed.';
+            }
+            if (String.isBlank(source.Staff_Base_Names__c)) {
+                return 'Enter the staff names. No Opportunity was changed.';
             }
             return null;
         }
@@ -396,26 +438,26 @@ public with sharing class NTEUpdateSubmissionService {
             if (existing.NTE_Source_Form_Type__c != 'Exhibitor Application') {
                 return 'This staff form does not match the booking type. No Opportunity was changed.';
             }
-            Decimal bookedCount = initialStaffCount(existing);
-            Integer baseNamesCount = nonBlankLineCount(source.Staff_Base_Names__c);
-            if (bookedCount < 1 || bookedCount > 99 || baseNamesCount != bookedCount) {
-                return 'The names covered by the booking must match the staff total in the booking confirmation. No Opportunity was changed.';
+            if (String.isBlank(source.Staff_Base_Names__c)) {
+                return 'Enter the staff names. No Opportunity was changed.';
             }
             if (!new Set<String>{'Yes', 'No'}.contains(source.Top_Up_Staff_Required__c)) {
                 return 'Select whether additional top-up staff places are required. No Opportunity was changed.';
             }
             if (source.Top_Up_Staff_Required__c == 'Yes') {
                 Decimal topUpCount = source.Top_Up_Staff_Count__c;
-                Integer topUpNamesCount = nonBlankLineCount(source.Top_Up_Staff_Names__c);
                 Integer existingTopUpCount = existing.NTE_Top_Up_Staff_Count__c == null ? 0 : existing.NTE_Top_Up_Staff_Count__c.intValue();
-                if (topUpCount == null || topUpCount < 1 || topUpCount > 99 || topUpNamesCount != topUpCount) {
-                    return 'The top-up total must be between 1 and 99 and match the number of top-up names supplied. No Opportunity was changed.';
+                if (topUpCount == null || topUpCount < 1 || topUpCount > 99 || topUpCount != topUpCount.setScale(0)) {
+                    return 'The top-up total must be a whole number between 1 and 99. No Opportunity was changed.';
+                }
+                if (String.isBlank(source.Top_Up_Staff_Names__c)) {
+                    return 'Enter the top-up staff names. No Opportunity was changed.';
                 }
                 if (topUpCount < existingTopUpCount) {
                     return 'Existing top-up places cannot be reduced with this form. Contact the NTE team to change or cancel paid places.';
                 }
                 if (existingTopUpCount > 0 && topUpCount > existingTopUpCount) {
-                    return 'Additional staff can only be requested once for this booking. You can correct names using the accepted quantity. Contact the NTE team about other changes.';
+                    return 'Additional staff can only be requested once for this booking. You can update the staff names without changing that purchase. Contact the NTE team about other changes.';
                 }
             }
             String topUpNames = source.Top_Up_Staff_Required__c == 'Yes'
@@ -451,22 +493,6 @@ public with sharing class NTEUpdateSubmissionService {
         Boolean anyValue = String.isNotBlank(description) || String.isNotBlank(registration)
             || String.isNotBlank(dimensions) || String.isNotBlank(weight);
         return anyValue && (String.isBlank(description) || String.isBlank(dimensions) || String.isBlank(weight));
-    }
-
-    private static Integer integerFromText(String value) {
-        if (String.isBlank(value)) return null;
-        try {
-            return Integer.valueOf(value.trim());
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
-
-    private static Integer nonBlankLineCount(String value) {
-        Integer count = 0;
-        if (String.isBlank(value)) return count;
-        for (String line : value.split('\\r?\\n')) if (String.isNotBlank(line)) count++;
-        return count;
     }
 
     private static void applyHeavyFields(Opportunity target, Lead source) {
@@ -542,6 +568,45 @@ public with sharing class NTEUpdateSubmissionService {
         );
     }
 
+    private static void writeAcknowledgementAudits(List<Lead> audits, AccessLevel accessLevel) {
+        if (audits.isEmpty()) return;
+        if (Test.isRunningTest() && failNextAcknowledgementAuditSave) {
+            failNextAcknowledgementAuditSave = false;
+            throw new AcknowledgementAuditException('The acknowledgement result could not be saved.');
+        }
+        Database.update(audits, true, accessLevel);
+    }
+
+    private static Map<Id, String> dispatchAndRecordAcknowledgements(List<Lead> leads,
+        Map<Id, String> templateByLeadId, Map<Id, Id> bookingIdByLeadId,
+        Boolean skipEmailDelivery, AccessLevel accessLevel) {
+        Map<Id, String> errors = new Map<Id, String>();
+        if (leads.isEmpty()) return errors;
+        // Keep the accepted booking update; only this email attempt and its audit
+        // must commit together. A retry is safe only after the attempt is rolled back.
+        Savepoint emailSavepoint = Database.setSavepoint();
+        try {
+            errors = sendAcknowledgements(leads, templateByLeadId, bookingIdByLeadId, skipEmailDelivery, accessLevel);
+            List<Lead> audits = new List<Lead>();
+            for (Lead lead : leads) audits.add(acknowledgementAudit(lead.Id, errors.get(lead.Id)));
+            writeAcknowledgementAudits(audits, accessLevel);
+        } catch (Exception auditFailure) {
+            Database.rollback(emailSavepoint);
+            errors.clear();
+            List<Lead> failures = new List<Lead>();
+            String error = ('The booking details were saved, but the acknowledgement was not sent because its result could not be saved. '
+                + auditFailure.getMessage()).left(32000);
+            for (Lead lead : leads) {
+                errors.put(lead.Id, error);
+                failures.add(acknowledgementAudit(lead.Id, error));
+            }
+            writeAcknowledgementAudits(failures, accessLevel);
+        } finally {
+            Database.releaseSavepoint(emailSavepoint);
+        }
+        return errors;
+    }
+
     @TestVisible
     private static Messaging.SingleEmailMessage acknowledgementMessage(Id mergeLeadId, Id templateId, String primaryEmail) {
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
@@ -589,7 +654,7 @@ public with sharing class NTEUpdateSubmissionService {
                 List<Messaging.SingleEmailMessage> batch = new List<Messaging.SingleEmailMessage>();
                 for (Integer index = startIndex; index < endIndex; index++) batch.add(messages[index]);
                 try {
-                    List<Messaging.SendEmailResult> results = Messaging.sendEmail(batch, false);
+                    List<Messaging.SendEmailResult> results = emailSender.send(batch);
                     for (Integer index = 0; index < results.size(); index++) {
                         if (!results[index].isSuccess()) {
                             String error = results[index].getErrors().isEmpty()
@@ -650,11 +715,13 @@ public with sharing class NTEUpdateSubmissionService {
         if (bookings.size() != 1 || !matchesAppliedBooking(submission, bookings[0])) {
             error = 'The acknowledgement was not sent because its saved booking identity and reference could not be verified. The saved booking details were not changed.';
         } else {
-            Map<Id, String> errors = sendAcknowledgements(submissions, new Map<Id, String>{leadId => templateName},
+            Map<Id, String> errors = dispatchAndRecordAcknowledgements(submissions, new Map<Id, String>{leadId => templateName},
                 new Map<Id, Id>{leadId => bookings[0].Id}, bypassEmailDelivery, AccessLevel.USER_MODE);
             error = errors.get(leadId);
         }
-        Database.update(acknowledgementAudit(leadId, error), AccessLevel.USER_MODE);
+        if (bookings.size() != 1 || !matchesAppliedBooking(submission, bookings[0])) {
+            writeAcknowledgementAudits(new List<Lead>{acknowledgementAudit(leadId, error)}, AccessLevel.USER_MODE);
+        }
         result.success = error == null;
         result.message = error == null ? 'Booking update acknowledgement accepted by Salesforce.' : error;
         return result;

@@ -281,6 +281,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <classAccesses>
         <apexClass>NTEExhibitorApprovalEmailService</apexClass>
         <enabled>true</enabled>
@@ -295,6 +316,9 @@
     </classAccesses>
     <classAccesses><apexClass>NTEEmailDispatchService</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>NTEUpdateSubmissionService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>NTELeadEmailRetryService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>NTEBookingEmailRetryService</apexClass><enabled>true</enabled></classAccesses>
+<classAccesses><apexClass>NTEFinanceService</apexClass><enabled>true</enabled></classAccesses>
     <recordTypeVisibilities>
         <recordType>Opportunity.NTE_Event_Opportunity</recordType>
         <visible>true</visible>
@@ -331,6 +355,7 @@
     <userPermissions><enabled>true</enabled><name>RunReports</name></userPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>NTE Management User</label>
+    
     
     
     
@@ -556,6 +581,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Lead.Invoice_Requested__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Lead.Heavy_Vehicle_Required__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -717,6 +747,31 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Lead.Listed_Price_Total__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Lead.VAT_Rate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.VAT_Total__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Total_Including_VAT__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Top_Up_VAT_Total__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Top_Up_Total_Inc_VAT__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1001,6 +1056,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Opportunity.NTE_Invoice_Requested__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Opportunity.NTE_Invoiced_Company__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -1211,12 +1271,52 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Opportunity.NTE_Pricing_Ready__c</field>
+        <field>Opportunity.NTE_Price_Adjustment__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Opportunity.NTE_Finance_Invoice_Due__c</field>
+        <field>Opportunity.NTE_Approval_Email_Kind__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_Free_Space_Confirmed__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_VAT_Rate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_VAT_Total__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_Total_Including_VAT__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Top_Up_VAT_Rate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_Top_Up_VAT_Total__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_Top_Up_Total_Inc_VAT__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_Pricing_Ready__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1242,6 +1342,41 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Opportunity.NTE_Pricing_Version__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.NTE_Finance_Requirements_Due__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_PO_Confirmed__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Agreement_Provided__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Invoice_Details_Included__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Bank_Details_Provided__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Top_Up_Payment_Requested_At__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Joining_Instructions_By__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1594,7 +1729,6 @@
     <fieldPermissions><editable>true</editable><field>Lead.NTE_Invitation_Recipient__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Opportunity.NTE_Final_Pack_Status__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Opportunity.NTE_Final_Pack_Sent_At__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Opportunity.NTE_Final_Pack_Recipient__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Opportunity.NTE_Approval_Email_Status__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Opportunity.NTE_Approval_Email_Batch__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Opportunity.NTE_Approval_Email_Lead_Id__c</field><readable>true</readable></fieldPermissions>
@@ -1622,6 +1756,7 @@
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Charge_Key__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Kind__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Status__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Live_Mode__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Amount_Minor__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Net_Minor__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>NTE_Payment_Request__c.Tax_Rate__c</field><readable>true</readable></fieldPermissions>

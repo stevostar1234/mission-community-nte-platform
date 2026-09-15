@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Free_Space_Confirmed__c</fullName>
+    <description>A free booking or waived booking has had its confirmation accepted for sending.</description>
+    <defaultValue>false</defaultValue>
+    <label>NTE Free Space Confirmed</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -50,7 +50,7 @@ private class NTEConversionFlowTest {
             Secondary_Contact_Mobile__c = '+44 7700 900790',
             Secondary_Contact_Phone__c = '+44 20 7946 0101',
             Exhibitor_Organisation_Category__c = 'CIC or Not for Profit',
-            Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £800 + VAT',
+            Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £799 + VAT',
             Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2, Stand_Power__c = 'No',
             Exhibitor_Hall_Schedule__c = 'Yes',
             Has_Special_Requirements__c = 'Yes',
@@ -165,9 +165,7 @@ private class NTEConversionFlowTest {
             WHERE WhatId = :convertedLead.ConvertedOpportunityId
             AND Subject LIKE 'NTE booking provisional email%'
         ];
-        System.assertEquals(1, approvalAudits.size());
-        System.assertEquals('NTE booking provisional email - sent', approvalAudits[0].Subject);
-        System.assert(approvalAudits[0].Description.contains('Template: NTE_Exhibitor_Approved'));
+        System.assertEquals(0, approvalAudits.size(), 'Conversion never sends an applicant email.');
     }
 
     @IsTest
@@ -197,6 +195,7 @@ private class NTEConversionFlowTest {
         List<Database.LeadConvertResult> results = Database.convertLead(new List<Database.LeadConvert>{
             conversionFor(free), conversionFor(extras)
         }, false);
+        for (Database.LeadConvertResult converted : results) { System.assert(converted.isSuccess()); NTEExhibitorApprovalEmailService.retryApprovalEmail(converted.getOpportunityId()); }
         Test.stopTest();
         for (Database.LeadConvertResult result : results) System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
         Set<Id> bookingIds = new Set<Id>{results[0].getOpportunityId(), results[1].getOpportunityId()};
@@ -220,7 +219,7 @@ private class NTEConversionFlowTest {
     }
 
     @IsTest
-    static void partnerSponsorConversionSendsPartnerProvisionalEmail() {
+    static void partnerBankTransferConversionSendsPartnerProvisionalEmail() {
         NTEInboundLeadService.bypassEmailDelivery = true;
         NTEExhibitorApprovalEmailService.bypassEmailDelivery = true;
         Lead application = new Lead(
@@ -234,12 +233,13 @@ private class NTEConversionFlowTest {
             Sponsor_Package__c = 'Champion Partner',
             Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2,
             Invoice_Required__c = 'Yes',
-            Payment_Method__c = 'Stripe'
+            Payment_Method__c = 'Bank transfer'
         );
         Database.insert(application, AccessLevel.SYSTEM_MODE);
 
         Test.startTest();
         Database.LeadConvertResult result = Database.convertLead(conversionFor(application));
+        NTEExhibitorApprovalEmailService.retryApprovalEmail(result.getOpportunityId());
         Test.stopTest();
 
         System.assert(result.isSuccess());
@@ -250,7 +250,7 @@ private class NTEConversionFlowTest {
             WHERE Id = :convertedLead.ConvertedOpportunityId
         ];
         System.assertEquals('Yes', participation.NTE_Invoice_Required__c);
-        System.assertEquals('Stripe', participation.NTE_Payment_Method__c);
+        System.assertEquals('Bank transfer', participation.NTE_Payment_Method__c);
         Task approvalAudit = [
             SELECT Subject, Description FROM Task
             WHERE WhatId = :convertedLead.ConvertedOpportunityId
@@ -281,7 +281,7 @@ private class NTEConversionFlowTest {
                 Web_Form_Type__c = 'Exhibitor Application',
                 Booking_Reference__c = 'NTE-BULK-' + token,
                 NTE_Event_Code__c = 'NTE2099',
-                Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £800 + VAT',
+                Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £799 + VAT',
                 Exhibitor_Organisation_Category__c = 'CIC or Not for Profit',
                 Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2, Stand_Power__c = 'No'
             ));
@@ -316,13 +316,13 @@ private class NTEConversionFlowTest {
             }
         }
         System.assertEquals(0, conversionErrors.size(), String.join(conversionErrors, '\n'));
-        System.assertEquals(1, Limits.getQueueableJobs());
+        System.assertEquals(0, Limits.getQueueableJobs());
         System.assertEquals(0, Limits.getEmailInvocations());
         Test.stopTest();
 
         System.assertEquals(12, opportunityIds.size());
-        System.assertEquals(1, NTEExhibitorApprovalEmailService.approvalSweepEnqueueCount);
-        System.assertEquals(12, [
+        System.assertEquals(0, NTEExhibitorApprovalEmailService.approvalSweepEnqueueCount);
+        System.assertEquals(0, [
             SELECT COUNT()
             FROM Task
             WHERE WhatId IN :opportunityIds
@@ -348,6 +348,7 @@ private class NTEConversionFlowTest {
         }, false);
         for (Database.LeadConvertResult result : results) System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
         update new Opportunity(Id = olderResult.getOpportunityId(), Description = 'Modified after both selected applications were converted.');
+        for (Database.LeadConvertResult converted : results) NTEExhibitorApprovalEmailService.retryApprovalEmail(converted.getOpportunityId());
         System.assertEquals(1, Limits.getQueueableJobs());
         System.assertEquals(0, Limits.getEmailInvocations());
         Test.stopTest();
@@ -396,6 +397,7 @@ private class NTEConversionFlowTest {
         conversion.setContactId(existingContact.Id);
         Test.startTest();
         Database.LeadConvertResult result = Database.convertLead(conversion);
+        NTEExhibitorApprovalEmailService.retryApprovalEmail(result.getOpportunityId());
         Test.stopTest();
         System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
         System.assertEquals(organisation.Id, result.getAccountId());
@@ -442,7 +444,7 @@ private class NTEConversionFlowTest {
         Lead partner = targetApplication('Elm Logistics', true);
         insert new List<Lead>{exhibitor, partner};
         update new List<Lead>{
-            new Lead(Id = exhibitor.Id, Exhibitor_Space_Selections__c = 'Double Garage - Track Side - £1,300 + VAT',
+            new Lead(Id = exhibitor.Id, Exhibitor_Space_Selections__c = 'Double Garage - Track Side - £1,299 + VAT',
                 Planned_Exhibitor_Count__c = '5', Stand_Power__c = 'Yes', Power_Socket_Count__c = 2,
                 Total_Staff_Count__c = 2, Additional_Staff_Count__c = '0', Exhibitor_Space_Price__c = 0,
                 Power_Socket_Total__c = 0, Additional_Staff_Total__c = 0, Listed_Price_Total__c = 0,
@@ -454,6 +456,7 @@ private class NTEConversionFlowTest {
         List<Database.LeadConvertResult> results = Database.convertLead(new List<Database.LeadConvert>{
             conversionFor(exhibitor), conversionFor(partner)
         }, false);
+        for (Database.LeadConvertResult converted : results) { System.assert(converted.isSuccess()); NTEExhibitorApprovalEmailService.retryApprovalEmail(converted.getOpportunityId()); }
         Test.stopTest();
         for (Database.LeadConvertResult result : results) System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
         Set<Id> bookingIds = new Set<Id>{results[0].getOpportunityId(), results[1].getOpportunityId(), oldBookingId};
@@ -464,9 +467,9 @@ private class NTEConversionFlowTest {
             NTE_Pricing_Status__c, NTE_Approval_Email_Status__c, NTE_Invoice_Provided__c, NTE_Payment_Received__c
             FROM Opportunity WHERE Id IN :bookingIds]);
         Opportunity priced = bookings.get(results[0].getOpportunityId());
-        System.assertEquals(1550, priced.Amount);
-        System.assertEquals(1550, priced.NTE_Listed_Price_Total__c);
-        System.assertEquals(1300, priced.NTE_Exhibitor_Space_Price__c);
+        System.assertEquals(1858.80, priced.Amount);
+        System.assertEquals(1549, priced.NTE_Listed_Price_Total__c);
+        System.assertEquals(1299, priced.NTE_Exhibitor_Space_Price__c);
         System.assertEquals(200, priced.NTE_Power_Socket_Total__c);
         System.assertEquals(50, priced.NTE_Additional_Staff_Total__c);
         System.assertEquals(5, priced.NTE_Initial_Staff_Count__c);
@@ -477,7 +480,7 @@ private class NTEConversionFlowTest {
         System.assertEquals('Calculated', priced.NTE_Pricing_Status__c);
         System.assertEquals('Sent', priced.NTE_Approval_Email_Status__c);
         System.assertEquals(7000, bookings.get(results[1].getOpportunityId()).NTE_Sponsor_Package_Total__c);
-        System.assertEquals(7000, bookings.get(results[1].getOpportunityId()).Amount);
+        System.assertEquals(8400, bookings.get(results[1].getOpportunityId()).Amount);
         System.assertEquals('Sent', bookings.get(results[1].getOpportunityId()).NTE_Approval_Email_Status__c);
         System.assertEquals(777, bookings.get(oldBookingId).Amount);
         System.assertEquals(777, bookings.get(oldBookingId).NTE_Listed_Price_Total__c);
@@ -495,6 +498,7 @@ private class NTEConversionFlowTest {
         update new Lead(Id = application.Id, Exhibitor_Space_Selections__c = null);
         Test.startTest();
         Database.LeadConvertResult result = Database.convertLead(conversionFor(application));
+        NTEExhibitorApprovalEmailService.retryApprovalEmail(result.getOpportunityId());
         Test.stopTest();
         System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
         Id bookingId = result.getOpportunityId();
@@ -552,7 +556,7 @@ private class NTEConversionFlowTest {
             FROM Opportunity WHERE Id = :bookingId];
         System.assertEquals('Failed', booking.NTE_Approval_Email_Status__c);
         System.assertEquals(result.message, booking.NTE_Approval_Email_Error__c);
-        System.assertEquals(800, booking.NTE_Listed_Price_Total__c);
+        System.assertEquals(799, booking.NTE_Listed_Price_Total__c);
     }
 
     @IsTest
@@ -576,8 +580,8 @@ private class NTEConversionFlowTest {
     }
 
     @IsTest
-    static void documentNativeNoOpportunityConversionPendingOwnerDecision() {
-        // Characterises a native option for the owner's decision; it is not a desired-workflow assertion.
+    static void noOpportunityConversionIsRejected() {
+        // The owner requires a new Opportunity for every NTE application.
         NTEInboundLeadService.bypassEmailDelivery = true;
         NTEExhibitorApprovalEmailService.bypassEmailDelivery = true;
         Lead application = targetApplication('Pine Automation', false);
@@ -587,18 +591,18 @@ private class NTEConversionFlowTest {
         conversion.setConvertedStatus([SELECT MasterLabel FROM LeadStatus WHERE IsConverted = true LIMIT 1].MasterLabel);
         conversion.setDoNotCreateOpportunity(true);
         Test.startTest();
-        Database.LeadConvertResult result = Database.convertLead(conversion);
+        Database.LeadConvertResult result = Database.convertLead(conversion, false);
         Test.stopTest();
-        System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
+        System.assert(!result.isSuccess(), String.valueOf(result.getErrors()));
         System.assertEquals(null, result.getOpportunityId());
         System.assertEquals(0, [SELECT COUNT() FROM Opportunity]);
         System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject LIKE 'NTE booking provisional email%']);
-        System.assertEquals(true, [SELECT IsConverted FROM Lead WHERE Id = :application.Id].IsConverted);
+        System.assertEquals(false, [SELECT IsConverted FROM Lead WHERE Id = :application.Id].IsConverted);
     }
 
     @IsTest
-    static void documentNativeExistingBookingConversionPendingOwnerDecision() {
-        // Isolated evidence for a native-conversion policy decision; never target a persistent existing booking.
+    static void existingBookingConversionIsRejected() {
+        // Reject reuse before any existing booking facts can be overwritten.
         NTEInboundLeadService.bypassEmailDelivery = true;
         NTEExhibitorApprovalEmailService.bypassEmailDelivery = true;
         Account organisation = new Account(Name = 'Larch Engineering');
@@ -624,19 +628,19 @@ private class NTEConversionFlowTest {
         conversion.setContactId(primary.Id);
         conversion.setOpportunityId(previous.Id);
         Test.startTest();
-        Database.LeadConvertResult result = Database.convertLead(conversion);
+        Database.LeadConvertResult result = Database.convertLead(conversion, false);
         Test.stopTest();
-        System.assert(result.isSuccess(), String.valueOf(result.getErrors()));
-        System.assertEquals(previous.Id, result.getOpportunityId());
+        System.assert(!result.isSuccess(), String.valueOf(result.getErrors()));
+        System.assertEquals(null, result.getOpportunityId());
         System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
         Opportunity merged = [SELECT Booking_Reference__c, NTE_Event_Code__c, NTE_Source_Form_Type__c, Amount,
             NTE_Payment_Received__c, NTE_Approval_Email_Status__c FROM Opportunity WHERE Id = :previous.Id];
-        System.assertEquals(application.Booking_Reference__c, merged.Booking_Reference__c);
-        System.assertEquals('NTE2099', merged.NTE_Event_Code__c);
-        System.assertEquals('Partner / Sponsor Application', merged.NTE_Source_Form_Type__c);
-        System.assertEquals(2000, merged.Amount);
+        System.assertEquals('NTE-LARCH-PRIOR', merged.Booking_Reference__c);
+        System.assertEquals('NTE2098', merged.NTE_Event_Code__c);
+        System.assertEquals('Exhibitor Application', merged.NTE_Source_Form_Type__c);
+        System.assertEquals(777, merged.Amount);
         System.assertEquals(true, merged.NTE_Payment_Received__c,
-            'Characterise whether a reused booking retains its earlier payment while conversion replaces the price.');
+            'Rejected conversion preserves the previous booking and payment.');
         System.assertEquals('Sent', merged.NTE_Approval_Email_Status__c);
         System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject LIKE 'NTE booking provisional email%']);
     }
@@ -647,7 +651,7 @@ private class NTEConversionFlowTest {
             Email = token + '@example.invalid', Web_Form_Type__c = partner ? 'Partner / Sponsor Application' : 'Exhibitor Application',
             Booking_Reference__c = 'NTE-EXACT-' + token, NTE_Event_Code__c = 'NTE2099',
             Sponsor_Package__c = partner ? 'Champion Partner' : null,
-            Exhibitor_Space_Selections__c = partner ? null : 'Single Garage - Track Side - £800 + VAT',
+            Exhibitor_Space_Selections__c = partner ? null : 'Single Garage - Track Side - £799 + VAT',
             Exhibitor_Organisation_Category__c = partner ? null : 'CIC or Not for Profit',
             Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2, Stand_Power__c = 'No',
             Invoice_Required__c = 'Yes', Payment_Method__c = 'Bank transfer');
