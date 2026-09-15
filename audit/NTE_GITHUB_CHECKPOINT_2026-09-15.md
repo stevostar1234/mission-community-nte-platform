@@ -24,4 +24,10 @@ No Salesforce deployment, applicant submission, email, payment or public Pages p
 
 ## Publication result
 
-The exact commit and verified remote-tree result are recorded here after the upload completes.
+Contents commit: [`42b672e759b567e1850bcdae484e6882ed1ecd24`](https://github.com/stevostar1234/mission-community-nte-platform/commit/42b672e759b567e1850bcdae484e6882ed1ecd24), published to `main` and verified at **09:28:28 UTC on 15 September 2026**.
+
+The complete, non-truncated GitHub tree contains **927 file blobs**: all **926 current project files**, plus the retained empty `.gitkeep`. Every remote blob matches the local committed tree, every selected project file matches its source snapshot, and all **594 qualified Salesforce source/manifest hashes** match. All 22 retired paths are absent from the active tree. The repository remains private and owner-controlled; the isolated clone is clean.
+
+The first upload returned an HTTP 408 timeout. A read-only check proved the branch was still at the old commit. Retrying the identical non-forced commit with per-command buffered HTTP/1.1 succeeded; no global Git setting or branch history was rewritten. This verification note and the completed checkpoint update are committed after the contents commit; they change no executable source or configuration.
+
+Final remote-tree and source verification is retained in `tmp/nte-github-upload-20260915/final-verification.json`. The original working directory's historical branch, Git index and `origin`/`package` remote destinations remain untouched. Production Salesforce and the separate public preview site are unchanged.
