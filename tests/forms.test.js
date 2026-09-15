@@ -282,7 +282,7 @@ assert(exhibitorHtml.includes("Do you require a purchase order or reference?"), 
 assert(exhibitorHtml.includes("Do you require a quotation?"), "exhibitor finance section must ask separately about a quotation");
 assert(exhibitorHtml.includes("Payment Method"), "exhibitor finance section must ask separately about bank transfer or Stripe");
 assert(exhibitorHtml.includes("Legal organisation name for quotation and invoicing"), "exhibitor finance section must request the legal organisation name");
-assert(exhibitorHtml.includes("<strong>Please provide the finance contact below, even if it is the same person.</strong>"), "exhibitor finance-contact guidance must be prominent");
+assert(exhibitorHtml.includes("<strong>Please provide the finance contact below, this should be different to the main contact if possible.</strong>"), "exhibitor finance-contact guidance must be prominent");
 assert(exhibitorHtml.includes('id="invoice-required" type="hidden" value="No" data-sf-field="Invoice_Required__c"'), "exhibitor pricing must control whether payment and finance questions apply");
 assert(exhibitorHtml.includes('id="payment-method" data-required-when-visible data-sf-field="Payment_Method__c"'), "exhibitor applications must capture the selected payment method");
 assert(exhibitorHtml.includes('<option>Bank transfer</option>'), "exhibitor applications must offer bank transfer");
@@ -319,7 +319,7 @@ assert(partnerHtml.includes("Do you require a purchase order or reference?"), "p
 assert(partnerHtml.includes("Do you require a quotation?"), "partner finance section must ask separately about a quotation");
 assert(partnerHtml.includes("Payment Method"), "partner finance section must ask separately about bank transfer or Stripe");
 assert(partnerHtml.includes("Legal organisation name for quotation and invoicing"), "partner finance section must request the legal organisation name");
-assert(partnerHtml.includes("<strong>Please provide the finance contact below — this should be different to the main contact.</strong>"), "partner finance-contact guidance must be prominent");
+assert(partnerHtml.includes("<strong>Please provide the finance contact below, this should be different to the main contact if possible.</strong>"), "partner finance-contact guidance must be prominent");
 assert(partnerHtml.includes('id="partner-payment-method" required data-sf-field="Payment_Method__c"'), "partner applications must require a payment method");
 assert(partnerHtml.includes('<option>Bank transfer</option>'), "partner applications must offer bank transfer");
 assert(partnerHtml.includes('<option>Stripe</option>'), "partner applications must offer Stripe");
