@@ -8,7 +8,7 @@ The complete project is maintained in the private [mission-community-nte-platfor
 | --- | --- |
 | Salesforce source and complete manifest | `force-app/`, `sfdx-project.json`, `manifest/production-package.xml` |
 | Intended workflow and owner decisions | [Desired workflow](NTE_DESIRED_WORKFLOW.md), [approved proposals](NTE_CHANGE_PROPOSALS.md) |
-| Current qualification and completed testing | [Audit checkpoint](NTE_AUDIT_RESUME.md), [14 September end-to-end audit](audit/NTE_END_TO_END_AUDIT_2026-09-14.md), [current source and release identity](audit/NTE_SPACE_SELECTION_QUALIFICATION_2026-09-15.json) |
+| Current qualification and completed testing | [Audit checkpoint](NTE_AUDIT_RESUME.md), [14 September end-to-end audit](audit/NTE_END_TO_END_AUDIT_2026-09-14.md), [current source and release identity](audit/VOLUNTEER_LEGACY_COMPATIBILITY_QUALIFICATION_2026-09-15.json) |
 | Production preparation and release | [Deployment plan](NTE_PRODUCTION_DEPLOYMENT_PLAN_2026-09-08.md), [Salesforce deployment](SALESFORCE_DEPLOYMENT.md), [package synchronisation](PRODUCTION_PACKAGE_SYNC.md) |
 | Public forms and email presentation | Root HTML, `assets/`, `config/`, `email-templates/` |
 | Metadata generation and local checks | `scripts/`, `tests/`, `package.json` |
@@ -45,3 +45,5 @@ The canonical public forms preview remains [nte27-web-to-lead-demo](https://gith
 Earlier audits, screenshots, the original client brief and the 12 September reconstruction manual/source archive are retained as dated project history. They predate the subsequent manual-finance and staff-roster changes. Their old field counts, quote/invoice refiners, conversion-time sends and final-pack instructions must not override the current desired workflow or root source. See [the output index](output/README.md).
 
 Authentication caches, API secrets, private keys, raw mailbox/provider/business-record exports, installed dependencies and temporary working snapshots are excluded. Historical links into `tmp/` refer to the retained local evidence workspace. The repository includes the deployment manifests and current source hash evidence, without importing sandbox applicants or test payments into production.
+
+Latest volunteer/client-copy/webinar contents commit: `f6117c56db0302eb0c1e3198f4f933f1b8b41b09`. All 61 selected files and all 614 qualified core source/manifest files were compared with the actual GitHub commit tree; every blob matches. The archive remains available in `output/NTE27-Webinar-Invitations.zip`.
