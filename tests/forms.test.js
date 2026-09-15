@@ -299,7 +299,7 @@ for (const field of ["Exhibitor_Space_Price__c", "Power_Socket_Unit_Price__c", "
   assert(exhibitorHtml.includes(`data-sf-field="${field}"`), `exhibitor application must submit ${field}`);
 }
 const partnerHtml = fs.readFileSync(path.join(root, "partner-sponsor-application.html"), "utf8");
-assert(partnerHtml.includes("More than a traditional jobs fair, NTE27 is designed to foster meaningful connections"), "the partner form must use Kate's revised introduction");
+assert(partnerHtml.includes("NTE creates meaningful connections, encourages collaboration and develops long lasting relationships"), "the partner form must use Kate's 15 September introduction");
 assert(partnerHtml.includes("All package benefits are listed in the NTE27 Partner and Sponsor Brochure."), "the package section must refer to the brochure");
 assert(partnerHtml.includes("There is no additional staff charge for partners and sponsors."), "partner staff guidance must state that additional people are free");
 assert(/id="partner-planned-count"[^>]+type="number"[^>]+min="1"[^>]+max="99"/.test(partnerHtml), "partner applications must capture a 1-99 planned staff total");
@@ -373,7 +373,7 @@ assert(volunteerHtml.includes('data-conduct-reader tabindex="0" role="region"'),
 for (const field of ["Date_of_Birth__c", "NOK_Name__c", "NOK_Relationship__c", "NOK_Phone__c", "Volunteer_Armed_Forces_Service__c", "Volunteer_Service_Details__c", "Volunteer_Service_Dates__c", "Volunteer_Opportunities__c", "Volunteer_Skills__c", "Volunteer_Travel_Regions__c", "Volunteer_DBS_Willing__c", "Volunteer_Consent__c", "Volunteer_Form_Version__c", "Declaration_Name__c", "Declaration_Date__c"]) {
   assert(volunteerHtml.includes(`data-sf-field="${field}"`), `volunteer application must capture ${field}`);
 }
-assert(volunteerHtml.includes('value="Individual Volunteer" data-sf-field="Company"'), "volunteer Leads must use a stable individual-volunteer company value");
+assert(!volunteerHtml.includes('data-sf-field="Company"'), "volunteer applications must leave Company blank for native Person Account conversion");
 assert(volunteerHtml.includes('value="Volunteer Application" data-sf-field="Web_Form_Type__c"'), "volunteer Leads must use a stable isolated form type");
 assert(volunteerHtml.includes('value="North East England"'), "volunteer regions must retain the source form wording");
 assert(volunteerHtml.includes('value="South West England"'), "volunteer regions must retain the source form wording");

@@ -1,5 +1,7 @@
 # Volunteer field compatibility review — 15 September 2026
 
+**Later outcome:** proposal 26 was approved and implemented after this review. See [the verified release](VOLUNTEER_LEGACY_COMPATIBILITY_RELEASE_2026-09-15.md) and [production extension guide](../deployment/VOLUNTEER_LEGACY_EXTENSION.md). The findings below retain the original pre-change state.
+
 Status: read-only assessment. The owner explicitly requested discussion before implementation. No volunteer field, form, layout, conversion mapping, record or production setting was changed. This review follows the separately completed NTE app-page repair.
 
 ## Recommended approach

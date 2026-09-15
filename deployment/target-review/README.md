@@ -1,5 +1,7 @@
 # Changes to existing target components
 
+The separately approved 15 September volunteer extension is documented in [VOLUNTEER_LEGACY_EXTENSION.md](../VOLUNTEER_LEGACY_EXTENSION.md). Its additive pages, layouts, native conversion mappings and staff field visibility must be generated from fresh target metadata. The older patches below do not implement that extension.
+
 These two small changes were implemented and verified separately in MMUAT on 14 September. Their components are shared with existing Mission Motorsport work and are deliberately outside the NTE production manifest. The patches preserve the exact reviewed change without packaging a complete sandbox app/report definition over the client's existing configuration.
 
 **15 September preservation decision:** keep production's existing business views and apps unchanged. These historical patches are not automatic production steps. Follow [the page-isolation checks](../NTE_PAGE_ISOLATION.md); any future change to a shared production component needs its own specific scope and approval. Do not include the separate MMUAT Lead-default repair in the NTE package.

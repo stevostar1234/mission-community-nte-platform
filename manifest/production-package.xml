@@ -48,6 +48,7 @@
         <members>NTEBookingPriceService</members>
         <members>NTEBookingPriceServiceTest</members>
         <members>NTEBookingWaiverTest</members>
+        <members>VolunteerCompatibilityTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -427,6 +428,23 @@
         <members>Opportunity.NTE_Price_Adjustment__c</members>
         <members>Opportunity.NTE_Free_Space_Confirmed__c</members>
         <members>Opportunity.NTE_Approval_Email_Kind__c</members>
+        <members>Contact.NOK_Address__c</members>
+        <members>Contact.NOK_Postcode__c</members>
+        <members>Contact.Volunteer_Armed_Forces_Service__c</members>
+        <members>Contact.Volunteer_Service_Details__c</members>
+        <members>Contact.Volunteer_Service_Dates__c</members>
+        <members>Contact.Volunteer_Opportunities__c</members>
+        <members>Contact.Volunteer_Skills__c</members>
+        <members>Contact.Volunteer_Hours__c</members>
+        <members>Contact.Volunteer_Availability__c</members>
+        <members>Contact.Volunteer_Travel_Regions__c</members>
+        <members>Contact.Volunteer_DBS_Willing__c</members>
+        <members>Contact.Volunteer_Consent__c</members>
+        <members>Contact.Volunteer_Code_Consent__c</members>
+        <members>Contact.Volunteer_Code_Version__c</members>
+        <members>Contact.Volunteer_Form_Version__c</members>
+        <members>Contact.Volunteer_Declaration_Name__c</members>
+        <members>Contact.Volunteer_Declaration_Date__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -486,6 +504,7 @@
         <members>NTE_Inbound_Lead_Routing</members>
         <members>NTE_Supplementary_Update_Handler</members>
         <members>Volunteer_Inbound_Lead_Notification</members>
+        <members>Volunteer_Conversion_Details</members>
         <name>Flow</name>
     </types>
     <types>

@@ -1,0 +1,41 @@
+{
+  "sourceDocumentSha256": "96d797eaf90993d22725b7eea94d0aa17eedfa8adf2183a0b300057d3518cba9",
+  "subject": "Invitation to the NTE27 Launch Webinar",
+  "classicMergeField": "{!Contact.FirstName}",
+  "files": {
+    "exhibitor-webinar-invitation": {
+      "sourceParagraphsExact": true,
+      "nativeHtmlAndTextMerge": true,
+      "recipient": "fictional Contact first name",
+      "nativeBodyWordingExact": true,
+      "registerLinkCount": 1,
+      "sha256": "bf64472e24baf6da74be5a6ec9cb4f94cfcde846ebeef1b4f3df0c940c3f340d"
+    },
+    "partner-sponsor-webinar-invitation": {
+      "sourceParagraphsExact": true,
+      "nativeHtmlAndTextMerge": true,
+      "recipient": "fictional Contact first name",
+      "nativeBodyWordingExact": true,
+      "registerLinkCount": 1,
+      "sha256": "8a9e80de23b275fad71212159c5ea8f7a84beda3b863508f203eb6d5258efb21"
+    },
+    "charity-webinar-invitation": {
+      "sourceParagraphsExact": true,
+      "nativeHtmlAndTextMerge": true,
+      "recipient": "fictional Contact first name",
+      "nativeBodyWordingExact": true,
+      "registerLinkCount": 1,
+      "sha256": "b34603c5772890b3a53ccaa0b680501744936ae9ec7084ca34f214008e522eec"
+    }
+  },
+  "desktopPresentationChecked": true,
+  "narrowScreen": {
+    "width": 390,
+    "documentWidth": 390,
+    "logoLoaded": true
+  },
+  "registrationPageVerified": true,
+  "invitationSends": 0,
+  "temporaryNativeTemplatesRolledBack": true,
+  "archiveSha256": "8005048cc74786b1dae57e1ab164c7081605df5ae4896b58e8a70a595e0a3a5b"
+}

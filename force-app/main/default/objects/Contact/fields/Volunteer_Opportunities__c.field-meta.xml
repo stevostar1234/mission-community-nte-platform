@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Volunteer_Opportunities__c</fullName>
+    <label>Volunteering Opportunities</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>MultiselectPicklist</type>
+    <visibleLines>6</visibleLines>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Fundraising</fullName>
+                <default>false</default>
+                <label>Fundraising</label>
+            </value>
+            <value>
+                <fullName>Transport and Logistics</fullName>
+                <default>false</default>
+                <label>Transport and Logistics</label>
+            </value>
+            <value>
+                <fullName>Motorsport Event Support</fullName>
+                <default>false</default>
+                <label>Motorsport Event Support</label>
+            </value>
+            <value>
+                <fullName>Marshalling</fullName>
+                <default>false</default>
+                <label>Marshalling</label>
+            </value>
+            <value>
+                <fullName>Community Outreach / Awareness</fullName>
+                <default>false</default>
+                <label>Community Outreach / Awareness</label>
+            </value>
+            <value>
+                <fullName>Professional Skills</fullName>
+                <default>false</default>
+                <label>Professional Skills</label>
+            </value>
+            <value>
+                <fullName>Mentoring &amp; Coaching</fullName>
+                <default>false</default>
+                <label>Mentoring &amp; Coaching</label>
+            </value>
+            <value>
+                <fullName>Team Area Co-Ordinator</fullName>
+                <default>false</default>
+                <label>Team Area Co-Ordinator</label>
+            </value>
+            <value>
+                <fullName>Vehicle Maintenance / Repairs (Wantage)</fullName>
+                <default>false</default>
+                <label>Vehicle Maintenance / Repairs (Wantage)</label>
+            </value>
+            <value>
+                <fullName>Pop up shop</fullName>
+                <default>false</default>
+                <label>Pop up shop</label>
+            </value>
+            <value>
+                <fullName>Storekeeping (Wantage)</fullName>
+                <default>false</default>
+                <label>Storekeeping (Wantage)</label>
+            </value>
+            <value>
+                <fullName>Maintenance / DIY (Wantage)</fullName>
+                <default>false</default>
+                <label>Maintenance / DIY (Wantage)</label>
+            </value>
+            <value>
+                <fullName>Driving / Transport</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Driving / Transport</label>
+            </value>
+            <value>
+                <fullName>Charity Merchandise / Shop Support</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Charity Merchandise / Shop Support</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

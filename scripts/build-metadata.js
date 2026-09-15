@@ -638,7 +638,11 @@ const leadListViews = {
     {field: "NTE_Applicant_Email_Status__c", operation: "equals", value: "Failed"}
   ], "1 AND (2 OR (3 AND 4))"],
   NTE_All_Web_Submissions: ["NTE All Web Submissions", ["FULL_NAME", "LEAD.COMPANY", "LEAD.EMAIL", "Web_Form_Type__c", "NTE_Event_Code__c", "Booking_Reference__c", "Target_Booking_Reference__c", "LEAD.STATUS", "LEAD.CREATED_DATE"], [{field: "NTE_Event_Code__c", operation: "notEqual"}]],
-  Volunteer_Applications: ["Volunteer Applications", ["FULL_NAME", "LEAD.EMAIL", "LEAD.MOBILE_PHONE", "Volunteer_Opportunities__c", "Volunteer_Travel_Regions__c", "Volunteer_DBS_Willing__c", "LEAD.STATUS", "LEAD.CREATED_DATE"], [{field: "Web_Form_Type__c", operation: "equals", value: "Volunteer Application"}]]
+  Volunteer_Applications: ["Volunteer Applications", ["FULL_NAME", "LEAD.EMAIL", "LEAD.MOBILE_PHONE", "Volunteer_Opportunities__c", "Volunteer_Travel_Regions__c", "Volunteer_DBS_Willing__c", "LEAD.STATUS", "LEAD.CREATED_DATE"], [
+    {field: "Web_Form_Type__c", operation: "equals", value: "Volunteer Application"},
+    {field: "Interested_in_Volunteering__c", operation: "equals", value: "1"},
+    {field: "LEAD.LEAD_SOURCE", operation: "equals", value: "Volunteer Application"}
+  ], "1 OR 2 OR 3"]
 };
 leadListViews.NTE_Expressions_of_Interest[2].push(
   {field: "NTE_Interest_Progressed__c", operation: "equals", value: "0"},
@@ -2149,3 +2153,4 @@ require("./build-stripe");
 require("./build-stripe-bookings");
 
 require("./build-manual-finance");
+require("./build-volunteer-compatibility");

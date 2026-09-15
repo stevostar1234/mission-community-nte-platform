@@ -6,11 +6,29 @@ This is the current record of the intended workflow. Read it before proposing, i
 
 When the project owner supplies a changed brief, update the relevant rule here, record the change in the decision history, and update affected proposal statuses/dependencies. Record unknowns as undecided. Do not treat an assistant suggestion as an accepted business rule. Current explicit user instructions take precedence over this document. Do not assume client changes have occurred unless they are communicated or otherwise authorised for discovery.
 
-## Volunteer legacy compatibility — proposal 26, review only, 15 September
+## Volunteer legacy compatibility — proposal 26, approved 15 September
 
-The owner requires preservation of existing volunteer records and established field/API definitions. The new web form should populate the same fields for equivalent questions; genuinely new questions may remain blank on older records. Do not make historic records invalid, reclassify them or replace their existing information. The owner explicitly requests discussion before implementing any volunteer mapping/layout change.
+The owner approves extending the existing volunteer model, its lists, pages and conversion mappings, followed by fresh testing. Preserve existing volunteer records and established field/API definitions. The new web form populates the same fields for equivalent questions; genuinely new questions remain optional in Salesforce and may be blank on older records. Do not make historic records invalid, reclassify them or replace their existing information.
 
-The read-only review confirms reuse of the established identity, contact, date-of-birth, next-of-kin, volunteering and consent fields. It identifies new answers missing from the old Lead page, absent conversion mappings/destination fields for those answers, a populated Company placeholder inconsistent with the existing Person Account volunteer register, and a new-form-only Lead list. Proposed remedies remain unapproved. Preserve all 25 native custom Lead conversion mappings and the existing beneficiary/volunteer overlap. [Field-by-field findings and recommendation](audit/VOLUNTEER_LEGACY_COMPATIBILITY_REVIEW_2026-09-15.md).
+Include both new web applications and manually entered volunteers in the Lead view, using the existing volunteer flag/source as well as form type. Preserve the Accounts Volunteers register covering the Volunteer Person Account type OR the volunteer flag; a beneficiary or donor may also volunteer. Leave Company blank on future volunteer web submissions so native conversion can use Person Accounts. Do not change NTE organisation handling or require an Opportunity for volunteers.
+
+Add optional destinations for new volunteer answers on Contact (exposed through Person Accounts), preserving all 25 existing native mappings and all populated destination values during reuse. Keep the original application evidence on its Lead; do not infer structured service fields from free text or replace the existing rich-text Skills Profile. Scope shared declaration copying to volunteer applications, so NTE signatures cannot become volunteer declarations.
+
+The approved page changes are additive volunteer sections on the existing relevant Mission layouts/pages, preserving their current fields, actions, assignments and content. They are a separate target-derived extension, not permission to copy sandbox business layouts into production or weaken NTE app isolation. Build the production extension from that target's current metadata when production is separately authorised. No backfill, cleanup or production deployment is approved. [Original field-by-field review](audit/VOLUNTEER_LEGACY_COMPATIBILITY_REVIEW_2026-09-15.md).
+
+15 September display decision: retain Salesforce's standard semicolon display for multi-select values. The owner declined an additional formatted preferences panel after reviewing the native limitation. Do not change stored delimiters, field types or existing record presentation for this suggestion.
+
+15 September access decision: the owner declined a new volunteer permission-set assignment and requested the new volunteer information be available to existing staff. Use additive field visibility through existing internal staff profiles, preserving all other profile settings, sharing and memberships. MMUAT Admin and Standard are verified; production must derive its separate field-access extension from its own current profiles. Do not widen guest/integration access or put sandbox Profiles into the NTE core package.
+
+15 September implementation outcome: proposal 26 is complete in MMUAT. New and returning volunteers convert through the existing Person Account model without Opportunities; old data and overlapping beneficiary roles are preserved. All 25 existing native mappings remain, with 15 optional answer mappings added. The 614-file source/manifest baseline and full 429-test validation are recorded in [the release](audit/VOLUNTEER_LEGACY_COMPATIBILITY_RELEASE_2026-09-15.md). Standard multi-select display remains unchanged.
+
+## Webinar invitation handover — proposal 28, 15 September
+
+Create three standalone Classic Custom HTML invitations for exhibitors, partners/sponsors and charities from the owner's supplied `NTE27 Webinar invitation wording x3.docx`, preserving Kate's body wording and registration link with the existing NTE email design. Deliver HTML files, plain-text alternatives and upload notes for the coworker. This does not authorise a production deployment, recipient-list change, scheduled mailing or invitation send. Verify native Classic recipient merges and presentation; keep handover instructions outside recipient copy.
+
+## Application introductions — proposal 27, approved 15 September
+
+Use the replacement Exhibitor and Partner/Sponsor introductions from Kate Lole's email **Amended wording for the Exhibitor and Partner/Sponsor application forms**, 15 September 2026, 13:59 UTC. Replace only the opening prose; retain the exhibitor approval/payment paragraph and partner support paragraph supplied in that email. Keep all form questions, fields, choices, prices and submission behaviour unchanged. Publish both updated application forms to the canonical preview.
 
 ## App-specific record views — proposal 25, approved 15 September
 

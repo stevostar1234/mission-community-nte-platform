@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "build": "node scripts/build-metadata.js",
-    "test": "node tests/forms.test.js && python3 tests/page-isolation.test.py",
+    "test": "node tests/forms.test.js && python3 tests/page-isolation.test.py && python3 tests/volunteer-compatibility.test.py",
     "test:page-isolation": "python3 tests/page-isolation.test.py",
+    "test:volunteer": "python3 tests/volunteer-compatibility.test.py",
     "validate": "npm run build && npm test"
   }
 }

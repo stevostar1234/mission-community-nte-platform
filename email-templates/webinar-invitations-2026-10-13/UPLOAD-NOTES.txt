@@ -1,0 +1,15 @@
+NTE27 Launch Webinar invitations
+
+Subject for all three: Invitation to the NTE27 Launch Webinar
+
+Files: exhibitor-webinar-invitation.html, partner-sponsor-webinar-invitation.html, charity-webinar-invitation.html. Matching plain-text alternatives are included.
+
+Upload as Salesforce Classic Custom HTML templates without a letterhead; each HTML file includes the complete NTE header and footer. Use UTF-8. Do not apply a second letterhead.
+
+The greeting uses {!Contact.FirstName}, suitable for Contact and Person Account recipients. If a sending list contains Leads instead, use Salesforce's merge-field picker to replace it with the Lead First Name field for that template. Preview against a real intended recipient before sending, and use a generic greeting for recipients without a first name. The HTML and plain-text greeting were verified using Salesforce’s native Classic merge in MMUAT. No private NTE Apex greeting processor is required.
+
+Kate's supplied body wording and Teams registration link are retained. The previous standard NTE team signature and footer complete each email. The Register here link opens the National Transition Event 2027 Launch Webinar on Tuesday 13 October at 13:00. The registration page was opened and checked; no registration was submitted.
+
+The logo uses the same existing public HTTPS NTE image as the current templates. It is a linked image, not a local file dependency. If moving the asset to the client's host, replace the src with the final public HTTPS image URL and recheck rendering.
+
+These are manually sent launch invitations. They are separate from booking automation and do not add recipients, schedule mail or deploy anything to production. Use the client's existing approved mailing-list and opt-out process.
