@@ -38,6 +38,8 @@ An isolated local rebuild reproduces the current generated source exactly. No sa
 4. Replace MMUAT-specific routing, organisation/field IDs, preview URLs and merchant settings with the approved production values. Install API secrets separately in protected credentials. The repository intentionally retains the qualified sandbox configuration; it is not a ready-configured production merchant.
 5. Validate the exact configured candidate in the authorised production org, then release it through the separately approved deployment. Do not run destructive manifests or backfill scripts automatically; their target-specific scope must first be checked.
 
+Laura’s real SharePoint file-request destination is now configured in the logo form, published as `1b071a5` and verified through the guest upload page. The maintained source includes this link for the production handover. [16 September release](audit/NTE_LOGO_SHAREPOINT_LINK_2026-09-16.md).
+
 The canonical public forms preview remains [nte27-web-to-lead-demo](https://github.com/stevostar1234/nte27-web-to-lead-demo). This private repository does not create a second Pages site. Final NTE hosting and client Stripe sandbox/live configuration remain outstanding.
 
 ## Historical work and exclusions

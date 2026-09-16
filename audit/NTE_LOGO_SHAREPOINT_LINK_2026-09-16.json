@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-09-16T19:15:35.652854+00:00",
+  "files": [
+    {
+      "file": "assets/config.js",
+      "url": "https://stevostar1234.github.io/nte27-web-to-lead-demo/assets/config.js?v=20260916-logo-1",
+      "sha256": "68ebff9ec6c20cd2304af0f33fac71a6056c123f12e9ebbb12b8d4ee34f166bd",
+      "matches_source": true
+    },
+    {
+      "file": "logo-upload.html",
+      "url": "https://stevostar1234.github.io/nte27-web-to-lead-demo/logo-upload.html",
+      "sha256": "d95b68e112b61a33c7a01706ae6e6dfaa048611b3141bedaecf3a60b06558cb8",
+      "matches_source": true
+    }
+  ],
+  "proposal": 29,
+  "website_commit": "1b071a50bd4221d5d76519fed85ff7a5a910f948",
+  "source": {
+    "sender": "Laura Westrope <lw@missionmotorsport.org>",
+    "received_at": "2026-09-16T13:58:02Z",
+    "subject": "FW: [EXTERNAL]:FW: Uploading exhibitor logos to Sharepoint and next meeting",
+    "gmail_message_id": "1a0aa82b562fd808"
+  },
+  "destination": "https://missioncommunityorg.sharepoint.com/:f:/s/MissionCommunity/IgACqM_zXPyfQ6rpuy0q2kTJAZYM8Ny7YDP8_9OO_DGD4tg",
+  "browser_checks": {
+    "form_link_enabled": true,
+    "exact_supplied_href": true,
+    "target": "_blank",
+    "rel": "noopener noreferrer",
+    "new_tab_confirmed_in_chrome": true,
+    "sharepoint_title": "Exhibitor and Sponsor Logos",
+    "select_files_visible": true,
+    "sign_in_required_at_landing": false,
+    "form_remains_open": true,
+    "form_console_errors_or_warnings": []
+  },
+  "local_checks": {
+    "command": "node tests/forms.test.js",
+    "result": "passed",
+    "git_diff_check": "passed",
+    "url_length": 113,
+    "salesforce_url_field_limit": 255
+  },
+  "no_file_uploaded": true,
+  "no_form_submitted": true,
+  "salesforce_metadata_changed": false,
+  "sharing_permissions_changed": false
+}
