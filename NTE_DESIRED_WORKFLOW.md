@@ -1,6 +1,6 @@
 # Desired NTE workflow
 
-Last updated: 15 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
+Last updated: 16 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
 
 This is the current record of the intended workflow. Read it before proposing, implementing, testing or reviewing NTE changes. Confirmed requirements describe the target behaviour; they do not imply that the current package already implements it. [NTE_CHANGE_PROPOSALS.md](NTE_CHANGE_PROPOSALS.md) records implementation proposals and their approval status. The dated audit contains source evidence and historical discussion, some of which has been superseded here.
 
@@ -418,3 +418,5 @@ Approved: keep all bottom-chart counts visible, including zero and small segment
 14 September client meeting examples: the owner explicitly requested fresh normal/blocked/elevated-risk/refund/dispute/insufficient-funds Stripe test examples, plus five interests and five Stripe applications. Completed seven direct provider simulations and ten normal Web-to-Lead submissions; all ten Leads remain New/unconverted for demonstration. This adds retained meeting data and does not change the confirmed business workflow, client settings or production authorisation. [Exact results](audit/NTE_MEETING_DEMOS_2026-09-14.md).
 
 15 September, proposal 24 decision and release: allow identical main/finance name, email and phone on both application forms. A separate person is preferred only if possible. Preserve current required finance details and routing. Both hosted forms and four isolated matching-contact cases are verified; no Salesforce code change was required. [Follow-up evidence](audit/NTE_FINANCE_CONTACT_FOLLOWUP_2026-09-15.md).
+
+16 September, proposal 28 extension: the owner supplied the EOI webinar wording and requested the matching fourth Classic HTML invitation. Preserve the supplied body and use the Contact first-name merge for external Eventbrite EOIs held as Contacts. Add HTML/text files and refresh the four-template download pack, preserving the original three emails. This remains a manual file handover, with no automated send or production deployment. [Completed EOI handover](audit/NTE_EOI_WEBINAR_INVITATION_2026-09-16.md).

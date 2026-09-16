@@ -8,3 +8,5 @@ For the current implementation, use the repository's root `force-app/` and `mani
 ## 15 September webinar invitation handover
 
 [NTE27 webinar invitation archive](NTE27-Webinar-Invitations.zip) contains three Classic HTML invitations for exhibitors, partners/sponsors and charities, matching text alternatives and upload notes. Kate’s supplied wording, the Teams registration destination and native Classic merges are verified. These files are separate from booking automation; no invitations have been sent or deployed to production.
+
+16 September: the same [webinar archive](NTE27-Webinar-Invitations.zip) now also includes the [EOI invitation](NTE27-Webinar-Invitations/eoi-webinar-invitation.html), using the Classic Contact greeting. The original three invitations are unchanged.

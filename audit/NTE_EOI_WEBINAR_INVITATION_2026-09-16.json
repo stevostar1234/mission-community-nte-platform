@@ -1,0 +1,41 @@
+{
+  "sourceDocument": "NTE27 Webinar invitation wording for EOIs.docx",
+  "sourceSha256": "87586535e51301c29181063577a570ddc5f26785cb584ca8fe1c02994d2b207a",
+  "subject": "Invitation to the NTE27 Launch Webinar",
+  "paragraphs": [
+    "Dear xxxxxxx",
+    "Thank you for your interest in the National Transition Event (NTE) at Silverstone which has helped change life outcomes for thousands of members of the Armed Forces community and their families.",
+    "We are delighted to return to Silverstone for NTE27 on Monday 1st March 2027, once again connecting businesses, government departments and service charities along with the Armed Forces community for the largest event of its kind in the UK. The event brings together the community all under one roof in an expo-style format, alongside the much-loved Troops’ Track Day on the GP Circuit.",
+    "This unique gathering would not be possible without the support of exhibitors and sponsors. Their contribution helps us provide free exhibition space to charities and support services, keep tickets free of charge for attendees, all whilst ensuring vital assistance is accessible to the Armed Forces community at every stage of life.",
+    "We would like to invite you to attend our NTE27 Launch Webinar taking place on Tuesday 13th October at 13:00 to find out more about our plans for 2027, where we will:",
+    "share a preview of NTE27",
+    "introduce you to our exhibitor, partnership and sponsorship opportunities",
+    "answer any questions you may have",
+    "To join the webinar, please Register here.",
+    "We look forward to welcoming you to the webinar and working together again at NTE27.",
+    "Kind regards"
+  ],
+  "registrationUrl": "https://events.teams.microsoft.com/event/27996c46-33a4-4d03-8537-c80a5cc85949@3f78e58a-ac67-4f7e-9347-3445d6d2fea2",
+  "htmlSha256": "54778d6540db79cede46c610eaed4d35ee1e67171f8ff7c3e7e6b6972decafed",
+  "classicMergeField": "{!Contact.FirstName}",
+  "intendedRecipients": "External Eventbrite EOIs held as Contacts",
+  "nativeHtmlMerge": true,
+  "nativeTextMerge": true,
+  "bodyWordingExact": true,
+  "originalThreeEmailsUnchanged": true,
+  "registrationVerified": "National Transition Event 2027 Launch Webinar; Tuesday 13 October, 13:00",
+  "archiveSha256": "bfda87a452514ab09e089b41949f6e5f247e06504602fbaf84c97a0e6edd2f72",
+  "desktopVisualCheck": true,
+  "sentEmails": 0,
+  "files": {
+    "output/NTE27-Webinar-Invitations/UPLOAD-NOTES.txt": "3296881a5470a1d414753e9054463cfdc6e0aa7ff21bcb83334a37f0b604b0dd",
+    "output/NTE27-Webinar-Invitations/charity-webinar-invitation.html": "b34603c5772890b3a53ccaa0b680501744936ae9ec7084ca34f214008e522eec",
+    "output/NTE27-Webinar-Invitations/charity-webinar-invitation.txt": "18726d4948d79a1ec92b13e1d24d017c98cd5535729b7a703c3d25887ced1e81",
+    "output/NTE27-Webinar-Invitations/eoi-webinar-invitation.html": "54778d6540db79cede46c610eaed4d35ee1e67171f8ff7c3e7e6b6972decafed",
+    "output/NTE27-Webinar-Invitations/eoi-webinar-invitation.txt": "4eba49bfdb9afe1ac764280694c4e1bf93aae5499b168a032246e28ced61692b",
+    "output/NTE27-Webinar-Invitations/exhibitor-webinar-invitation.html": "bf64472e24baf6da74be5a6ec9cb4f94cfcde846ebeef1b4f3df0c940c3f340d",
+    "output/NTE27-Webinar-Invitations/exhibitor-webinar-invitation.txt": "1421cbf22c346cad62df59a22e0b548577a14804622e0a026c7fda5833759ab0",
+    "output/NTE27-Webinar-Invitations/partner-sponsor-webinar-invitation.html": "8a9e80de23b275fad71212159c5ea8f7a84beda3b863508f203eb6d5258efb21",
+    "output/NTE27-Webinar-Invitations/partner-sponsor-webinar-invitation.txt": "8181eb3670b2d561f0f314c4fe4f9d0029f7f66dc5a6f813a8d382edcff1932e"
+  }
+}

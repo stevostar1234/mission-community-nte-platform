@@ -19,3 +19,5 @@ The navy/gold/white shell, NTE logo and footer match the established NTE email d
 [Content, merge and archive hashes](NTE_WEBINAR_INVITATIONS_2026-09-15.json). The first combined native render attempt exceeded the anonymous Apex script-size limit and made no change; separate successful renders completed all three checks.
 
 These files do not add booking automation, recipient lists, schedules or live email templates. Coworker production upload and the client's eventual invitation sends are outside this completed file handover.
+
+**16 September addition:** the current archive now contains the fourth EOI invitation. The original three HTML/text files are unchanged; this dated report describes their initial qualification. See [the EOI extension](NTE_EOI_WEBINAR_INVITATION_2026-09-16.md) for the current archive hash and Contact merge verification.

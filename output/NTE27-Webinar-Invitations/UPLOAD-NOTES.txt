@@ -1,12 +1,12 @@
 NTE27 Launch Webinar invitations
 
-Subject for all three: Invitation to the NTE27 Launch Webinar
+Subject for all four: Invitation to the NTE27 Launch Webinar
 
-Files: exhibitor-webinar-invitation.html, partner-sponsor-webinar-invitation.html, charity-webinar-invitation.html. Matching plain-text alternatives are included.
+Files: exhibitor-webinar-invitation.html, partner-sponsor-webinar-invitation.html, charity-webinar-invitation.html, eoi-webinar-invitation.html. Matching plain-text alternatives are included.
 
 Upload as Salesforce Classic Custom HTML templates without a letterhead; each HTML file includes the complete NTE header and footer. Use UTF-8. Do not apply a second letterhead.
 
-The greeting uses {!Contact.FirstName}, suitable for Contact and Person Account recipients. If a sending list contains Leads instead, use Salesforce's merge-field picker to replace it with the Lead First Name field for that template. Preview against a real intended recipient before sending, and use a generic greeting for recipients without a first name. The HTML and plain-text greeting were verified using Salesforce’s native Classic merge in MMUAT. No private NTE Apex greeting processor is required.
+All four invitations use {!Contact.FirstName}, suitable for Contact and Person Account recipients. The EOI version is for the external Eventbrite EOIs held as Contacts. If a sending list contains Leads instead, use Salesforce's merge-field picker to replace it with the Lead First Name field for that template. Preview against a real intended recipient before sending, and use a generic greeting for recipients without a first name. The HTML and plain-text greeting were verified using Salesforce’s native Classic merge in MMUAT. No private NTE Apex greeting processor is required.
 
 Kate's supplied body wording and Teams registration link are retained. The previous standard NTE team signature and footer complete each email. The Register here link opens the National Transition Event 2027 Launch Webinar on Tuesday 13 October at 13:00. The registration page was opened and checked; no registration was submitted.
 
