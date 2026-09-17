@@ -1,10 +1,14 @@
 # Desired NTE workflow
 
-Last updated: 16 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
+Last updated: 17 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
 
 This is the current record of the intended workflow. Read it before proposing, implementing, testing or reviewing NTE changes. Confirmed requirements describe the target behaviour; they do not imply that the current package already implements it. [NTE_CHANGE_PROPOSALS.md](NTE_CHANGE_PROPOSALS.md) records implementation proposals and their approval status. The dated audit contains source evidence and historical discussion, some of which has been superseded here.
 
 When the project owner supplies a changed brief, update the relevant rule here, record the change in the decision history, and update affected proposal statuses/dependencies. Record unknowns as undecided. Do not treat an assistant suggestion as an accepted business rule. Current explicit user instructions take precedence over this document. Do not assume client changes have occurred unless they are communicated or otherwise authorised for discovery.
+
+## Volunteer service selections — proposal 30, approved 17 September
+
+Use Tony Radford’s 17 September emails: when an applicant answers Yes to having served or currently serving, show independent checkboxes for British Army, Royal Navy, Royal Air Force and Royal Marines. Remove the public “Service, unit, station or ship” text box; retain optional Dates in Service. Allow multiple services and keep the previous optional status. Save the selected labels through the existing `Volunteer_Service_Details__c` Lead field and its Contact/Person Account conversion mapping, preserving the field type/API and all historic free-text answers. No new field, backfill, shared page change or structured legacy-service inference is approved. Keep the current Code of Conduct and its v3 validation unchanged; Tony’s separate final wording sign-off remains awaited. Publish the revised volunteer form to the existing canonical preview. Released and verified as `a0bd081`; [evidence](audit/VOLUNTEER_SERVICE_CHOICES_2026-09-17.md).
 
 ## Volunteer legacy compatibility — proposal 26, approved 15 September
 

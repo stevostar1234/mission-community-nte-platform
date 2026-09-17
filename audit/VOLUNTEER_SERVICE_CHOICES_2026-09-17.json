@@ -1,0 +1,185 @@
+{
+  "url": "https://stevostar1234.github.io/nte27-web-to-lead-demo/volunteer-application.html",
+  "checked_at": "2026-09-17T09:36:33.809219+00:00",
+  "sha256": "3499499839265954214fc2b6d413f844f1325ce2fd1affd75dff3f5e6909643a",
+  "matches_source": true,
+  "proposal": 30,
+  "website_commit": "a0bd0812dd250f877a90a38a64183b371e246538",
+  "pages_run": 35205984842,
+  "pages_conclusion": "success",
+  "source_emails": [
+    {
+      "gmail_message_id": "1a0ae7e5c1b476ad",
+      "sender": "Tony Radford",
+      "sent_utc": "2026-09-17T08:31:41Z",
+      "requirement": "British Army, Royal Navy, Royal Air Force and Royal Marines checkboxes when served/serving is Yes"
+    },
+    {
+      "gmail_message_id": "1a0ae99d1b96ae57",
+      "sender": "Tony Radford",
+      "sent_utc": "2026-09-17T09:01:38Z",
+      "requirement": "Remove the Service, unit, station or ship text box"
+    }
+  ],
+  "field": "Volunteer_Service_Details__c",
+  "field_type_unchanged": "LongTextArea",
+  "choices": [
+    "British Army",
+    "Royal Navy",
+    "Royal Air Force",
+    "Royal Marines"
+  ],
+  "multiple_choices_allowed": true,
+  "service_details_remain_optional": true,
+  "service_dates_retained": true,
+  "code_of_conduct_and_v3_validation_preserved": true,
+  "local_payload_checks": {
+    "passed": 18,
+    "failed": 0,
+    "transport": "inert local DOM only; no network requests",
+    "outcomes": [
+      {
+        "selected": [],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Navy"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Navy"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Air Force"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Air Force"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Navy",
+          "Royal Air Force"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Navy",
+          "Royal Air Force"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Navy",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Navy",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Air Force",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Air Force",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "Royal Navy",
+          "Royal Air Force",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "selected": [
+          "British Army",
+          "Royal Navy",
+          "Royal Air Force",
+          "Royal Marines"
+        ],
+        "passed": true
+      },
+      {
+        "toggle": "Yes > No",
+        "passed": true
+      },
+      {
+        "toggle": "Yes > No > Yes",
+        "passed": true
+      }
+    ]
+  },
+  "existing_test_results": {
+    "forms_suite": "passed",
+    "volunteer_form_engine": {
+      "passed": 26,
+      "failed": 0
+    },
+    "volunteer_compatibility": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "browser_results": {
+    "yes_displays_four_checkboxes": true,
+    "british_army_and_royal_marines_selected_together": true,
+    "no_hides_and_disables_all_four": true,
+    "dates_retained": true,
+    "desktop_visual_checked": true,
+    "console_errors_or_warnings": []
+  },
+  "live_submissions": 0,
+  "salesforce_metadata_changed": false,
+  "existing_records_changed": false,
+  "maximum_serialized_length": 53
+}

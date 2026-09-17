@@ -40,6 +40,8 @@ An isolated local rebuild reproduces the current generated source exactly. No sa
 
 Laura’s real SharePoint file-request destination is now configured in the logo form, published as `1b071a5` and verified through the guest upload page. The maintained source includes this link for the production handover. [16 September release](audit/NTE_LOGO_SHAREPOINT_LINK_2026-09-16.md).
 
+Tony’s volunteer service checkboxes are published as `a0bd081`, using the existing service-details field and conversion mapping while preserving older answers. [17 September release](audit/VOLUNTEER_SERVICE_CHOICES_2026-09-17.md).
+
 The canonical public forms preview remains [nte27-web-to-lead-demo](https://github.com/stevostar1234/nte27-web-to-lead-demo). This private repository does not create a second Pages site. Final NTE hosting and client Stripe sandbox/live configuration remain outstanding.
 
 ## Historical work and exclusions

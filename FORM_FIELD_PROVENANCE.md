@@ -236,3 +236,7 @@ Tony’s emails at 08:37 and 08:40 UTC supply the actual Code of Conduct and the
 [Release evidence](audit/VOLUNTEER_CODE_OF_CONDUCT_2026-09-10.md). Reaching the end records an interaction, not proof of reading; direct raw requests can also impersonate a client assertion, as with the existing public Web-to-Lead interface.
 
 10 September volunteer reader correction is published: the eight paper-signature paragraphs are removed; the policy/declaration, scroll gate, acknowledgement and digital signature remain. Preview `5fb41927a9e301aab921894af101891602ad72e6` changes one file; 6/6 hosted files match, `npm test` and 8 focused conduct checks pass. No Salesforce metadata change or deployment was needed. [Follow-up evidence](audit/VOLUNTEER_CODE_OF_CONDUCT_2026-09-10.md#later-owner-correction--paper-signature-section-removed).
+
+## 10. Volunteer service choices — approved 17 September 2026
+
+Tony’s emails at 08:31 and 09:01 UTC replace the public service/unit/station/ship text box with independent British Army, Royal Navy, Royal Air Force and Royal Marines checkboxes. The existing `Volunteer_Service_Details__c` LongTextArea field and Lead-to-Contact mapping receive the selected labels; no field type/API changes or old-value migration. Service dates and optional service details are retained. The v3 form identifier and conduct checks remain unchanged. [Release evidence](audit/VOLUNTEER_SERVICE_CHOICES_2026-09-17.md).
