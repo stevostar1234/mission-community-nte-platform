@@ -111,6 +111,41 @@ private class NTEManualFinanceTest {
         System.assert(booking.NTE_Finance_Payment_Confirmed__c);
         System.assertEquals(1,[SELECT COUNT() FROM NTE_Email_Dispatch__c WHERE Opportunity__c=:booking.Id AND Kind__c='BOOKING_CONFIRMED']);
     }
+    @IsTest static void commercialFreeSpacesConvertAndConfirmThroughTheManualAction() {
+        List<Opportunity> bookings = new List<Opportunity>();
+        for (String space : new List<String>{'COBSEO Charity - Single - Free', 'Non COBSEO Charity - Single - Free'}) {
+            Lead lead = application('COMMERCIAL-FREE-' + bookings.size(), true);
+            lead.Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector';
+            lead.Exhibitor_Space_Selections__c = space;
+            update lead;
+            Opportunity booking = convert(lead);
+            System.assertEquals(0, booking.Amount);
+            System.assertEquals('Calculated', booking.NTE_Pricing_Status__c);
+            System.assert(!booking.NTE_Free_Space_Confirmed__c);
+            System.assertEquals(null, booking.NTE_Approval_Email_Sent_At__c, 'Conversion remains silent.');
+            bookings.add(booking);
+        }
+        update new Opportunity(Id = bookings[1].Id, NTE_Approval_Email_Status__c = 'Failed',
+            NTE_Approval_Email_Kind__c = 'Free confirmation', NTE_Approval_Email_Error__c = 'The booking price needs review.');
+        Test.startTest();
+        for (Opportunity booking : bookings) NTEFinanceService.sendFinanceAction(booking.Id, 'FREE');
+        Test.stopTest();
+        Set<Id> bookingIds = new Map<Id, Opportunity>(bookings).keySet();
+        for (Opportunity booking : bookings) {
+            Opportunity outcome = state(booking.Id);
+            System.assertEquals('Sent', outcome.NTE_Approval_Email_Status__c);
+            System.assert(outcome.NTE_Free_Space_Confirmed__c);
+            System.assert(outcome.NTE_Finance_Payment_Confirmed__c);
+            System.assert(!outcome.NTE_Payment_Received__c);
+            Boolean duplicateBlocked = false;
+            try { NTEFinanceService.sendFinanceAction(booking.Id, 'FREE'); }
+            catch (AuraHandledException expected) { duplicateBlocked = true; }
+            System.assert(duplicateBlocked, 'A confirmed free space must not send twice.');
+        }
+        System.assertEquals(2, [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds
+            AND Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Opportunity__c IN :bookingIds]);
+    }
     @IsTest static void topUpPaymentCanPrecedeBasePayment() {
         Opportunity booking=convert(application('TOPUP',false));
         update new Opportunity(Id=booking.Id,NTE_Top_Up_Staff_Total__c=100,NTE_Top_Up_Payment_Requested_At__c=System.now());

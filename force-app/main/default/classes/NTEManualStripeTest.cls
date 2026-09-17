@@ -17,11 +17,14 @@ private class NTEManualStripeTest {
         }
     }
     private static Id newTopUpBooking(String key, Decimal quantity, Decimal unitPrice, Decimal total) {
+        return newTopUpBooking(key, quantity, unitPrice, total, 'Single Garage - Track Side - £799 + VAT');
+    }
+    private static Id newTopUpBooking(String key, Decimal quantity, Decimal unitPrice, Decimal total, String space) {
         Lead lead = new Lead(FirstName='Asha', LastName='TopUp '+key, Company='Manual Stripe Top-up '+key,
             Email='topup-'+key.toLowerCase()+'@example.invalid', Web_Form_Type__c='Exhibitor Application',
             NTE_Event_Code__c='NTE2099', Booking_Reference__c='NTE-MANUAL-TOPUP-'+key,
             Exhibitor_Organisation_Category__c='CIC or Not for Profit',
-            Exhibitor_Space_Selections__c='Single Garage - Track Side - £799 + VAT',
+            Exhibitor_Space_Selections__c=space,
             Planned_Exhibitor_Count__c='2', Total_Staff_Count__c=2, Stand_Power__c='No',
             Heavy_Vehicle_Required__c='No', Payment_Method__c='Bank transfer');
         insert lead;
@@ -94,6 +97,42 @@ private class NTEManualStripeTest {
         System.assertEquals('Needs review',payment().Status__c);System.assertEquals(null,payment().Delivered_At__c);
         NTEFinanceService.sendFinanceAction(request.Opportunity__c,'TOP_UP');System.assertEquals('Queued',payment().Status__c);
         System.assertEquals(request.Id,payment().Id);System.assertEquals(1,[SELECT COUNT() FROM NTE_Payment_Request__c]);
+    }
+    @IsTest static void commercialCobseoFreeSpaceSupportsTheLaterStaffTopUp() {
+        assertFreeSpaceTopUp('COBSEO Charity - Single - Free');
+    }
+    @IsTest static void commercialNonCobseoFreeSpaceSupportsTheLaterStaffTopUp() {
+        assertFreeSpaceTopUp('Non COBSEO Charity - Single - Free');
+    }
+    private static void assertFreeSpaceTopUp(String space) {
+        configure();
+        Id bookingId = newTopUpBooking('COMMERCIAL-FREE', 1, 50, 50, space);
+        update new Opportunity(Id = bookingId, NTE_Free_Space_Confirmed__c = true);
+        NTEFinanceService.sendFinanceAction(bookingId, 'TOP_UP');
+        NTE_Payment_Request__c request = payment(bookingId);
+        Mock mock = new Mock(request, 'normal');
+        Test.setMock(HttpCalloutMock.class, mock);
+        Test.startTest();
+        NTEStripeBookingService.processPayment(request.Id, false);
+        NTEStripeBookingService.deliverTopUp(request.Id, true);
+        NTEStripeBookingService.deliverTopUp(request.Id, true);
+        Test.stopTest();
+        request = payment(bookingId);
+        System.assertEquals('Sent', request.Status__c, 'Free-space top-up: ' + request.Error__c);
+        System.assertEquals(5000, request.Net_Minor__c);
+        System.assertEquals(6000, request.Amount_Minor__c);
+        System.assertEquals(2, mock.writes, 'Create only one price and one link for the top-up.');
+        Opportunity booking = [SELECT Amount, NTE_Listed_Price_Total__c, NTE_Free_Space_Confirmed__c,
+            NTE_Payment_Received__c, NTE_Exhibitor_Organisation_Category__c, NTE_Exhibitor_Space_Selections__c
+            FROM Opportunity WHERE Id = :bookingId];
+        System.assertEquals(0, booking.Amount);
+        System.assertEquals(0, booking.NTE_Listed_Price_Total__c);
+        System.assert(booking.NTE_Free_Space_Confirmed__c);
+        System.assert(!booking.NTE_Payment_Received__c);
+        System.assertEquals('CIC or Not for Profit', booking.NTE_Exhibitor_Organisation_Category__c);
+        System.assertEquals(space, booking.NTE_Exhibitor_Space_Selections__c);
+        System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Opportunity__c = :bookingId AND Kind__c = 'Booking']);
+        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND Subject = 'NTE staff top-up payment email - sent']);
     }
     @IsTest static void topUpCannotQueueTwiceOrRequestAnAlreadyPaidCharge() {
         configure();NTE_Payment_Request__c request=payment();Boolean blocked=false;

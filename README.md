@@ -2,6 +2,8 @@
 
 This repository contains the Salesforce source, forms, tests and release documentation for National Transition Event submissions in Mission Community.
 
+The latest backend correction, 17 September, allows any organisation category to confirm either valid free-space choice. It is qualified and deployed in MMUAT with all 434 Apex tests passing. See [the release](audit/NTE_FREE_SPACE_CONFIRMATION_FIX_2026-09-17.md) and [current source qualification](audit/NTE_FREE_SPACE_CONFIRMATION_QUALIFICATION_2026-09-17.json); production deployment remains separate.
+
 **15 September space-selection release:** any organisation type may request any listed exhibitor space; free choices show their £499 + VAT bundle value. Deployed to MMUAT and published to the canonical preview after 422 native tests. [Release evidence](audit/NTE_SPACE_SELECTION_RELEASE_2026-09-15.md) and [remaining form restrictions](audit/NTE_FORM_RESTRICTIONS_2026-09-15.md).
 
 The complete private project checkpoint is [stevostar1234/mission-community-nte-platform](https://github.com/stevostar1234/mission-community-nte-platform). [Current publication and verification](audit/NTE_GITHUB_CHECKPOINT_2026-09-15.md) records this update; [the earlier checkpoint](audit/NTE_GITHUB_CHECKPOINT_2026-09-08.md) retains its original evidence.

@@ -1,4 +1,4 @@
-# Current project and deployment source — 15 September 2026
+# Current project and deployment source — 17 September 2026
 
 The complete project is maintained in the private [mission-community-nte-platform repository](https://github.com/stevostar1234/mission-community-nte-platform). This checkpoint contains the current Salesforce implementation and the supporting website, email, test and handover work. It does not deploy Salesforce or activate payments.
 
@@ -8,7 +8,7 @@ The complete project is maintained in the private [mission-community-nte-platfor
 | --- | --- |
 | Salesforce source and complete manifest | `force-app/`, `sfdx-project.json`, `manifest/production-package.xml` |
 | Intended workflow and owner decisions | [Desired workflow](NTE_DESIRED_WORKFLOW.md), [approved proposals](NTE_CHANGE_PROPOSALS.md) |
-| Current qualification and completed testing | [Audit checkpoint](NTE_AUDIT_RESUME.md), [14 September end-to-end audit](audit/NTE_END_TO_END_AUDIT_2026-09-14.md), [current source and release identity](audit/VOLUNTEER_LEGACY_COMPATIBILITY_QUALIFICATION_2026-09-15.json) |
+| Current qualification and completed testing | [Audit checkpoint](NTE_AUDIT_RESUME.md), [14 September end-to-end audit](audit/NTE_END_TO_END_AUDIT_2026-09-14.md), [current source and release identity](audit/NTE_FREE_SPACE_CONFIRMATION_QUALIFICATION_2026-09-17.json) |
 | Production preparation and release | [Deployment plan](NTE_PRODUCTION_DEPLOYMENT_PLAN_2026-09-08.md), [Salesforce deployment](SALESFORCE_DEPLOYMENT.md), [package synchronisation](PRODUCTION_PACKAGE_SYNC.md) |
 | Public forms and email presentation | Root HTML, `assets/`, `config/`, `email-templates/` |
 | Metadata generation and local checks | `scripts/`, `tests/`, `package.json` |
@@ -17,6 +17,8 @@ The complete project is maintained in the private [mission-community-nte-platfor
 | Preserve existing business record views | [App-specific page boundary and deployment checks](deployment/NTE_PAGE_ISOLATION.md); historical [target-review patches](deployment/target-review/README.md) must not be applied automatically |
 
 ## Verified implementation
+
+The 17 September complimentary-confirmation correction completes proposal 23 and resolves simplicity finding S01 under approved proposal 31. Both free-space choices now support confirmation for all organisation categories. Full MMUAT check `0AfAd00000SyKtNKAV` passed 528 components / 434 tests; exact four-class release `0AfAd00000SyLRFKA3` and native readback pass. The other 610 qualified files, prices, public forms and email templates are unchanged. Existing failed confirmations can use the normal manual action; no historic booking was automatically retried. [Release](audit/NTE_FREE_SPACE_CONFIRMATION_FIX_2026-09-17.md), [614 current source/manifest hashes](audit/NTE_FREE_SPACE_CONFIRMATION_QUALIFICATION_2026-09-17.json). Production deployment remains separate.
 
 The 15 September full MMUAT validation `0AfAd00000Sw2KfKAJ` passed 509 components and 422 Apex tests. The exact candidate was deployed as `0AfAd00000Sw3DVKAZ`; all 594 source/manifest hashes are recorded in the current qualification. Any organisation may now request any listed exhibitor space, with the NTE team deciding approval. Both free choices show the £499 + VAT bundle value. The paired public preview `31c568e7529acee99c6717c0dbf162982a3940ea` has 12/12 files byte-verified. The earlier GitHub baseline and 14 September releases remain historical evidence. The later finance-contact wording follow-up is published as `617e2c5a06af41847a23767fba8860836573416a` with both HTML files verified; matching main/finance details are allowed on both applications, and the Salesforce source hashes remain unchanged. [Follow-up evidence](audit/NTE_FINANCE_CONTACT_FOLLOWUP_2026-09-15.md).
 

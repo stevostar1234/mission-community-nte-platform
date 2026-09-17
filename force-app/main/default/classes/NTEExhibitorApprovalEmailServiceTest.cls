@@ -89,13 +89,13 @@ private class NTEExhibitorApprovalEmailServiceTest {
         Fixture extras = booking('EXTRAS', false);
         for (Fixture fixture : new List<Fixture>{free, extras}) {
             fixture.booking.NTE_Exhibitor_Space_Selections__c = 'COBSEO Charity - Single - Free';
-            fixture.booking.NTE_Exhibitor_Organisation_Category__c = 'Charity - member of Cobseo';
+            fixture.booking.NTE_Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector';
             fixture.booking.NTE_Exhibitor_Space_Price__c = 0;
-            fixture.booking.Amount = fixture == free ? 0 : 60;
-            fixture.booking.NTE_Listed_Price_Total__c = fixture == free ? 0 : 50;
-            fixture.booking.NTE_Power_Socket_Total__c = fixture == free ? 0 : 50;
+            fixture.booking.Amount = fixture == free ? 0 : 120;
+            fixture.booking.NTE_Listed_Price_Total__c = fixture == free ? 0 : 100;
+            fixture.booking.NTE_Power_Socket_Total__c = fixture == free ? 0 : 100;
             fixture.booking.NTE_Power_Socket_Count__c = fixture == free ? 0 : 1;
-            fixture.booking.NTE_Power_Socket_Unit_Price__c = fixture == free ? 0 : 50;
+            fixture.booking.NTE_Power_Socket_Unit_Price__c = fixture == free ? 0 : 100;
             Database.update(fixture.booking, AccessLevel.SYSTEM_MODE);
         }
         Test.startTest();
@@ -108,6 +108,108 @@ private class NTEExhibitorApprovalEmailServiceTest {
         System.assert(!extrasHtml.contains('No payment is due.'));
         System.assertEquals('NTE_Exhibitor_Approved',
             NTEExhibitorApprovalEmailService.selectedTemplateByOpportunityId.get(extras.booking.Id));
+    }
+
+    @IsTest
+    static void everyOrganisationCategoryCanConfirmEitherFreeSpaceOnce() {
+        Fixture seed = booking('FREE-CATEGORIES', false);
+        List<Lead> applications = new List<Lead>();
+        List<Opportunity> bookings = new List<Opportunity>();
+        for (Schema.PicklistEntry category : Lead.Exhibitor_Organisation_Category__c.getDescribe().getPicklistValues()) {
+            if (!category.isActive()) continue;
+            for (String space : new List<String>{'COBSEO Charity - Single - Free', 'Non COBSEO Charity - Single - Free'}) {
+                String reference = 'NTE-FREE-CATEGORY-' + bookings.size();
+                Lead application = seed.application.clone(false, false, false, false);
+                application.Booking_Reference__c = reference;
+                application.Exhibitor_Organisation_Category__c = category.getValue();
+                application.Exhibitor_Space_Selections__c = space;
+                applications.add(application);
+                Opportunity booking = seed.booking.clone(false, false, false, false);
+                booking.Booking_Reference__c = reference;
+                booking.NTE_Exhibitor_Organisation_Category__c = category.getValue();
+                booking.NTE_Exhibitor_Space_Selections__c = space;
+                booking.NTE_Exhibitor_Space_Price__c = 0;
+                booking.NTE_Listed_Price_Total__c = 0;
+                booking.Amount = 0;
+                booking.NTE_Payment_Method__c = null;
+                bookings.add(booking);
+            }
+        }
+        System.assert(!bookings.isEmpty(), 'Exercise the configured organisation categories.');
+        insert applications;
+        insert bookings;
+        List<OpportunityContactRole> roles = new List<OpportunityContactRole>();
+        List<NTEExhibitorApprovalEmailService.Request> requests = new List<NTEExhibitorApprovalEmailService.Request>();
+        for (Integer index = 0; index < bookings.size(); index++) {
+            roles.add(new OpportunityContactRole(OpportunityId = bookings[index].Id, ContactId = seed.primary.Id, IsPrimary = true));
+            NTEExhibitorApprovalEmailService.Request request = new NTEExhibitorApprovalEmailService.Request();
+            request.leadId = applications[index].Id;
+            request.opportunityId = bookings[index].Id;
+            requests.add(request);
+        }
+        insert roles;
+        Set<Id> bookingIds = new Map<Id, Opportunity>(bookings).keySet();
+        Test.startTest();
+        NTEExhibitorApprovalEmailService.processRequests(requests);
+        String batchKey = [SELECT NTE_Approval_Email_Batch__c FROM Opportunity WHERE Id = :bookings[0].Id].NTE_Approval_Email_Batch__c;
+        NTEExhibitorApprovalEmailService.processPendingBatch(batchKey, true, true);
+        NTEExhibitorApprovalEmailService.processRequests(requests);
+        Test.stopTest();
+        Map<Id, Opportunity> outcomes = new Map<Id, Opportunity>([SELECT Amount, NTE_Listed_Price_Total__c,
+            NTE_Approval_Email_Status__c, NTE_Approval_Email_Error__c, NTE_Approval_Email_Kind__c,
+            NTE_Approval_Email_Recipient__c, NTE_Free_Space_Confirmed__c, NTE_Payment_Received__c,
+            NTE_Exhibitor_Organisation_Category__c, NTE_Exhibitor_Space_Selections__c
+            FROM Opportunity WHERE Id IN :bookingIds]);
+        for (Opportunity original : bookings) {
+            Opportunity outcome = outcomes.get(original.Id);
+            String context = original.NTE_Exhibitor_Organisation_Category__c + ' / ' + original.NTE_Exhibitor_Space_Selections__c;
+            System.assertEquals('Sent', outcome.NTE_Approval_Email_Status__c, context + ': ' + outcome.NTE_Approval_Email_Error__c);
+            System.assertEquals('Free confirmation', outcome.NTE_Approval_Email_Kind__c, context);
+            System.assert(outcome.NTE_Free_Space_Confirmed__c, context);
+            System.assert(!outcome.NTE_Payment_Received__c, 'A free confirmation must not invent payment: ' + context);
+            System.assertEquals(0, outcome.Amount, context);
+            System.assertEquals(0, outcome.NTE_Listed_Price_Total__c, context);
+            System.assertEquals(original.NTE_Exhibitor_Organisation_Category__c, outcome.NTE_Exhibitor_Organisation_Category__c);
+            System.assertEquals(original.NTE_Exhibitor_Space_Selections__c, outcome.NTE_Exhibitor_Space_Selections__c);
+            System.assertEquals(seed.primary.Email.toLowerCase(), outcome.NTE_Approval_Email_Recipient__c, context);
+            System.assertEquals('NTE_Complimentary_Exhibitor_Approved',
+                NTEExhibitorApprovalEmailService.selectedTemplateByOpportunityId.get(original.Id), context);
+            String html = NTEExhibitorApprovalEmailService.htmlByOpportunityId.get(original.Id);
+            System.assert(html.contains('No payment is due.'), context);
+            System.assert(!html.contains('provisionally reserved'), context);
+            String plain = NTEExhibitorApprovalEmailService.plainTextFromHtml(html);
+            System.assert(plain.contains('No payment is due.') && plain.contains('Hi Primary'), context);
+        }
+        System.assertEquals(bookings.size(), NTEExhibitorApprovalEmailService.acceptedDispatchCount);
+        System.assertEquals(bookings.size(), [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds
+            AND Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Opportunity__c IN :bookingIds]);
+        System.assertEquals(0, Limits.getEmailInvocations());
+    }
+
+    @IsTest
+    static void zeroTotalsStillRequireRecognisedSpaceAndConsistentCalculatedPrices() {
+        Opportunity booking = new Opportunity(NTE_Source_Form_Type__c = 'Exhibitor Application',
+            NTE_Exhibitor_Organisation_Category__c = 'Employer - Automotive Sector',
+            NTE_Exhibitor_Space_Selections__c = 'Non COBSEO Charity - Single - Free',
+            NTE_Pricing_Status__c = 'Calculated', NTE_Listed_Price_Total__c = 0, Amount = 0);
+        System.assertEquals(null, NTEExhibitorApprovalEmailService.savedPriceError(booking));
+        for (String space : new List<String>{null, 'Unrecognised space', 'Single Garage - Track Side - £799 + VAT'}) {
+            booking.NTE_Exhibitor_Space_Selections__c = space;
+            System.assertNotEquals(null, NTEExhibitorApprovalEmailService.savedPriceError(booking), 'Unknown zero price: ' + space);
+        }
+        booking.NTE_Exhibitor_Space_Selections__c = 'Non COBSEO Charity - Single - Free';
+        for (String status : new List<String>{null, 'Review required'}) {
+            booking.NTE_Pricing_Status__c = status;
+            System.assertNotEquals(null, NTEExhibitorApprovalEmailService.savedPriceError(booking), 'Unconfirmed pricing: ' + status);
+        }
+        booking.NTE_Pricing_Status__c = 'Calculated';
+        booking.NTE_Power_Socket_Count__c = 1;
+        booking.NTE_Power_Socket_Unit_Price__c = 100;
+        booking.NTE_Power_Socket_Total__c = 0;
+        System.assertNotEquals(null, NTEExhibitorApprovalEmailService.savedPriceError(booking), 'Paid extras must not disappear.');
+        booking.NTE_Power_Socket_Total__c = 100;
+        System.assertNotEquals(null, NTEExhibitorApprovalEmailService.savedPriceError(booking), 'Saved totals must include the extras.');
     }
 
     @IsTest

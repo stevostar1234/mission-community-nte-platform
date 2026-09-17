@@ -2,6 +2,8 @@
 
 16 September 2026 · Internal review for the project owner · Findings only
 
+**17 September follow-up:** the owner selected **S01**, which is now corrected in source and MMUAT with 434 passing Apex tests. [Fix and release evidence](NTE_FREE_SPACE_CONFIRMATION_FIX_2026-09-17.md). All other findings remain unchanged and unapproved. The findings below describe the [original audit snapshot](https://github.com/stevostar1234/mission-community-nte-platform/blob/7229247280f65257754602f96ef1adfeacc3f2ba/audit/NTE_SIMPLICITY_AUDIT_2026-09-16.md).
+
 ## Overall assessment
 
 **There are issues worth addressing. The clearest deployment blocker is an old charity-category check that still prevents some now-permitted £0 bookings from being confirmed.** Several other controls correctly stop unsafe work but leave ordinary corrections unnecessarily difficult. There are also separate correctness, maintenance and conditional volume risks.
@@ -26,7 +28,7 @@ The table is the overall review order; detailed findings are split into simplici
 
 | Order | ID | Priority | Finding / exposure |
 |---:|---|---|---|
-| 1 | S01 | P1 | Old charity rule blocks valid free-space confirmation. |
+| 1 | S01 | P1 at audit; resolved in MMUAT | Old charity rule blocked valid free-space confirmation; corrected 17 September. |
 | 2 | O01 | P2 | A delayed preparation job can overwrite a newer manual correction. |
 | 3 | O02 | P2 | Clearing a top-up quantity can let a later form reset paid history. |
 | 4 | S02 | P2 | Correcting the Primary Contact can strand an unsuccessful Stripe request. |
@@ -53,6 +55,8 @@ The table is the overall review order; detailed findings are split into simplici
 ## A. Simplicity, excessive restrictions and recovery
 
 ### S01 — An obsolete category check blocks valid complimentary confirmations
+
+**Resolved in source and MMUAT, 17 September, under proposal 31.** Both free choices pass confirmation tests across all 19 categories; the manual action, failed-confirmation retry, paid extras and later staff top-ups are covered. [Current qualification and release](NTE_FREE_SPACE_CONFIRMATION_FIX_2026-09-17.md). The original finding is retained below; production release remains separate.
 
 **P1 · Confirmed defect · Conflicts with approved proposal 23.**
 

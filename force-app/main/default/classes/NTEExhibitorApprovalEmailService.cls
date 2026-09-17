@@ -645,10 +645,8 @@ public without sharing class NTEExhibitorApprovalEmailService {
             && componentTotal(booking) + booking.NTE_Price_Adjustment__c == 0
             && (booking.NTE_Source_Form_Type__c == EXHIBITOR_FORM_TYPE || booking.NTE_Source_Form_Type__c == PARTNER_FORM_TYPE)) return true;
         return booking != null && booking.NTE_Source_Form_Type__c == EXHIBITOR_FORM_TYPE
-            && ((booking.NTE_Exhibitor_Space_Selections__c == 'COBSEO Charity - Single - Free'
-                && booking.NTE_Exhibitor_Organisation_Category__c == 'Charity - member of Cobseo')
-            || (booking.NTE_Exhibitor_Space_Selections__c == 'Non COBSEO Charity - Single - Free'
-                && booking.NTE_Exhibitor_Organisation_Category__c == 'Charity - not a member of Cobseo'));
+            && (booking.NTE_Exhibitor_Space_Selections__c == 'COBSEO Charity - Single - Free'
+                || booking.NTE_Exhibitor_Space_Selections__c == 'Non COBSEO Charity - Single - Free');
     }
     private static String truncate(String value) {
         if (String.isBlank(value)) return 'An unexpected email error occurred.';
