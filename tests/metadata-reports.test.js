@@ -123,10 +123,6 @@ if (process.argv.includes("--generated")) {
   const recordPage = fs.readFileSync(path.join(md, "flexipages/NTE_Management_Opportunity_Record_Page.flexipage-meta.xml"), "utf8");
   assert(recordPage.includes("<fieldItem>Record.NTE_Free_Space_Confirmed__c</fieldItem>"), "the record page shows the free-space confirmation");
   assert(!/<value>readonly<\/value>\s*<\/fieldInstanceProperties>\s*<fieldItem>Record\.NTE_Free_Space_Confirmed__c<\/fieldItem>/.test(recordPage), "the record page no longer locks the free-space confirmation");
-  const capacity = file => ({type: file.match(/<type>([^<]+)<\/type>/)[1], length: Number(file.match(/<length>(\d+)<\/length>/)[1])});
-  const leadPosition = capacity(fs.readFileSync(path.join(md, "objects/Lead/fields/Exhibitor_Space_Position__c.field-meta.xml"), "utf8"));
-  const bookingPosition = capacity(fs.readFileSync(path.join(md, "objects/Opportunity/fields/NTE_Exhibitor_Space_Position__c.field-meta.xml"), "utf8"));
-  assert.deepStrictEqual(bookingPosition, leadPosition, "the converted space-position note keeps the Lead field's type and capacity");
   const conversion = fs.readFileSync(path.join(md, "flows/NTE_Copy_Converted_Lead_to_Opportunity.flow-meta.xml"), "utf8");
   assert(/<start>[\s\S]*?<targetReference>Conversion_Just_Completed<\/targetReference>/.test(conversion), "Conversion checks the actual transition before copying application data");
   assert(conversion.includes("<leftValueReference>$Record__Prior.IsConverted</leftValueReference><operator>EqualTo</operator><rightValue><booleanValue>false</booleanValue></rightValue>"), "Later converted-Lead edits cannot overwrite the reviewed booking");

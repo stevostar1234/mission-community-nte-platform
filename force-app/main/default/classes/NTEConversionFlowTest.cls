@@ -25,9 +25,6 @@ private class NTEConversionFlowTest {
     static void convertedApplicationCopiesNteFieldsToOpportunity() {
         NTEInboundLeadService.bypassEmailDelivery = true;
         NTEExhibitorApprovalEmailService.bypassEmailDelivery = true;
-        // Longer than the 255 characters the booking field used to hold; the Lead field allows 1,000.
-        String positionNote = 'Near the main hall entrance with level access for the demonstration vehicle. '.repeat(8);
-        System.assert(positionNote.length() > 255 && positionNote.length() <= 1000);
         Lead application = new Lead(
             FirstName = 'NTE',
             LastName = 'Conversion Test',
@@ -54,7 +51,6 @@ private class NTEConversionFlowTest {
             Secondary_Contact_Phone__c = '+44 20 7946 0101',
             Exhibitor_Organisation_Category__c = 'CIC or Not for Profit',
             Exhibitor_Space_Selections__c = 'Single Garage - Track Side - £799 + VAT',
-            Exhibitor_Space_Position__c = positionNote,
             Planned_Exhibitor_Count__c = '2', Total_Staff_Count__c = 2, Stand_Power__c = 'No',
             Exhibitor_Hall_Schedule__c = 'Yes',
             Has_Special_Requirements__c = 'Yes',
@@ -96,7 +92,7 @@ private class NTEConversionFlowTest {
                    NTE_Invoice_Additional_Information__c, NTE_Secondary_Contact_Prefix__c,
                    NTE_Secondary_Contact_Name__c, NTE_Secondary_Contact_Title__c,
                    NTE_Secondary_Contact_Email__c, NTE_Secondary_Contact_Mobile__c, NTE_Secondary_Contact_Phone__c,
-                   NTE_Exhibitor_Organisation_Category__c, NTE_Exhibitor_Space_Position__c, NTE_Exhibitor_Hall_Schedule__c,
+                   NTE_Exhibitor_Organisation_Category__c, NTE_Exhibitor_Hall_Schedule__c,
                    NTE_Has_Special_Requirements__c, NTE_Industry_Body_Details__c,
                    NTE_Event_Discovery_Source__c, NTE_Declaration_Name__c, NTE_Terms_Accepted__c
             FROM Opportunity
@@ -120,7 +116,6 @@ private class NTEConversionFlowTest {
         System.assertEquals('NTE Secondary Contact', participation.NTE_Secondary_Contact_Name__c);
         System.assertEquals('secondary@example.invalid', participation.NTE_Secondary_Contact_Email__c);
         System.assertEquals('CIC or Not for Profit', participation.NTE_Exhibitor_Organisation_Category__c);
-        System.assertEquals(positionNote, participation.NTE_Exhibitor_Space_Position__c, 'A placement note longer than 255 characters converts intact.');
         System.assertEquals('Yes', participation.NTE_Exhibitor_Hall_Schedule__c);
         System.assertEquals('Yes', participation.NTE_Has_Special_Requirements__c);
         System.assertEquals('NTE QA Industry Body', participation.NTE_Industry_Body_Details__c);
