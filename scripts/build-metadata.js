@@ -267,7 +267,8 @@ const opportunityFields = [
   text("NTE_Exhibitor_Organisation_Category__c", "NTE Exhibitor Organisation Category", 255),
   longtext("NTE_Exhibitor_Space_Selections__c", "NTE Exhibitor Space Selection", 32768, 3),
   text("NTE_Exhibitor_Space_Size__c", "NTE Exhibitor Space Size", 255),
-  text("NTE_Exhibitor_Space_Position__c", "NTE Exhibitor Space Position", 255),
+  // Same capacity as the Lead field it is converted from (LongTextArea 1,000).
+  longtext("NTE_Exhibitor_Space_Position__c", "NTE Exhibitor Space Position", 1000, 3),
   text("NTE_Previous_Events__c", "Previous NTE Events", 255),
   text("NTE_Stand_Power__c", "NTE Stand Power", 40),
   number("NTE_Power_Socket_Count__c", "NTE Power Socket Count", 2, 0),
