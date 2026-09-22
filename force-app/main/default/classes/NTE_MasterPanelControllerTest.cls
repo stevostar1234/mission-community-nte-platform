@@ -815,9 +815,9 @@ private class NTE_MasterPanelControllerTest {
         System.assertEquals(true, rowsById.get(unknown.Id).canConfirmNoHeavyVehicle, 'An unconfirmed answer without details can be confirmed as No.');
         System.assert(!rowsById.containsKey(supplied.Id), 'A completed heavy update is not outstanding.');
 
+        // Each dashboard read costs dozens of count queries; keep the post-confirmation reads in a fresh limit context.
         Test.startTest();
         NTE_MasterPanelController.ActionResult confirmed = NTE_MasterPanelController.confirmNoHeavyVehicle(unknown.Id);
-        Test.stopTest();
         System.assertEquals(true, confirmed.success);
         Opportunity saved = [SELECT NTE_Heavy_Vehicle_Required__c, NTE_Heavy_Vehicle_Update_Completed_At__c FROM Opportunity WHERE Id = :unknown.Id];
         System.assertEquals('No', saved.NTE_Heavy_Vehicle_Required__c);
@@ -830,6 +830,7 @@ private class NTE_MasterPanelControllerTest {
         for (NTE_MasterPanelController.DashboardRow row : NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'COMPLETED', 25, 0).rows) {
             if (row.recordId == unknown.Id) nowComplete = true;
         }
+        Test.stopTest();
         System.assertEquals(false, stillOutstanding, 'The confirmed booking leaves Logistics outstanding.');
         System.assertEquals(true, nowComplete, 'Confirming No lets an otherwise finished booking complete.');
 
