@@ -267,7 +267,8 @@ const opportunityFields = [
   text("NTE_Exhibitor_Organisation_Category__c", "NTE Exhibitor Organisation Category", 255),
   longtext("NTE_Exhibitor_Space_Selections__c", "NTE Exhibitor Space Selection", 32768, 3),
   text("NTE_Exhibitor_Space_Size__c", "NTE Exhibitor Space Size", 255),
-  text("NTE_Exhibitor_Space_Position__c", "NTE Exhibitor Space Position", 255),
+  // Same capacity as the Lead field it is converted from (LongTextArea 1,000).
+  longtext("NTE_Exhibitor_Space_Position__c", "NTE Exhibitor Space Position", 1000, 3),
   text("NTE_Previous_Events__c", "Previous NTE Events", 255),
   text("NTE_Stand_Power__c", "NTE Stand Power", 40),
   number("NTE_Power_Socket_Count__c", "NTE Power Socket Count", 2, 0),
@@ -332,7 +333,7 @@ const opportunityFields = [
   currency("NTE_Listed_Price_Total__c", "NTE Booking Total (ex VAT)"),
   {...currency("NTE_Price_Adjustment__c", "NTE Booking Adjustment (ex VAT)"), defaultValue: 0, readOnly: true, description: "Difference between the original item charges and the revised net booking total. To revise the booking price, edit Amount including VAT."},
   {...text("NTE_Approval_Email_Kind__c", "NTE Booking Email Kind", 40), readOnly: true, description: "The requested kind of booking email, retained while the manual send is processed."},
-  {...checkbox("NTE_Free_Space_Confirmed__c", "NTE Free Space Confirmed"), readOnly: true, description: "A free booking or waived booking has had its confirmation accepted for sending."},
+  {...checkbox("NTE_Free_Space_Confirmed__c", "NTE Free Space Confirmed"), description: "A free booking or waived booking has had its confirmation accepted for sending. Set by the Master Panel action; staff may tick or untick it on the record as a manual fallback."},
   {...number("NTE_VAT_Rate__c", "NTE Booking VAT Rate (%)", 5, 2), defaultValue: vatRate},
   formulaCurrency("NTE_VAT_Total__c", "NTE Booking VAT", `IF(NOT(NTE_Pricing_Ready__c), NULL, IF(ISBLANK(Amount), ROUND(NTE_Listed_Price_Total__c * BLANKVALUE(NTE_VAT_Rate__c, ${vatRate}) / 100, 2), Amount - NTE_Listed_Price_Total__c))`),
   formulaCurrency("NTE_Total_Including_VAT__c", "NTE Booking Total (inc VAT)", "IF(NOT(NTE_Pricing_Ready__c), NULL, BLANKVALUE(Amount, NTE_Listed_Price_Total__c + NTE_VAT_Total__c))"),
@@ -1832,7 +1833,7 @@ write(path.join(md, "flows", "NTE_Copy_Converted_Lead_to_Opportunity.flow-meta.x
 ].join("\n"));
 
 function fieldInstanceXml(api, identifier, behavior = "none") {
-  if (["NTE_Update_Booking_Id__c", "NTE_Price_Adjustment__c", "NTE_Free_Space_Confirmed__c", "NTE_Approval_Email_Kind__c"].includes(api)) behavior = "readonly";
+  if (["NTE_Update_Booking_Id__c", "NTE_Price_Adjustment__c", "NTE_Approval_Email_Kind__c"].includes(api)) behavior = "readonly";
   return [
     "        <itemInstances>",
     "            <fieldInstance>",

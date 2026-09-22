@@ -1312,7 +1312,7 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>readonly</value>
+                    <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Free_Space_Confirmed__c</fieldItem>
                 <identifier>RecordNTE_Free_Space_Confirmed__c7L13</identifier>

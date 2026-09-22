@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>NTE_Free_Space_Confirmed__c</fullName>
-    <description>A free booking or waived booking has had its confirmation accepted for sending.</description>
+    <description>A free booking or waived booking has had its confirmation accepted for sending. Set by the Master Panel action; staff may tick or untick it on the record as a manual fallback.</description>
     <defaultValue>false</defaultValue>
     <label>NTE Free Space Confirmed</label>
     <required>false</required>
