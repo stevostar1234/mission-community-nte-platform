@@ -82,14 +82,14 @@ def snapshot(source):
                                 for x in root.findall("m:" + tag, NS)], key=lambda x: json.dumps(x))
             else:
                 value = canonical(root)
-            files[str(path.relative_to(source))] = hashlib.sha256(json.dumps(value).encode()).hexdigest()
+            files[path.relative_to(source).as_posix()] = hashlib.sha256(json.dumps(value).encode()).hexdigest()
     for path in sorted((source / "objects").glob("*/*.object-meta.xml")):
         if path.parent.name in OWNED_OBJECTS:
             continue
         root = parse(path)
         value = sorted([canonical(x) for tag in ("actionOverrides", "compactLayoutAssignment", "searchLayouts")
                         for x in root.findall("m:" + tag, NS)], key=lambda x: json.dumps(x))
-        files[str(path.relative_to(source))] = hashlib.sha256(json.dumps(value).encode()).hexdigest()
+        files[path.relative_to(source).as_posix()] = hashlib.sha256(json.dumps(value).encode()).hexdigest()
     # These types must actually have been retrieved; an empty backup is not proof.
     missing = [folder for folder in ("applications", "flexipages", "layouts", "profiles")
                if not any(name.startswith(folder + "/") for name in files)]

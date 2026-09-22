@@ -50,8 +50,9 @@ The current visible copy and pricing catalogue are for NTE27. Form identities, b
 
 ```sh
 npm run validate
-python3 tests/shared-picklists.test.py
 ```
+
+`npm run validate` regenerates the metadata and then runs every suite: the form unit and DOM-fixture tests, the Master Panel component tests, the report/metadata semantics checks (both against the generator and the generated files), the page-isolation, shared-picklist, Stripe pre-flight and volunteer compatibility checks. `npm run test:forms`, `test:panel`, `test:metadata`, `test:page-isolation` and `test:volunteer` run the individual groups. The repository sets `eol=lf` through `.gitattributes`, so the generated-text comparisons behave the same on Windows and macOS/Linux.
 
 Credentials, authentication caches, temporary snapshots and raw business-record exports are excluded from Git. Historical audit links into `tmp/` refer to the retained local evidence workspace. The repository contains the current implementation and internal handoff documents; it does not activate production or publish another forms site.
 
