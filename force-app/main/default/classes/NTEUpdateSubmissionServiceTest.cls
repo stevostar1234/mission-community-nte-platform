@@ -1533,8 +1533,7 @@ private class NTEUpdateSubmissionServiceTest {
         booking.NTE_Total_Staff_Count__c = 4;
         booking.NTE_Top_Up_Staff_Required__c = 'Yes';
         booking.NTE_Top_Up_Staff_Count__c = null; // cleared by mistake after the purchase was paid
-        booking.NTE_Top_Up_Staff_Names__c = 'Paid One
-Paid Two';
+        booking.NTE_Top_Up_Staff_Names__c = 'Paid One\nPaid Two';
         booking.NTE_Top_Up_Staff_Unit_Price__c = 60;
         booking.NTE_Top_Up_Staff_Total__c = 120;
         booking.NTE_Top_Up_Invoice_Required__c = true;
@@ -1550,12 +1549,10 @@ Paid Two';
         populateRequiredExhibitorStaffFields(repeatPurchase);
         repeatPurchase.Top_Up_Staff_Required__c = 'Yes';
         repeatPurchase.Top_Up_Staff_Count__c = 2;
-        repeatPurchase.Top_Up_Staff_Names__c = 'Paid One
-Paid Two';
+        repeatPurchase.Top_Up_Staff_Names__c = 'Paid One\nPaid Two';
         Lead namesOnly = newLead(booking.Booking_Reference__c);
         populateRequiredExhibitorStaffFields(namesOnly);
-        namesOnly.Staff_Base_Names__c = 'Corrected One
-Corrected Two';
+        namesOnly.Staff_Base_Names__c = 'Corrected One\nCorrected Two';
         update new List<Lead>{repeatPurchase, namesOnly};
 
         Test.startTest();
@@ -1571,10 +1568,7 @@ Corrected Two';
             NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Names__c, NTE_Top_Up_Staff_Unit_Price__c, NTE_Top_Up_Staff_Total__c,
             NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Payment_Requested_At__c, NTE_Top_Up_Payment_Received__c,
             NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c FROM Opportunity WHERE Id = :booking.Id];
-        System.assertEquals('Corrected One
-Corrected Two
-Paid One
-Paid Two', saved.NTE_Stand_Colleagues__c);
+        System.assertEquals('Corrected One\nCorrected Two\nPaid One\nPaid Two', saved.NTE_Stand_Colleagues__c);
         System.assertEquals(4, saved.NTE_Total_Staff_Count__c, 'Attendance is not incremented again.');
         System.assertEquals(null, saved.NTE_Top_Up_Staff_Count__c, 'The cleared quantity is left visible for staff repair.');
         for (String fieldName : new List<String>{'NTE_Top_Up_Staff_Required__c', 'NTE_Top_Up_Staff_Names__c',
