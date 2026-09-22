@@ -299,6 +299,12 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <classAccesses><apexClass>NTE_MasterPanelController</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses>
         <apexClass>NTEExhibitorApprovalEmailService</apexClass>
@@ -1081,6 +1087,36 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Opportunity.NTE_Supplier_Agreement_Required__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Logistics_Contact_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Logistics_Contact_Email__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Logistics_Contact_Phone__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Email__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Phone__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

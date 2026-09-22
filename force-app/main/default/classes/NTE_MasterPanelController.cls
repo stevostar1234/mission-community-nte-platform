@@ -203,6 +203,12 @@ public with sharing class NTE_MasterPanelController {
         @AuraEnabled public String eventDayContactName;
         @AuraEnabled public String eventDayContactEmail;
         @AuraEnabled public String eventDayContactPhone;
+        @AuraEnabled public String logisticsContactName;
+        @AuraEnabled public String logisticsContactEmail;
+        @AuraEnabled public String logisticsContactPhone;
+        @AuraEnabled public String logisticsSecondContactName;
+        @AuraEnabled public String logisticsSecondContactEmail;
+        @AuraEnabled public String logisticsSecondContactPhone;
         @AuraEnabled public String approvalEmailStatus;
         @AuraEnabled public String approvalEmailError;
         @AuraEnabled public Datetime approvalEmailSentAt;
@@ -1101,7 +1107,10 @@ public with sharing class NTE_MasterPanelController {
                 + 'NTE_Approval_Email_Status__c, NTE_Approval_Email_Error__c, NTE_Approval_Email_Sent_At__c, NTE_Free_Space_Confirmed__c, '
                 + 'NTE_Final_Pack_Status__c, NTE_Final_Pack_Sent_At__c, '
                 + 'NTE_Haulier_Vehicle_Type__c, NTE_Haulier_Vehicle_Registration__c, '
-                + 'NTE_Haulier_Vehicle_Dimensions__c, NTE_Haulier_Name__c, LastModifiedDate '
+                + 'NTE_Haulier_Vehicle_Dimensions__c, NTE_Haulier_Name__c, '
+                + 'NTE_Logistics_Contact_Name__c, NTE_Logistics_Contact_Email__c, NTE_Logistics_Contact_Phone__c, '
+                + 'NTE_Logistics_Second_Contact_Name__c, NTE_Logistics_Second_Contact_Email__c, NTE_Logistics_Second_Contact_Phone__c, '
+                + 'LastModifiedDate '
                 + 'FROM Opportunity WHERE ' + opportunityBase + opportunityExtra
                 + ' ORDER BY ' + opportunityOrder + ' LIMIT :queryLimit', binds, AccessLevel.USER_MODE
             );
@@ -1274,6 +1283,12 @@ public with sharing class NTE_MasterPanelController {
         row.eventDayContactName = recordValue.NTE_Event_Contact_Name__c;
         row.eventDayContactEmail = recordValue.NTE_Event_Contact_Email__c;
         row.eventDayContactPhone = recordValue.NTE_Event_Contact_Mobile__c;
+        row.logisticsContactName = recordValue.NTE_Logistics_Contact_Name__c;
+        row.logisticsContactEmail = recordValue.NTE_Logistics_Contact_Email__c;
+        row.logisticsContactPhone = recordValue.NTE_Logistics_Contact_Phone__c;
+        row.logisticsSecondContactName = recordValue.NTE_Logistics_Second_Contact_Name__c;
+        row.logisticsSecondContactEmail = recordValue.NTE_Logistics_Second_Contact_Email__c;
+        row.logisticsSecondContactPhone = recordValue.NTE_Logistics_Second_Contact_Phone__c;
         row.approvalEmailStatus = recordValue.NTE_Approval_Email_Status__c;
         row.approvalEmailError = recordValue.NTE_Approval_Email_Error__c;
         row.approvalEmailSentAt = recordValue.NTE_Approval_Email_Sent_At__c;

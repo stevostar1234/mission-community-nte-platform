@@ -498,6 +498,15 @@ public with sharing class NTEUpdateSubmissionService {
     private static void applyHeavyFields(Opportunity target, Lead source) {
         target.NTE_Heavy_Vehicle_Required__c = 'Yes';
         target.NTE_Heavy_Vehicle_Update_Completed_At__c = System.now();
+        // The logistics form collects its own two contacts. They are kept on the booking because the
+        // temporary Lead is deleted after a successful update, and they must not overwrite the
+        // application's event and secondary contacts.
+        target.NTE_Logistics_Contact_Name__c = source.Event_Contact_Name__c;
+        target.NTE_Logistics_Contact_Email__c = source.Email;
+        target.NTE_Logistics_Contact_Phone__c = source.Phone;
+        target.NTE_Logistics_Second_Contact_Name__c = source.Secondary_Contact_Name__c;
+        target.NTE_Logistics_Second_Contact_Email__c = source.Secondary_Contact_Email__c;
+        target.NTE_Logistics_Second_Contact_Phone__c = source.Secondary_Contact_Phone__c;
         target.NTE_Delivery_Window__c = source.Delivery_Window__c;
         target.NTE_Heavy_Item_1_Description__c = source.Heavy_Item_1_Description__c;
         target.NTE_Heavy_Item_1_Registration__c = source.Heavy_Item_1_Registration__c;

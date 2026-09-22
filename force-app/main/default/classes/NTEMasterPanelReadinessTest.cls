@@ -109,6 +109,14 @@ private class NTEMasterPanelReadinessTest {
         System.assertEquals('Event Day Person', ready.eventDayContactName);
         System.assertEquals('day-contact@example.invalid', ready.eventDayContactEmail);
         System.assertEquals('+44 7700 900999', ready.eventDayContactPhone);
+        System.assertEquals('Logistics Lead', ready.logisticsContactName, 'Logistics contacts are shown separately from the primary and event day contacts.');
+        System.assertEquals('logistics-lead@example.invalid', ready.logisticsContactEmail);
+        System.assertEquals('+44 7700 900700', ready.logisticsContactPhone);
+        System.assertEquals('Logistics Second', ready.logisticsSecondContactName);
+        System.assertEquals('logistics-second@example.invalid', ready.logisticsSecondContactEmail);
+        System.assertEquals('+44 7700 900701', ready.logisticsSecondContactPhone);
+        System.assertEquals(null, missing.logisticsContactName, 'Bookings without a logistics submission expose no logistics contacts.');
+        System.assertEquals(null, missing.logisticsSecondContactName);
         System.assertEquals(null, ready.contactIssue);
         System.assertEquals(null, missing.contactName);
         System.assertEquals(null, missing.email);
@@ -333,6 +341,12 @@ private class NTEMasterPanelReadinessTest {
             NTE_Logo_Update_Provided__c = logoProvided,
             NTE_Event_Contact_Name__c = 'Event Day Person', NTE_Event_Contact_Email__c = 'day-contact@example.invalid',
             NTE_Event_Contact_Mobile__c = '+44 7700 900999',
+            NTE_Logistics_Contact_Name__c = logoProvided ? 'Logistics Lead' : null,
+            NTE_Logistics_Contact_Email__c = logoProvided ? 'logistics-lead@example.invalid' : null,
+            NTE_Logistics_Contact_Phone__c = logoProvided ? '+44 7700 900700' : null,
+            NTE_Logistics_Second_Contact_Name__c = logoProvided ? 'Logistics Second' : null,
+            NTE_Logistics_Second_Contact_Email__c = logoProvided ? 'logistics-second@example.invalid' : null,
+            NTE_Logistics_Second_Contact_Phone__c = logoProvided ? '+44 7700 900701' : null,
             NTE_Final_Pack_Status__c = packStatus, NTE_Final_Pack_Sent_At__c = packStatus == 'Sent' ? System.now() : null
         );
     }

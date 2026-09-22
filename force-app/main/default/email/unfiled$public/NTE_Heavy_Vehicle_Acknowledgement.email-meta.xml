@@ -27,6 +27,7 @@ Booking
 Organisation {!Lead.Company}
 Booking reference {!Lead.Target_Booking_Reference__c}
 Contact {!Lead.FirstName} {!Lead.LastName}
+{!IF(AND(ISBLANK(Lead.Secondary_Contact_Name__c),ISBLANK(Lead.Secondary_Contact_Email__c),ISBLANK(Lead.Secondary_Contact_Phone__c)),&quot;&quot;,&quot;Second contact &quot;)}{!Lead.Secondary_Contact_Name__c}{!IF(OR(ISBLANK(Lead.Secondary_Contact_Email__c),ISBLANK(Lead.Secondary_Contact_Name__c)),&quot;&quot;,&quot; - &quot;)}{!Lead.Secondary_Contact_Email__c}{!IF(OR(ISBLANK(Lead.Secondary_Contact_Phone__c),AND(ISBLANK(Lead.Secondary_Contact_Name__c),ISBLANK(Lead.Secondary_Contact_Email__c))),&quot;&quot;,&quot; - &quot;)}{!Lead.Secondary_Contact_Phone__c}
 Delivery window {!Lead.Delivery_Window__c}
 
 Equipment

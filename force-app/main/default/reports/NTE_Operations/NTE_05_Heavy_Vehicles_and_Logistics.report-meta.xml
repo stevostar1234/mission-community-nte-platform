@@ -40,6 +40,24 @@
         <field>Opportunity.NTE_Secondary_Contact_Mobile__c</field>
     </columns>
     <columns>
+        <field>Opportunity.NTE_Logistics_Contact_Name__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Contact_Email__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Contact_Phone__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Name__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Email__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Phone__c</field>
+    </columns>
+    <columns>
         <field>Opportunity.NTE_Delivery_Window__c</field>
     </columns>
     <columns>

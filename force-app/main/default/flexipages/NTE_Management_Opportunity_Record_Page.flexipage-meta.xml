@@ -1436,8 +1436,68 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logistics_Contact_Name__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Contact_Name__c8L0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logistics_Contact_Email__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Contact_Email__c8L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logistics_Contact_Phone__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Contact_Phone__c8L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logistics_Second_Contact_Name__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Second_Contact_Name__c8L3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logistics_Second_Contact_Email__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Second_Contact_Email__c8L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Logistics_Second_Contact_Phone__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Second_Contact_Phone__c8L5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Delivery_Window__c</fieldItem>
-                <identifier>RecordNTE_Delivery_Window__c8L0</identifier>
+                <identifier>RecordNTE_Delivery_Window__c8L6</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1447,7 +1507,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_1_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Description__c8L1</identifier>
+                <identifier>RecordNTE_Heavy_Item_1_Description__c8L7</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1457,7 +1517,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_1_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Registration__c8L2</identifier>
+                <identifier>RecordNTE_Heavy_Item_1_Registration__c8L8</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1467,7 +1527,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_1_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Dimensions__c8L3</identifier>
+                <identifier>RecordNTE_Heavy_Item_1_Dimensions__c8L9</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1477,7 +1537,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_1_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Gross_Weight__c8L4</identifier>
+                <identifier>RecordNTE_Heavy_Item_1_Gross_Weight__c8L10</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1487,7 +1547,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_2_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Description__c8L5</identifier>
+                <identifier>RecordNTE_Heavy_Item_2_Description__c8L11</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1497,7 +1557,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_2_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Registration__c8L6</identifier>
+                <identifier>RecordNTE_Heavy_Item_2_Registration__c8L12</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1507,7 +1567,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_2_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Dimensions__c8L7</identifier>
+                <identifier>RecordNTE_Heavy_Item_2_Dimensions__c8L13</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1517,7 +1577,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_2_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Gross_Weight__c8L8</identifier>
+                <identifier>RecordNTE_Heavy_Item_2_Gross_Weight__c8L14</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1527,7 +1587,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_3_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Description__c8L9</identifier>
+                <identifier>RecordNTE_Heavy_Item_3_Description__c8L15</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1537,7 +1597,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_3_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Registration__c8L10</identifier>
+                <identifier>RecordNTE_Heavy_Item_3_Registration__c8L16</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1547,7 +1607,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_3_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Dimensions__c8L11</identifier>
+                <identifier>RecordNTE_Heavy_Item_3_Dimensions__c8L17</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1557,7 +1617,7 @@
                     <value>none</value>
                 </fieldInstanceProperties>
                 <fieldItem>Record.NTE_Heavy_Item_3_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Gross_Weight__c8L12</identifier>
+                <identifier>RecordNTE_Heavy_Item_3_Gross_Weight__c8L18</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_9_Left</name>

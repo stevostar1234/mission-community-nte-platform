@@ -290,6 +290,12 @@
         <members>Opportunity.NTE_Last_Update_Processed_At__c</members>
         <members>Opportunity.NTE_Last_Update_Type__c</members>
         <members>Opportunity.NTE_Listed_Price_Total__c</members>
+        <members>Opportunity.NTE_Logistics_Contact_Email__c</members>
+        <members>Opportunity.NTE_Logistics_Contact_Name__c</members>
+        <members>Opportunity.NTE_Logistics_Contact_Phone__c</members>
+        <members>Opportunity.NTE_Logistics_Second_Contact_Email__c</members>
+        <members>Opportunity.NTE_Logistics_Second_Contact_Name__c</members>
+        <members>Opportunity.NTE_Logistics_Second_Contact_Phone__c</members>
         <members>Opportunity.NTE_Logo_Update_Provided_At__c</members>
         <members>Opportunity.NTE_Logo_Update_Provided__c</members>
         <members>Opportunity.NTE_Payment_Method__c</members>

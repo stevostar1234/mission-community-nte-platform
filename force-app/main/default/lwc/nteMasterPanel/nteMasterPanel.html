@@ -539,6 +539,20 @@
                             </div>
                         </template>
 
+                        <template lwc:if={selectedRecord.hasLogisticsContacts}>
+                            <div class="detail-section">
+                                <h4>Logistics contacts</h4>
+                                <dl>
+                                    <div><dt>Main contact</dt><dd>{selectedRecord.logisticsContactNameDisplay}</dd></div>
+                                    <div><dt>Email</dt><dd><a href={selectedRecord.logisticsContactEmailUrl}>{selectedRecord.logisticsContactEmail}</a></dd></div>
+                                    <div><dt>Phone</dt><dd><a href={selectedRecord.logisticsContactPhoneUrl}>{selectedRecord.logisticsContactPhone}</a></dd></div>
+                                    <div><dt>Second contact</dt><dd>{selectedRecord.logisticsSecondContactNameDisplay}</dd></div>
+                                    <div><dt>Email</dt><dd><a href={selectedRecord.logisticsSecondContactEmailUrl}>{selectedRecord.logisticsSecondContactEmail}</a></dd></div>
+                                    <div><dt>Phone</dt><dd><a href={selectedRecord.logisticsSecondContactPhoneUrl}>{selectedRecord.logisticsSecondContactPhone}</a></dd></div>
+                                </dl>
+                            </div>
+                        </template>
+
                         <template lwc:if={selectedRecord.isGuest}>
                             <div class="detail-section">
                                 <h4>Guest registration</h4>

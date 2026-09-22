@@ -501,9 +501,17 @@ private class NTEUpdateSubmissionServiceTest {
                    NTE_Heavy_Vehicle_Required__c, NTE_Heavy_Vehicle_Update_Completed_At__c,
                    NTE_Heavy_Item_2_Description__c, NTE_Heavy_Item_2_Registration__c, NTE_Heavy_Item_3_Description__c,
                    NTE_Haulier_Staff__c, NTE_Haulier_Vehicle_Registration__c, NTE_Stand_Colleagues__c,
-                   NTE_Invoiced_Email__c, Amount, NTE_Invoice_Provided__c, NTE_Payment_Received__c
+                   NTE_Invoiced_Email__c, Amount, NTE_Invoice_Provided__c, NTE_Payment_Received__c,
+                   NTE_Logistics_Contact_Name__c, NTE_Logistics_Contact_Email__c, NTE_Logistics_Contact_Phone__c,
+                   NTE_Logistics_Second_Contact_Name__c, NTE_Logistics_Second_Contact_Email__c, NTE_Logistics_Second_Contact_Phone__c
             FROM Opportunity WHERE Id = :opportunity.Id
         ];
+        System.assertEquals('NTE Logistics Contact', updated.NTE_Logistics_Contact_Name__c, 'The logistics main contact is kept on the booking.');
+        System.assertEquals('logistics-fallback@example.invalid', updated.NTE_Logistics_Contact_Email__c);
+        System.assertEquals('+44 7700 900123', updated.NTE_Logistics_Contact_Phone__c);
+        System.assertEquals('NTE Secondary Logistics', updated.NTE_Logistics_Second_Contact_Name__c, 'The required second contact is no longer discarded with the temporary Lead.');
+        System.assertEquals('secondary-logistics@example.invalid', updated.NTE_Logistics_Second_Contact_Email__c);
+        System.assertEquals('+44 20 7946 0999', updated.NTE_Logistics_Second_Contact_Phone__c);
         System.assertEquals(opportunity.NTE_Event_Contact_Name__c, updated.NTE_Event_Contact_Name__c);
         System.assertEquals(opportunity.NTE_Event_Contact_Title__c, updated.NTE_Event_Contact_Title__c);
         System.assertEquals(opportunity.NTE_Event_Contact_Email__c, updated.NTE_Event_Contact_Email__c);
@@ -1605,9 +1613,17 @@ private class NTEUpdateSubmissionServiceTest {
         booking.NTE_Haulier_Vehicle_Gross_Weight__c = '10,000 kg';
         booking.NTE_Haulier_Vehicle_Dimensions__c = '9m x 3m x 4m';
         booking.NTE_Haulier_Vehicle_Registration__c = 'AB26 CDE';
+        booking.NTE_Logistics_Contact_Name__c = 'Previous Logistics Lead';
+        booking.NTE_Logistics_Contact_Email__c = 'previous-logistics@example.invalid';
+        booking.NTE_Logistics_Contact_Phone__c = '+44 7700 900800';
+        booking.NTE_Logistics_Second_Contact_Name__c = 'Previous Second Contact';
+        booking.NTE_Logistics_Second_Contact_Email__c = 'previous-second@example.invalid';
+        booking.NTE_Logistics_Second_Contact_Phone__c = '+44 7700 900801';
         List<String> snapshotFields = new List<String>{'NTE_Heavy_Vehicle_Required__c', 'NTE_Heavy_Vehicle_Update_Completed_At__c',
             'NTE_Delivery_Window__c', 'NTE_Haulier_Name__c', 'NTE_Haulier_Staff__c', 'NTE_Haulier_Vehicle_Type__c',
-            'NTE_Haulier_Vehicle_Gross_Weight__c', 'NTE_Haulier_Vehicle_Dimensions__c', 'NTE_Haulier_Vehicle_Registration__c'};
+            'NTE_Haulier_Vehicle_Gross_Weight__c', 'NTE_Haulier_Vehicle_Dimensions__c', 'NTE_Haulier_Vehicle_Registration__c',
+            'NTE_Logistics_Contact_Name__c', 'NTE_Logistics_Contact_Email__c', 'NTE_Logistics_Contact_Phone__c',
+            'NTE_Logistics_Second_Contact_Name__c', 'NTE_Logistics_Second_Contact_Email__c', 'NTE_Logistics_Second_Contact_Phone__c'};
         for (Integer index = 1; index <= 3; index++) {
             String prefix = 'NTE_Heavy_Item_' + index + '_';
             booking.put(prefix + 'Description__c', 'Existing vehicle ' + index);
@@ -1668,6 +1684,12 @@ private class NTEUpdateSubmissionServiceTest {
         System.assertEquals(null, replaced.NTE_Haulier_Vehicle_Registration__c);
         System.assertEquals(replacement.Delivery_Window__c, replaced.NTE_Delivery_Window__c);
         System.assertEquals(replacement.Haulier_Name__c, replaced.NTE_Haulier_Name__c);
+        System.assertEquals(replacement.Event_Contact_Name__c, replaced.NTE_Logistics_Contact_Name__c, 'A complete replacement supplies the current logistics contacts.');
+        System.assertEquals(replacement.Email, replaced.NTE_Logistics_Contact_Email__c);
+        System.assertEquals(replacement.Phone, replaced.NTE_Logistics_Contact_Phone__c);
+        System.assertEquals(replacement.Secondary_Contact_Name__c, replaced.NTE_Logistics_Second_Contact_Name__c);
+        System.assertEquals(replacement.Secondary_Contact_Email__c, replaced.NTE_Logistics_Second_Contact_Email__c);
+        System.assertEquals(replacement.Secondary_Contact_Phone__c, replaced.NTE_Logistics_Second_Contact_Phone__c);
     }
 
     @IsTest
