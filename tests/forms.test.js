@@ -137,7 +137,7 @@ const expectedAssetVersion = "20260908-1";
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
   const vatForm = ["partner-sponsor-application.html", "exhibitor-application.html", "exhibitor-staff-update.html"].includes(file);
-  const expectedScriptVersion = "20260915-spaces-1";
+  const expectedScriptVersion = "20260922-hardening-1";
   assert(html.includes("assets/config.js?v=20260913-finance-2"), `${file}: config asset version is stale`);
   assert(html.includes(`assets/forms.js?v=${expectedScriptVersion}`), `${file}: forms asset version is stale`);
   assert(html.includes(`assets/styles.css?v=${vatForm ? "20260913-vat" : expectedAssetVersion}`), `${file}: stylesheet asset version is stale`);
@@ -382,7 +382,7 @@ assert(volunteerHtml.includes('data-checkbox-copy-from="volunteer-consent" data-
 assert(formsJs.includes('Street: "street"'), "street address must use Salesforce Web-to-Lead's standard field name");
 assert(formsJs.includes('PostalCode: "zip"'), "postcode must use Salesforce Web-to-Lead's standard field name");
 assert(formsJs.includes('[data-checkbox-copy-from]'), "consent copy fields must be synchronized before submission");
-assert(logoHtml.includes('type="submit">Confirm logo upload</button>'), "logo updates retain an explicit submission action");
+assert(logoHtml.includes('type="submit" disabled>Confirm logo upload</button>'), "logo updates retain an explicit submission action (enabled by the engine once loaded)");
 assert(heavyHtml.includes('pattern="NTE-[A-Za-z0-9][A-Za-z0-9\\-]{1,74}[A-Za-z0-9]"'), "heavy-vehicle updates must validate booking-reference shape");
 assert(formsJs.includes("normalizeBookingReferences"), "supplementary booking references must be trimmed and normalized before matching");
 assert(formsJs.includes('form.dataset.formKind === "partner-staff-update"'), "partner staff updates retain validation of their declared quantity");
@@ -463,6 +463,22 @@ for (const filename of ["exhibitor-staff-update-applicant-confirmation.html", "p
 
 assert(formsJs.includes('form.dataset.submitting === "true"'), "forms must reject replay while a submission is in progress");
 assert(formsJs.includes('button.disabled = true'), "submit controls must lock before Web-to-Lead navigation");
+assert(formsJs.includes('button.removeAttribute("disabled")'), "the engine must enable the submit controls it finds disabled in the markup");
+for (const file of fs.readdirSync(root).filter(name => name.endsWith(".html"))) {
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  if (!html.includes("data-web-to-lead")) continue;
+  assert(html.includes('<button class="button" type="submit" disabled>'), `${file}: the submit control must start disabled until the form engine has loaded`);
+  const hiddenPricingVersion = html.match(/<input type="hidden" value="([^"]+)" data-sf-field="Pricing_Version__c">/);
+  if (hiddenPricingVersion) {
+    assert.strictEqual(hiddenPricingVersion[1], formsJs.match(/var pricingVersion = "([^"]+)"/)[1], `${file}: the hidden pricing version default must match the engine catalogue version`);
+  }
+}
+assert.strictEqual(utils.normalizeWebsiteAddress("www.example.org"), "https://www.example.org");
+assert.strictEqual(utils.normalizeWebsiteAddress("  example.org/careers  "), "https://example.org/careers");
+assert.strictEqual(utils.normalizeWebsiteAddress("https://www.example.org/"), "https://www.example.org/");
+assert.strictEqual(utils.normalizeWebsiteAddress("HTTP://legacy.example.org"), "HTTP://legacy.example.org");
+assert.strictEqual(utils.normalizeWebsiteAddress(""), "");
+assert.strictEqual(utils.normalizeWebsiteAddress("   "), "");
 assert(formsJs.includes('honeypot.value'), "forms must reject the bot honeypot");
 assert(formsJs.includes('value = value.trim()'), "form values must be trimmed before posting");
 assert(formsJs.includes('String(control.value || "").trim() === ""'), "required text fields must reject whitespace-only values");

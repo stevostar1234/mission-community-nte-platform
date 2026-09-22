@@ -671,6 +671,31 @@ test('free exhibitor hides and omits finance; paid extras restore all independen
 
 if (process.env.NTE_FORM_SCHEMA) fs.writeFileSync(path.resolve(process.env.NTE_FORM_SCHEMA), JSON.stringify(filenames.map(filename => { const f=fixture(filename); return {filename, formKind:f.form.dataset.formKind || null, webFormType:f.form.querySelector('[data-sf-field="Web_Form_Type__c"]').value, leadSource:f.form.dataset.leadSource, controls:f.form.querySelectorAll("input, select, textarea").filter(control=>!control.dataset.formHoneypot).map(control=>({id:control.id || null, type:control.type || control.tagName.toLowerCase(), salesforceField:control.dataset.sfField || null, required:control.required, requiredWhenVisible:control.hasAttribute("data-required-when-visible"), maxlength:control.maxLength, min:control.min || null,max:control.max || null,pattern:control.pattern || null,conditionalSource:control.closest("[data-conditional-for]")?.dataset.conditionalFor || null, options:control.tagName === "SELECT" ? control.querySelectorAll("option").map(option=>option.value) : undefined}))}; }),null,2)+"\n");
 
+test("website fields accept bare hostnames, reject non-addresses with a specific message and start disabled", () => {
+  const raw = fs.readFileSync(path.join(root, "exhibitor-interest.html"), "utf8");
+  assert.equal(/<button class="button" type="submit" disabled>/.test(raw), true, "markup ships the submit control disabled");
+  const f = complete(fixture("exhibitor-interest.html"));
+  assert.equal(f.form.querySelector('[type="submit"]').disabled, false, "the engine enables the submit control once ready");
+  set(f, "exhibitor-interest-website", "www.example.org");
+  f.form.requestSubmit();
+  assert.equal(f.document.posts.length, 1, f.form.querySelector("[data-form-status]").textContent);
+  assert.equal(payload(f).URL, "https://www.example.org");
+  const g = complete(fixture("exhibitor-interest.html"));
+  set(g, "exhibitor-interest-website", "not a website");
+  g.form.requestSubmit();
+  assert.equal(g.document.posts.length, 0);
+  assert.match(g.form.querySelector("[data-form-status]").textContent, /website address/);
+  assert.equal(g.document.activeElement?.id, "exhibitor-interest-website");
+  set(g, "exhibitor-interest-website", "https://already.example.org/path");
+  g.form.requestSubmit();
+  assert.equal(g.document.posts.length, 1);
+  assert.equal(payload(g).URL, "https://already.example.org/path");
+  const h = complete(fixture("exhibitor-interest.html"));
+  set(h, "exhibitor-interest-website", "");
+  h.form.requestSubmit();
+  assert.equal(h.document.posts.length, 1, "a blank optional website is still fine");
+});
+
 console.log(`Form engine stress: ${passed} checks passed; ${failed} failed; ${matrixCases} catalogue/boundary combinations.`);
 if (process.env.NTE_FORM_RESULTS) fs.writeFileSync(path.resolve(process.env.NTE_FORM_RESULTS), JSON.stringify({sourceRoot:root, generatedAt:new Date().toISOString(), passed,failed,matrixCases,results},null,2)+"\n");
 if (failed) process.exitCode = 1;
