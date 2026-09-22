@@ -1,0 +1,90 @@
+From 7ed05d7ad3039f4a2bc79e70d20cd345ebd044c6 Mon Sep 17 00:00:00 2001
+From: stevostar1234 <skybasteven@gmail.com>
+Date: Tue, 22 Sep 2026 20:43:03 +0100
+Subject: [PATCH] Correct three facts in the 22 September review write-up
+
+- PR #6's check-only validation succeeded (4 components, 105 tests).
+- PR #8: a re-check found no live or recycled booking holding the field and
+  the check-only validation still failed, so emptying the Recycle Bin is not
+  a confirmed fix; a manual type change in Setup or an additive field is.
+- The two volunteer test failures happen in asynchronous runs only; they pass
+  at deploy time (0AfAd00000T2P3FKAV, 25/25) and passed until 17 September.
+Adds a pointer to the second-opinion review.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ audit/NTE_INDEPENDENT_REVIEW_2026-09-22.md | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/audit/NTE_INDEPENDENT_REVIEW_2026-09-22.md b/audit/NTE_INDEPENDENT_REVIEW_2026-09-22.md
+index 223d08b..5ef1bb9 100644
+--- a/audit/NTE_INDEPENDENT_REVIEW_2026-09-22.md
++++ b/audit/NTE_INDEPENDENT_REVIEW_2026-09-22.md
+@@ -15,7 +15,7 @@ Nineteen findings were recorded. Seven pull requests fix the ones that are defec
+ | Metadata drift (repo vs MMUAT) | None beyond XML formatting |
+ | Org data state | Clean; no stuck records; Update issues 0 |
+ | Local suites (before this review) | Pass, except `page-isolation` on Windows (tooling bug, fixed) |
+-| Org Apex tests | 456/458 baseline; the 2 failures are in the out-of-scope volunteer test class |
++| Org Apex tests | 456/458 in the 22 September asynchronous run; the 2 failures are in the out-of-scope volunteer test class and do not reproduce in deploy-time validation (see R) |
+ | Reports vs panel | Consistent, one deliberate difference (P) |
+ 
+ ## 2. Pull requests
+@@ -29,9 +29,9 @@ All branches start `review/`; nothing was merged or deployed. Each Salesforce PR
+ | platform #3 | Master Panel fallbacks: blank payment method hint and "No heavy vehicle" action | H, I | Succeeded — 3 components, 135 tests, coverage 96.6% |
+ | platform #4 + forms #1 | Harden the public forms: disabled-until-ready submit, website addresses, pricing default | K (O03) | Local form suites; no org metadata |
+ | platform #5 | Run every suite from `npm test`; keep the working tree LF on Windows (O10) | O, tooling | Local; no org metadata |
+-| platform #6 | Make the free-space confirmation editable as a manual fallback | G | See PR for the check-only result |
++| platform #6 | Make the free-space confirmation editable as a manual fallback | G | Succeeded — 4 components, 105 tests |
+ | platform #7 | Add the 22 September independent implementation review | — | Documentation |
+-| platform #8 | Give the converted space-position note the Lead field's capacity (O05) | F | **Blocked**: the API refuses Text → Long Text Area while recycled sandbox records hold values (12 found); needs the Recycle Bin emptied or a one-time manual type change (client decision) |
++| platform #8 | Give the converted space-position note the Lead field's capacity (O05) | F | **Blocked**: the API refuses the Text → Long Text Area change ("Cannot change type due to existing data"). A re-check on 22 September evening found no live or recycled booking holding a value and the check-only validation still failed, so emptying the Recycle Bin is not a confirmed fix; a one-time manual type change in Setup or an additive field is needed (client decision) |
+ 
+ ## 3. Findings
+ 
+@@ -44,7 +44,7 @@ Severity: **Medium** = data loss or a stage the team cannot progress without an
+ | C | Low | The top-up guard used the editable quantity as proof that no purchase existed; clearing it let a later form reset paid history and re-increment attendance. (O02) | `NTEUpdateSubmissionService` | Fixed, PR #2 (durable-evidence predicate; names-only correction leaves an accepted purchase untouched) |
+ | D | Low | Dispatch-record retry checked only `Status='Failed'`; an accepted email relabelled Failed could be resent and its timestamp replaced. (O07) | `NTEEmailDispatchService` | Fixed, PR #2 (shared accepted-send predicate in history, retry and worker) |
+ | E | Low | An application keyed in natively had no booking reference, so conversion produced a booking that emails and update forms refused. (O08) | `NTEInboundLeadService` | Fixed, PR #2 (reference generated at intake in the forms' format; supplied references kept; no back-fill) |
+-| F | Low | `Exhibitor_Space_Position__c` is LongTextArea(1000) on Lead and Text(255) on Opportunity; a valid long note blocked conversion. (O05) The public form does not collect the field, so only native entry is exposed. | generator | Fix ready in PR #8; deployment needs the sandbox Recycle Bin emptied or a manual type change first |
++| F | Low | `Exhibitor_Space_Position__c` is LongTextArea(1000) on Lead and Text(255) on Opportunity; a valid long note blocked conversion. (O05) The public form does not collect the field, so only native entry is exposed. | generator | Fix ready in PR #8; deployment needs a one-time manual type change in Setup (or an additive field) first |
+ | G | Medium | `NTE_Free_Space_Confirmed__c` was read-only for NTE roles and locked on the record page, so a complimentary booking confirmed outside the email path could not be progressed without an administrator. | generator (permission sets, record page) | Fixed, PR #6 (reviewer may decline) |
+ | H | Low | A billable booking with a blank payment method showed no request button in Requirements and no reason. | `NTE_MasterPanelController`, `nteMasterPanel` | Fixed, PR #3 (hint) |
+ | I | Medium | A booking whose logistics answer is blank or "Not known yet" sat in Logistics outstanding with no route to "No" except editing the full record; it can never complete. | Master Panel | Fixed, PR #3 ("No heavy vehicle" action, refused when vehicle details exist) |
+@@ -56,7 +56,7 @@ Severity: **Medium** = data loss or a stage the team cannot progress without an
+ | O | Low | No `.gitattributes`; with `core.autocrlf=true` a Windows checkout rewrote ~500 files to CRLF, breaking generated-text comparisons; `page-isolation` test keyed paths with backslashes and failed on Windows; `npm test` ran three of eight suites (O10). | tooling | Fixed, PR #5 |
+ | P | Note | Report NTE_05 lists bookings with `Heavy Vehicle Required = Yes`; the panel's Logistics outstanding also includes blank/"Not known yet". | report vs panel | Deliberate difference (report = confirmed vehicles for the logistics team). Decision: leave, or add a "not confirmed" report. |
+ | Q | Note | The event code is calculated in the browser (month ≥ 4 → next year); the server only checks the `NTE####` shape. | forms, validation rule | Acceptable: staff can correct the code; the panel filters by code. |
+-| R | Note | Two deterministic Apex test failures in MMUAT: `VolunteerInboundLeadServiceTest` (`MIXED_DML_OPERATION` when inserting a queue beside a Lead; flow-trigger "Limit Exceeded" in a 120-lead mixed batch). | volunteer tests | Outside NTE scope; see §5. They do not affect NTE deployments validated with specified tests. |
++| R | Note | Two `VolunteerInboundLeadServiceTest` methods failed in the 22 September asynchronous test runs (`MIXED_DML_OPERATION` when inserting a queue beside a Lead; flow-trigger "Limit Exceeded" in a 120-lead mixed batch). They passed in every deploy-time run up to 17 September and in a deploy-time check-only run on 22 September (`0AfAd00000T2P3FKAV`, 25/25), so the failure depends on how the tests are run rather than being deterministic. | volunteer tests | Outside NTE scope; see §5. The documented `RunLocalTests` release validation is not blocked by them on current evidence. |
+ | S | Note | The panel's default event is the highest year present (O13); a future-year record changes the default working event. | `resolveEventCode` | Policy decision, unchanged. |
+ 
+ ### Confirmed correct
+@@ -76,7 +76,7 @@ Severity: **Medium** = data loss or a stage the team cannot progress without an
+ 4. **Default event (S):** keep "highest year wins", or pin the working edition in `NTE_Routing_Config__mdt`.
+ 5. **Stripe re-pricing hold (M):** acceptable for the interim Stripe link process; revisit in the connected-app design.
+ 6. **Receipt in Requirements (J):** the reviewer confirmed the approved refiner rule; no change proposed.
+-7. **Space-position capacity (F, PR #8):** empty the MMUAT Recycle Bin (12 recycled bookings hold the field) and re-validate, or change the field type once by hand in Setup, or ask for an additive field instead.
++7. **Space-position capacity (F, PR #8):** change the field type once by hand in MMUAT Setup (Text → Long Text Area, values kept) and re-validate, or ask for an additive field instead. Emptying the Recycle Bin is not enough on current evidence (no recycled booking holds a value and the validation still fails). Confirm whether production already has this field before choosing.
+ 
+ ## 5. Outside NTE scope — volunteer application (for information)
+ 
+@@ -86,7 +86,7 @@ The volunteer form shares the form engine and the org but is not part of NTE and
+ - Any Lead created with the volunteer type and source, including manual or imported records, triggers both emails; there is no suppression.
+ - The internal notification goes only to the record owner (the org default lead owner); if that is a queue or inactive user it fails until reassigned; no org-wide sender address is used.
+ - The audit-record DML in the service is unguarded on first save; a Lead validation error elsewhere would roll back the intake.
+-- Two deterministic test failures (R) in `VolunteerInboundLeadServiceTest`: the queue fixture needs `System.runAs` around its setup-object DML; the 120-lead mixed batch exceeds the flow-trigger limit.
++- Two test methods (R) in `VolunteerInboundLeadServiceTest` fail when run asynchronously but pass at deploy time: the queue fixture would be safer with `System.runAs` around its setup-object DML, and the 120-lead mixed batch sits close to the flow-trigger limit.
+ 
+ ## 6. Method and evidence
+ 
+@@ -94,3 +94,7 @@ The volunteer form shares the form engine and the org but is not part of NTE and
+ - MMUAT: full metadata retrieval compared with the repository; data-state queries for stuck records; Master Panel walked through Interest, Applications, Approved, Finances (Requirements / Payment required / Payment confirmed), Updates and the event breakdown; Apex tests run for the intake, update, finance and volunteer classes.
+ - Local suites run before and after each change; each Salesforce PR validated with a check-only deployment of its changed components and the covering test classes (results in §2 and in each PR).
+ - Nothing was deployed, merged or changed in the org.
++
++## 7. Second opinion
++
++An independent second review of these pull requests, with follow-up patches for several of them and the corrections above, is in `audit/NTE_SECOND_OPINION_REVIEW_2026-09-22.md` (separate pull request).
+-- 
+2.39.1.windows.1
+

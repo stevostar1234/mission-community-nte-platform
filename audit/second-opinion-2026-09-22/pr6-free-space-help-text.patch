@@ -1,0 +1,68 @@
+From a09206964980503a8eacf5da403fc64d3631c8e3 Mon Sep 17 00:00:00 2001
+From: stevostar1234 <skybasteven@gmail.com>
+Date: Tue, 22 Sep 2026 20:19:33 +0100
+Subject: [PATCH] Warn on the editable free-space box that ticking it sends
+ nothing
+
+The free-space confirmation email is the message that gives a complimentary
+booking its staff-details and logo links. With the box editable, a hand tick
+moves the booking to Payment confirmed and hides the panel action without
+sending that email. Adds field help text (generator gains inlineHelpText
+support) and a generated-metadata assertion.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ .../fields/NTE_Free_Space_Confirmed__c.field-meta.xml          | 1 +
+ scripts/build-metadata.js                                      | 3 ++-
+ tests/metadata-reports.test.js                                 | 2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/force-app/main/default/objects/Opportunity/fields/NTE_Free_Space_Confirmed__c.field-meta.xml b/force-app/main/default/objects/Opportunity/fields/NTE_Free_Space_Confirmed__c.field-meta.xml
+index 6eb0e25..40e7edc 100644
+--- a/force-app/main/default/objects/Opportunity/fields/NTE_Free_Space_Confirmed__c.field-meta.xml
++++ b/force-app/main/default/objects/Opportunity/fields/NTE_Free_Space_Confirmed__c.field-meta.xml
+@@ -3,6 +3,7 @@
+     <fullName>NTE_Free_Space_Confirmed__c</fullName>
+     <description>A free booking or waived booking has had its confirmation accepted for sending. Set by the Master Panel action; staff may tick or untick it on the record as a manual fallback.</description>
+     <defaultValue>false</defaultValue>
++    <inlineHelpText>Ticking this box does not email the applicant. To send the free-space confirmation with its staff and logo links, use Confirm Free space in the Master Panel Requirements view.</inlineHelpText>
+     <label>NTE Free Space Confirmed</label>
+     <required>false</required>
+     <trackFeedHistory>false</trackFeedHistory>
+diff --git a/scripts/build-metadata.js b/scripts/build-metadata.js
+index 9321b99..6f926fb 100644
+--- a/scripts/build-metadata.js
++++ b/scripts/build-metadata.js
+@@ -53,6 +53,7 @@ function fieldXml(field) {
+     field.externalId !== undefined ? `    <externalId>${field.externalId}</externalId>` : "",
+     field.formula ? `    <formula>${esc(field.formula)}</formula>` : "",
+     field.formulaTreatBlanksAs ? `    <formulaTreatBlanksAs>${field.formulaTreatBlanksAs}</formulaTreatBlanksAs>` : "",
++    field.inlineHelpText ? `    <inlineHelpText>${esc(field.inlineHelpText)}</inlineHelpText>` : "",
+     `    <label>${esc(field.label)}</label>`,
+     field.length ? `    <length>${field.length}</length>` : "",
+     field.precision ? `    <precision>${field.precision}</precision>` : "",
+@@ -332,7 +333,7 @@ const opportunityFields = [
+   currency("NTE_Listed_Price_Total__c", "NTE Booking Total (ex VAT)"),
+   {...currency("NTE_Price_Adjustment__c", "NTE Booking Adjustment (ex VAT)"), defaultValue: 0, readOnly: true, description: "Difference between the original item charges and the revised net booking total. To revise the booking price, edit Amount including VAT."},
+   {...text("NTE_Approval_Email_Kind__c", "NTE Booking Email Kind", 40), readOnly: true, description: "The requested kind of booking email, retained while the manual send is processed."},
+-  {...checkbox("NTE_Free_Space_Confirmed__c", "NTE Free Space Confirmed"), description: "A free booking or waived booking has had its confirmation accepted for sending. Set by the Master Panel action; staff may tick or untick it on the record as a manual fallback."},
++  {...checkbox("NTE_Free_Space_Confirmed__c", "NTE Free Space Confirmed"), description: "A free booking or waived booking has had its confirmation accepted for sending. Set by the Master Panel action; staff may tick or untick it on the record as a manual fallback.", inlineHelpText: "Ticking this box does not email the applicant. To send the free-space confirmation with its staff and logo links, use Confirm Free space in the Master Panel Requirements view."},
+   {...number("NTE_VAT_Rate__c", "NTE Booking VAT Rate (%)", 5, 2), defaultValue: vatRate},
+   formulaCurrency("NTE_VAT_Total__c", "NTE Booking VAT", `IF(NOT(NTE_Pricing_Ready__c), NULL, IF(ISBLANK(Amount), ROUND(NTE_Listed_Price_Total__c * BLANKVALUE(NTE_VAT_Rate__c, ${vatRate}) / 100, 2), Amount - NTE_Listed_Price_Total__c))`),
+   formulaCurrency("NTE_Total_Including_VAT__c", "NTE Booking Total (inc VAT)", "IF(NOT(NTE_Pricing_Ready__c), NULL, BLANKVALUE(Amount, NTE_Listed_Price_Total__c + NTE_VAT_Total__c))"),
+diff --git a/tests/metadata-reports.test.js b/tests/metadata-reports.test.js
+index 94d72ff..0260a0b 100644
+--- a/tests/metadata-reports.test.js
++++ b/tests/metadata-reports.test.js
+@@ -120,6 +120,8 @@ if (process.argv.includes("--generated")) {
+     assert(xml.includes("<apexClass>NTE_MasterPanelController</apexClass>"), `${permission}: panel access is self-contained`);
+     assert(xml.includes("<application>NTE_Management</application>"), `${permission}: app access is self-contained`);
+   }
++  const freeSpaceField = fs.readFileSync(path.join(md, "objects/Opportunity/fields/NTE_Free_Space_Confirmed__c.field-meta.xml"), "utf8");
++  assert(/<inlineHelpText>[^<]*does not email the applicant[^<]*<\/inlineHelpText>/.test(freeSpaceField), "the editable free-space box warns that ticking it sends nothing");
+   const recordPage = fs.readFileSync(path.join(md, "flexipages/NTE_Management_Opportunity_Record_Page.flexipage-meta.xml"), "utf8");
+   assert(recordPage.includes("<fieldItem>Record.NTE_Free_Space_Confirmed__c</fieldItem>"), "the record page shows the free-space confirmation");
+   assert(!/<value>readonly<\/value>\s*<\/fieldInstanceProperties>\s*<fieldItem>Record\.NTE_Free_Space_Confirmed__c<\/fieldItem>/.test(recordPage), "the record page no longer locks the free-space confirmation");
+-- 
+2.39.1.windows.1
+

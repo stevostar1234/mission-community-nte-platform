@@ -1,0 +1,322 @@
+From a0c54675aee7eaed3b98ed78db8c0587076a0683 Mon Sep 17 00:00:00 2001
+From: stevostar1234 <skybasteven@gmail.com>
+Date: Tue, 22 Sep 2026 20:37:30 +0100
+Subject: [PATCH] Second-opinion follow-up for the public form hardening
+
+- Website check: after "https://" is added, the browser's own URL check
+  accepted almost anything ("https://N/A", "https://someone@example.org",
+  "https://not a website" in Chromium 152), so values the old engine blocked
+  were posted as the organisation's website and echoed in emails. A website
+  now needs an http(s) address with a real host name and no user name; a
+  rejected entry is left as typed. Bare host names such as www.example.org,
+  ports and international domains are still accepted.
+- The submit control is enabled at the end of each form's set-up, and only
+  when its system fields were filled, rather than before the Code of Conduct,
+  honeypot and submit handler were installed.
+- Each NTE form gains a short noscript notice with the existing NTE contact
+  address (the 16 September O03 fix asked for a no-JavaScript route).
+- The volunteer form belongs to the Mission app: its submit control and the
+  volunteer thank-you page are left as they were.
+- Tests: every form is checked for re-enabling, junk website values and the
+  noscript notice are covered.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ assets/forms.js                   | 31 +++++++++++++++++++++++--------
+ exhibitor-application.html        |  2 +-
+ exhibitor-interest.html           |  2 +-
+ exhibitor-staff-update.html       |  2 +-
+ guest-registration.html           |  2 +-
+ heavy-vehicle-details.html        |  2 +-
+ logo-upload.html                  |  2 +-
+ partner-sponsor-application.html  |  2 +-
+ partner-sponsor-interest.html     |  2 +-
+ partner-sponsor-staff-update.html |  2 +-
+ tests/forms.test.js               | 15 +++++++++++++++
+ tests/stress-form-engine.test.js  |  9 +++++++++
+ volunteer-application.html        |  2 +-
+ volunteer-thank-you.html          |  2 +-
+ 14 files changed, 58 insertions(+), 19 deletions(-)
+
+diff --git a/assets/forms.js b/assets/forms.js
+index 89cc38f..37c49cb 100644
+--- a/assets/forms.js
++++ b/assets/forms.js
+@@ -581,9 +581,20 @@
+   function normalizeWebsiteAddress(value) {
+     var trimmed = String(value || "").trim();
+     if (!trimmed) return "";
+-    // People usually type "www.example.org"; a URL field needs a scheme to be valid.
+-    if (!/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) trimmed = "https://" + trimmed;
+-    return trimmed;
++    // People usually type "www.example.org"; the Website field stores a full web address.
++    return /^https?:\/\//i.test(trimmed) ? trimmed : "https://" + trimmed.replace(/^\/+/, "");
++  }
++
++  // Once "https://" is added, the browser's own URL check accepts almost anything
++  // ("https://N/A", "https://someone@example.org"), so require a real web host.
++  function isWebsiteAddress(value) {
++    try {
++      var address = new URL(value);
++      return /^https?:$/.test(address.protocol) && !address.username && !address.password
++        && /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9-]{2,}$/i.test(address.hostname);
++    } catch (error) {
++      return false;
++    }
+   }
+ 
+   function validateWebsiteAddresses(form) {
+@@ -591,10 +602,11 @@
+       if (control.disabled) return false;
+       var value = normalizeWebsiteAddress(control.value);
+       if (!value) return false;
++      if (!isWebsiteAddress(value)) return true;
+       if (value !== String(control.value || "")) control.value = value;
+-      return !control.checkValidity();
++      return false;
+     });
+-    return !invalid || setRuleError(form, invalid, "Enter the website address, such as https://www.example.org, or leave it blank.");
++    return !invalid || setRuleError(form, invalid, "Enter a website address such as www.example.org, or leave it blank.");
+   }
+ 
+   function formatWebToLeadDate(value) {
+@@ -784,13 +796,12 @@
+       // Normalise references and refresh conditional requirements before asking
+       // the browser to validate; reportValidity still enforces native rules.
+       form.noValidate = true;
+-      // The markup ships its submit control disabled, so a page whose engine never
+-      // started cannot post an unvalidated form. Enable it now the engine is ready.
+-      form.querySelectorAll('[type="submit"]').forEach(function (button) { button.removeAttribute("disabled"); });
+       var validateCodeOfConduct = setupCodeOfConduct(form);
++      var systemFieldsReady = true;
+       try {
+         populateSystemFields(form);
+       } catch (error) {
++        systemFieldsReady = false;
+         setStatus(form, "This form is currently unavailable. Reload the page and try again.", "error");
+       }
+       var honeypot = document.createElement("input");
+@@ -880,6 +891,9 @@
+       form.addEventListener("focusin", function (event) {
+         if (event.target && event.target.type === "date") configureFieldConstraints();
+       });
++      // The markup ships its submit control disabled. Enable it only once this form's
++      // set-up has finished, so a failed start can never post an unvalidated form.
++      if (systemFieldsReady) form.querySelectorAll('[type="submit"]').forEach(function (button) { button.removeAttribute("disabled"); });
+     });
+     if (window.addEventListener) window.addEventListener("pageshow", function () {
+       configureFieldConstraints();
+@@ -975,6 +989,7 @@
+     qualifiesForPowerDiscount: qualifiesForPowerDiscount,
+     formatWebToLeadDate: formatWebToLeadDate,
+     normalizeWebsiteAddress: normalizeWebsiteAddress,
++    isWebsiteAddress: isWebsiteAddress,
+     resolveReturnUrl: resolveReturnUrl
+   };
+ }());
+diff --git a/exhibitor-application.html b/exhibitor-application.html
+index b436e12..6b385d5 100644
+--- a/exhibitor-application.html
++++ b/exhibitor-application.html
+@@ -179,7 +179,7 @@
+           <div class="field"><label class="required" for="declaration-date">Date</label><input id="declaration-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+         <div class="checkline"><input id="terms" type="checkbox" required data-sf-field="Terms_and_Conditions__c"><label for="terms">I have read and agree to the <a data-config-link="terms" target="_blank" rel="noopener">NTE27 Privacy Policy</a>.</label></div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit exhibitor application</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit exhibitor application</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript>
+         <div data-form-status hidden aria-live="polite"></div>
+       </section>
+       <section class="email-preview-panel" aria-labelledby="exhibitor-application-emails-heading">
+diff --git a/exhibitor-interest.html b/exhibitor-interest.html
+index 11c23a0..fcbf44b 100644
+--- a/exhibitor-interest.html
++++ b/exhibitor-interest.html
+@@ -69,7 +69,7 @@
+           <div class="field"><label class="required" for="exhibitor-interest-signature">Digital signature (full name)</label><input id="exhibitor-interest-signature" required autocomplete="name" data-sf-field="Declaration_Name__c"></div>
+           <div class="field"><label class="required" for="exhibitor-interest-signature-date">Date</label><input id="exhibitor-interest-signature-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit expression of interest</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit expression of interest</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript>
+         <div data-form-status hidden aria-live="polite"></div>
+       </section>
+       <section class="email-preview-panel" aria-labelledby="exhibitor-interest-emails-heading">
+diff --git a/exhibitor-staff-update.html b/exhibitor-staff-update.html
+index fb0caf6..40d6201 100644
+--- a/exhibitor-staff-update.html
++++ b/exhibitor-staff-update.html
+@@ -46,7 +46,7 @@
+           <div class="field"><label class="required" for="exhibitor-staff-signature">Digital signature (full name)</label><input id="exhibitor-staff-signature" required autocomplete="name" data-sf-field="Declaration_Name__c"></div>
+           <div class="field"><label class="required" for="exhibitor-staff-date">Date</label><input id="exhibitor-staff-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit staff details</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><div data-form-status hidden aria-live="polite"></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit staff details</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript><div data-form-status hidden aria-live="polite"></div>
+       </section>
+       <section class="email-preview-panel" aria-labelledby="exhibitor-staff-email-heading"><p class="eyebrow">Email for this form</p><h2 id="exhibitor-staff-email-heading">Staff details acknowledgement</h2><p>Open the confirmation sent after the staff details are matched to a booking.</p><div class="button-row"><a class="button-secondary" target="_blank" rel="noopener" href="email-templates/examples/exhibitor-staff-update-applicant-confirmation.html">Staff details acknowledgement</a><a class="button-secondary" target="_blank" rel="noopener" href="email-templates/examples/staff-top-up-payment.html">Staff top-up payment request</a></div></section>
+     </form>
+diff --git a/guest-registration.html b/guest-registration.html
+index 32fb632..f2b283c 100644
+--- a/guest-registration.html
++++ b/guest-registration.html
+@@ -61,7 +61,7 @@
+           <div class="field"><label class="required" for="guest-signature">Digital signature (full name)</label><input id="guest-signature" required autocomplete="name" data-sf-field="Declaration_Name__c"></div>
+           <div class="field"><label class="required" for="guest-signature-date">Date</label><input id="guest-signature-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit guest registration</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit guest registration</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript>
+         <div data-form-status hidden aria-live="polite"></div>
+       </section>
+ 
+diff --git a/heavy-vehicle-details.html b/heavy-vehicle-details.html
+index 6902e22..aac460f 100644
+--- a/heavy-vehicle-details.html
++++ b/heavy-vehicle-details.html
+@@ -45,7 +45,7 @@
+           <div class="field"><label class="required" for="vehicle-signature">Digital signature (full name)</label><input id="vehicle-signature" required autocomplete="name" data-sf-field="Declaration_Name__c"></div>
+           <div class="field"><label class="required" for="vehicle-signature-date">Date</label><input id="vehicle-signature-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit logistics details</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><div data-form-status hidden aria-live="polite"></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit logistics details</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript><div data-form-status hidden aria-live="polite"></div>
+       </section>
+       <section class="email-preview-panel" aria-labelledby="vehicle-email-heading">
+         <p class="eyebrow">Email for this form</p>
+diff --git a/logo-upload.html b/logo-upload.html
+index 7c8ff81..b5a41a9 100644
+--- a/logo-upload.html
++++ b/logo-upload.html
+@@ -29,7 +29,7 @@
+           <div class="field"><label class="required" for="logo-email">Your email address</label><input id="logo-email" type="email" required autocomplete="email" data-sf-field="Email"></div>
+           <div class="field"><label class="required" for="logo-booking-reference">Booking reference</label><input id="logo-booking-reference" required autocomplete="off" maxlength="80" pattern="NTE-[A-Za-z0-9][A-Za-z0-9\-]{1,74}[A-Za-z0-9]" data-sf-field="Target_Booking_Reference__c"><span class="help">Enter the exact reference beginning NTE- from your reservation or confirmation email.</span></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Confirm logo upload</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><div data-form-status hidden aria-live="polite"></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Confirm logo upload</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript><div data-form-status hidden aria-live="polite"></div>
+       </section>
+     </form>
+   </main>
+diff --git a/partner-sponsor-application.html b/partner-sponsor-application.html
+index 9b8b011..b9d2602 100644
+--- a/partner-sponsor-application.html
++++ b/partner-sponsor-application.html
+@@ -134,7 +134,7 @@
+           <div class="field"><label class="required" for="partner-declaration-date">Date</label><input id="partner-declaration-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+         <div class="checkline"><input id="partner-terms" type="checkbox" required data-sf-field="Terms_and_Conditions__c"><label for="partner-terms">I have read and agree to the <a data-config-link="terms" target="_blank" rel="noopener">NTE27 Privacy Policy</a>.</label></div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit partner / sponsor application</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><div data-form-status hidden aria-live="polite"></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit partner / sponsor application</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript><div data-form-status hidden aria-live="polite"></div>
+       </section>
+       <section class="email-preview-panel" aria-labelledby="partner-application-emails-heading">
+         <p class="eyebrow">Emails for this form</p>
+diff --git a/partner-sponsor-interest.html b/partner-sponsor-interest.html
+index d21606d..734d7c7 100644
+--- a/partner-sponsor-interest.html
++++ b/partner-sponsor-interest.html
+@@ -63,7 +63,7 @@
+           <div class="field"><label class="required" for="eoi-signature">Digital signature (full name)</label><input id="eoi-signature" required autocomplete="name" data-sf-field="Declaration_Name__c"></div>
+           <div class="field"><label class="required" for="eoi-signature-date">Date</label><input id="eoi-signature-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit expression of interest</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit expression of interest</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript>
+         <div data-form-status hidden aria-live="polite"></div>
+       </section>
+ 
+diff --git a/partner-sponsor-staff-update.html b/partner-sponsor-staff-update.html
+index 6c0905b..18ee040 100644
+--- a/partner-sponsor-staff-update.html
++++ b/partner-sponsor-staff-update.html
+@@ -34,7 +34,7 @@
+           <div class="field"><label class="required" for="partner-staff-signature">Digital signature (full name)</label><input id="partner-staff-signature" required autocomplete="name" data-sf-field="Declaration_Name__c"></div>
+           <div class="field"><label class="required" for="partner-staff-date">Date</label><input id="partner-staff-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit staff details</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><div data-form-status hidden aria-live="polite"></div>
++        <div class="button-row"><button class="button" type="submit" disabled>Submit staff details</button><a class="button-secondary" href="https://www.nationaltransitionevent.com/">Visit the NTE website</a></div><noscript><p class="status error">This form needs JavaScript. Turn it on and reload the page, or email <a href="mailto:nte@missioncommunity.org">nte@missioncommunity.org</a>.</p></noscript><div data-form-status hidden aria-live="polite"></div>
+       </section>
+       <section class="email-preview-panel" aria-labelledby="partner-staff-email-heading"><p class="eyebrow">Email for this form</p><h2 id="partner-staff-email-heading">Staff details acknowledgement</h2><p>Open the confirmation sent after the staff details are matched to a booking.</p><div class="button-row"><a class="button-secondary" target="_blank" rel="noopener" href="email-templates/examples/partner-sponsor-staff-update-applicant-confirmation.html">Staff details acknowledgement</a></div></section>
+     </form>
+diff --git a/tests/forms.test.js b/tests/forms.test.js
+index 91413be..83dbd59 100644
+--- a/tests/forms.test.js
++++ b/tests/forms.test.js
+@@ -467,7 +467,13 @@ assert(formsJs.includes('button.removeAttribute("disabled")'), "the engine must
+ for (const file of fs.readdirSync(root).filter(name => name.endsWith(".html"))) {
+   const html = fs.readFileSync(path.join(root, file), "utf8");
+   if (!html.includes("data-web-to-lead")) continue;
++  // The volunteer form belongs to the Mission app and keeps its existing behaviour.
++  if (file === "volunteer-application.html") {
++    assert(html.includes('<button class="button" type="submit">Submit volunteer application</button>'), `${file}: NTE changes leave the volunteer submit control as it was`);
++    continue;
++  }
+   assert(html.includes('<button class="button" type="submit" disabled>'), `${file}: the submit control must start disabled until the form engine has loaded`);
++  assert(html.includes('<noscript><p class="status error">This form needs JavaScript.'), `${file}: a visitor without JavaScript is told why the form cannot be sent`);
+   const hiddenPricingVersion = html.match(/<input type="hidden" value="([^"]+)" data-sf-field="Pricing_Version__c">/);
+   if (hiddenPricingVersion) {
+     assert.strictEqual(hiddenPricingVersion[1], formsJs.match(/var pricingVersion = "([^"]+)"/)[1], `${file}: the hidden pricing version default must match the engine catalogue version`);
+@@ -479,6 +485,15 @@ assert.strictEqual(utils.normalizeWebsiteAddress("https://www.example.org/"), "h
+ assert.strictEqual(utils.normalizeWebsiteAddress("HTTP://legacy.example.org"), "HTTP://legacy.example.org");
+ assert.strictEqual(utils.normalizeWebsiteAddress(""), "");
+ assert.strictEqual(utils.normalizeWebsiteAddress("   "), "");
++assert.strictEqual(utils.normalizeWebsiteAddress("//example.org"), "https://example.org");
++assert.strictEqual(utils.normalizeWebsiteAddress("www.example.org:8080"), "https://www.example.org:8080");
++for (const accepted of ["https://www.example.org", "HTTP://legacy.example.org", "https://www.example.org:8080/path?x=1", "https://bücher.example", "https://example.co.uk/careers"]) {
++  assert.strictEqual(utils.isWebsiteAddress(accepted), true, `${accepted} is a website address`);
++}
++for (const rejected of ["https://N/A", "https://tbc", "https://example", "https://someone@example.org", "https://https//example.org",
++  "https://not a website", "https://mailto:x@y.org", "https://javascript:alert(1)", "https://", "ftp://example.org"]) {
++  assert.strictEqual(utils.isWebsiteAddress(rejected), false, `${rejected} is not accepted as a website`);
++}
+ assert(formsJs.includes('honeypot.value'), "forms must reject the bot honeypot");
+ assert(formsJs.includes('value = value.trim()'), "form values must be trimmed before posting");
+ assert(formsJs.includes('String(control.value || "").trim() === ""'), "required text fields must reject whitespace-only values");
+diff --git a/tests/stress-form-engine.test.js b/tests/stress-form-engine.test.js
+index 074a149..a80c3b8 100644
+--- a/tests/stress-form-engine.test.js
++++ b/tests/stress-form-engine.test.js
+@@ -148,6 +148,9 @@ const payload = f => f.document.posts.at(-1);
+ 
+ test("all current public forms are covered", () => assert.equal(filenames.length, 10));
+ for (const filename of filenames) {
++  test(filename + ": the engine enables the submit control after start-up", () => {
++    assert.equal(fixture(filename).form.querySelector('[type="submit"]').disabled, false);
++  });
+   test(filename + ": required schema routes a valid isolated submission once", () => {
+     const f = complete(fixture(filename)); f.form.requestSubmit(); assert.equal(f.document.posts.length, 1, f.form.querySelector("[data-form-status]").textContent); f.form.requestSubmit(); assert.equal(f.document.posts.length, 1); assert.equal(payload(f).oid, "00DAd00000A95Vl"); assert.equal(payload(f).useDefaultRule, "0"); assert.equal(payload(f).lead_source, filename === "volunteer-application.html" ? "Volunteer Application" : "Customer Event"); assert.equal(payload(f).retURL.endsWith(filename === "volunteer-application.html" ? "/volunteer-thank-you.html" : "/thank-you.html"), true);
+   });
+@@ -681,6 +684,12 @@ test("website fields accept bare hostnames, reject non-addresses with a specific
+   assert.equal(f.document.posts.length, 1, f.form.querySelector("[data-form-status]").textContent);
+   assert.equal(payload(f).URL, "https://www.example.org");
+   const g = complete(fixture("exhibitor-interest.html"));
++  for (const junk of ["N/A", "tbc", "someone@example.org", "https//example.org"]) {
++    set(g, "exhibitor-interest-website", junk);
++    g.form.requestSubmit();
++    assert.equal(g.document.posts.length, 0, `${junk} is not posted as a website`);
++    assert.equal(g.form.querySelector("#exhibitor-interest-website").value, junk, "a rejected entry is left as typed");
++  }
+   set(g, "exhibitor-interest-website", "not a website");
+   g.form.requestSubmit();
+   assert.equal(g.document.posts.length, 0);
+diff --git a/volunteer-application.html b/volunteer-application.html
+index 6066a4c..b817545 100644
+--- a/volunteer-application.html
++++ b/volunteer-application.html
+@@ -305,7 +305,7 @@
+           <div class="field"><label class="required" for="volunteer-signature-date">Date</label><input id="volunteer-signature-date" type="date" required data-sf-field="Declaration_Date__c"></div>
+         </div>
+         <p class="help">Entering your name confirms that the information supplied is accurate and that you accept the privacy statement above.</p>
+-        <div class="button-row"><button class="button" type="submit" disabled>Submit volunteer application</button><a class="button-secondary" href="https://www.missionmotorsport.org/">Visit Mission Motorsport</a></div>
++        <div class="button-row"><button class="button" type="submit">Submit volunteer application</button><a class="button-secondary" href="https://www.missionmotorsport.org/">Visit Mission Motorsport</a></div>
+         <div data-form-status hidden aria-live="polite"></div>
+       </section>
+ 
+diff --git a/volunteer-thank-you.html b/volunteer-thank-you.html
+index ef6a0f9..3d4d5ed 100644
+--- a/volunteer-thank-you.html
++++ b/volunteer-thank-you.html
+@@ -24,6 +24,6 @@
+     </section>
+   </main>
+   <footer class="site-footer">Mission Motorsport · Mission Community</footer>
+-  <script src="assets/config.js?v=20260913-finance-2"></script><script src="assets/forms.js?v=20260922-hardening-1"></script>
++  <script src="assets/config.js?v=20260913-finance-2"></script><script src="assets/forms.js?v=20260913-finance-2"></script>
+ </body>
+ </html>
+-- 
+2.39.1.windows.1
+

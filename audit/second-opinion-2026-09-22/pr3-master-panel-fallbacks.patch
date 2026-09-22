@@ -1,0 +1,184 @@
+From 49c85f803bad22521bce0fdf580b18f32580ec82 Mon Sep 17 00:00:00 2001
+From: stevostar1234 <skybasteven@gmail.com>
+Date: Tue, 22 Sep 2026 20:40:34 +0100
+Subject: [PATCH] Second-opinion follow-up for the Master Panel fallbacks
+
+- "No heavy vehicle" was also offered, and accepted, for bookings whose
+  applicant answered Yes but has not sent the details yet. One click moved
+  such a booking out of Logistics outstanding, stopped its logistics
+  reminders and removed it from report NTE_05. The PR, the review finding and
+  the open workflow question only cover blank or "Not known yet"; a Yes is
+  now refused with a pointer to the full record, and tested.
+- The confirmation text no longer reads as if the booking stays outstanding.
+- The handler holds live refreshes while its dialog is open, like the
+  milestone actions, so a focus-triggered refresh cannot make the confirmed
+  save return silently; dialog errors show a toast. Added to the shared
+  "locks before confirmation" and "cancel" panel tests.
+- The payment-method hint no longer names Stripe (which may be disabled) and
+  drops the live-region role on static text.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ .../classes/NTE_MasterPanelController.cls     | 12 ++++++---
+ .../classes/NTE_MasterPanelControllerTest.cls | 15 ++++++++---
+ .../lwc/nteMasterPanel/nteMasterPanel.html    |  2 +-
+ .../lwc/nteMasterPanel/nteMasterPanel.js      | 26 ++++++++++++++-----
+ tests/panel-ui-stress.test.js                 |  3 ++-
+ 5 files changed, 41 insertions(+), 17 deletions(-)
+
+diff --git a/force-app/main/default/classes/NTE_MasterPanelController.cls b/force-app/main/default/classes/NTE_MasterPanelController.cls
+index 5576b0a..132a2bf 100644
+--- a/force-app/main/default/classes/NTE_MasterPanelController.cls
++++ b/force-app/main/default/classes/NTE_MasterPanelController.cls
+@@ -836,9 +836,9 @@ public with sharing class NTE_MasterPanelController {
+     }
+ 
+     /**
+-     * Manual fallback for a booking whose logistics answer is blank, "Not known yet" or an
+-     * unconfirmed "Yes" and for which no vehicle details were ever supplied. It records the
+-     * same "No" the application form would have, so the booking can complete.
++     * Manual fallback for a booking whose logistics answer is blank or "Not known yet" and for
++     * which no vehicle details were ever supplied. It records the same "No" the application form
++     * would have, so the booking can complete. An applicant's "Yes" is changed on the full record.
+      */
+     @AuraEnabled
+     public static ActionResult confirmNoHeavyVehicle(Id opportunityId) {
+@@ -868,6 +868,9 @@ public with sharing class NTE_MasterPanelController {
+             if (booking.NTE_Heavy_Vehicle_Update_Completed_At__c != null) {
+                 throw handled('Vehicle details have already been supplied for this booking. Change the requirement on the full record if they no longer apply.');
+             }
++            if (booking.NTE_Heavy_Vehicle_Required__c == 'Yes') {
++                throw handled('The applicant said a heavy vehicle is coming. If they have told you otherwise, change the requirement on the full record.');
++            }
+             Database.update(new Opportunity(Id = booking.Id, NTE_Heavy_Vehicle_Required__c = 'No'), AccessLevel.USER_MODE);
+             ActionResult result = new ActionResult();
+             result.success = true;
+@@ -1375,7 +1378,7 @@ public with sharing class NTE_MasterPanelController {
+         // A billable booking with no recognised payment method has no request action; say why instead of showing nothing.
+         row.financeActionIssue = row.baseInvoiceRequired && row.baseSendAction == null && !row.basePaymentReceived
+             && !row.pricingReviewRequired && recordValue.NTE_Approval_Email_Sent_At__c == null
+-            ? 'Select the payment method (Stripe or Bank transfer) on the booking to enable the payment request.' : null;
++            ? 'Set the payment method on the full record to enable the payment request.' : null;
+         row.financeStatus = financeStatus(row);
+         row.staffStatus = recordValue.NTE_Staff_Update_Completed_At__c == null ? 'Update required' : 'Complete';
+         row.logoUpdateProvided = recordValue.NTE_Logo_Update_Provided__c;
+@@ -1389,6 +1392,7 @@ public with sharing class NTE_MasterPanelController {
+             row.logisticsStatus = 'Not confirmed';
+         }
+         row.canConfirmNoHeavyVehicle = recordValue.NTE_Heavy_Vehicle_Required__c != 'No'
++            && recordValue.NTE_Heavy_Vehicle_Required__c != 'Yes'
+             && recordValue.NTE_Heavy_Vehicle_Update_Completed_At__c == null;
+         row.complete = isComplete(recordValue);
+         if (row.complete) row.stage = 'Completed';
+diff --git a/force-app/main/default/classes/NTE_MasterPanelControllerTest.cls b/force-app/main/default/classes/NTE_MasterPanelControllerTest.cls
+index 84bc225..3aea78b 100644
+--- a/force-app/main/default/classes/NTE_MasterPanelControllerTest.cls
++++ b/force-app/main/default/classes/NTE_MasterPanelControllerTest.cls
+@@ -807,13 +807,17 @@ private class NTE_MasterPanelControllerTest {
+             false, false, true, true, false, 'Not known yet', null, System.now());
+         Opportunity supplied = booking(accountRecord.Id, openStage, 'Vehicle details supplied', 'NTE-MP-LOGISTICS-SUPPLIED', 100,
+             false, false, true, true, false, 'Yes', System.now(), System.now());
+-        insert new List<Opportunity>{unknown, supplied};
++        Opportunity expected = booking(accountRecord.Id, openStage, 'Vehicle coming, details pending', 'NTE-MP-LOGISTICS-EXPECTED', 100,
++            false, false, true, true, false, 'Yes', null, System.now());
++        insert new List<Opportunity>{unknown, supplied, expected};
+ 
+         NTE_MasterPanelController.DashboardResponse outstanding = NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'HEAVY_DUE', 25, 0);
+         Map<Id, NTE_MasterPanelController.DashboardRow> rowsById = new Map<Id, NTE_MasterPanelController.DashboardRow>();
+         for (NTE_MasterPanelController.DashboardRow row : outstanding.rows) rowsById.put(row.recordId, row);
+         System.assertEquals(true, rowsById.get(unknown.Id).canConfirmNoHeavyVehicle, 'An unconfirmed answer without details can be confirmed as No.');
+         System.assert(!rowsById.containsKey(supplied.Id), 'A completed heavy update is not outstanding.');
++        System.assertEquals(false, rowsById.get(expected.Id).canConfirmNoHeavyVehicle,
++            'An applicant who said Yes stays outstanding for their vehicle details and is not offered No from the panel.');
+ 
+         // Each dashboard read costs dozens of count queries; keep the post-confirmation reads in a fresh limit context.
+         Test.startTest();
+@@ -834,15 +838,18 @@ private class NTE_MasterPanelControllerTest {
+         System.assertEquals(false, stillOutstanding, 'The confirmed booking leaves Logistics outstanding.');
+         System.assertEquals(true, nowComplete, 'Confirming No lets an otherwise finished booking complete.');
+ 
+-        // Guards: already No, details already supplied, not an Opportunity.
+-        for (Id blocked : new List<Id>{unknown.Id, supplied.Id}) {
++        // Guards: already No, details already supplied, the applicant said Yes, not an Opportunity.
++        Map<Id, String> refusals = new Map<Id, String>{
++            unknown.Id => 'already recorded', supplied.Id => 'already been supplied', expected.Id => 'said a heavy vehicle is coming'};
++        for (Id blocked : refusals.keySet()) {
+             try {
+                 NTE_MasterPanelController.confirmNoHeavyVehicle(blocked);
+                 System.assert(false, 'Expected the confirmation to be refused for ' + blocked);
+             } catch (AuraHandledException refusal) {
+-                System.assert(refusal.getMessage().contains(blocked == unknown.Id ? 'already recorded' : 'already been supplied'), refusal.getMessage());
++                System.assert(refusal.getMessage().contains(refusals.get(blocked)), refusal.getMessage());
+             }
+         }
++        System.assertEquals('Yes', [SELECT NTE_Heavy_Vehicle_Required__c FROM Opportunity WHERE Id = :expected.Id].NTE_Heavy_Vehicle_Required__c);
+         try {
+             NTE_MasterPanelController.confirmNoHeavyVehicle(accountRecord.Id);
+             System.assert(false, 'Expected an Account Id to be refused.');
+diff --git a/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.html b/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.html
+index 5bf64c5..3bbf5a5 100644
+--- a/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.html
++++ b/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.html
+@@ -234,7 +234,7 @@
+                                         <footer class="requirement-card-actions">
+                                             <div class="requirement-request-status">
+                                                 <template lwc:if={row.contactIssue}><p class="request-error">{row.contactIssue}</p></template>
+-                                                <template lwc:if={row.financeActionIssue}><p class="request-error" role="status">{row.financeActionIssue}</p></template>
++                                                <template lwc:if={row.financeActionIssue}><p class="request-error">{row.financeActionIssue}</p></template>
+                                                 <template lwc:if={row.bookingEmailPending}><p class="request-status" role="status">Booking email queued</p></template>
+                                                 <template lwc:if={row.approvalEmailError}><p class="request-error" role="status">{row.approvalEmailError}</p></template>
+                                                 <template lwc:if={row.topUpEmailPending}><p class="request-status" role="status">Staff top-up email queued</p></template>
+diff --git a/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.js b/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.js
+index b6e412c..57c5c13 100644
+--- a/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.js
++++ b/force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.js
+@@ -764,13 +764,25 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
+         if (this.panelControlsDisabled) return;
+         const opportunityId = event.currentTarget.dataset.id;
+         if (!opportunityId) return;
+-        const confirmed = await LightningConfirm.open({
+-            label: 'No heavy vehicle',
+-            message: 'Record that this booking brings no heavy vehicle or large equipment? '
+-                + 'It leaves Logistics outstanding, and the applicant can still submit vehicle details later.',
+-            theme: 'warning'
+-        });
+-        if (!confirmed) return;
++        // Hold live refreshes while the dialog is open, as the milestone actions do, so a refresh
++        // started by a focus change cannot make the confirmed save return without a message.
++        this.isActionPending = true;
++        let confirmed = false;
++        try {
++            confirmed = await LightningConfirm.open({
++                label: 'No heavy vehicle',
++                message: 'Record that this booking will not bring a heavy vehicle or large equipment? '
++                    + 'It will move out of Logistics outstanding. Vehicle details sent later will still be applied.',
++                theme: 'warning'
++            });
++        } catch (error) {
++            if (!this.isDisconnected) {
++                this.dispatchEvent(new ShowToastEvent({title: 'Update needs attention', message: this.readError(error), variant: 'error', mode: 'sticky'}));
++            }
++        } finally {
++            this.isActionPending = false;
++        }
++        if (!confirmed || this.isDisconnected) return;
+         await this.saveFinanceChange(opportunityId, async () => {
+             const result = await confirmNoHeavyVehicle({opportunityId});
+             if (!this.isDisconnected) this.dispatchEvent(new ShowToastEvent({title: 'No heavy vehicle', message: result.message, variant: 'success'}));
+diff --git a/tests/panel-ui-stress.test.js b/tests/panel-ui-stress.test.js
+index a1eeb47..3527d8f 100644
+--- a/tests/panel-ui-stress.test.js
++++ b/tests/panel-ui-stress.test.js
+@@ -170,7 +170,8 @@ test('a scheduled refresh cannot replace the panel while a draft opens', async (
+ 
+ for (const [method, dataset, endpoint] of [
+     ['handleLeadDecision', { id: '00Qbooking', decision: 'APPLICATION_REJECTED' }, 'updateLeadDecision'],
+-    ['handleMilestone', { id: '006booking', action: 'PAYMENT_RECEIVED' }, 'recordReviewedPayment']
++    ['handleMilestone', { id: '006booking', action: 'PAYMENT_RECEIVED' }, 'recordReviewedPayment'],
++    ['handleConfirmNoHeavyVehicle', { id: '006booking' }, 'confirmNoHeavyVehicle']
+ ]) {
+     test(`${method} locks before confirmation and submits once`, async () => {
+         const confirmation = deferred(); let confirms = 0; let writes = 0;
+-- 
+2.39.1.windows.1
+

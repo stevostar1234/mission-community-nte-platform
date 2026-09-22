@@ -1,0 +1,177 @@
+From 95e0210feef1e46b4bf6951e3e45969b3d36c84d Mon Sep 17 00:00:00 2001
+From: stevostar1234 <skybasteven@gmail.com>
+Date: Tue, 22 Sep 2026 20:25:03 +0100
+Subject: [PATCH] Second-opinion follow-up for the intake, top-up and dispatch
+ guards
+
+- tests/forms.test.js asserted the old first-purchase expression, so the
+  normal local suite failed on this branch; it now asserts the durable
+  evidence rule and the held-for-repair branch instead.
+- The cleared-quantity rejection no longer tells staff to "reprocess" the
+  submission: no such action exists and the owner chose manual correction
+  or one fresh form (14 September audit). A negative count typed by hand
+  is treated like a blank one.
+- Retry on a genuinely Sent dispatch returns the accepted-email guidance
+  instead of pointing at a blank Send Error.
+- A hand-queued dispatch with an acceptance timestamp is restored to Sent
+  rather than Skipped, so the panel's last-sent date and the Status-based
+  duplicate guards still see it.
+- New test with a preparation reminder, a kind the previous code really did
+  resend after a relabel; the colleague test user now uses the runner's
+  profile like NTEUpdateIssuesPanelTest instead of the org's oldest user.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ .../classes/NTEEmailDispatchService.cls       |  6 ++---
+ .../classes/NTEEmailDispatchServiceTest.cls   | 27 ++++++++++++++++++-
+ .../classes/NTEInboundLeadServiceTest.cls     | 11 +++-----
+ .../classes/NTEUpdateSubmissionService.cls    |  7 ++---
+ .../NTEUpdateSubmissionServiceTest.cls        |  4 ++-
+ tests/forms.test.js                           |  5 +++-
+ 6 files changed, 44 insertions(+), 16 deletions(-)
+
+diff --git a/force-app/main/default/classes/NTEEmailDispatchService.cls b/force-app/main/default/classes/NTEEmailDispatchService.cls
+index ce0e38e..aff9aaa 100644
+--- a/force-app/main/default/classes/NTEEmailDispatchService.cls
++++ b/force-app/main/default/classes/NTEEmailDispatchService.cls
+@@ -292,9 +292,9 @@ public with sharing class NTEEmailDispatchService {
+         Map<String, List<Id>> idsByKind = new Map<String, List<Id>>();
+         Integer acceptedCount = 0;
+         for (NTE_Email_Dispatch__c dispatch : failed) {
+-            if (dispatch.Status__c != 'Failed') continue;
+             // A status relabelled by hand cannot outrank the retained acceptance timestamp.
+             if (alreadyAccepted(dispatch)) { acceptedCount++; continue; }
++            if (dispatch.Status__c != 'Failed') continue;
+             if (!idsByKind.containsKey(dispatch.Kind__c)) idsByKind.put(dispatch.Kind__c, new List<Id>());
+             idsByKind.get(dispatch.Kind__c).add(targetId(dispatch));
+         }
+@@ -414,8 +414,8 @@ public with sharing class NTEEmailDispatchService {
+         Set<String> sendingTargets = new Set<String>();
+         for (NTE_Email_Dispatch__c dispatch : dispatches) {
+             if (dispatch.Sent_At__c != null) {
+-                // Queued by hand after acceptance: resolve the queue entry without a second send.
+-                dispatch.Status__c = 'Skipped';
++                // Queued by hand after acceptance: restore the accepted status without a second send.
++                dispatch.Status__c = 'Sent';
+                 dispatch.Error__c = ALREADY_ACCEPTED_GUIDANCE;
+                 continue;
+             }
+diff --git a/force-app/main/default/classes/NTEEmailDispatchServiceTest.cls b/force-app/main/default/classes/NTEEmailDispatchServiceTest.cls
+index 55d3597..70bd549 100644
+--- a/force-app/main/default/classes/NTEEmailDispatchServiceTest.cls
++++ b/force-app/main/default/classes/NTEEmailDispatchServiceTest.cls
+@@ -264,12 +264,37 @@ private class NTEEmailDispatchServiceTest {
+         Test.stopTest();
+         System.assert(!NTEEmailDispatchService.renderedHtml.containsKey(selected), 'No email is rendered for an accepted dispatch.');
+         NTE_Email_Dispatch__c resolved = dispatchFor(selected);
+-        System.assertEquals('Skipped', resolved.Status__c);
++        System.assertEquals('Sent', resolved.Status__c, 'The accepted status is restored, not replaced by Skipped.');
+         System.assertEquals(acceptedAt, resolved.Sent_At__c);
+         System.assert(resolved.Error__c.contains('Forward the original email'));
+         System.assertEquals(1, [SELECT COUNT() FROM NTE_Email_Dispatch__c]);
+     }
+ 
++    @IsTest
++    static void acceptedReminderRelabelledFailedIsNotSentAgain() {
++        configure();
++        Id selected = bookingId('EXHIBITOR');
++        NTEEmailDispatchService.DraftDTO draft = NTEEmailDispatchService.buildDraft('STAFF_DUE', new List<Id>{selected});
++        NTEEmailDispatchService.queueMessages(requestFor(draft, new Set<Id>{selected}));
++        List<Id> dispatchIds = dispatchIdsFor(selected);
++        NTEEmailDispatchService.processQueued(dispatchIds, true);
++        NTE_Email_Dispatch__c accepted = dispatchFor(selected);
++        System.assertEquals('Sent', accepted.Status__c);
++        Datetime acceptedAt = accepted.Sent_At__c;
++        System.assert(NTEEmailDispatchService.retryDispatch(accepted.Id).message.contains('already accepted'),
++            'Retrying a sent email explains why nothing was queued.');
++
++        update new NTE_Email_Dispatch__c(Id = accepted.Id, Status__c = 'Failed', Error__c = 'Recipient reported a bounce.');
++        NTEEmailDispatchService.renderedHtml.clear();
++        Test.startTest();
++        NTEEmailDispatchService.QueueResponse retry = NTEEmailDispatchService.retryFailed(dispatchIds);
++        Test.stopTest();
++        System.assertEquals(0, retry.queuedCount, 'An accepted reminder is not queued again after a relabel.');
++        System.assert(!NTEEmailDispatchService.renderedHtml.containsKey(selected), 'No second reminder is rendered.');
++        System.assertEquals(acceptedAt, dispatchFor(selected).Sent_At__c);
++        System.assertEquals(1, [SELECT COUNT() FROM NTE_Email_Dispatch__c WHERE Opportunity__c = :selected]);
++    }
++
+     @IsTest
+     static void failedRetryDoesNotSilentlySwitchToANewRecipient() {
+         configure();
+diff --git a/force-app/main/default/classes/NTEInboundLeadServiceTest.cls b/force-app/main/default/classes/NTEInboundLeadServiceTest.cls
+index 8ae2570..6f25afb 100644
+--- a/force-app/main/default/classes/NTEInboundLeadServiceTest.cls
++++ b/force-app/main/default/classes/NTEInboundLeadServiceTest.cls
+@@ -65,15 +65,12 @@ private class NTEInboundLeadServiceTest {
+             NTE_Email_Error__c FROM Lead WHERE Id = :leadId];
+     }
+ 
+-    /** Another active user for ownership tests; created only when the org has none besides the runner. */
++    /** Another active user for ownership tests, with the runner's profile so it can own Leads in any org. */
+     private static User colleague() {
+-        List<User> others = [SELECT Id, Username FROM User WHERE IsActive = true AND UserType = 'Standard'
+-            AND Id != :UserInfo.getUserId() ORDER BY CreatedDate LIMIT 1];
+-        if (!others.isEmpty()) return others[0];
+-        Profile standard = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
+         User created = new User(Alias = 'ntecol', Email = 'nte-colleague@example.invalid', EmailEncodingKey = 'UTF-8',
+-            FirstName = 'NTE', LastName = 'Colleague', LanguageLocaleKey = 'en_US', LocaleSidKey = 'en_GB', ProfileId = standard.Id,
+-            TimeZoneSidKey = 'Europe/London', Username = 'nte-colleague-' + System.currentTimeMillis() + '@example.invalid');
++            FirstName = 'NTE', LastName = 'Colleague', LanguageLocaleKey = 'en_US', LocaleSidKey = 'en_GB',
++            ProfileId = UserInfo.getProfileId(), TimeZoneSidKey = 'Europe/London',
++            Username = 'nte.colleague.' + UserInfo.getOrganizationId() + '.' + System.now().getTime() + '@example.invalid');
+         System.runAs(new User(Id = UserInfo.getUserId())) { insert created; }
+         return created;
+     }
+diff --git a/force-app/main/default/classes/NTEUpdateSubmissionService.cls b/force-app/main/default/classes/NTEUpdateSubmissionService.cls
+index d7ec765..9074f33 100644
+--- a/force-app/main/default/classes/NTEUpdateSubmissionService.cls
++++ b/force-app/main/default/classes/NTEUpdateSubmissionService.cls
+@@ -473,9 +473,10 @@ public with sharing class NTEUpdateSubmissionService {
+                 if (String.isBlank(source.Top_Up_Staff_Names__c)) {
+                     return 'Enter the top-up staff names. No Opportunity was changed.';
+                 }
+-                if (existingTopUpCount == 0 && hasAcceptedTopUpPurchase(existing)) {
+-                    return 'This booking has top-up purchase or payment records but no saved top-up quantity. '
+-                        + 'Restore the top-up quantity on the booking, then reprocess this submission. No Opportunity was changed.';
++                if (existingTopUpCount <= 0 && hasAcceptedTopUpPurchase(existing)) {
++                    return 'This booking has top-up payment records but no top-up staff count. No Opportunity was changed. '
++                        + 'If the top-up was bought, enter its staff count on the booking, then add these names on the booking '
++                        + 'or ask the organiser to send the staff form again. If it was not bought, clear the top-up payment fields first.';
+                 }
+                 if (topUpCount < existingTopUpCount) {
+                     return 'Existing top-up places cannot be reduced with this form. Contact the NTE team to change or cancel paid places.';
+diff --git a/force-app/main/default/classes/NTEUpdateSubmissionServiceTest.cls b/force-app/main/default/classes/NTEUpdateSubmissionServiceTest.cls
+index 24dbc10..9e58d55 100644
+--- a/force-app/main/default/classes/NTEUpdateSubmissionServiceTest.cls
++++ b/force-app/main/default/classes/NTEUpdateSubmissionServiceTest.cls
+@@ -1561,7 +1561,9 @@ private class NTEUpdateSubmissionServiceTest {
+ 
+         Lead rejected = [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id = :repeatPurchase.Id];
+         System.assertEquals('Failed', rejected.NTE_Update_Status__c);
+-        System.assert(rejected.NTE_Update_Error__c.contains('no saved top-up quantity'), rejected.NTE_Update_Error__c);
++        System.assert(rejected.NTE_Update_Error__c.contains('no top-up staff count'), rejected.NTE_Update_Error__c);
++        System.assert(!rejected.NTE_Update_Error__c.containsIgnoreCase('reprocess'),
++            'Staff are pointed to manual correction or a fresh form; there is no reprocess action.');
+         System.assertEquals(1, [SELECT COUNT() FROM Lead WHERE Id = :namesOnly.Id AND IsDeleted = true ALL ROWS],
+             'The names-only correction is still applied.');
+         Opportunity saved = [SELECT NTE_Total_Staff_Count__c, NTE_Stand_Colleagues__c, NTE_Top_Up_Staff_Required__c,
+diff --git a/tests/forms.test.js b/tests/forms.test.js
+index f1e6d66..8e77f92 100644
+--- a/tests/forms.test.js
++++ b/tests/forms.test.js
+@@ -701,7 +701,10 @@ for (const [target, source] of [["NTE_Delivery_Window__c", "Delivery_Window__c"]
+   assert(updateService.includes(`target.${target} = source.${source};`), `${target}: logistics replacement must apply supplied values including blanks`);
+ }
+ assert(updateService.includes("existingTopUpCount > 0 && topUpCount > existingTopUpCount"), "Salesforce must reject a second increase after the first accepted top-up purchase");
+-assert(updateService.includes("previousTopUpCount == 0 && requestedTopUpCount > 0"), "only the first positive purchase may initialize top-up finance milestones");
++assert(updateService.includes("!acceptedPurchase && requestedTopUpCount > 0"), "only the first positive purchase may initialize top-up finance milestones");
++const acceptedPurchaseRule = updateService.match(/private static Boolean hasAcceptedTopUpPurchase\(Opportunity existing\) \{([\s\S]*?)\n    \}/);
++assert(acceptedPurchaseRule && ["NTE_Top_Up_Staff_Count__c", "NTE_Top_Up_Staff_Total__c", "NTE_Top_Up_Invoice_Required__c", "NTE_Top_Up_Invoice_Provided__c", "NTE_Top_Up_Payment_Received__c", "NTE_Top_Up_Payment_Requested_At__c"].every(field => acceptedPurchaseRule[1].includes(`existing.${field}`)), "an accepted top-up is recognised from durable request, invoice and receipt evidence, not the editable quantity alone");
++assert(updateService.includes("existingTopUpCount <= 0 && hasAcceptedTopUpPurchase(existing)"), "a positive top-up against cleared purchase history is held for staff repair");
+ assert(updateService.includes("FOR UPDATE") && updateService.includes("existing.put(fieldName, updateRecord.get(fieldName))"), "top-up validation must use locked booking data and the accepted state of earlier submissions in the batch");
+ assert(updateService.includes("NTEBookingContactService.primaryContacts"), "update acknowledgements must use the booking's Primary Contact");
+ assert(updateService.includes("setTargetObjectId(mergeLeadId)") && updateService.includes("setTreatTargetObjectAsRecipient(false)")
+-- 
+2.39.1.windows.1
+
