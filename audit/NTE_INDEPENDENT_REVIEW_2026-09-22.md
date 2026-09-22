@@ -8,7 +8,7 @@
 
 No blocking defect was found. The workflow is implemented as agreed: expressions of interest and applications route and acknowledge themselves, conversion is silent and guarded, the three finance refiners are mutually exclusive and exhaustive, the supplementary update forms match bookings by exact reference and surface failures in **Update issues**, and staff can progress every stage from the Master Panel or the record page. The browser-side pricing catalogue and the server-side allowlist are in step (`NTE27-2026-09-13-VAT`).
 
-Nineteen findings were recorded. Six pull requests fix the ones that are defects or missing fallbacks; the rest are limitations or business decisions for the client, listed in §4. The repository and the sandbox match: a full metadata retrieval (617 components) showed only formatting differences, and the Apex, component, permission-set class access and custom-metadata values are identical.
+Nineteen findings were recorded. Seven pull requests fix the ones that are defects or missing fallbacks (one of them, PR #8, waits on a sandbox housekeeping step); the rest are limitations or business decisions for the client, listed in §4. The repository and the sandbox match: a full metadata retrieval (617 components) showed only formatting differences, and the Apex, component, permission-set class access and custom-metadata values are identical.
 
 | Area | Outcome |
 | --- | --- |
@@ -29,7 +29,9 @@ All branches start `review/`; nothing was merged or deployed. Each Salesforce PR
 | platform #3 | Master Panel fallbacks: blank payment method hint and "No heavy vehicle" action | H, I | Succeeded — 3 components, 135 tests, coverage 96.6% |
 | platform #4 + forms #1 | Harden the public forms: disabled-until-ready submit, website addresses, pricing default | K (O03) | Local form suites; no org metadata |
 | platform #5 | Run every suite from `npm test`; keep the working tree LF on Windows (O10) | O, tooling | Local; no org metadata |
-| platform #6 | Match the space-position capacity (O05); free-space flag editable as manual fallback | F, G | See PR for the check-only result |
+| platform #6 | Make the free-space confirmation editable as a manual fallback | G | See PR for the check-only result |
+| platform #7 | Add the 22 September independent implementation review | — | Documentation |
+| platform #8 | Give the converted space-position note the Lead field's capacity (O05) | F | **Blocked**: the API refuses Text → Long Text Area while recycled sandbox records hold values (12 found); needs the Recycle Bin emptied or a one-time manual type change (client decision) |
 
 ## 3. Findings
 
@@ -42,7 +44,7 @@ Severity: **Medium** = data loss or a stage the team cannot progress without an 
 | C | Low | The top-up guard used the editable quantity as proof that no purchase existed; clearing it let a later form reset paid history and re-increment attendance. (O02) | `NTEUpdateSubmissionService` | Fixed, PR #2 (durable-evidence predicate; names-only correction leaves an accepted purchase untouched) |
 | D | Low | Dispatch-record retry checked only `Status='Failed'`; an accepted email relabelled Failed could be resent and its timestamp replaced. (O07) | `NTEEmailDispatchService` | Fixed, PR #2 (shared accepted-send predicate in history, retry and worker) |
 | E | Low | An application keyed in natively had no booking reference, so conversion produced a booking that emails and update forms refused. (O08) | `NTEInboundLeadService` | Fixed, PR #2 (reference generated at intake in the forms' format; supplied references kept; no back-fill) |
-| F | Low | `Exhibitor_Space_Position__c` is LongTextArea(1000) on Lead and Text(255) on Opportunity; a valid long note blocked conversion. (O05) | generator | Fixed, PR #6 |
+| F | Low | `Exhibitor_Space_Position__c` is LongTextArea(1000) on Lead and Text(255) on Opportunity; a valid long note blocked conversion. (O05) The public form does not collect the field, so only native entry is exposed. | generator | Fix ready in PR #8; deployment needs the sandbox Recycle Bin emptied or a manual type change first |
 | G | Medium | `NTE_Free_Space_Confirmed__c` was read-only for NTE roles and locked on the record page, so a complimentary booking confirmed outside the email path could not be progressed without an administrator. | generator (permission sets, record page) | Fixed, PR #6 (reviewer may decline) |
 | H | Low | A billable booking with a blank payment method showed no request button in Requirements and no reason. | `NTE_MasterPanelController`, `nteMasterPanel` | Fixed, PR #3 (hint) |
 | I | Medium | A booking whose logistics answer is blank or "Not known yet" sat in Logistics outstanding with no route to "No" except editing the full record; it can never complete. | Master Panel | Fixed, PR #3 ("No heavy vehicle" action, refused when vehicle details exist) |
@@ -74,6 +76,7 @@ Severity: **Medium** = data loss or a stage the team cannot progress without an 
 4. **Default event (S):** keep "highest year wins", or pin the working edition in `NTE_Routing_Config__mdt`.
 5. **Stripe re-pricing hold (M):** acceptable for the interim Stripe link process; revisit in the connected-app design.
 6. **Receipt in Requirements (J):** the reviewer confirmed the approved refiner rule; no change proposed.
+7. **Space-position capacity (F, PR #8):** empty the MMUAT Recycle Bin (12 recycled bookings hold the field) and re-validate, or change the field type once by hand in Setup, or ask for an additive field instead.
 
 ## 5. Outside NTE scope — volunteer application (for information)
 
