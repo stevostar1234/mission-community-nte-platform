@@ -12,6 +12,7 @@ import updateLeadDecision from '@salesforce/apex/NTE_MasterPanelController.updat
 import updateMilestone from '@salesforce/apex/NTE_MasterPanelController.updateMilestone';
 import getPaymentReceiptPreview from '@salesforce/apex/NTE_MasterPanelController.getPaymentReceiptPreview';
 import recordReviewedPayment from '@salesforce/apex/NTE_MasterPanelController.recordReviewedPayment';
+import confirmNoHeavyVehicle from '@salesforce/apex/NTE_MasterPanelController.confirmNoHeavyVehicle';
 import setRequirement from '@salesforce/apex/NTEFinanceService.setRequirement';
 import setJoiningInstructions from '@salesforce/apex/NTEFinanceService.setJoiningInstructions';
 import sendFinanceAction from '@salesforce/apex/NTEFinanceService.sendFinanceAction';
@@ -339,7 +340,7 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
 
     get hasRowActions() {
         if (this.isUpdateIssuesView) return false;
-        return this.isCompletedView || this.rows.some(row => row.showInterestDecision || row.showApplicationDecision || row.canSendBase || row.canSendTopUp || row.showMarkPaid || row.showMarkTopUpPaid || row.bookingEmailPending || row.topUpEmailPending || row.approvalEmailError || row.topUpEmailError);
+        return this.isCompletedView || this.rows.some(row => row.showInterestDecision || row.showApplicationDecision || row.canSendBase || row.canSendTopUp || row.showMarkPaid || row.showMarkTopUpPaid || row.showConfirmNoHeavyVehicle || row.bookingEmailPending || row.topUpEmailPending || row.approvalEmailError || row.topUpEmailError);
     }
 
     get showOwnerColumn() { return !this.isFinanceView; }
@@ -604,6 +605,7 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
             showMarkQuote: false,
             showMarkInvoice: false,
             showMarkPaid: showPaymentActions && row.canMarkPaid,
+            showConfirmNoHeavyVehicle: this.isHeavyView && isOpportunity && Boolean(row.canConfirmNoHeavyVehicle),
             showMarkTopUpInvoice: false,
             showMarkTopUpPaid: showPaymentActions && row.canMarkTopUpPaid,
             showInterestDecision: this.isInterestView && isInterest,
@@ -755,6 +757,26 @@ export default class NteMasterPanel extends NavigationMixin(LightningElement) {
                 return row?.bookingEmailPending ? true : undefined;
             },
             savedMessage: 'The payment email request is recorded. Check its current status.'
+        });
+    }
+    async handleConfirmNoHeavyVehicle(event) {
+        event.stopPropagation();
+        if (this.panelControlsDisabled) return;
+        const opportunityId = event.currentTarget.dataset.id;
+        if (!opportunityId) return;
+        const confirmed = await LightningConfirm.open({
+            label: 'No heavy vehicle',
+            message: 'Record that this booking brings no heavy vehicle or large equipment? '
+                + 'It leaves Logistics outstanding, and the applicant can still submit vehicle details later.',
+            theme: 'warning'
+        });
+        if (!confirmed) return;
+        await this.saveFinanceChange(opportunityId, async () => {
+            const result = await confirmNoHeavyVehicle({opportunityId});
+            if (!this.isDisconnected) this.dispatchEvent(new ShowToastEvent({title: 'No heavy vehicle', message: result.message, variant: 'success'}));
+        }, {
+            reconcileSaved: row => row ? row.logisticsStatus === 'Not required' : undefined,
+            savedMessage: 'The logistics requirement is recorded as not required.'
         });
     }
     async saveFinanceChange(id, save, {onSaved, reconcileSaved, savedMessage, recoverPolling = false} = {}) {

@@ -234,6 +234,7 @@
                                         <footer class="requirement-card-actions">
                                             <div class="requirement-request-status">
                                                 <template lwc:if={row.contactIssue}><p class="request-error">{row.contactIssue}</p></template>
+                                                <template lwc:if={row.financeActionIssue}><p class="request-error" role="status">{row.financeActionIssue}</p></template>
                                                 <template lwc:if={row.bookingEmailPending}><p class="request-status" role="status">Booking email queued</p></template>
                                                 <template lwc:if={row.approvalEmailError}><p class="request-error" role="status">{row.approvalEmailError}</p></template>
                                                 <template lwc:if={row.topUpEmailPending}><p class="request-status" role="status">Staff top-up email queued</p></template>
@@ -474,6 +475,7 @@
 <template lwc:if={row.canSendTopUp}><button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP" onclick={handleFinanceAction} disabled={row.actionDisabled}>Send Stripe link <span class="action-detail">Staff top-up</span></button></template>
 <template lwc:if={row.showMarkPaid}><button class="table-action" type="button" data-id={row.recordId} data-action="PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Booking payment received</button></template>
 <template lwc:if={row.showMarkTopUpPaid}><button class="table-action" type="button" data-id={row.recordId} data-action="TOP_UP_PAYMENT_RECEIVED" onclick={handleMilestone} disabled={row.actionDisabled}>Staff top-up payment received</button></template>
+<template lwc:if={row.showConfirmNoHeavyVehicle}><button class="table-action" type="button" data-id={row.recordId} onclick={handleConfirmNoHeavyVehicle} disabled={row.actionDisabled}>No heavy vehicle <span class="action-detail">Confirm logistics not required</span></button></template>
 <template lwc:if={isCompletedView}><lightning-input type="checkbox" label="Final joining instructions sent" checked={row.joiningSent} data-id={row.recordId} onchange={handleJoiningInstructions} onclick={handleControlClick} disabled={row.actionDisabled}></lightning-input></template>
                                             </td>
                                             </template>

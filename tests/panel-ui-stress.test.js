@@ -1168,3 +1168,25 @@ test('an empty Update issues view states global scope while ordinary queues reta
     assert.equal(component.emptyQueueTitle,'No records in this queue');
     assert.equal(component.emptyQueueDetail,'Nothing matches the selected event, time and owner filters.');
 });
+
+test('logistics fallback and the payment-method hint follow their views', () => {
+    const {component} = mount();
+    const booking = {recordId: 'booking', objectApiName: 'Opportunity', canConfirmNoHeavyVehicle: true, financeActionIssue: 'Select the payment method'};
+    component.viewKey = 'HEAVY_DUE';
+    const row = component.decorateRow(booking);
+    assert.equal(row.showConfirmNoHeavyVehicle, true);
+    assert.equal(row.financeActionIssue, 'Select the payment method');
+    component.rows = [row];
+    assert.equal(component.hasRowActions, true, 'Logistics outstanding renders its action column');
+    component.rows = [component.decorateRow({...booking, canConfirmNoHeavyVehicle: false})];
+    assert.equal(component.hasRowActions, false, 'no action column when nothing can be confirmed');
+    assert.equal(component.decorateRow({...booking, canConfirmNoHeavyVehicle: false}).showConfirmNoHeavyVehicle, false);
+    assert.equal(component.decorateRow({...booking, objectApiName: 'Lead'}).showConfirmNoHeavyVehicle, false);
+    for (const viewKey of ['READINESS_DUE', 'STAFF_DUE', 'LOGO_DUE', 'COMPLETED', 'REQUIREMENTS']) {
+        component.viewKey = viewKey;
+        assert.equal(component.decorateRow(booking).showConfirmNoHeavyVehicle, false, viewKey + ' offers no logistics confirmation');
+    }
+    const html = fs.readFileSync(path.join(sourceRoot, 'force-app/main/default/lwc/nteMasterPanel/nteMasterPanel.html'), 'utf8');
+    assert(html.includes('{row.financeActionIssue}'), 'Requirements cards show why no request action is offered');
+    assert(html.includes('onclick={handleConfirmNoHeavyVehicle}'), 'the logistics confirmation is wired to its handler');
+});

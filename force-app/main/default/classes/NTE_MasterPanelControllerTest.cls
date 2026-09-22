@@ -800,6 +800,83 @@ private class NTE_MasterPanelControllerTest {
     }
 
     @IsTest
+    static void unknownLogisticsCanBeConfirmedAsNotRequiredFromThePanel() {
+        Account accountRecord = [SELECT Id FROM Account WHERE Name = 'NTE Master Panel Test Organisation' LIMIT 1];
+        String openStage = [SELECT MasterLabel FROM OpportunityStage WHERE IsActive = true AND IsClosed = false ORDER BY SortOrder LIMIT 1].MasterLabel;
+        Opportunity unknown = booking(accountRecord.Id, openStage, 'Phone-confirmed no vehicle', 'NTE-MP-LOGISTICS-PHONE', 100,
+            false, false, true, true, false, 'Not known yet', null, System.now());
+        Opportunity supplied = booking(accountRecord.Id, openStage, 'Vehicle details supplied', 'NTE-MP-LOGISTICS-SUPPLIED', 100,
+            false, false, true, true, false, 'Yes', System.now(), System.now());
+        insert new List<Opportunity>{unknown, supplied};
+
+        NTE_MasterPanelController.DashboardResponse outstanding = NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'HEAVY_DUE', 25, 0);
+        Map<Id, NTE_MasterPanelController.DashboardRow> rowsById = new Map<Id, NTE_MasterPanelController.DashboardRow>();
+        for (NTE_MasterPanelController.DashboardRow row : outstanding.rows) rowsById.put(row.recordId, row);
+        System.assertEquals(true, rowsById.get(unknown.Id).canConfirmNoHeavyVehicle, 'An unconfirmed answer without details can be confirmed as No.');
+        System.assert(!rowsById.containsKey(supplied.Id), 'A completed heavy update is not outstanding.');
+
+        Test.startTest();
+        NTE_MasterPanelController.ActionResult confirmed = NTE_MasterPanelController.confirmNoHeavyVehicle(unknown.Id);
+        Test.stopTest();
+        System.assertEquals(true, confirmed.success);
+        Opportunity saved = [SELECT NTE_Heavy_Vehicle_Required__c, NTE_Heavy_Vehicle_Update_Completed_At__c FROM Opportunity WHERE Id = :unknown.Id];
+        System.assertEquals('No', saved.NTE_Heavy_Vehicle_Required__c);
+        System.assertEquals(null, saved.NTE_Heavy_Vehicle_Update_Completed_At__c, 'No vehicle details are invented.');
+        Boolean stillOutstanding = false;
+        Boolean nowComplete = false;
+        for (NTE_MasterPanelController.DashboardRow row : NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'HEAVY_DUE', 25, 0).rows) {
+            if (row.recordId == unknown.Id) stillOutstanding = true;
+        }
+        for (NTE_MasterPanelController.DashboardRow row : NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'COMPLETED', 25, 0).rows) {
+            if (row.recordId == unknown.Id) nowComplete = true;
+        }
+        System.assertEquals(false, stillOutstanding, 'The confirmed booking leaves Logistics outstanding.');
+        System.assertEquals(true, nowComplete, 'Confirming No lets an otherwise finished booking complete.');
+
+        // Guards: already No, details already supplied, not an Opportunity.
+        for (Id blocked : new List<Id>{unknown.Id, supplied.Id}) {
+            try {
+                NTE_MasterPanelController.confirmNoHeavyVehicle(blocked);
+                System.assert(false, 'Expected the confirmation to be refused for ' + blocked);
+            } catch (AuraHandledException refusal) {
+                System.assert(refusal.getMessage().contains(blocked == unknown.Id ? 'already recorded' : 'already been supplied'), refusal.getMessage());
+            }
+        }
+        try {
+            NTE_MasterPanelController.confirmNoHeavyVehicle(accountRecord.Id);
+            System.assert(false, 'Expected an Account Id to be refused.');
+        } catch (AuraHandledException refusal) {
+            System.assert(refusal.getMessage().contains('Select an NTE Opportunity'), refusal.getMessage());
+        }
+        System.assertEquals('Yes', [SELECT NTE_Heavy_Vehicle_Required__c FROM Opportunity WHERE Id = :supplied.Id].NTE_Heavy_Vehicle_Required__c);
+    }
+
+    @IsTest
+    static void billableBookingWithoutPaymentMethodExplainsTheMissingRequestAction() {
+        Opportunity invoiceBooking = [SELECT Id, NTE_Payment_Method__c FROM Opportunity WHERE Name = 'Invoice booking' LIMIT 1];
+        System.assertEquals(null, invoiceBooking.NTE_Payment_Method__c);
+        NTE_MasterPanelController.DashboardRow before;
+        for (NTE_MasterPanelController.DashboardRow row : NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'REQUIREMENTS', 25, 0).rows) {
+            if (row.recordId == invoiceBooking.Id) before = row;
+        }
+        System.assertNotEquals(null, before, 'The billable booking waits in Requirements.');
+        System.assertEquals(null, before.baseSendAction);
+        System.assertEquals(false, before.canSendBase);
+        System.assert(before.financeActionIssue != null && before.financeActionIssue.contains('payment method'), 'Staff are told why no request action is offered.');
+
+        update new Opportunity(Id = invoiceBooking.Id, NTE_Payment_Method__c = 'Bank transfer');
+        Test.startTest();
+        NTE_MasterPanelController.DashboardRow after;
+        for (NTE_MasterPanelController.DashboardRow row : NTE_MasterPanelController.getDashboard('NTE2027', 'ALL', null, 'REQUIREMENTS', 25, 0).rows) {
+            if (row.recordId == invoiceBooking.Id) after = row;
+        }
+        Test.stopTest();
+        System.assertEquals('BANK', after.baseSendAction);
+        System.assertEquals(true, after.canSendBase);
+        System.assertEquals(null, after.financeActionIssue, 'The hint disappears once a payment method is recorded.');
+    }
+
+    @IsTest
     static void completionRequiresEveryApplicableMilestone() {
         Opportunity quoteBooking = [
             SELECT Id, NTE_Quote_Provided__c, NTE_Invoice_Provided__c, NTE_Payment_Received__c

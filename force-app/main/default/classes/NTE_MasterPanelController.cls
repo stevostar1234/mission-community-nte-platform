@@ -256,6 +256,8 @@ public with sharing class NTE_MasterPanelController {
         @AuraEnabled public String plannedStaffCount;
         @AuraEnabled public String additionalStaffCount;
         @AuraEnabled public String heavyVehicleRequirement;
+        @AuraEnabled public Boolean canConfirmNoHeavyVehicle;
+        @AuraEnabled public String financeActionIssue;
         @AuraEnabled public String vehicleType;
         @AuraEnabled public String vehicleRegistration;
         @AuraEnabled public String vehicleDimensions;
@@ -833,6 +835,52 @@ public with sharing class NTE_MasterPanelController {
         }
     }
 
+    /**
+     * Manual fallback for a booking whose logistics answer is blank, "Not known yet" or an
+     * unconfirmed "Yes" and for which no vehicle details were ever supplied. It records the
+     * same "No" the application form would have, so the booking can complete.
+     */
+    @AuraEnabled
+    public static ActionResult confirmNoHeavyVehicle(Id opportunityId) {
+        if (opportunityId == null || opportunityId.getSObjectType() != Opportunity.SObjectType) {
+            throw handled('Select an NTE Opportunity before confirming its logistics.');
+        }
+        try {
+            List<Opportunity> currentBookings = [
+                SELECT Id, NTE_Heavy_Vehicle_Required__c, NTE_Heavy_Vehicle_Update_Completed_At__c
+                FROM Opportunity
+                WHERE Id = :opportunityId
+                  AND RecordType.DeveloperName = 'NTE_Event_Opportunity'
+                  AND NTE_Event_Code__c != null
+                  AND NTE_Source_Form_Type__c IN :APPLICATION_TYPES
+                  AND (IsClosed = false OR IsWon = true)
+                WITH USER_MODE
+                LIMIT 1
+                FOR UPDATE
+            ];
+            if (currentBookings.isEmpty()) {
+                throw handled('This booking is no longer available in the panel. Refresh and select an active booking.');
+            }
+            Opportunity booking = currentBookings[0];
+            if (booking.NTE_Heavy_Vehicle_Required__c == 'No') {
+                throw handled('This booking is already recorded as having no heavy vehicle requirement.');
+            }
+            if (booking.NTE_Heavy_Vehicle_Update_Completed_At__c != null) {
+                throw handled('Vehicle details have already been supplied for this booking. Change the requirement on the full record if they no longer apply.');
+            }
+            Database.update(new Opportunity(Id = booking.Id, NTE_Heavy_Vehicle_Required__c = 'No'), AccessLevel.USER_MODE);
+            ActionResult result = new ActionResult();
+            result.success = true;
+            result.message = 'Logistics recorded as not required. The applicant can still submit vehicle details later if that changes.';
+            result.completedAt = System.now();
+            return result;
+        } catch (AuraHandledException handledException) {
+            throw handledException;
+        } catch (Exception exceptionValue) {
+            throw handled('The logistics requirement could not be updated. ' + safeMessage(exceptionValue));
+        }
+    }
+
     private static ActionResult saveMilestone(Id opportunityId, String actionName, Decimal expectedAmount) {
         if (opportunityId == null || opportunityId.getSObjectType() != Opportunity.SObjectType) {
             throw handled('Select an NTE Opportunity before updating a milestone.');
@@ -1324,6 +1372,10 @@ public with sharing class NTE_MasterPanelController {
             && (row.baseInvoiceRequired ? recordValue.NTE_Approval_Email_Sent_At__c == null : !recordValue.NTE_Free_Space_Confirmed__c)
             && row.baseSendAction != null && recordValue.NTE_Approval_Email_Status__c != 'Pending';
         row.canSendTopUp = !row.pricingReviewRequired && row.topUpInvoiceRequired && !row.topUpPaymentReceived && !row.topUpRequested;
+        // A billable booking with no recognised payment method has no request action; say why instead of showing nothing.
+        row.financeActionIssue = row.baseInvoiceRequired && row.baseSendAction == null && !row.basePaymentReceived
+            && !row.pricingReviewRequired && recordValue.NTE_Approval_Email_Sent_At__c == null
+            ? 'Select the payment method (Stripe or Bank transfer) on the booking to enable the payment request.' : null;
         row.financeStatus = financeStatus(row);
         row.staffStatus = recordValue.NTE_Staff_Update_Completed_At__c == null ? 'Update required' : 'Complete';
         row.logoUpdateProvided = recordValue.NTE_Logo_Update_Provided__c;
@@ -1336,6 +1388,8 @@ public with sharing class NTE_MasterPanelController {
         } else {
             row.logisticsStatus = 'Not confirmed';
         }
+        row.canConfirmNoHeavyVehicle = recordValue.NTE_Heavy_Vehicle_Required__c != 'No'
+            && recordValue.NTE_Heavy_Vehicle_Update_Completed_At__c == null;
         row.complete = isComplete(recordValue);
         if (row.complete) row.stage = 'Completed';
         row.modifiedAt = recordValue.LastModifiedDate;
