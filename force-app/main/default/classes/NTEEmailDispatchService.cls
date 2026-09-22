@@ -232,10 +232,21 @@ public with sharing class NTEEmailDispatchService {
         return resultFor(1, 0);
     }
 
+    private static final String ALREADY_ACCEPTED_GUIDANCE =
+        'This email was already accepted by Salesforce. Forward the original email if another copy is needed.';
+
+    /** Accepted-send evidence shared by history, retry and the worker: a sent status or a retained sent timestamp. */
+    @TestVisible
+    private static Boolean alreadyAccepted(NTE_Email_Dispatch__c dispatch) {
+        return dispatch.Status__c == 'Sent' || dispatch.Sent_At__c != null;
+    }
+
     @AuraEnabled
     public static QueueResponse retryDispatch(Id dispatchId) {
         QueueResponse result = retryFailed(new List<Id>{dispatchId});
-        if (result.queuedCount == 0) result.message = 'Email not queued. Check the Send Error on this email record.';
+        if (result.queuedCount == 0 && result.message != ALREADY_ACCEPTED_GUIDANCE) {
+            result.message = 'Email not queued. Check the Send Error on this email record.';
+        }
         return result;
     }
 
@@ -257,7 +268,7 @@ public with sharing class NTEEmailDispatchService {
             item.createdAt = dispatch.CreatedDate;
             item.error = dispatch.Error__c;
             item.runId = dispatch.Run_Id__c;
-            item.canRetry = dispatch.Status__c == 'Failed';
+            item.canRetry = dispatch.Status__c == 'Failed' && !alreadyAccepted(dispatch);
             history.add(item);
         }
         return history;
@@ -279,8 +290,11 @@ public with sharing class NTEEmailDispatchService {
             Recipient__c, Event_Code__c, Status__c, Fingerprint__c, Link__c, Sent_At__c, Error__c
             FROM NTE_Email_Dispatch__c WHERE Id IN :ids WITH USER_MODE FOR UPDATE];
         Map<String, List<Id>> idsByKind = new Map<String, List<Id>>();
+        Integer acceptedCount = 0;
         for (NTE_Email_Dispatch__c dispatch : failed) {
             if (dispatch.Status__c != 'Failed') continue;
+            // A status relabelled by hand cannot outrank the retained acceptance timestamp.
+            if (alreadyAccepted(dispatch)) { acceptedCount++; continue; }
             if (!idsByKind.containsKey(dispatch.Kind__c)) idsByKind.put(dispatch.Kind__c, new List<Id>());
             idsByKind.get(dispatch.Kind__c).add(targetId(dispatch));
         }
@@ -292,7 +306,7 @@ public with sharing class NTEEmailDispatchService {
         List<NTE_Email_Dispatch__c> updates = new List<NTE_Email_Dispatch__c>();
         Set<String> queuedTargets = new Set<String>();
         for (NTE_Email_Dispatch__c dispatch : failed) {
-            if (dispatch.Status__c != 'Failed') continue;
+            if (dispatch.Status__c != 'Failed' || alreadyAccepted(dispatch)) continue;
             RecipientDTO recipient = recipientsByKind.get(dispatch.Kind__c).get(targetId(dispatch));
             String targetKey = dispatch.Kind__c + '|' + String.valueOf(targetId(dispatch));
             if (queuedTargets.contains(targetKey)) {
@@ -328,7 +342,9 @@ public with sharing class NTEEmailDispatchService {
                 throw handled('The email could not be queued. Its failed status has been retained.');
             }
         }
-        return resultFor(queuedIds.size(), ids.size() - queuedIds.size());
+        QueueResponse result = resultFor(queuedIds.size(), ids.size() - queuedIds.size());
+        if (queuedIds.isEmpty() && acceptedCount > 0) result.message = ALREADY_ACCEPTED_GUIDANCE;
+        return result;
     }
 
     private static void enqueue(List<Id> dispatchIds) {
@@ -397,6 +413,12 @@ public with sharing class NTEEmailDispatchService {
         List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
         Set<String> sendingTargets = new Set<String>();
         for (NTE_Email_Dispatch__c dispatch : dispatches) {
+            if (dispatch.Sent_At__c != null) {
+                // Queued by hand after acceptance: resolve the queue entry without a second send.
+                dispatch.Status__c = 'Skipped';
+                dispatch.Error__c = ALREADY_ACCEPTED_GUIDANCE;
+                continue;
+            }
             RecipientDTO recipient = recipientsByKind.get(dispatch.Kind__c).get(targetId(dispatch));
             String targetKey = dispatch.Kind__c + '|' + String.valueOf(targetId(dispatch));
             if (sendingTargets.contains(targetKey)) {

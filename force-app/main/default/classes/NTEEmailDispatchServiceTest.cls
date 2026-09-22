@@ -228,6 +228,49 @@ private class NTEEmailDispatchServiceTest {
     }
 
     @IsTest
+    static void acceptedEmailRelabelledFailedIsNeverResentByAnyRetryPath() {
+        configure();
+        Id selected = leadId('EXHIBITOR');
+        NTEEmailDispatchService.DraftDTO draft = NTEEmailDispatchService.buildDraft('INVITATION', new List<Id>{selected});
+        NTEEmailDispatchService.queueMessages(requestFor(draft, new Set<Id>{selected}));
+        List<Id> dispatchIds = dispatchIdsFor(selected);
+        NTEEmailDispatchService.processQueued(dispatchIds, true);
+        NTE_Email_Dispatch__c accepted = dispatchFor(selected);
+        System.assertEquals('Sent', accepted.Status__c);
+        Datetime acceptedAt = accepted.Sent_At__c;
+        System.assertNotEquals(null, acceptedAt);
+
+        // An administrator relabels the accepted email after a delivery complaint; the timestamp stays.
+        update new NTE_Email_Dispatch__c(Id = accepted.Id, Status__c = 'Failed', Error__c = 'Recipient reported a bounce.');
+        System.assertEquals(false, NTEEmailDispatchService.recentDispatches(new List<Id>{selected})[0].canRetry,
+            'History must not offer a retry for an accepted email.');
+        NTEEmailDispatchService.renderedHtml.clear();
+
+        Test.startTest();
+        NTEEmailDispatchService.QueueResponse retry = NTEEmailDispatchService.retryFailed(dispatchIds);
+        System.assertEquals(0, retry.queuedCount);
+        System.assertEquals(1, retry.skippedCount);
+        System.assert(retry.message.contains('Forward the original email'), retry.message);
+        NTEEmailDispatchService.QueueResponse single = NTEEmailDispatchService.retryDispatch(accepted.Id);
+        System.assert(single.message.contains('Forward the original email'), single.message);
+        NTE_Email_Dispatch__c untouched = dispatchFor(selected);
+        System.assertEquals('Failed', untouched.Status__c, 'The operator relabel is left in place.');
+        System.assertEquals('Recipient reported a bounce.', untouched.Error__c);
+        System.assertEquals(acceptedAt, untouched.Sent_At__c);
+
+        // Even a hand-queued record with acceptance evidence is resolved without a second send.
+        update new NTE_Email_Dispatch__c(Id = accepted.Id, Status__c = 'Queued');
+        NTEEmailDispatchService.processQueued(dispatchIds, true);
+        Test.stopTest();
+        System.assert(!NTEEmailDispatchService.renderedHtml.containsKey(selected), 'No email is rendered for an accepted dispatch.');
+        NTE_Email_Dispatch__c resolved = dispatchFor(selected);
+        System.assertEquals('Skipped', resolved.Status__c);
+        System.assertEquals(acceptedAt, resolved.Sent_At__c);
+        System.assert(resolved.Error__c.contains('Forward the original email'));
+        System.assertEquals(1, [SELECT COUNT() FROM NTE_Email_Dispatch__c]);
+    }
+
+    @IsTest
     static void failedRetryDoesNotSilentlySwitchToANewRecipient() {
         configure();
         Id selected = leadId('EXHIBITOR');

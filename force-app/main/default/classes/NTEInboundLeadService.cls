@@ -44,6 +44,22 @@ public with sharing class NTEInboundLeadService {
         }
     }
 
+    private static final Set<String> APPLICATION_FORMS = new Set<String>{'Exhibitor Application', 'Partner / Sponsor Application'};
+    // Same alphabet as the public forms: no 0/O/1/I look-alikes.
+    private static final String REFERENCE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    /** Same shape as the browser-generated reference: NTE-<milliseconds>-<8 characters>. */
+    @TestVisible
+    private static String generateBookingReference() {
+        String suffix = '';
+        while (suffix.length() < 8) {
+            Integer position = Math.mod(Crypto.getRandomInteger(), REFERENCE_ALPHABET.length());
+            if (position < 0) position += REFERENCE_ALPHABET.length();
+            suffix += REFERENCE_ALPHABET.substring(position, position + 1);
+        }
+        return 'NTE-' + System.currentTimeMillis() + '-' + suffix;
+    }
+
     @InvocableMethod(
         label='Route and Acknowledge NTE Lead'
         description='Routes new NTE Leads and sends applicant and owner notifications. Repeated calls retry only messages not already accepted.'
@@ -60,7 +76,7 @@ public with sharing class NTEInboundLeadService {
         if (leadIds.isEmpty()) return;
 
         Set<String> supportedForms = TEMPLATES_BY_FORM.keySet();
-        List<Lead> leads = [SELECT Id, Email, OwnerId, Web_Form_Type__c,
+        List<Lead> leads = [SELECT Id, Email, OwnerId, Web_Form_Type__c, Booking_Reference__c,
             NTE_Applicant_Email_Status__c, NTE_Internal_Email_Status__c
             FROM Lead WHERE Id IN :leadIds AND Web_Form_Type__c IN :supportedForms AND IsConverted = false FOR UPDATE];
         if (leads.isEmpty()) return;
@@ -72,12 +88,19 @@ public with sharing class NTEInboundLeadService {
         for (Lead lead : leads) {
             Boolean applicantRequired = String.isNotBlank(TEMPLATES_BY_FORM.get(lead.Web_Form_Type__c)[0]);
             if (newLeadIds.contains(lead.Id)) {
-                initialAudits.add(new Lead(Id = lead.Id,
+                Lead initialAudit = new Lead(Id = lead.Id,
                     NTE_Interest_Progressed__c = false, NTE_Interest_Not_Progressed__c = false,
                     NTE_Application_Rejected__c = false, NTE_Invitation_Status__c = null,
                     NTE_Invitation_Sent_At__c = null, NTE_Invitation_Recipient__c = null,
                     NTE_Applicant_Email_Status__c = applicantRequired ? 'Not Attempted' : NOT_REQUIRED, NTE_Internal_Email_Status__c = 'Not Attempted',
-                    NTE_Email_Error__c = null));
+                    NTE_Email_Error__c = null);
+                // Browser submissions arrive with their reference. An application keyed in
+                // natively gets one here so conversion, booking emails and the update forms
+                // can identify it. Retries never back-fill historical blanks.
+                if (APPLICATION_FORMS.contains(lead.Web_Form_Type__c) && String.isBlank(lead.Booking_Reference__c)) {
+                    initialAudit.Booking_Reference__c = generateBookingReference();
+                }
+                initialAudits.add(initialAudit);
                 lead.NTE_Applicant_Email_Status__c = applicantRequired ? 'Not Attempted' : NOT_REQUIRED;
                 lead.NTE_Internal_Email_Status__c = 'Not Attempted';
             }
@@ -106,9 +129,11 @@ public with sharing class NTEInboundLeadService {
         }
         Map<Id, User> currentOwnersById = currentOwnerIds.isEmpty() ? new Map<Id, User>()
             : new Map<Id, User>([SELECT Id, Email FROM User WHERE Id IN :currentOwnerIds AND IsActive = true]);
+        // Initial routing assigns the configured owner. A retry only resends failed
+        // messages, so it keeps whatever owner the team has chosen since.
         List<Lead> ownershipUpdates = new List<Lead>();
         for (Lead lead : leads) {
-            if (pendingLeadIds.contains(lead.Id) && eventOwner != null && lead.OwnerId != eventOwner.Id) {
+            if (newLeadIds.contains(lead.Id) && pendingLeadIds.contains(lead.Id) && eventOwner != null && lead.OwnerId != eventOwner.Id) {
                 ownershipUpdates.add(new Lead(Id = lead.Id, OwnerId = eventOwner.Id));
             }
         }

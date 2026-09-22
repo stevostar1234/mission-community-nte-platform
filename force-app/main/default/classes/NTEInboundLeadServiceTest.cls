@@ -65,13 +65,27 @@ private class NTEInboundLeadServiceTest {
             NTE_Email_Error__c FROM Lead WHERE Id = :leadId];
     }
 
+    /** Another active user for ownership tests; created only when the org has none besides the runner. */
+    private static User colleague() {
+        List<User> others = [SELECT Id, Username FROM User WHERE IsActive = true AND UserType = 'Standard'
+            AND Id != :UserInfo.getUserId() ORDER BY CreatedDate LIMIT 1];
+        if (!others.isEmpty()) return others[0];
+        Profile standard = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
+        User created = new User(Alias = 'ntecol', Email = 'nte-colleague@example.invalid', EmailEncodingKey = 'UTF-8',
+            FirstName = 'NTE', LastName = 'Colleague', LanguageLocaleKey = 'en_US', LocaleSidKey = 'en_GB', ProfileId = standard.Id,
+            TimeZoneSidKey = 'Europe/London', Username = 'nte-colleague-' + System.currentTimeMillis() + '@example.invalid');
+        System.runAs(new User(Id = UserInfo.getUserId())) { insert created; }
+        return created;
+    }
+
     @IsTest
     static void routesSupportedLeadAndBuildsNotifications() {
-        Lead lead = pendingLead('routing', 'Partner / Sponsor Expression of Interest');
+        // Routing happens when the create Flow calls the service for a new submission.
         NTEInboundLeadService.ownerUsernameOverride = null;
         NTEInboundLeadService.bypassEmailDelivery = true;
+        Lead lead = intakeLead('routing', 'Partner / Sponsor Expression of Interest');
         Test.startTest();
-        NTEInboundLeadService.routeAndAcknowledge(new List<NTEInboundLeadService.Request>{requestFor(lead.Id)});
+        Database.insert(lead, AccessLevel.SYSTEM_MODE);
         Test.stopTest();
 
         Lead routed = auditFor(lead.Id);
@@ -82,6 +96,72 @@ private class NTEInboundLeadServiceTest {
         System.assertEquals('Not Attempted', routed.NTE_Applicant_Email_Status__c);
         System.assertEquals('Not Attempted', routed.NTE_Internal_Email_Status__c);
         System.assertEquals(null, routed.NTE_Email_Error__c);
+    }
+
+    @IsTest
+    static void initialRoutingAssignsConfiguredOwnerButRetriesKeepStaffReassignment() {
+        User reassignedTo = colleague();
+        NTEInboundLeadService.ownerUsernameOverride = UserInfo.getUserName();
+        NTEInboundLeadService.bypassEmailDelivery = true;
+        Lead lead = intakeLead('reassigned', 'Exhibitor Expression of Interest');
+        lead.OwnerId = reassignedTo.Id;
+        Database.insert(lead, AccessLevel.SYSTEM_MODE);
+        System.assertEquals(UserInfo.getUserId(), auditFor(lead.Id).OwnerId, 'New intake is routed to the configured owner.');
+
+        // Staff hand the record to a colleague, then retry only its failed applicant receipt.
+        Database.update(new Lead(Id = lead.Id, OwnerId = reassignedTo.Id,
+            NTE_Applicant_Email_Status__c = 'Failed', NTE_Internal_Email_Status__c = ACCEPTED), AccessLevel.SYSTEM_MODE);
+        NTEInboundLeadService.bypassEmailDelivery = false;
+        StubSender sender = new StubSender();
+        NTEInboundLeadService.emailSender = sender;
+        Test.startTest();
+        NTEInboundLeadService.routeAndAcknowledge(new List<NTEInboundLeadService.Request>{requestFor(lead.Id)});
+        Test.stopTest();
+        Lead retried = auditFor(lead.Id);
+        System.assertEquals(reassignedTo.Id, retried.OwnerId, 'A retry must not undo a staff reassignment.');
+        System.assertEquals(ACCEPTED, retried.NTE_Applicant_Email_Status__c);
+        System.assertEquals(ACCEPTED, retried.NTE_Internal_Email_Status__c);
+        System.assertEquals(1, sender.messages.size(), 'Only the failed applicant receipt is resent.');
+    }
+
+    @IsTest
+    static void nativeApplicationsReceiveUniqueBookingReferencesOnlyWhenNew() {
+        NTEInboundLeadService.bypassEmailDelivery = true;
+        NTEInboundLeadService.ownerUsernameOverride = '';
+        List<Lead> leads = new List<Lead>();
+        for (Integer index = 0; index < 60; index++) {
+            leads.add(intakeLead('native-' + index, Math.mod(index, 2) == 0 ? 'Exhibitor Application' : 'Partner / Sponsor Application'));
+        }
+        Lead supplied = intakeLead('supplied', 'Exhibitor Application');
+        supplied.Booking_Reference__c = 'NTE-1700000000000-SUPPLIED';
+        Lead interest = intakeLead('interest', 'Exhibitor Expression of Interest');
+        Lead guest = intakeLead('guest', 'Guest Registration');
+        leads.add(supplied);
+        leads.add(interest);
+        leads.add(guest);
+        Test.startTest();
+        Database.insert(leads, AccessLevel.SYSTEM_MODE);
+        Test.stopTest();
+
+        Set<String> generated = new Set<String>();
+        for (Lead saved : [SELECT Email, Web_Form_Type__c, Booking_Reference__c FROM Lead WHERE Id IN :leads]) {
+            if (saved.Email == supplied.Email) {
+                System.assertEquals('NTE-1700000000000-SUPPLIED', saved.Booking_Reference__c, 'A supplied reference is kept.');
+            } else if (saved.Web_Form_Type__c.endsWith('Application')) {
+                System.assert(Pattern.matches('^NTE-[0-9]{13}-[A-Z2-9]{8}$', saved.Booking_Reference__c), 'Unexpected reference ' + saved.Booking_Reference__c);
+                System.assert(NTEUpdateSubmissionService.isValidBookingReference(saved.Booking_Reference__c));
+                generated.add(saved.Booking_Reference__c);
+            } else {
+                System.assertEquals(null, saved.Booking_Reference__c, 'Only applications receive a reference.');
+            }
+        }
+        System.assertEquals(60, generated.size(), 'Every native application receives its own reference.');
+
+        // A historical application without a reference is not back-filled by a retry.
+        Lead historical = leads[0];
+        Database.update(new Lead(Id = historical.Id, Booking_Reference__c = null, NTE_Internal_Email_Status__c = 'Failed'), AccessLevel.SYSTEM_MODE);
+        NTEInboundLeadService.routeAndAcknowledge(new List<NTEInboundLeadService.Request>{requestFor(historical.Id)});
+        System.assertEquals(null, [SELECT Booking_Reference__c FROM Lead WHERE Id = :historical.Id].Booking_Reference__c);
     }
 
     @IsTest

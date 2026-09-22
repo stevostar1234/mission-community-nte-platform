@@ -1525,6 +1525,66 @@ private class NTEUpdateSubmissionServiceTest {
     }
 
     @IsTest
+    static void clearedTopUpQuantityCannotResetAcceptedPurchaseHistory() {
+        Account company = new Account(Name = 'Ridgeway Components');
+        insert company;
+        Opportunity booking = newNteOpportunity(company.Id, 'Ridgeway Components', 'NTE-STRESS-SUPP-CLEARED-TOPUP');
+        booking.NTE_Initial_Staff_Count__c = 2;
+        booking.NTE_Total_Staff_Count__c = 4;
+        booking.NTE_Top_Up_Staff_Required__c = 'Yes';
+        booking.NTE_Top_Up_Staff_Count__c = null; // cleared by mistake after the purchase was paid
+        booking.NTE_Top_Up_Staff_Names__c = 'Paid One
+Paid Two';
+        booking.NTE_Top_Up_Staff_Unit_Price__c = 60;
+        booking.NTE_Top_Up_Staff_Total__c = 120;
+        booking.NTE_Top_Up_Invoice_Required__c = true;
+        booking.NTE_Top_Up_Payment_Requested_At__c = System.now().addDays(-2);
+        booking.NTE_Top_Up_Payment_Received__c = true;
+        booking.NTE_Top_Up_Payment_At__c = System.now().addDays(-1);
+        booking.NTE_Top_Up_Payment_By__c = 'Finance Tester';
+        insert booking;
+        addPrimaryContact(booking);
+        System.assertEquals(true, NTEUpdateSubmissionService.hasAcceptedTopUpPurchase(booking));
+
+        Lead repeatPurchase = newLead(booking.Booking_Reference__c);
+        populateRequiredExhibitorStaffFields(repeatPurchase);
+        repeatPurchase.Top_Up_Staff_Required__c = 'Yes';
+        repeatPurchase.Top_Up_Staff_Count__c = 2;
+        repeatPurchase.Top_Up_Staff_Names__c = 'Paid One
+Paid Two';
+        Lead namesOnly = newLead(booking.Booking_Reference__c);
+        populateRequiredExhibitorStaffFields(namesOnly);
+        namesOnly.Staff_Base_Names__c = 'Corrected One
+Corrected Two';
+        update new List<Lead>{repeatPurchase, namesOnly};
+
+        Test.startTest();
+        NTEUpdateSubmissionService.processLeadIds(new Set<Id>{repeatPurchase.Id, namesOnly.Id}, true);
+        Test.stopTest();
+
+        Lead rejected = [SELECT NTE_Update_Status__c, NTE_Update_Error__c FROM Lead WHERE Id = :repeatPurchase.Id];
+        System.assertEquals('Failed', rejected.NTE_Update_Status__c);
+        System.assert(rejected.NTE_Update_Error__c.contains('no saved top-up quantity'), rejected.NTE_Update_Error__c);
+        System.assertEquals(1, [SELECT COUNT() FROM Lead WHERE Id = :namesOnly.Id AND IsDeleted = true ALL ROWS],
+            'The names-only correction is still applied.');
+        Opportunity saved = [SELECT NTE_Total_Staff_Count__c, NTE_Stand_Colleagues__c, NTE_Top_Up_Staff_Required__c,
+            NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Names__c, NTE_Top_Up_Staff_Unit_Price__c, NTE_Top_Up_Staff_Total__c,
+            NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Payment_Requested_At__c, NTE_Top_Up_Payment_Received__c,
+            NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c FROM Opportunity WHERE Id = :booking.Id];
+        System.assertEquals('Corrected One
+Corrected Two
+Paid One
+Paid Two', saved.NTE_Stand_Colleagues__c);
+        System.assertEquals(4, saved.NTE_Total_Staff_Count__c, 'Attendance is not incremented again.');
+        System.assertEquals(null, saved.NTE_Top_Up_Staff_Count__c, 'The cleared quantity is left visible for staff repair.');
+        for (String fieldName : new List<String>{'NTE_Top_Up_Staff_Required__c', 'NTE_Top_Up_Staff_Names__c',
+            'NTE_Top_Up_Staff_Unit_Price__c', 'NTE_Top_Up_Staff_Total__c', 'NTE_Top_Up_Invoice_Required__c',
+            'NTE_Top_Up_Payment_Requested_At__c', 'NTE_Top_Up_Payment_Received__c', 'NTE_Top_Up_Payment_At__c', 'NTE_Top_Up_Payment_By__c'}) {
+            System.assertEquals(booking.get(fieldName), saved.get(fieldName), fieldName + ' must be preserved.');
+        }
+    }
+
+    @IsTest
     static void noNewTopUpCorrectsBaseNamesWithoutChangingAcceptedPurchaseOrContacts() {
         Account company = new Account(Name = 'Hartwell Fabrication');
         insert company;

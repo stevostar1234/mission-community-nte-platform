@@ -179,7 +179,7 @@ public with sharing class NTEUpdateSubmissionService {
                 + 'NTE_Top_Up_Staff_Required__c, NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Names__c, '
                 + 'NTE_Top_Up_Staff_Unit_Price__c, NTE_Top_Up_VAT_Rate__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Invoice_Required__c, NTE_Top_Up_Invoice_Provided__c, '
                 + 'NTE_Top_Up_Invoice_At__c, NTE_Top_Up_Invoice_By__c, NTE_Top_Up_Payment_Received__c, '
-                + 'NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c, '
+                + 'NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c, NTE_Top_Up_Payment_Requested_At__c, '
                 + 'NTE_Sponsor_Package_Total__c, NTE_Exhibitor_Space_Price__c, '
                 + 'NTE_Power_Socket_Total__c, NTE_Additional_Staff_Total__c, NTE_Listed_Price_Total__c, Amount, '
                 + 'NTE_Pricing_Status__c, NTE_Invoice_Provided__c, NTE_Invoice_Provided_At__c, '
@@ -354,24 +354,44 @@ public with sharing class NTEUpdateSubmissionService {
         target.NTE_Stand_Colleagues__c = source.Staff_Base_Names__c;
     }
 
+    /**
+     * Durable evidence that a top-up purchase was accepted. The editable quantity alone is
+     * not proof: staff can clear it by mistake, and a later form must not treat the booking
+     * as a first purchase and reset its charges, attendance or receipt history.
+     */
+    @TestVisible
+    private static Boolean hasAcceptedTopUpPurchase(Opportunity existing) {
+        return (existing.NTE_Top_Up_Staff_Count__c != null && existing.NTE_Top_Up_Staff_Count__c > 0)
+            || (existing.NTE_Top_Up_Staff_Total__c != null && existing.NTE_Top_Up_Staff_Total__c > 0)
+            || existing.NTE_Top_Up_Invoice_Required__c == true
+            || existing.NTE_Top_Up_Invoice_Provided__c == true
+            || existing.NTE_Top_Up_Payment_Received__c == true
+            || existing.NTE_Top_Up_Payment_Requested_At__c != null;
+    }
+
     private static void applyExhibitorStaffFields(Opportunity target, Lead source, Opportunity existing) {
         Decimal previousTopUpCount = existing.NTE_Top_Up_Staff_Count__c == null ? 0 : existing.NTE_Top_Up_Staff_Count__c;
+        Boolean acceptedPurchase = hasAcceptedTopUpPurchase(existing);
         Boolean requestsTopUp = source.Top_Up_Staff_Required__c == 'Yes';
         Decimal requestedTopUpCount = requestsTopUp ? source.Top_Up_Staff_Count__c : previousTopUpCount;
         String requestedTopUpNames = requestsTopUp ? source.Top_Up_Staff_Names__c : existing.NTE_Top_Up_Staff_Names__c;
 
         target.NTE_Staff_Update_Completed_At__c = System.now();
-        target.NTE_Top_Up_Staff_Required__c = requestedTopUpCount > 0 ? 'Yes' : 'No';
-        target.NTE_Top_Up_Staff_Count__c = requestedTopUpCount;
-        target.NTE_Top_Up_Staff_Names__c = requestedTopUpNames;
+        if (requestsTopUp || !acceptedPurchase) {
+            // A names-only correction leaves an accepted purchase exactly as recorded, even
+            // when its quantity has been cleared and is waiting for staff repair.
+            target.NTE_Top_Up_Staff_Required__c = requestedTopUpCount > 0 ? 'Yes' : 'No';
+            target.NTE_Top_Up_Staff_Count__c = requestedTopUpCount;
+            target.NTE_Top_Up_Staff_Names__c = requestedTopUpNames;
+        }
         target.NTE_Stand_Colleagues__c = combineNames(source.Staff_Base_Names__c, requestedTopUpNames);
 
-        if (previousTopUpCount == 0) {
+        if (!acceptedPurchase) {
             target.NTE_Top_Up_VAT_Rate__c = NTEVat.RATE;
             target.NTE_Top_Up_Staff_Unit_Price__c = requestedTopUpCount > 0 ? NTEPricingService.ADDITIONAL_STAFF_PRICE : 0;
             target.NTE_Top_Up_Staff_Total__c = requestedTopUpCount * NTEPricingService.ADDITIONAL_STAFF_PRICE;
         }
-        if (previousTopUpCount == 0 && requestedTopUpCount > 0) {
+        if (!acceptedPurchase && requestedTopUpCount > 0) {
             // A names-only update must not rewrite the booked quantity. A new
             // purchase adds its explicit quantity only when the old total is known.
             Decimal existingCount = existing.NTE_Total_Staff_Count__c == null
@@ -452,6 +472,10 @@ public with sharing class NTEUpdateSubmissionService {
                 }
                 if (String.isBlank(source.Top_Up_Staff_Names__c)) {
                     return 'Enter the top-up staff names. No Opportunity was changed.';
+                }
+                if (existingTopUpCount == 0 && hasAcceptedTopUpPurchase(existing)) {
+                    return 'This booking has top-up purchase or payment records but no saved top-up quantity. '
+                        + 'Restore the top-up quantity on the booking, then reprocess this submission. No Opportunity was changed.';
                 }
                 if (topUpCount < existingTopUpCount) {
                     return 'Existing top-up places cannot be reduced with this form. Contact the NTE team to change or cancel paid places.';
