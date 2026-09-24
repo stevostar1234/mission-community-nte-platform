@@ -1436,8 +1436,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Delivery_Window__c</fieldItem>
-                <identifier>RecordNTE_Delivery_Window__c8L0</identifier>
+                <fieldItem>Record.NTE_Logistics_Contact_Name__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Contact_Name__c8L0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1446,8 +1446,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Description__c8L1</identifier>
+                <fieldItem>Record.NTE_Logistics_Contact_Email__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Contact_Email__c8L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1456,108 +1456,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Registration__c8L2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Dimensions__c8L3</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_1_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_1_Gross_Weight__c8L4</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Description__c8L5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Registration__c8L6</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Dimensions__c8L7</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_2_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_2_Gross_Weight__c8L8</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Description__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Description__c8L9</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Registration__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Registration__c8L10</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Dimensions__c8L11</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Item_3_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Item_3_Gross_Weight__c8L12</identifier>
+                <fieldItem>Record.NTE_Logistics_Contact_Phone__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Contact_Phone__c8L2</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_9_Left</name>
@@ -1570,8 +1470,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Name__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Name__c8R0</identifier>
+                <fieldItem>Record.NTE_Logistics_Second_Contact_Name__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Second_Contact_Name__c8R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1580,8 +1480,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Staff__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Staff__c8R1</identifier>
+                <fieldItem>Record.NTE_Logistics_Second_Contact_Email__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Second_Contact_Email__c8R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1590,38 +1490,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Type__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Type__c8R2</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Gross_Weight__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Gross_Weight__c8R3</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Dimensions__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Dimensions__c8R4</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Haulier_Vehicle_Registration__c</fieldItem>
-                <identifier>RecordNTE_Haulier_Vehicle_Registration__c8R5</identifier>
+                <fieldItem>Record.NTE_Logistics_Second_Contact_Phone__c</fieldItem>
+                <identifier>RecordNTE_Logistics_Second_Contact_Phone__c8R2</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_9_Right</name>
@@ -1658,8 +1528,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Staff_Update_Completed_At__c</fieldItem>
-                <identifier>RecordNTE_Staff_Update_Completed_At__c9L0</identifier>
+                <fieldItem>Record.NTE_Delivery_Window__c</fieldItem>
+                <identifier>RecordNTE_Delivery_Window__c9L0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1668,8 +1538,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Heavy_Vehicle_Update_Completed_At__c</fieldItem>
-                <identifier>RecordNTE_Heavy_Vehicle_Update_Completed_At__c9L1</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Description__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Description__c9L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1678,8 +1548,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Logo_Update_Provided__c</fieldItem>
-                <identifier>RecordNTE_Logo_Update_Provided__c9L2</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Registration__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Registration__c9L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1688,8 +1558,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Logo_Update_Provided_At__c</fieldItem>
-                <identifier>RecordNTE_Logo_Update_Provided_At__c9L3</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Dimensions__c9L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1698,8 +1568,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Type__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Type__c9L4</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_1_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_1_Gross_Weight__c9L4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1708,8 +1578,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Form_Version__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Form_Version__c9L5</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_2_Description__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Description__c9L5</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1718,8 +1588,68 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Processed_At__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Processed_At__c9L6</identifier>
+                <fieldItem>Record.NTE_Heavy_Item_2_Registration__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Registration__c9L6</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_2_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Dimensions__c9L7</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_2_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_2_Gross_Weight__c9L8</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Description__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Description__c9L9</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Registration__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Registration__c9L10</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Dimensions__c9L11</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Heavy_Item_3_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Item_3_Gross_Weight__c9L12</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_10_Left</name>
@@ -1732,8 +1662,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Declaration_Name__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Declaration_Name__c9R0</identifier>
+                <fieldItem>Record.NTE_Haulier_Name__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Name__c9R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1742,8 +1672,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Declaration_Date__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Declaration_Date__c9R1</identifier>
+                <fieldItem>Record.NTE_Haulier_Staff__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Staff__c9R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1752,8 +1682,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Last_Update_Error__c</fieldItem>
-                <identifier>RecordNTE_Last_Update_Error__c9R2</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Type__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Type__c9R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1762,8 +1692,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Description</fieldItem>
-                <identifier>RecordDescription9R3</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Gross_Weight__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Gross_Weight__c9R3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1772,8 +1702,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.CreatedById</fieldItem>
-                <identifier>RecordCreatedById9R4</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Dimensions__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Dimensions__c9R4</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1782,18 +1712,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.LastModifiedById</fieldItem>
-                <identifier>RecordLastModifiedById9R5</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Joining_Instructions_By__c</fieldItem>
-                <identifier>RecordNTE_Joining_Instructions_By__c9R6</identifier>
+                <fieldItem>Record.NTE_Haulier_Vehicle_Registration__c</fieldItem>
+                <identifier>RecordNTE_Haulier_Vehicle_Registration__c9R5</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_10_Right</name>
@@ -1828,10 +1748,10 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>readonly</value>
+                    <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Kind__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Kind__c10L0</identifier>
+                <fieldItem>Record.NTE_Staff_Update_Completed_At__c</fieldItem>
+                <identifier>RecordNTE_Staff_Update_Completed_At__c10L0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1840,8 +1760,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Status__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Status__c10L1</identifier>
+                <fieldItem>Record.NTE_Heavy_Vehicle_Update_Completed_At__c</fieldItem>
+                <identifier>RecordNTE_Heavy_Vehicle_Update_Completed_At__c10L1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1850,8 +1770,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Sent_At__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Sent_At__c10L2</identifier>
+                <fieldItem>Record.NTE_Logo_Update_Provided__c</fieldItem>
+                <identifier>RecordNTE_Logo_Update_Provided__c10L2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1860,8 +1780,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Recipient__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Recipient__c10L3</identifier>
+                <fieldItem>Record.NTE_Logo_Update_Provided_At__c</fieldItem>
+                <identifier>RecordNTE_Logo_Update_Provided_At__c10L3</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1870,8 +1790,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Error__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Error__c10L4</identifier>
+                <fieldItem>Record.NTE_Last_Update_Type__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Type__c10L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Form_Version__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Form_Version__c10L5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Last_Update_Processed_At__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Processed_At__c10L6</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_11_Left</name>
@@ -1884,8 +1824,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Requested_At__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Requested_At__c10R0</identifier>
+                <fieldItem>Record.NTE_Last_Update_Declaration_Name__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Declaration_Name__c10R0</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1894,8 +1834,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Approval_Email_Requested_By__c</fieldItem>
-                <identifier>RecordNTE_Approval_Email_Requested_By__c10R1</identifier>
+                <fieldItem>Record.NTE_Last_Update_Declaration_Date__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Declaration_Date__c10R1</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1904,8 +1844,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Final_Pack_Status__c</fieldItem>
-                <identifier>RecordNTE_Final_Pack_Status__c10R2</identifier>
+                <fieldItem>Record.NTE_Last_Update_Error__c</fieldItem>
+                <identifier>RecordNTE_Last_Update_Error__c10R2</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -1914,8 +1854,38 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.NTE_Final_Pack_Sent_At__c</fieldItem>
-                <identifier>RecordNTE_Final_Pack_Sent_At__c10R3</identifier>
+                <fieldItem>Record.Description</fieldItem>
+                <identifier>RecordDescription10R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CreatedById</fieldItem>
+                <identifier>RecordCreatedById10R4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.LastModifiedById</fieldItem>
+                <identifier>RecordLastModifiedById10R5</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Joining_Instructions_By__c</fieldItem>
+                <identifier>RecordNTE_Joining_Instructions_By__c10R6</identifier>
             </fieldInstance>
         </itemInstances>
         <name>NTE_Section_11_Right</name>
@@ -1943,6 +1913,128 @@
             </componentInstance>
         </itemInstances>
         <name>NTE_Section_11_Columns</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Kind__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Kind__c11L0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Status__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Status__c11L1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Sent_At__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Sent_At__c11L2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Recipient__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Recipient__c11L3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Error__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Error__c11L4</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>NTE_Section_12_Left</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Requested_At__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Requested_At__c11R0</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Approval_Email_Requested_By__c</fieldItem>
+                <identifier>RecordNTE_Approval_Email_Requested_By__c11R1</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Final_Pack_Status__c</fieldItem>
+                <identifier>RecordNTE_Final_Pack_Status__c11R2</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.NTE_Final_Pack_Sent_At__c</fieldItem>
+                <identifier>RecordNTE_Final_Pack_Sent_At__c11R3</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <name>NTE_Section_12_Right</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>NTE_Section_12_Left</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>NTE_Section_12_Column_Left</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>NTE_Section_12_Right</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:column</componentName>
+                <identifier>NTE_Section_12_Column_Right</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>NTE_Section_12_Columns</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -2102,7 +2194,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Heavy vehicle and logistics</value>
+                    <value>Logistics contacts</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>NTE_Section_9_FieldSection</identifier>
@@ -2120,7 +2212,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Update audit</value>
+                    <value>Heavy vehicle and logistics</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>NTE_Section_10_FieldSection</identifier>
@@ -2138,10 +2230,28 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Booking correspondence</value>
+                    <value>Update audit</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>NTE_Section_11_FieldSection</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>columns</name>
+                    <value>NTE_Section_12_Columns</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>horizontalAlignment</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <value>Booking correspondence</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:fieldSection</componentName>
+                <identifier>NTE_Section_12_FieldSection</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>

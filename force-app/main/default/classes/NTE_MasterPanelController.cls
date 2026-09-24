@@ -1008,7 +1008,7 @@ public with sharing class NTE_MasterPanelController {
         return new List<PipelineStep>{
             new PipelineStep('interest', 'Interest', counts.get('INTEREST'), 'Expressions of interest', 'standard:contact_request', 'INTEREST'),
             new PipelineStep('applications', 'Applications', counts.get('APPLICATION_REVIEW'), 'Applications awaiting conversion', 'standard:lead', 'APPLICATION_REVIEW'),
-            new PipelineStep('approved', 'Approved', counts.get('APPROVED'), 'Approved bookings', 'standard:approval', 'APPROVED'),
+            new PipelineStep('approved', 'Converted', counts.get('APPROVED'), 'Converted bookings', 'standard:approval', 'APPROVED'),
             new PipelineStep('finance', 'Finances', counts.get('FINANCE_DUE'), 'Booking requirements and payments', 'standard:currency', 'FINANCE_DUE'),
             new PipelineStep('readiness', 'Updates', counts.get('READINESS_DUE'), 'Staff, vehicle or logo details outstanding', 'standard:people', 'READINESS_DUE'),
             new PipelineStep('complete', 'Completed', completed, percentage + '% of approved bookings complete', 'standard:task2', 'COMPLETED')
@@ -1023,9 +1023,9 @@ public with sharing class NTE_MasterPanelController {
             queue('APPLICATION_REVIEW', 'Applications', counts, 'Combined exhibitor and partner / sponsor applications', 'standard:lead', reports, '/lightning/o/Lead/list?filterName=NTE_Applications'),
             queue('APPLICATION_EXHIBITOR', 'Exhibitor applications', counts, 'Exhibitor applications awaiting review', 'standard:store_group', reports, null),
             queue('APPLICATION_PARTNER', 'Partner / sponsor applications', counts, 'Partner and sponsor applications awaiting review', 'standard:people', reports, null),
-            queue('APPROVED', 'Approved bookings', counts, 'Combined approved exhibitor and partner / sponsor bookings', 'standard:approval', reports, '/lightning/o/Opportunity/list?filterName=NTE_Event_Participation'),
-            queue('APPROVED_EXHIBITOR', 'Approved exhibitors', counts, 'Approved exhibitor bookings', 'standard:store_group', reports, null),
-            queue('APPROVED_PARTNER', 'Approved partners / sponsors', counts, 'Approved partner and sponsor bookings', 'standard:people', reports, null),
+            queue('APPROVED', 'Converted bookings', counts, 'Combined converted exhibitor and partner / sponsor bookings', 'standard:approval', reports, '/lightning/o/Opportunity/list?filterName=NTE_Event_Participation'),
+            queue('APPROVED_EXHIBITOR', 'Converted exhibitors', counts, 'Converted exhibitor bookings', 'standard:store_group', reports, null),
+            queue('APPROVED_PARTNER', 'Converted partners / sponsors', counts, 'Converted partner and sponsor bookings', 'standard:people', reports, null),
             queue('REQUIREMENTS', 'Requirements', counts, 'Booking requirements and confirmation', 'standard:orders', reports, '/lightning/o/Opportunity/list?filterName=NTE_Requirements'),
             queue('PAYMENT_DUE', 'Payment required', counts, 'Payment has been requested and is outstanding', 'standard:currency', reports, null),
             queue('PAYMENT_COMPLETE', 'Payment confirmed', counts, 'All applicable booking and staff top-up payments confirmed', 'standard:currency', reports, null),

@@ -501,9 +501,17 @@ private class NTEUpdateSubmissionServiceTest {
                    NTE_Heavy_Vehicle_Required__c, NTE_Heavy_Vehicle_Update_Completed_At__c,
                    NTE_Heavy_Item_2_Description__c, NTE_Heavy_Item_2_Registration__c, NTE_Heavy_Item_3_Description__c,
                    NTE_Haulier_Staff__c, NTE_Haulier_Vehicle_Registration__c, NTE_Stand_Colleagues__c,
-                   NTE_Invoiced_Email__c, Amount, NTE_Invoice_Provided__c, NTE_Payment_Received__c
+                   NTE_Invoiced_Email__c, Amount, NTE_Invoice_Provided__c, NTE_Payment_Received__c,
+                   NTE_Logistics_Contact_Name__c, NTE_Logistics_Contact_Email__c, NTE_Logistics_Contact_Phone__c,
+                   NTE_Logistics_Second_Contact_Name__c, NTE_Logistics_Second_Contact_Email__c, NTE_Logistics_Second_Contact_Phone__c
             FROM Opportunity WHERE Id = :opportunity.Id
         ];
+        System.assertEquals('NTE Logistics Contact', updated.NTE_Logistics_Contact_Name__c, 'The logistics main contact is kept on the booking.');
+        System.assertEquals('logistics-fallback@example.invalid', updated.NTE_Logistics_Contact_Email__c);
+        System.assertEquals('+44 7700 900123', updated.NTE_Logistics_Contact_Phone__c);
+        System.assertEquals('NTE Secondary Logistics', updated.NTE_Logistics_Second_Contact_Name__c, 'The required second contact is no longer discarded with the temporary Lead.');
+        System.assertEquals('secondary-logistics@example.invalid', updated.NTE_Logistics_Second_Contact_Email__c);
+        System.assertEquals('+44 20 7946 0999', updated.NTE_Logistics_Second_Contact_Phone__c);
         System.assertEquals(opportunity.NTE_Event_Contact_Name__c, updated.NTE_Event_Contact_Name__c);
         System.assertEquals(opportunity.NTE_Event_Contact_Title__c, updated.NTE_Event_Contact_Title__c);
         System.assertEquals(opportunity.NTE_Event_Contact_Email__c, updated.NTE_Event_Contact_Email__c);
@@ -1605,9 +1613,17 @@ private class NTEUpdateSubmissionServiceTest {
         booking.NTE_Haulier_Vehicle_Gross_Weight__c = '10,000 kg';
         booking.NTE_Haulier_Vehicle_Dimensions__c = '9m x 3m x 4m';
         booking.NTE_Haulier_Vehicle_Registration__c = 'AB26 CDE';
+        booking.NTE_Logistics_Contact_Name__c = 'Previous Logistics Lead';
+        booking.NTE_Logistics_Contact_Email__c = 'previous-logistics@example.invalid';
+        booking.NTE_Logistics_Contact_Phone__c = '+44 7700 900800';
+        booking.NTE_Logistics_Second_Contact_Name__c = 'Previous Second Contact';
+        booking.NTE_Logistics_Second_Contact_Email__c = 'previous-second@example.invalid';
+        booking.NTE_Logistics_Second_Contact_Phone__c = '+44 7700 900801';
         List<String> snapshotFields = new List<String>{'NTE_Heavy_Vehicle_Required__c', 'NTE_Heavy_Vehicle_Update_Completed_At__c',
             'NTE_Delivery_Window__c', 'NTE_Haulier_Name__c', 'NTE_Haulier_Staff__c', 'NTE_Haulier_Vehicle_Type__c',
-            'NTE_Haulier_Vehicle_Gross_Weight__c', 'NTE_Haulier_Vehicle_Dimensions__c', 'NTE_Haulier_Vehicle_Registration__c'};
+            'NTE_Haulier_Vehicle_Gross_Weight__c', 'NTE_Haulier_Vehicle_Dimensions__c', 'NTE_Haulier_Vehicle_Registration__c',
+            'NTE_Logistics_Contact_Name__c', 'NTE_Logistics_Contact_Email__c', 'NTE_Logistics_Contact_Phone__c',
+            'NTE_Logistics_Second_Contact_Name__c', 'NTE_Logistics_Second_Contact_Email__c', 'NTE_Logistics_Second_Contact_Phone__c'};
         for (Integer index = 1; index <= 3; index++) {
             String prefix = 'NTE_Heavy_Item_' + index + '_';
             booking.put(prefix + 'Description__c', 'Existing vehicle ' + index);
@@ -1668,6 +1684,12 @@ private class NTEUpdateSubmissionServiceTest {
         System.assertEquals(null, replaced.NTE_Haulier_Vehicle_Registration__c);
         System.assertEquals(replacement.Delivery_Window__c, replaced.NTE_Delivery_Window__c);
         System.assertEquals(replacement.Haulier_Name__c, replaced.NTE_Haulier_Name__c);
+        System.assertEquals(replacement.Event_Contact_Name__c, replaced.NTE_Logistics_Contact_Name__c, 'A complete replacement supplies the current logistics contacts.');
+        System.assertEquals(replacement.Email, replaced.NTE_Logistics_Contact_Email__c);
+        System.assertEquals(replacement.Phone, replaced.NTE_Logistics_Contact_Phone__c);
+        System.assertEquals(replacement.Secondary_Contact_Name__c, replaced.NTE_Logistics_Second_Contact_Name__c);
+        System.assertEquals(replacement.Secondary_Contact_Email__c, replaced.NTE_Logistics_Second_Contact_Email__c);
+        System.assertEquals(replacement.Secondary_Contact_Phone__c, replaced.NTE_Logistics_Second_Contact_Phone__c);
     }
 
     @IsTest
@@ -1724,4 +1746,81 @@ private class NTEUpdateSubmissionServiceTest {
     }
 
     private class NTEUpdateSubmissionServiceTestException extends Exception {}
+
+    @IsTest
+    static void manualTopUpReceiptWithNoQuantitySurvivesBothStaffUpdateChoices() {
+        Account company = new Account(Name = 'Manual receipt recovery'); insert company;
+        List<Opportunity> bookings = new List<Opportunity>();
+        List<Lead> submissions = new List<Lead>();
+        Datetime paidAt = System.now().addDays(-1);
+        for (String choice : new List<String>{'No', 'Yes'}) {
+            Opportunity booking = newNteOpportunity(company.Id, 'Manual receipt ' + choice, 'NTE-MANUAL-PAID-' + choice.toUpperCase());
+            booking.NTE_Top_Up_Staff_Required__c = 'Yes';
+            booking.NTE_Top_Up_Payment_Received__c = true;
+            booking.NTE_Top_Up_Payment_At__c = paidAt;
+            booking.NTE_Top_Up_Payment_By__c = 'NTE team';
+            booking.NTE_Top_Up_Staff_Total__c = choice == 'Yes' ? 75 : null;
+            booking.NTE_Top_Up_Staff_Count__c = choice == 'Yes' ? 0 : null;
+            booking.NTE_Total_Staff_Count__c = 2;
+            booking.NTE_Top_Up_Staff_Names__c = 'Existing guest';
+            insert booking; addPrimaryContact(booking); bookings.add(booking);
+            Lead submission = newLead(booking.Booking_Reference__c);
+            populateRequiredExhibitorStaffFields(submission);
+            submission.Top_Up_Staff_Required__c = choice;
+            if (choice == 'Yes') {
+                submission.Top_Up_Staff_Count__c = 3;
+                submission.Top_Up_Staff_Names__c = 'Updated guest names';
+            }
+            update submission; submissions.add(submission);
+        }
+        Test.startTest();
+        NTEUpdateSubmissionService.processLeadIds(new Map<Id, Lead>(submissions).keySet(), true);
+        Test.stopTest();
+        Map<Id, Opportunity> saved = new Map<Id, Opportunity>([SELECT NTE_Top_Up_Staff_Required__c,
+            NTE_Top_Up_Staff_Count__c, NTE_Top_Up_Staff_Total__c, NTE_Top_Up_Staff_Unit_Price__c,
+            NTE_Top_Up_Payment_Received__c, NTE_Top_Up_Payment_At__c, NTE_Top_Up_Payment_By__c,
+            NTE_Total_Staff_Count__c, NTE_Stand_Colleagues__c FROM Opportunity WHERE AccountId = :company.Id]);
+        for (Integer index = 0; index < bookings.size(); index++) {
+            Opportunity before = bookings[index]; Opportunity after = saved.get(before.Id);
+            System.assertEquals(true, after.NTE_Top_Up_Payment_Received__c);
+            System.assertEquals(paidAt, after.NTE_Top_Up_Payment_At__c);
+            System.assertEquals('NTE team', after.NTE_Top_Up_Payment_By__c);
+            System.assertEquals(before.NTE_Top_Up_Staff_Count__c, after.NTE_Top_Up_Staff_Count__c);
+            System.assertEquals(before.NTE_Top_Up_Staff_Total__c, after.NTE_Top_Up_Staff_Total__c);
+            System.assertEquals(null, after.NTE_Top_Up_Staff_Unit_Price__c);
+            System.assertEquals(2, after.NTE_Total_Staff_Count__c);
+            System.assertEquals('Yes', after.NTE_Top_Up_Staff_Required__c);
+            System.assert(after.NTE_Stand_Colleagues__c.contains(submissions[index].Staff_Base_Names__c));
+            System.assert(after.NTE_Stand_Colleagues__c.contains(index == 0 ? 'Existing guest' : 'Updated guest names'));
+        }
+        System.assertEquals(0, [SELECT COUNT() FROM Lead WHERE Id IN :submissions]);
+        System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c]);
+    }
+
+    @IsTest
+    static void maximumAcknowledgementBatchFitsAsyncLimitsWithNativeActivityLogging() {
+        Account company = new Account(Name = 'Bulk activity test'); insert company;
+        Opportunity booking = newNteOpportunity(company.Id, 'Bulk booking', 'NTE-ACTIVITY-BULK');
+        booking.NTE_Initial_Staff_Count__c = 2; booking.NTE_Total_Staff_Count__c = 2;
+        insert booking; addPrimaryContact(booking);
+        List<Lead> submissions = new List<Lead>();
+        for (Integer index = 0; index < 100; index++) submissions.add(new Lead(FirstName = 'Staff',
+            LastName = 'Update ' + index, Company = company.Name, Email = 'submitter@example.invalid',
+            Target_Booking_Reference__c = booking.Booking_Reference__c));
+        insert submissions;
+        List<String> ids = new List<String>();
+        for (Lead submission : submissions) { populateRequiredExhibitorStaffFields(submission); ids.add(String.valueOf(submission.Id)); }
+        update submissions;
+        Test.startTest();
+        System.enqueueJob(new NTEUpdateSubmissionJob(String.join(ids, ','), false));
+        Test.stopTest();
+        List<Lead> results = [SELECT IsDeleted, NTE_Update_Status__c, NTE_Applicant_Email_Status__c,
+            NTE_Update_Error__c, NTE_Email_Error__c FROM Lead WHERE Id IN :submissions ALL ROWS];
+        System.assertEquals(100, results.size());
+        for (Lead result : results) {
+            System.assertEquals('Matched and Applied', result.NTE_Update_Status__c, 'Bulk update: ' + result.NTE_Update_Error__c);
+            System.assertEquals('Accepted by Salesforce', result.NTE_Applicant_Email_Status__c, 'Bulk acknowledgement: ' + result.NTE_Email_Error__c);
+            System.assertEquals(true, result.IsDeleted);
+        }
+    }
 }

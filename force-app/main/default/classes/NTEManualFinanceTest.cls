@@ -143,7 +143,7 @@ private class NTEManualFinanceTest {
             System.assert(duplicateBlocked, 'A confirmed free space must not send twice.');
         }
         System.assertEquals(2, [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds
-            AND Subject = 'NTE booking provisional email - sent']);
+            AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
         System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Opportunity__c IN :bookingIds]);
     }
     @IsTest static void topUpPaymentCanPrecedeBasePayment() {

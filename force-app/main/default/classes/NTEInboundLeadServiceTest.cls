@@ -167,6 +167,8 @@ private class NTEInboundLeadServiceTest {
         System.assertEquals(8, sender.messages.size());
         System.assertEquals(1, sender.calls);
         for (Messaging.SingleEmailMessage message : sender.messages) {
+            System.assertEquals(true, message.getSaveAsActivity(), 'Every intake message must be retained on its Lead.');
+            System.assertEquals(null, message.getWhatId(), 'Lead activities cannot use an Opportunity WhatId.');
             Boolean internalMessage = message.getToAddresses() != null && !message.getToAddresses().isEmpty();
             System.assertEquals(prefixByLead.get(message.getTargetObjectId()) + (internalMessage ? '_Internal' : '_Acknowledgement'),
                 templates.get(message.getTemplateId()).DeveloperName);

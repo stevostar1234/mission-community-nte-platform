@@ -1,10 +1,22 @@
 # Desired NTE workflow
 
-Last updated: 17 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
+Last updated: 24 September 2026. Business owner: the project owner, conveying the NTE / Mission Community team's requirements.
 
 This is the current record of the intended workflow. Read it before proposing, implementing, testing or reviewing NTE changes. Confirmed requirements describe the target behaviour; they do not imply that the current package already implements it. [NTE_CHANGE_PROPOSALS.md](NTE_CHANGE_PROPOSALS.md) records implementation proposals and their approval status. The dated audit contains source evidence and historical discussion, some of which has been superseded here.
 
 When the project owner supplies a changed brief, update the relevant rule here, record the change in the decision history, and update affected proposal statuses/dependencies. Record unknowns as undecided. Do not treat an assistant suggestion as an accepted business rule. Current explicit user instructions take precedence over this document. Do not assume client changes have occurred unless they are communicated or otherwise authorised for discovery.
+
+## PR review clarifications — confirmed 24 September; implementation selection pending
+
+These are business-rule clarifications for the review of GitHub PRs #1–#9 in the platform repository and #1 in the public forms repository. Those PR numbers are not the implementation proposal numbers below. The owner requests a per-change assessment before selecting any merges; this discussion does not authorise merging, deploying or publishing those PRs.
+
+- Keep normal work on the Master Panel and exceptional manual corrections on the full record. Do not add the proposed “No heavy vehicle” action or additional exception/dismissal buttons. Staff can edit Heavy Vehicle Required to Yes or No; the panel reflects the saved booking state on refresh. Existing completion and send history must not be erased implicitly by changing a requirement.
+- Rare manual applications may use a staff-chosen unique booking reference within the existing supported format. Automatic reference generation is not requested where a valid reference is supplied. The verified example `NTE-ACME-123-2027` is accepted; references are case-insensitive, 7–80 characters, start `NTE-`, use letters/digits/hyphens, and end with a letter or digit. This does not remove the existing converted-application relationship required by booking email and Stripe actions: manual entry should create an NTE application Lead and convert it normally, rather than create a standalone Opportunity and assume its reference supplies that relationship.
+- Websites remain optional. Prefer permissive entry of ordinary website addresses; do not add a restrictive domain-format policy merely as defensive hardening.
+- A deliberate manual **Top-up Payment Received** tick records payment even when staff have not yet completed the top-up quantity or price. Later staff updates must not erase that payment decision or reject the entire update solely because those financial details are missing. Preserve submitted nonfinancial updates and saved payment history without inventing quantities/prices or creating another charge; staff can complete the missing financial details manually. **Payment Required** and **Invoice Provided** remain distinct from **Payment Received** and are not proof of payment. The current code and proposed PR #2 need assessment/revision against this target; it is not a claim that all such paths already work.
+- Manual changes should make bookings enter or leave the existing refiners according to their saved state. They do not imply that a direct field edit replays a Master Panel action's email or timestamp side effects. Retain the established distinction between manual record correction/direct applicant communication and the standard action workflow.
+
+The owner considers the logistics-contact work and test tooling promising but asks for their effects and side effects first. Free-confirmation editing, the space-position field migration and all other unselected PR changes remain undecided. Existing one-positive-top-up, manual-forwarding and no-reprocess decisions remain in force.
 
 ## Volunteer service selections — proposal 30, approved 17 September
 
@@ -430,3 +442,23 @@ Approved: keep all bottom-chart counts visible, including zero and small segment
 16 September, proposal 28 extension: the owner supplied the EOI webinar wording and requested the matching fourth Classic HTML invitation. Preserve the supplied body and use the Contact first-name merge for external Eventbrite EOIs held as Contacts. Add HTML/text files and refresh the four-template download pack, preserving the original three emails. This remains a manual file handover, with no automated send or production deployment. [Completed EOI handover](audit/NTE_EOI_WEBINAR_INVITATION_2026-09-16.md).
 
 16 September, proposal 29: the owner authorises using Laura Westrope’s newly supplied SharePoint file-request link in the logo form. Use the new link from her 16 September email, not the superseded folder link in its quoted August correspondence. Open the upload request in a separate tab so applicants can return to the existing unsigned booking-reference confirmation. No file upload, form submission, Salesforce record change or sharing-permission change is part of this configuration update. [Release evidence](audit/NTE_LOGO_SHAREPOINT_LINK_2026-09-16.md).
+
+
+## Selected PR implementation — approved 24 September 2026
+
+The owner authorises selected changes from platform PRs #1–#9 and public forms PR #1, with MMUAT qualification and the usual GitHub backup/canonical preview publication. Production is not authorised. GitHub PR numbers remain separate from the proposal numbers in this document.
+
+- Keep both logistics contacts on the Opportunity and show them on its NTE record page and logistics report. Do not add them to the Master Panel or change acknowledgement wording/recipients.
+- Preserve lead-owner retry behaviour and staff-entered booking references. The owner clarified that genuinely failed booking emails may be retried, while emails already recorded as sent use manual forwarding. Keep the existing sent-timestamp guard; changing a sent notification to Failed is not a resend override.
+- Preserve current missing-payment-method behaviour, full-record Heavy Vehicle Required edits, current free-waiver/Requirements confirmation behaviour and the existing lack of exception-dismissal/reprocess controls.
+- Do not add loading-based form restrictions or change website validation speculatively. Report a reproduced ordinary-URL problem before choosing its remedy. Reconcile the stale hidden pricing-version literals without changing prices; keep platform/canonical website copies aligned.
+- Keep PR #5's developer-only test/line-ending/path portability improvements and a small offline GitHub check from #9. No GitHub job may deploy Salesforce or send messages.
+- **Park PR #8 / the space-position length mismatch.** After Salesforce blocked in-place conversion because 16 saved Flow versions reference the field, the owner explicitly deferred this change. Options retained for later: reduce the form/Lead input to 255 characters, or introduce a 1,000-character replacement with safe migration. Neither option is approved now. Keep current form/field lengths and Flow versions unchanged; the existing >255-character conversion risk remains documented.
+- Rename the Approved pipeline step to Converted, preserving internal keys and business states.
+- Retain NTE email content and actual recipients in the native Activity timeline for intake, booking confirmations/payment requests, supplementary acknowledgements and reviewed bulk messages. Keep send timing, duplicate/retry rules and recipients unchanged. Do not invent original content for old messages that was never retained.
+- Correct the clear stale-data display failure in NTE Relationships: a failed load must clear the previous record's relationships, and a later successful load must recover normally.
+- Preserve deliberate manual top-up receipt when quantity/price are incomplete. Subsequent staff forms may update names without clearing receipt or inventing a new charge; this implements the already confirmed manual-recovery rule.
+
+The owner explicitly declines O01 stale-submission blocking: keep the current last-processed update behaviour, including when an older queued staff/logistics form is processed after a manual correction. No new freshness gate or Update issues exception is approved.
+
+Selected implementation is released in MMUAT: full qualification `0AfAd00000T4hKDKAZ` (535 components / 439 tests), actual `0AfAd00000T4hbxKAB` (25 components) and canonical preview `afaa804` are verified. The note-length change stays parked; an ordinary-URL remedy awaits a decision. Previously completed audit records/sends/payments must not be replayed. [Release evidence](audit/NTE_SELECTED_PR_RELEASE_2026-09-24.md).

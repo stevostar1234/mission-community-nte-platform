@@ -55,7 +55,7 @@ function mount(name = 'nteMasterPanel', overrides = {}) {
         ...overrides
     });
     const source = fs.readFileSync(path.join(sourceRoot, 'force-app/main/default/lwc', name, `${name}.js`), 'utf8');
-    vm.runInContext(source.replace(/^import .*;\s*$/gm, '').replace(/@api\s*/g, '')
+    vm.runInContext(source.replace(/^import .*;\s*$/gm, '').replace(/@api\s*/g, '').replace(/^\s*@wire\([^\n]*\)\s*$/gm, '')
         .replace(/export default class (\w+)/, 'this.Component = class $1'), context);
     const component = new context.Component();
     component.isLoading = false;
@@ -1167,4 +1167,33 @@ test('an empty Update issues view states global scope while ordinary queues reta
     component.viewKey = 'PAYMENT_DUE';
     assert.equal(component.emptyQueueTitle,'No records in this queue');
     assert.equal(component.emptyQueueDetail,'Nothing matches the selected event, time and owner filters.');
+});
+
+
+test('relationship load failure clears the previous record and the next successful record recovers', () => {
+    const { component } = mount('nteRelatedOpportunities');
+    component.recordId = 'first';
+    component.wiredRelationships({ data: {
+        title: 'First booking', mode: 'relationships', account: { id: 'a-first', name: 'First company' },
+        contacts: [{ id: 'c-first', name: 'First contact' }], opportunities: [{ id: 'o-first', amount: 100 }]
+    }});
+    assert.equal(component.account.id, 'a-first');
+    assert.equal(component.hasContacts, true);
+    component.recordId = 'second';
+    component.wiredRelationships({ error: new Error('Second record is unavailable') });
+    assert.equal(component.account, null);
+    assert.equal(component.hasContacts, false);
+    assert.equal(component.hasOpportunities, false);
+    assert.equal(component.showsRelationships, false);
+    assert.equal(component.showsOpportunities, false);
+    assert.match(component.errorMessage, /could not be loaded/);
+    component.wiredRelationships({ data: {
+        title: 'Second booking', mode: 'relationships', account: { id: 'a-second', name: 'Second company' },
+        contacts: [{ id: 'c-second', name: 'Second contact' }], opportunities: []
+    }});
+    assert.equal(component.account.id, 'a-second');
+    assert.equal(component.contacts[0].id, 'c-second');
+    assert.equal(component.errorMessage, '');
+    assert.equal(component.showsRelationships, true);
+    assert.equal(component.isLoading, false);
 });

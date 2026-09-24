@@ -2,6 +2,14 @@
 
 Created: 5 September 2026. Governing requirements: [NTE_DESIRED_WORKFLOW.md](NTE_DESIRED_WORKFLOW.md).
 
+## Decision history — 24 September 2026 PR discussion
+
+The owner requests a concrete, per-fix assessment of GitHub platform PRs #1–#9 and public forms PR #1 before choosing merges. These GitHub numbers are separate from the stable implementation proposals in this document. No PR merge, deployment or public-site release is approved by this discussion.
+
+Confirmed direction: retain full-record Heavy Vehicle Required Yes/No editing instead of the proposed extra panel action; use full-record corrections for exceptional cases without adding exception/dismissal buttons; accept valid unique staff-entered booking references for rare manual application Leads converted normally; keep optional website entry permissive. A deliberate manual Top-up Payment Received tick must stand even when quantity/price remain to be completed, and later staff updates must not erase receipt or fail in their entirety solely for those missing financial details. Payment Required and Invoice Provided do not mean paid. Preserve the single-positive-top-up rule and do not invent charges or financial amounts.
+
+Implementation selection is pending. The favourable comments about logistics contacts and test tooling are requests to examine side effects, not merge approval. The manual-receipt clarification requires revising the relevant top-up recommendation, while free-confirmation editing and the proposed space-position field conversion remain undecided. Source findings and technical boundaries are recorded in the [current desired workflow](NTE_DESIRED_WORKFLOW.md#pr-review-clarifications--confirmed-24-september-implementation-selection-pending). Only local internal decision documents were updated for this discussion; no runtime code or Salesforce records were changed.
+
 The owner approved **1, 2, 3, 4, 5, 6, 8 and 10**, and approved **9 with revised actions Send Application / Reject**. Proposals 1–10 are implemented in source and deployed to MMUAT; see [release evidence](audit/NTE_IMPLEMENTATION_2026-09-05.md). Matching public forms and email examples are published and verified on the existing GitHub preview site. **7 is now also approved: enforce in Salesforce and explain the rule in the static form. For 11, manual Payment Links is implemented and qualified for the restricted owner-controlled MMUAT test scope; client account/configuration acceptance and production remain awaited. 12 was approved and implemented on 7 September.** Documentation maintenance is authorised. Keep these numbers stable so a response such as "go ahead with 1–7; hold 8–12" has an unambiguous meaning. Record approval, deferral, implementation evidence and remaining dependencies against each number.
 
 | No. | Proposal | Reviewable scope | Status |
@@ -252,3 +260,27 @@ Proposal 22 follow-up approved 13 September: after workflow completion/verificat
 14 September, manual-reconciliation follow-up qualified: Opportunity Amount-only gross adjustments and full waivers, independent current-price payment confirmations, stable Requirements order/focus and supplied document/trading names are deployed in MMUAT. Full check `0AfAd00000SuWl3KAF` passed 380 tests; actual `0AfAd00000SuWptKAF` and canonical preview commit `1718aa7b918b1f07dbb0054226560f11780d1a1f` are verified. No existing sends were replayed, no new Stripe requests were created, and the single temporary UI booking was removed. The separate recovery findings remain recorded for a selected follow-up. See [release evidence and audit](audit/NTE_MANUAL_RECONCILIATION_RELEASE_2026-09-14.md).
 
 15 September, proposal 24: the owner confirms the same person may be the main and finance contact. Both forms now use the preferred-separate-if-possible wording. Four isolated form cases pass and both hosted files match commit `617e2c5a06af41847a23767fba8860836573416a`. No actual distinct-person rule was found, so Salesforce source and routing remain unchanged. See [follow-up evidence](audit/NTE_FINANCE_CONTACT_FOLLOWUP_2026-09-15.md).
+
+
+## Proposal 32 — selected PR changes and activity history, 24 September 2026
+
+The owner authorises selected changes from platform PRs #1–#9 and public forms PR #1, with MMUAT qualification and the usual GitHub backup/canonical preview publication. Production is not authorised. GitHub PR numbers remain separate from the proposal numbers in this document.
+
+- Keep both logistics contacts on the Opportunity and show them on its NTE record page and logistics report. Do not add them to the Master Panel or change acknowledgement wording/recipients.
+- Preserve lead-owner retry behaviour, staff-entered booking references and the existing ability to retry after staff deliberately change a notification status to Failed. Do not add timestamp-based resend rejection.
+- Preserve current missing-payment-method behaviour, full-record Heavy Vehicle Required edits, current free-waiver/Requirements confirmation behaviour and the existing lack of exception-dismissal/reprocess controls.
+- Do not add loading-based form restrictions or change website validation speculatively. Report a reproduced ordinary-URL problem before choosing its remedy. Reconcile the stale hidden pricing-version literals without changing prices; keep public/private website copies aligned.
+- Keep PR #5's developer-only test/line-ending/path portability improvements and a small offline GitHub check from #9. No GitHub job may deploy Salesforce or send messages.
+- **Park PR #8 / the space-position length mismatch.** After Salesforce blocked in-place conversion because 16 saved Flow versions reference the field, the owner explicitly deferred this change. Options retained for later: reduce the form/Lead input to 255 characters, or introduce a 1,000-character replacement with safe migration. Neither option is approved now. Keep current form/field lengths and Flow versions unchanged; the existing >255-character conversion risk remains documented.
+- Rename the Approved pipeline step to Converted, preserving internal keys and business states.
+- Retain NTE email content and actual recipients in the native Activity timeline for intake, booking confirmations/payment requests, supplementary acknowledgements and reviewed bulk messages. Keep send timing, duplicate/retry rules and recipients unchanged. Do not invent original content for old messages that was never retained.
+- Correct the clear stale-data display failure in NTE Relationships: a failed load must clear the previous record's relationships, and a later successful load must recover normally.
+- Preserve deliberate manual top-up receipt when quantity/price are incomplete. Subsequent staff forms may update names without clearing receipt or inventing a new charge; this implements the already confirmed manual-recovery rule.
+
+The owner explicitly declines O01 stale-submission blocking: keep the current last-processed update behaviour, including when an older queued staff/logistics form is processed after a manual correction. No new freshness gate or Update issues exception is approved.
+
+Implementation is in an isolated branch; deployment and publication evidence will be recorded when complete. Previously completed audit records/sends/payments must not be replayed.
+
+24 September, proposal 32 resend clarification: the owner confirms retry for a genuinely failed booking-email send, and manual forwarding for an email already recorded as sent. Preserve the existing sent-timestamp guard and current retry behaviour. This supersedes the earlier wording suggesting that changing an already-sent notification to Failed should override that guard. No resend policy/code change is included.
+
+24 September, proposal 32 implementation outcome: selected scope passed full MMUAT qualification `0AfAd00000T4hKDKAZ` (535 components / 439 tests), narrow actual deployment `0AfAd00000T4hbxKAB` (25 components), native readback and rollback-only email integration. Existing 28 booking snapshots are unchanged. Preview `afaa804` publishes only the two pricing-version literals. Note length remains parked, O01 freshness blocking declined and already-sent emails use manual forwarding. Website-address handling is pending. [Release and qualification](audit/NTE_SELECTED_PR_RELEASE_2026-09-24.md).

@@ -182,7 +182,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
         }
         System.assertEquals(bookings.size(), NTEExhibitorApprovalEmailService.acceptedDispatchCount);
         System.assertEquals(bookings.size(), [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds
-            AND Subject = 'NTE booking provisional email - sent']);
+            AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
         System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c WHERE Opportunity__c IN :bookingIds]);
         System.assertEquals(0, Limits.getEmailInvocations());
     }
@@ -701,7 +701,7 @@ private class NTEExhibitorApprovalEmailServiceTest {
         NTEExhibitorApprovalEmailService.processPendingBatch(batchKey, true, true);
         Test.stopTest();
         System.assertEquals(41, NTEExhibitorApprovalEmailService.acceptedDispatchCount);
-        System.assertEquals(41, [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds AND Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(41, [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
         System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE Id IN :bookingIds AND NTE_Approval_Email_Status__c = 'Pending']);
     }
 
@@ -786,6 +786,6 @@ private class NTEExhibitorApprovalEmailServiceTest {
             FROM Opportunity WHERE Id = :bookingId];
     }
     private static Integer auditCount(Id bookingId) {
-        return [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND Subject LIKE 'NTE booking provisional email%'];
+        return [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')];
     }
 }

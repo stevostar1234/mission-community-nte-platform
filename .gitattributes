@@ -1,0 +1,16 @@
+# Keep every text file LF in the working tree on every platform. The generator,
+# the email presentation compiler and the test suites compare generated text
+# byte for byte, and Windows checkouts with core.autocrlf=true were rewriting
+# hundreds of files to CRLF.
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.zip binary

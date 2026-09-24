@@ -49,7 +49,7 @@ private class NTEBookingWaiverTest {
             System.assertNotEquals('Sent', booking.NTE_Approval_Email_Status__c);
             System.assertEquals(null, booking.NTE_Approval_Email_Sent_At__c);
             System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId = :result.bookingId
-                AND Subject = 'NTE booking provisional email - sent']);
+                AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
             return result;
         }
         result.priorSentAt = System.now().addDays(-2);
@@ -123,7 +123,7 @@ private class NTEBookingWaiverTest {
         System.assertEquals(null, booking.NTE_Payment_Received_At__c);
         if (fixture.priorTaskId == null) {
             System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId
-                AND Subject = 'NTE booking provisional email - sent'],
+                AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')],
                 'An unsent request whose intent changed must not acquire accepted-send history.');
         } else {
             System.assertEquals('Original provisional email accepted before the waiver.',
@@ -165,7 +165,7 @@ private class NTEBookingWaiverTest {
         System.assertEquals(true, state(fixture.bookingId).NTE_Top_Up_Payment_Received__c);
         System.assertEquals(beforeRequest, requestSnapshot(paymentId));
         System.assertEquals(1, [SELECT COUNT() FROM NTE_Payment_Request__c]);
-        System.assertEquals(2, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId AND Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(2, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
         System.assertEquals(0, [SELECT COUNT() FROM NTE_Email_Dispatch__c]);
     }
 
@@ -198,8 +198,8 @@ private class NTEBookingWaiverTest {
         Test.stopTest();
         assertHistory(fixture, false);
         System.assertEquals('Failed', state(fixture.bookingId).NTE_Approval_Email_Status__c);
-        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId AND Subject = 'NTE booking provisional email - sent']);
-        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId AND Subject = 'NTE booking provisional email - failed']);
+        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
+        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :fixture.bookingId AND Subject IN ('NTE booking provisional email - failed', 'NTE free-space confirmation email - failed')]);
     }
 
     @IsTest static void failedWaiverCanUseExistingRetryWithoutTouchingOriginalRequest() {
@@ -291,7 +291,7 @@ private class NTEBookingWaiverTest {
         }
         System.assertEquals(beforeRequest, requestSnapshot(paymentId));
         System.assertEquals(1, [SELECT COUNT() FROM NTE_Payment_Request__c]);
-        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE Subject = 'NTE booking provisional email - sent'],
+        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')],
             'Only the earlier provisional for the waiver fixture remains; neither changed request was sent.');
     }
 

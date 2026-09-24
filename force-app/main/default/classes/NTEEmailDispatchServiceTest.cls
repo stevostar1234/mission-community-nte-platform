@@ -826,6 +826,25 @@ private class NTEEmailDispatchServiceTest {
         System.assert(sendRejected, 'Sending must reject the same invalid email request.');
     }
 
+    @IsTest
+    static void nativeInvitationAndReminderSendsAcceptTheirActivityLinks() {
+        configure();
+        Id interestId = leadId('EXHIBITOR'); Id opportunityId = bookingId('EXHIBITOR');
+        NTEEmailDispatchService.DraftDTO invitation = NTEEmailDispatchService.buildDraft('INVITATION', new List<Id>{interestId});
+        NTEEmailDispatchService.DraftDTO reminder = NTEEmailDispatchService.buildDraft('STAFF_DUE', new List<Id>{opportunityId});
+        Test.startTest();
+        System.assertEquals(1, NTEEmailDispatchService.queueMessages(requestFor(invitation, new Set<Id>{interestId})).queuedCount);
+        System.assertEquals(1, NTEEmailDispatchService.queueMessages(requestFor(reminder, new Set<Id>{opportunityId})).queuedCount);
+        List<Id> dispatchIds = dispatchIdsFor(interestId); dispatchIds.addAll(dispatchIdsFor(opportunityId));
+        NTEEmailDispatchService.processQueued(dispatchIds, false);
+        System.assertEquals(1, Limits.getEmailInvocations());
+        for (NTE_Email_Dispatch__c dispatch : [SELECT Status__c, Error__c, Recipient__c FROM NTE_Email_Dispatch__c WHERE Id IN :dispatchIds]) {
+            System.assertEquals('Sent', dispatch.Status__c, 'Native dispatch: ' + dispatch.Error__c);
+            System.assert(dispatch.Recipient__c.startsWith('dispatch-'));
+        }
+        Test.stopTest();
+    }
+
     private static NTEEmailDispatchService.DraftRequest requestFor(NTEEmailDispatchService.DraftDTO draft, Set<Id> selected) {
         NTEEmailDispatchService.DraftRequest request = new NTEEmailDispatchService.DraftRequest();
         request.kind = draft.kind; request.runId = draft.runId; request.subject = draft.subject; request.messageBody = draft.messageBody;

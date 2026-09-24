@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NTE_Logistics_Second_Contact_Name__c</fullName>
+    <description>Second contact supplied on the most recent Heavy Vehicle Details submission. Replaced automatically when a later submission is applied.</description>
+    <label>NTE Logistics Second Contact Name</label>
+    <length>200</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+</CustomField>

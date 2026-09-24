@@ -361,6 +361,13 @@ public with sharing class NTEUpdateSubmissionService {
         String requestedTopUpNames = requestsTopUp ? source.Top_Up_Staff_Names__c : existing.NTE_Top_Up_Staff_Names__c;
 
         target.NTE_Staff_Update_Completed_At__c = System.now();
+        if (existing.NTE_Top_Up_Payment_Received__c && previousTopUpCount <= 0) {
+            // A manual receipt can precede its quantity/price correction. Accept
+            // names without replacing that receipt or inventing another purchase.
+            target.NTE_Top_Up_Staff_Names__c = requestedTopUpNames;
+            target.NTE_Stand_Colleagues__c = combineNames(source.Staff_Base_Names__c, requestedTopUpNames);
+            return;
+        }
         target.NTE_Top_Up_Staff_Required__c = requestedTopUpCount > 0 ? 'Yes' : 'No';
         target.NTE_Top_Up_Staff_Count__c = requestedTopUpCount;
         target.NTE_Top_Up_Staff_Names__c = requestedTopUpNames;
@@ -498,6 +505,15 @@ public with sharing class NTEUpdateSubmissionService {
     private static void applyHeavyFields(Opportunity target, Lead source) {
         target.NTE_Heavy_Vehicle_Required__c = 'Yes';
         target.NTE_Heavy_Vehicle_Update_Completed_At__c = System.now();
+        // The logistics form collects its own two contacts. They are kept on the booking because the
+        // temporary Lead is deleted after a successful update, and they must not overwrite the
+        // application's event and secondary contacts.
+        target.NTE_Logistics_Contact_Name__c = source.Event_Contact_Name__c;
+        target.NTE_Logistics_Contact_Email__c = source.Email;
+        target.NTE_Logistics_Contact_Phone__c = source.Phone;
+        target.NTE_Logistics_Second_Contact_Name__c = source.Secondary_Contact_Name__c;
+        target.NTE_Logistics_Second_Contact_Email__c = source.Secondary_Contact_Email__c;
+        target.NTE_Logistics_Second_Contact_Phone__c = source.Secondary_Contact_Phone__c;
         target.NTE_Delivery_Window__c = source.Delivery_Window__c;
         target.NTE_Heavy_Item_1_Description__c = source.Heavy_Item_1_Description__c;
         target.NTE_Heavy_Item_1_Registration__c = source.Heavy_Item_1_Registration__c;
@@ -608,13 +624,20 @@ public with sharing class NTEUpdateSubmissionService {
     }
 
     @TestVisible
-    private static Messaging.SingleEmailMessage acknowledgementMessage(Id mergeLeadId, Id templateId, String primaryEmail) {
+    private static Messaging.SingleEmailMessage acknowledgementMessage(Id mergeLeadId, Id templateId,
+        Contact primaryContact, Id bookingId) {
+        // Merge the submitted details before the temporary Lead is removed. The
+        // retained activity belongs to the booking and its actual recipient.
+        Messaging.SingleEmailMessage rendered = Messaging.renderStoredEmailTemplate(templateId, mergeLeadId, null);
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-        message.setTargetObjectId(mergeLeadId);
+        message.setSubject(rendered.getSubject());
+        message.setHtmlBody(rendered.getHtmlBody());
+        message.setPlainTextBody(rendered.getPlainTextBody());
+        message.setTargetObjectId(primaryContact.Id);
         message.setTreatTargetObjectAsRecipient(false);
-        message.setToAddresses(new List<String>{primaryEmail});
-        message.setTemplateId(templateId);
-        message.setSaveAsActivity(false);
+        message.setToAddresses(new List<String>{primaryContact.Email});
+        message.setWhatId(bookingId);
+        message.setSaveAsActivity(true);
         return message;
     }
 
@@ -645,7 +668,7 @@ public with sharing class NTEUpdateSubmissionService {
                         if (String.isNotBlank(acknowledgementFailureOverride)) errors.put(lead.Id, acknowledgementFailureOverride);
                         continue;
                     }
-                    messages.add(acknowledgementMessage(lead.Id, templateId, primaryContact.Email));
+                    messages.add(acknowledgementMessage(lead.Id, templateId, primaryContact, bookingIdByLeadId.get(lead.Id)));
                     messageLeadIds.add(lead.Id);
                 }
             }

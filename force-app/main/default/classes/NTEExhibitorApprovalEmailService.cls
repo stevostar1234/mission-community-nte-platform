@@ -357,7 +357,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
                 if (accepted && freeConfirmation) updateRecord.NTE_Free_Space_Confirmed__c = true;
                 updates.add(updateRecord);
                 if (accepted && !freeConfirmation) NTEStripeBookingService.recordEmailAccepted(candidate.booking, updateRecord, candidate.recipient, paymentUpdates);
-                candidate.audit.Subject = TASK_PREFIX + (accepted ? 'sent' : 'failed');
+                candidate.audit.Subject = auditSubject(candidate.templateName, accepted ? 'sent' : 'failed');
                 candidate.audit.Description += accepted ? '\nSalesforce accepted the email for delivery.' : '\n' + truncate(errorMessage);
                 audits.add(candidate.audit);
                 if (accepted) acceptedDispatchCount++;
@@ -404,7 +404,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
         message.setTreatTargetObjectAsRecipient(false);
         message.setToAddresses(new List<String>{recipient.Email});
         message.setWhatId(booking.Id);
-        message.setSaveAsActivity(false);
+        message.setSaveAsActivity(true);
         return message;
     }
     public static Messaging.SingleEmailMessage renderTopUpEmail(Opportunity booking, Contact recipient, NTE_Payment_Request__c payment) {
@@ -420,7 +420,7 @@ public without sharing class NTEExhibitorApprovalEmailService {
         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
         message.setSubject(rendered.getSubject()); message.setHtmlBody(html); message.setPlainTextBody(plainTextFromHtml(html));
         message.setTargetObjectId(recipient.Id); message.setTreatTargetObjectAsRecipient(false);
-        message.setToAddresses(new List<String>{recipient.Email}); message.setWhatId(booking.Id); message.setSaveAsActivity(false);
+        message.setToAddresses(new List<String>{recipient.Email}); message.setWhatId(booking.Id); message.setSaveAsActivity(true);
         return message;
     }
     private static String replaceTemplateMarkers(String html, Map<String, String> replacements) {
@@ -629,9 +629,14 @@ public without sharing class NTEExhibitorApprovalEmailService {
             AND NTE_Approval_Email_Status__c = 'Pending' FOR UPDATE]) failures.add(failedUpdate(booking.Id, errorMessage));
         if (!failures.isEmpty()) Database.update(failures, true, AccessLevel.SYSTEM_MODE);
     }
+    private static String auditSubject(String templateName, String outcome) {
+        Boolean freeConfirmation = templateName == 'NTE_Complimentary_Exhibitor_Approved'
+            || templateName == 'NTE_Partner_Sponsor_Free_Confirmed';
+        return (freeConfirmation ? 'NTE free-space confirmation email - ' : TASK_PREFIX) + outcome;
+    }
     private static Task auditFor(Opportunity booking, String status, String outcome, String recipient, String templateName, String errorMessage) {
         return new Task(WhatId = booking.Id, OwnerId = booking.OwnerId, Status = status, ActivityDate = Date.today(),
-            Subject = TASK_PREFIX + outcome,
+            Subject = auditSubject(templateName, outcome),
             Description = 'Recipient: ' + (recipient == null ? 'No usable primary Contact email' : recipient)
                 + '\nEvent: ' + booking.NTE_Event_Code__c + '\nBooking reference: ' + booking.Booking_Reference__c
                 + '\nTemplate: ' + templateName + '\nRequested by: ' + booking.NTE_Approval_Email_Requested_By__c

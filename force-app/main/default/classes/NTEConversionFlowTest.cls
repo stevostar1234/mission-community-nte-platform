@@ -163,7 +163,7 @@ private class NTEConversionFlowTest {
             SELECT Subject, Description
             FROM Task
             WHERE WhatId = :convertedLead.ConvertedOpportunityId
-            AND Subject LIKE 'NTE booking provisional email%'
+            AND (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')
         ];
         System.assertEquals(0, approvalAudits.size(), 'Conversion never sends an applicant email.');
     }
@@ -209,10 +209,11 @@ private class NTEConversionFlowTest {
         System.assertEquals('Yes', bookings.get(results[1].getOpportunityId()).NTE_Invoice_Required__c);
         Map<Id, Task> audits = new Map<Id, Task>();
         for (Task audit : [SELECT WhatId, Subject, Description FROM Task WHERE WhatId IN :bookingIds
-            AND Subject LIKE 'NTE booking provisional email%']) audits.put(audit.WhatId, audit);
+            AND (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')]) audits.put(audit.WhatId, audit);
         for (Id bookingId : bookingIds) {
             System.assertEquals('Sent', bookings.get(bookingId).NTE_Approval_Email_Status__c);
-            System.assertEquals('NTE booking provisional email - sent', audits.get(bookingId).Subject);
+            System.assertEquals(audits.get(bookingId).Description.contains('Template: NTE_Complimentary_Exhibitor_Approved')
+                ? 'NTE free-space confirmation email - sent' : 'NTE booking provisional email - sent', audits.get(bookingId).Subject);
         }
         System.assert(audits.get(results[0].getOpportunityId()).Description.contains('Template: NTE_Complimentary_Exhibitor_Approved'));
         System.assert(audits.get(results[1].getOpportunityId()).Description.contains('Template: NTE_Exhibitor_Approved'));
@@ -254,7 +255,7 @@ private class NTEConversionFlowTest {
         Task approvalAudit = [
             SELECT Subject, Description FROM Task
             WHERE WhatId = :convertedLead.ConvertedOpportunityId
-            AND Subject LIKE 'NTE booking provisional email%'
+            AND (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')
             LIMIT 1
         ];
         System.assertEquals('NTE booking provisional email - sent', approvalAudit.Subject, approvalAudit.Description);
@@ -326,7 +327,7 @@ private class NTEConversionFlowTest {
             SELECT COUNT()
             FROM Task
             WHERE WhatId IN :opportunityIds
-            AND Subject = 'NTE booking provisional email - sent'
+            AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')
         ]);
     }
 
@@ -364,14 +365,14 @@ private class NTEConversionFlowTest {
             System.assertEquals('Sent', booking.NTE_Approval_Email_Status__c);
             System.assertEquals(applications[index].Email, booking.NTE_Approval_Email_Recipient__c);
             Task audit = [SELECT Description FROM Task WHERE WhatId = :booking.Id
-                AND Subject = 'NTE booking provisional email - sent' LIMIT 1];
+                AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent') LIMIT 1];
             System.assert(audit.Description.contains('Recipient: ' + applications[index].Email));
             System.assert(audit.Description.contains('Booking reference: ' + applications[index].Booking_Reference__c));
             System.assert(audit.Description.contains('Template: ' + (index == 0 ? 'NTE_Exhibitor_Approved' : 'NTE_Partner_Sponsor_Approved')));
         }
         System.assertEquals(null, bookings.get(olderResult.getOpportunityId()).NTE_Approval_Email_Status__c);
         System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId = :unrelatedId
-            AND Subject LIKE 'NTE booking provisional email%']);
+            AND (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')]);
     }
 
     @IsTest
@@ -424,7 +425,7 @@ private class NTEConversionFlowTest {
         System.assertEquals(existingContact.Email, booking.NTE_Approval_Email_Recipient__c);
         System.assertEquals(existingContact.Id, [SELECT ContactId FROM OpportunityContactRole
             WHERE OpportunityId = :bookingId AND IsPrimary = true].ContactId);
-        Task audit = [SELECT Description FROM Task WHERE WhatId = :bookingId AND Subject = 'NTE booking provisional email - sent'];
+        Task audit = [SELECT Description FROM Task WHERE WhatId = :bookingId AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')];
         System.assert(audit.Description.contains('Recipient: ' + existingContact.Email));
         System.assert(!audit.Description.contains(application.Email));
     }
@@ -508,7 +509,7 @@ private class NTEConversionFlowTest {
         System.assertEquals('Failed', booking.NTE_Approval_Email_Status__c);
         System.assert(booking.NTE_Approval_Email_Error__c.contains('price needs review'));
         System.assertEquals(false, booking.NTE_Payment_Received__c);
-        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
     }
 
     @IsTest
@@ -533,7 +534,7 @@ private class NTEConversionFlowTest {
         System.assertEquals('Failed', affected.NTE_Approval_Email_Status__c);
         System.assert(affected.NTE_Approval_Email_Error__c.contains('could not be matched'));
         System.assertEquals(null, [SELECT NTE_Approval_Email_Status__c FROM Opportunity WHERE Id = :originalId].NTE_Approval_Email_Status__c);
-        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
     }
 
     @IsTest
@@ -576,7 +577,7 @@ private class NTEConversionFlowTest {
         System.assertEquals(0, Limits.getEmailInvocations());
         Test.stopTest();
         System.assertEquals('Sent', [SELECT NTE_Approval_Email_Status__c FROM Opportunity WHERE Id = :bookingId].NTE_Approval_Email_Status__c);
-        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND Subject = 'NTE booking provisional email - sent']);
+        System.assertEquals(1, [SELECT COUNT() FROM Task WHERE WhatId = :bookingId AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
     }
 
     @IsTest
@@ -596,7 +597,7 @@ private class NTEConversionFlowTest {
         System.assert(!result.isSuccess(), String.valueOf(result.getErrors()));
         System.assertEquals(null, result.getOpportunityId());
         System.assertEquals(0, [SELECT COUNT() FROM Opportunity]);
-        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject LIKE 'NTE booking provisional email%']);
+        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')]);
         System.assertEquals(false, [SELECT IsConverted FROM Lead WHERE Id = :application.Id].IsConverted);
     }
 
@@ -642,7 +643,7 @@ private class NTEConversionFlowTest {
         System.assertEquals(true, merged.NTE_Payment_Received__c,
             'Rejected conversion preserves the previous booking and payment.');
         System.assertEquals('Sent', merged.NTE_Approval_Email_Status__c);
-        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE Subject LIKE 'NTE booking provisional email%']);
+        System.assertEquals(0, [SELECT COUNT() FROM Task WHERE (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')]);
     }
 
     @IsTest
@@ -687,7 +688,7 @@ private class NTEConversionFlowTest {
         }
         System.assertEquals(0, [SELECT COUNT() FROM NTE_Payment_Request__c]);
         System.assertEquals(0, [SELECT COUNT() FROM Task WHERE WhatId IN :bookingIds
-            AND Subject LIKE 'NTE booking provisional email%']);
+            AND (Subject LIKE 'NTE booking provisional email%' OR Subject LIKE 'NTE free-space confirmation email%')]);
     }
 
     private static Lead targetApplication(String label, Boolean partner) {

@@ -145,7 +145,7 @@ public with sharing class NTEInboundLeadService {
                     Messaging.SingleEmailMessage applicant = new Messaging.SingleEmailMessage();
                     applicant.setTargetObjectId(lead.Id);
                     applicant.setTemplateId(templateIds.get(pair[0]));
-                    applicant.setSaveAsActivity(false);
+                    applicant.setSaveAsActivity(true);
                     dispatches.add(new EmailDispatch(lead.Id, true, applicant));
                 }
             }
@@ -164,7 +164,7 @@ public with sharing class NTEInboundLeadService {
                     internalMessage.setTreatTargetObjectAsRecipient(false);
                     internalMessage.setToAddresses(new List<String>{notificationOwner.Email});
                     internalMessage.setTemplateId(templateIds.get(pair[1]));
-                    internalMessage.setSaveAsActivity(false);
+                    internalMessage.setSaveAsActivity(true);
                     dispatches.add(new EmailDispatch(lead.Id, false, internalMessage));
                 }
             }

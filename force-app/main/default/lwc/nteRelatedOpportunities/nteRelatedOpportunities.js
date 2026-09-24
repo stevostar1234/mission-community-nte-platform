@@ -39,6 +39,10 @@ export default class NteRelatedOpportunities extends LightningElement {
             this.errorMessage = "";
             this.isLoading = false;
         } else if (error) {
+            this.account = null;
+            this.contacts = [];
+            this.opportunities = [];
+            this.mode = "";
             this.errorMessage = "NTE relationships could not be loaded.";
             this.isLoading = false;
         }

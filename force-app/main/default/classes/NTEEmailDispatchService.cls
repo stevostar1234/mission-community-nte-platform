@@ -445,7 +445,10 @@ public with sharing class NTEEmailDispatchService {
                 if (!plainText.contains(recipient.link)) plainText += '\n\n' + recipient.link;
                 email.setPlainTextBody(plainText + '\n\nKind regards,\nThe National Transition Event Team\nMission Community');
                 email.setHtmlBody(htmlFor(dispatch.Kind__c, dispatch.Subject__c, dispatch.Message__c, recipient));
-                email.setSaveAsActivity(false);
+                email.setTargetObjectId(dispatch.Lead__c != null ? dispatch.Lead__c : recipient.primaryContact.Id);
+                email.setTreatTargetObjectAsRecipient(false);
+                if (dispatch.Opportunity__c != null) email.setWhatId(dispatch.Opportunity__c);
+                email.setSaveAsActivity(true);
             }
             messages.add(email);
             sendable.add(dispatch);

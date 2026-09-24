@@ -704,8 +704,10 @@ assert(updateService.includes("existingTopUpCount > 0 && topUpCount > existingTo
 assert(updateService.includes("previousTopUpCount == 0 && requestedTopUpCount > 0"), "only the first positive purchase may initialize top-up finance milestones");
 assert(updateService.includes("FOR UPDATE") && updateService.includes("existing.put(fieldName, updateRecord.get(fieldName))"), "top-up validation must use locked booking data and the accepted state of earlier submissions in the batch");
 assert(updateService.includes("NTEBookingContactService.primaryContacts"), "update acknowledgements must use the booking's Primary Contact");
-assert(updateService.includes("setTargetObjectId(mergeLeadId)") && updateService.includes("setTreatTargetObjectAsRecipient(false)")
-  && updateService.includes("setToAddresses(new List<String>{primaryEmail})"), "supplementary Leads may supply merge values but must not become the email recipient");
+assert(updateService.includes("renderStoredEmailTemplate(templateId, mergeLeadId, null)") && updateService.includes("setTargetObjectId(primaryContact.Id)")
+  && updateService.includes("setTreatTargetObjectAsRecipient(false)") && updateService.includes("setToAddresses(new List<String>{primaryContact.Email})")
+  && updateService.includes("setWhatId(bookingId)") && updateService.includes("setSaveAsActivity(true)"),
+  "supplementary Leads supply merge values while retained activities belong to the booking and its Primary Contact");
 assert(updateService.includes("retryAcknowledgement(Id leadId)") && updateService.includes("Only a failed acknowledgement for an already applied update can be retried."), "applied updates must provide an acknowledgement-only retry");
 const bookingContactService = fs.readFileSync(path.join(metadataRoot, "classes", "NTEBookingContactService.cls"), "utf8");
 assert(bookingContactService.includes("FROM OpportunityContactRole") && bookingContactService.includes("IsPrimary = true"), "booking recipients must come from the Primary Contact Role");

@@ -44,7 +44,7 @@ private class NTEFinanceEdgeRegressionTest {
         System.assert(blocked,'A stale action must not send the accepted provisional message a second time.');
         System.assertEquals('Sent',current.NTE_Approval_Email_Status__c);
         System.assertEquals(acceptedAt,current.NTE_Approval_Email_Sent_At__c);
-        System.assertEquals(0,[SELECT COUNT() FROM Task WHERE WhatId=:id AND Subject='NTE booking provisional email - sent']);
+        System.assertEquals(0,[SELECT COUNT() FROM Task WHERE WhatId=:id AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
     }
     @IsTest static void acceptedStripeRequestCannotBeResentAfterALaterFailureStatus() {
         Id id=booking('STRIPE-SENT');
@@ -92,7 +92,7 @@ private class NTEFinanceEdgeRegressionTest {
         Boolean blocked=false;
         try { NTEFinanceService.sendFinanceAction(id,'FREE'); } catch (AuraHandledException expected) { blocked=true; }
         System.assert(blocked,'The newly accepted free confirmation must not repeat.');
-        System.assertEquals(1,[SELECT COUNT() FROM Task WHERE WhatId=:id AND Subject='NTE booking provisional email - sent']);
+        System.assertEquals(1,[SELECT COUNT() FROM Task WHERE WhatId=:id AND Subject IN ('NTE booking provisional email - sent', 'NTE free-space confirmation email - sent')]);
     }
     @IsTest static void failedWaiverRetryKeepsOriginalProvisionalTimestamp() {
         Id id=booking('WAIVER-RETRY');Datetime acceptedAt=System.now().addHours(-1);

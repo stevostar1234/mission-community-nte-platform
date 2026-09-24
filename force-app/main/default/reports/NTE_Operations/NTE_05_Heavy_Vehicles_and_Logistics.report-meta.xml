@@ -40,6 +40,24 @@
         <field>Opportunity.NTE_Secondary_Contact_Mobile__c</field>
     </columns>
     <columns>
+        <field>Opportunity.NTE_Logistics_Contact_Name__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Contact_Email__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Contact_Phone__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Name__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Email__c</field>
+    </columns>
+    <columns>
+        <field>Opportunity.NTE_Logistics_Second_Contact_Phone__c</field>
+    </columns>
+    <columns>
         <field>Opportunity.NTE_Delivery_Window__c</field>
     </columns>
     <columns>
@@ -102,7 +120,7 @@
     <columns>
         <field>Opportunity.NTE_Heavy_Vehicle_Update_Completed_At__c</field>
     </columns>
-    <description>All NTE bookings requiring heavy-item or vehicle logistics, with every submitted item, registration, dimension, weight, delivery window and haulier detail.</description>
+    <description>All NTE bookings requiring heavy-item or vehicle logistics, with every submitted item, registration, dimension, weight, delivery window, logistics contacts and haulier detail.</description>
     <filter>
         <booleanFilter>(1 AND (2 OR 3)) AND 4</booleanFilter>
         <criteriaItems>
